@@ -5,8 +5,6 @@ var player: Player
 
 func enter() -> void:
 	player = character as Player
-	player.can_double_jump = true
-
 	# Zero out velocity completely on entry so player sticks to the wall immediately!
 	player.velocity = Vector2.ZERO
 

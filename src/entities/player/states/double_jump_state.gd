@@ -7,7 +7,6 @@ func enter() -> void:
 	player = character as Player
 	player.can_double_jump = false
 	player.velocity.y = player.double_jump_velocity
-	player.last_wall_jump_normal_x = 0.0
 
 func physics_update(delta: float) -> void:
 	# Wall jump check if pressing jump while touching wall
