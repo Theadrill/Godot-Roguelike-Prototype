@@ -1,6 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://movement_gym_01"]
+[gd_scene load_steps=12 format=3 uid="uid://cjijcwt58gu71"]
 
-[ext_resource type="PackedScene" uid="uid://player_scene_01" path="res://src/entities/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(400, 72)
@@ -21,7 +21,7 @@ size = Vector2(140, 64)
 size = Vector2(400, 72)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_left"]
-size = Vector2(32, 220)
+size = Vector2(32, 160)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_right"]
 size = Vector2(32, 220)
@@ -29,10 +29,12 @@ size = Vector2(32, 220)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_balcony"]
 size = Vector2(120, 20)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mid_platform"]
+size = Vector2(120, 20)
+
 [node name="MovementGym" type="Node2D"]
 
 [node name="Environment" type="StaticBody2D" parent="."]
-collision_layer = 1
 collision_mask = 0
 
 [node name="Ground1_Col" type="CollisionShape2D" parent="Environment"]
@@ -83,13 +85,21 @@ shape = SubResource("RectangleShape2D_ground3")
 color = Color(0.15, 0.17, 0.22, 1)
 polygon = PackedVector2Array(900, 288, 1300, 288, 1300, 360, 900, 360)
 
+[node name="MidPlatform_Col" type="CollisionShape2D" parent="Environment"]
+position = Vector2(895, 201)
+shape = SubResource("RectangleShape2D_mid_platform")
+
+[node name="MidPlatform_Vis" type="Polygon2D" parent="Environment"]
+color = Color(0.2, 0.45, 0.55, 1)
+polygon = PackedVector2Array(835, 191, 955, 191, 955, 211, 835, 211)
+
 [node name="WallLeft_Col" type="CollisionShape2D" parent="Environment"]
-position = Vector2(1016, 178)
+position = Vector2(1016, 148)
 shape = SubResource("RectangleShape2D_wall_left")
 
 [node name="WallLeft_Vis" type="Polygon2D" parent="Environment"]
 color = Color(0.2, 0.23, 0.3, 1)
-polygon = PackedVector2Array(1000, 68, 1032, 68, 1032, 288, 1000, 288)
+polygon = PackedVector2Array(1000, 68, 1032, 68, 1032, 228, 1000, 228)
 
 [node name="WallRight_Col" type="CollisionShape2D" parent="Environment"]
 position = Vector2(1096, 178)
@@ -100,12 +110,12 @@ color = Color(0.2, 0.23, 0.3, 1)
 polygon = PackedVector2Array(1080, 68, 1112, 68, 1112, 288, 1080, 288)
 
 [node name="Balcony_Col" type="CollisionShape2D" parent="Environment"]
-position = Vector2(1152, 78)
+position = Vector2(1172, 78)
 shape = SubResource("RectangleShape2D_balcony")
 
 [node name="Balcony_Vis" type="Polygon2D" parent="Environment"]
 color = Color(0.35, 0.4, 0.52, 1)
-polygon = PackedVector2Array(1092, 68, 1212, 68, 1212, 88, 1092, 88)
+polygon = PackedVector2Array(1112, 68, 1232, 68, 1232, 88, 1112, 88)
 
 [node name="UI_Hints" type="Node2D" parent="."]
 
