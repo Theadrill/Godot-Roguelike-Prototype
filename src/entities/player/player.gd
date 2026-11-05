@@ -176,14 +176,12 @@ func _prevent_standing_on_enemies() -> void:
 					elif push_dir < 0.0 and wall_on_left and not wall_on_right:
 						push_dir = 1.0
 
-				# Layer 3: Timeout Fail-safe (eject strongly if wedged for > 0.2s)
-				if enemy_head_stuck_timer > 0.2:
-					velocity.y = -120.0
-					velocity.x = push_dir * 260.0
-					global_position.x += push_dir * 4.0
-				else:
-					velocity.x = push_dir * 220.0
-					global_position.x += push_dir * 2.0
+				# Slide off cleanly using physics velocity (no teleporting!)
+				velocity.x = push_dir * 180.0
+
+				# Layer 3: Fail-safe hop if stuck on top for more than 0.25s
+				if enemy_head_stuck_timer > 0.25:
+					velocity.y = -100.0
 
 				coyote_timer = 0.0
 				jump_buffer_timer = 0.0

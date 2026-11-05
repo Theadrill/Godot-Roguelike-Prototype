@@ -7,21 +7,18 @@ func enter() -> void:
 	player = character as Player
 
 func physics_update(delta: float) -> void:
-	if player.is_on_floor():
-		if player.is_standing_on_enemy():
-			# An enemy head is NOT valid ground: clear jump buffers and remain in fall to slide off
-			player.jump_buffer_timer = 0.0
-			player.coyote_timer = 0.0
-			return
-
+	# Only transition to ground states if standing on real ground (NOT an enemy head)
+	if player.is_on_floor() and not player.is_standing_on_enemy():
 		if player.jump_buffer_timer > 0.0:
 			player.jump_buffer_timer = 0.0
 			state_machine.transition_to("jump")
+			return
 		elif abs(Input.get_axis("move_left", "move_right")) > 0.1:
 			state_machine.transition_to("run")
+			return
 		else:
 			state_machine.transition_to("idle")
-		return
+			return
 
 	if player.coyote_timer > 0.0 and Input.is_action_just_pressed("jump"):
 		if not player.is_standing_on_enemy():
@@ -62,20 +59,21 @@ func physics_update(delta: float) -> void:
 	# Gravity
 	player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
 
-	# Horizontal air control
-	var direction := Input.get_axis("move_left", "move_right")
-	if direction != 0.0:
-		player.update_facing(direction)
-		player.velocity.x = move_toward(
-			player.velocity.x,
-			direction * player.run_speed,
-			(player.run_speed / player.acceleration_time) * delta
-		)
-	else:
-		player.velocity.x = move_toward(
-			player.velocity.x,
-			0.0,
-			(player.run_speed / player.acceleration_time) * delta
-		)
+	# Horizontal air control (disabled while actively sliding off an enemy)
+	if not player.is_standing_on_enemy():
+		var direction := Input.get_axis("move_left", "move_right")
+		if direction != 0.0:
+			player.update_facing(direction)
+			player.velocity.x = move_toward(
+				player.velocity.x,
+				direction * player.run_speed,
+				(player.run_speed / player.acceleration_time) * delta
+			)
+		else:
+			player.velocity.x = move_toward(
+				player.velocity.x,
+				0.0,
+				(player.run_speed / player.acceleration_time) * delta
+			)
 
 	player.move_and_slide()
