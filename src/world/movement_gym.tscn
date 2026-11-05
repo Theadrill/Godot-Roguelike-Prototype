@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cjijcwt58gu71"]
 
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
-[ext_resource type="PackedScene" path="res://src/entities/dummy/combat_dummy.tscn" id="2_dummy"]
+[ext_resource type="PackedScene" uid="uid://c7kd6yq7h3dum" path="res://src/entities/dummy/combat_dummy.tscn" id="2_dummy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(400, 72)
@@ -175,11 +175,13 @@ theme_override_font_sizes/font_size = 10
 text = "5. WALL JUMP (CHAMINÉ)
 Quique entre as duas paredes!"
 
-[node name="CombatDummy" parent="." instance=ExtResource("2_dummy")]
+[node name="CombatDummy" parent="." unique_id=722785593 instance=ExtResource("2_dummy")]
 position = Vector2(250, 288)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(80, 288)
+roll_speed = 160.0
+roll_duration = 0.2
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1090956029]
 position = Vector2(0, -20)

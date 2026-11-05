@@ -34,6 +34,10 @@ func physics_update(delta: float) -> void:
 
 	player.move_and_slide()
 
+	# Stop rolling against walls immediately so we don't get embedded
+	if player.is_on_wall():
+		player.velocity.x = 0.0
+
 	# When roll duration ends, check if we have headroom to stand up
 	if roll_timer <= 0.0:
 		# Force raycast update
@@ -65,6 +69,16 @@ func _set_crouched(crouched: bool) -> void:
 		player.collision_shape.position = Vector2(0.0, -10.0)
 		player.visual.scale.y = 0.5
 	else:
+		# When expanding back to 40px standing height, test collision against solid environment first
+		# to guarantee the player can NEVER expand inside a wall or obstacle!
 		rect.size = Vector2(16.0, 40.0)
 		player.collision_shape.position = Vector2(0.0, -20.0)
 		player.visual.scale.y = 1.0
+
+		# Depenetration safety: if standing up causes overlap with a wall, push out cleanly
+		var test_col := player.move_and_collide(Vector2.ZERO, true)
+		if test_col:
+			var normal := test_col.get_normal()
+			# If overlapping a vertical wall, push away along the normal
+			if abs(normal.x) > 0.5:
+				player.global_position.x += normal.x * (test_col.get_depth() + 1.0)
