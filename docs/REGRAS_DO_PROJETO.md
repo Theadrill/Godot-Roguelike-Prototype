@@ -27,8 +27,9 @@
 * Trabalhar estritamente **ponto a ponto, um de cada vez**. Nunca atropelar decisões nem apresentar múltiplos blocos de escolhas sem validação prévia.
 * Antes de apresentar qualquer ponto ou subponto técnico ao PO, **pesquisar obrigatoriamente na internet como os jogos de referência da indústria resolvem aquele desafio** e apresentar o comparativo de mercado.
 
-### Regra 4: Parada Obrigatória para Validação do PO
+### Regra 4: Parada Obrigatória para Validação do PO & Geração de Sprites
 * Ao final de cada fase, funcionalidade, script ou cena, a IA deve **obrigatoriamente parar** e apresentar um resumo claro do que foi feito e como o PO deve testar.
+* **Parada Crítica para Geração de Sprites:** Sempre que for necessário gerar **QUALQUER SPRITE** (protagonista, inimigos, armas, cenários ou itens), o agente deve **obrigatoriamente parar e perguntar ao PO como o asset deverá ser** antes de gerar qualquer arquivo de imagem.
 * Nenhum avanço para o próximo passo pode ser feito sem a aprovação explícita do PO.
 
 ---
