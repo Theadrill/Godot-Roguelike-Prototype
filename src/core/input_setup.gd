@@ -53,6 +53,24 @@ func _ready() -> void:
 		_create_joy_button_event(JOY_BUTTON_Y)
 	])
 
+	# Right Analog Stick: Camera look-ahead (espiar adiante)
+	_register_action("look_left", [
+		_create_joy_motion_event(JOY_AXIS_RIGHT_X, -1.0),
+		_create_key_event(KEY_KP_4)
+	], 0.15)
+	_register_action("look_right", [
+		_create_joy_motion_event(JOY_AXIS_RIGHT_X, 1.0),
+		_create_key_event(KEY_KP_6)
+	], 0.15)
+	_register_action("look_up", [
+		_create_joy_motion_event(JOY_AXIS_RIGHT_Y, -1.0),
+		_create_key_event(KEY_KP_8)
+	], 0.15)
+	_register_action("look_down", [
+		_create_joy_motion_event(JOY_AXIS_RIGHT_Y, 1.0),
+		_create_key_event(KEY_KP_2)
+	], 0.15)
+
 func _unhandled_input(event: InputEvent) -> void:
 	# Quick reload inside game window: R, F5, or Select/Back on Gamepad
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():

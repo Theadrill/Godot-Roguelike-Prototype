@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://c7kd6yq7h3dum" path="res://src/entities/dummy/combat_dummy.tscn" id="2_dummy"]
 [ext_resource type="PackedScene" path="res://src/entities/enemies/soldier/soldier.tscn" id="3_soldier"]
+[ext_resource type="Script" path="res://src/core/game_camera.gd" id="4_camera"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(700, 72)
@@ -222,6 +223,7 @@ roll_duration = 0.24
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1090956029]
 position = Vector2(0, -20)
+script = ExtResource("4_camera")
 position_smoothing_enabled = true
 position_smoothing_speed = 7.0
 drag_horizontal_enabled = true
