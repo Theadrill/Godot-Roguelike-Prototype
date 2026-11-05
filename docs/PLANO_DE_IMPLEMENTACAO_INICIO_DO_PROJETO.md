@@ -101,7 +101,22 @@ Dar vida ao inimigo de teste para disparar golpes com sinalização visual e val
 
 ---
 
-## 🛡️ Fase 4: O Sistema de Defesa, Resposta aos 3 Sinais & Movimentação Avançada
+## 🎒 Fase 4: Arquitetura Modular de Equipamentos & Sockets (`MainHand` / `OffHand`)
+
+### 1. Visão Geral do Escopo (Resumo)
+Criar a fundação estrutural de encaixe de itens desacoplados do sprite base do protagonista (*Socketed Paperdoll*), evitando que equipamentos sejam desenhados colados ao corpo:
+* **Pontos de Ancoragem (Sockets):**
+  * `MainHandSocket`: Ponto de encaixe relativo para a arma principal (Espada, Adaga, Martelo, Cajado).
+  * `OffHandSocket`: Ponto de encaixe relativo para o escudo/arma secundária.
+* **Placeholders Geométricos Simples:** Sprites monocromáticos minimalistas representando cada categoria de equipamento para validar os pivôs de empunhadura e a troca dinâmica de nós.
+* **Diretriz de Armaduras:** Deixada para a fase final do projeto para definição madura entre trajes completos (*Dead Cells Skins*) vs. peças/sockets simplificados.
+
+> [!NOTE]
+> Esta fase estrutural prepara o terreno para plugar o escudo e as próximas armas sem necessidade de refatoração futura.
+
+---
+
+## 🛡️ Fase 5: O Sistema de Defesa, Resposta aos 3 Sinais & Movimentação Avançada
 
 ### 1. Visão Geral do Escopo
 Completar o triângulo tático de combate corpo a corpo e as manobras físicas avançadas especificadas no **Pilar 2** do Game Design Document ([`docs/BRAINSTORMING.md`](BRAINSTORMING.md)):
@@ -115,6 +130,27 @@ Completar o triângulo tático de combate corpo a corpo e as manobras físicas a
 * **Idle Breaks:**
   * Variações sutis de animação/pose após 5 segundos de inatividade, canceláveis no primeiro frame por qualquer input.
 
-> [!NOTE]
-> **Status:** Aguardando discussão e alinhamento prévio de design com o PO.
-> As escolhas e regras detalhadas deste sistema (mapeamento de botões, janelas exatas em milissegundos para o *Parry*, consumo de estamina/recurso e comportamento do contra-ataque) serão discutidas com o PO antes de elaborar o passo a passo de engenharia e iniciar a implementação.
+### 2. Decisões de Design Alinhadas com o PO (Em Andamento)
+* **Ponto 1 (Controle & Equipamento):** 
+  * Defesa em **Botão Dedicado** (`LB` / `L1` no Gamepad; tecla dedicada no Teclado). O jogador sempre tem a ferramenta de defesa equipada, sem sacrificar o slot secundário (`Y` / `Triângulo`).
+  * O escudo é um equipamento evoluível/craftável através do irmão forjador na Casa Santuário (metaprogressão de escudos com atributos e efeitos especiais).
+* **Ponto 2 (Mecânica de Toque vs. Segurar):**
+  * *Toque Rápido (Tap):* Janela ativa de Parry Perfeito (~120ms).
+  * *Segurar (Hold):* Guarda Contínua (absorve dano normal, 15% chip damage em amarelos, quebra de guarda em vermelhos).
+* **Ponto 3 (Prevenção de Spam & Cooldown):**
+  * *Punição no Erro:* Se errar o parry (apertar no ar ou fora de hora), entra em **cooldown estrito de 1.0 segundo** sem poder erguer o escudo, punindo o spam e exigindo leitura deliberada do jogador.
+  * *Recompensa no Acerto:* Se acertar o parry com perfeição, o **cooldown é resetado instantaneamente**, permitindo aparar múltiplos golpes ou combos rápidos em sequência.
+* **Ponto 4 (Recompensa do Parry & Modificador de Onda de Choque):**
+  * *Comportamento Base Oficial:* O inimigo atacante sofre *Stun* (~0.8s a 1.0s) e o próximo golpe do jogador causa **Dano Crítico massivo** com feedback tátil no controle, mantendo a fluidez sem animação travada de riposte.
+  * *Modificador de Recipe (Irmão Forjador):* Upgrade de Escudo de Repulsão — ao acertar o parry, emite uma onda de choque que afasta e repele os *demais* inimigos ao redor, isolando o jogador no 1v1 contra o alvo atordoado.
+* **Ponto 5 (Representação Visual do Escudo):**
+  * Opção C: Postura do corpo com braço em guarda e broquel rústico desacoplado, conectado no `OffHandSocket` criado na Fase 4.
+* **Ponto 6 (Ground Slam & Reutilização Modular):**
+  * *Comando:* `Baixo + Pulo` no ar.
+  * *Física:* Trava horizontal no ar com velocidade vertical terminal de 850 a 1000 px/s.
+  * *Impacto no Solo:* Esmagamento com dano massivo no ponto de impacto + onda de choque radial.
+  * *Arquitetura Modular (`RadialShockwave`):* Criação de um componente genérico de repulsão radial compartilhado entre o *Ground Slam* (com dano de área) e o modificador de escudo do irmão (empurrão sem dano que preserva o alvo em *stun*), respeitando a **Regra 9**.
+* **Ponto 7 (Idle Breaks & Zero Input Lock):**
+  * *Gatilho:* 5.0 segundos de inatividade contínua no chão em `IdleState`.
+  * *Comportamento no Greybox:* Micro-ciclo de respiração sutil (oscilação suave de 2px no tronco) e ondulação da faixa na cabeça.
+  * *Regra de Ouro:* Cancelamento instantâneo no frame 0 por qualquer input, garantindo resposta imediata sem travar o jogador.

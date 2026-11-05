@@ -78,3 +78,8 @@ Todos os assets visuais (protagonista, inimigos, armas, cenários e NPCs) devem 
   godot --headless --check-only --path .
   ```
 * Nenhuma cena com dependência quebrada, script com erro de sintaxe ou referência nula pode ser passada para teste do PO.
+
+### Regra 9: Princípio da Reutilização & Modularidade Radical (DRY First)
+* **PROIBIDO duplicar código ou criar cópias quase idênticas de scripts** para comportamentos físicos, mecânicas de combate ou efeitos visuais similares.
+* **Componentização Obrigatória:** Sempre priorizar componentes desacoplados, nós reutilizáveis e funções parametrizadas (ex: `Hitbox`, `Hurtbox`, `CombatFeedback`, `RadialShockwave`).
+* **Regra de Ouro da Parametrização:** Se duas ou mais mecânicas compartilham a mesma essência física (como a onda de choque do *Ground Slam* e a repulsão de multidão do *Parry de Escudo*), deve ser criado **um único componente modular genérico** que aceita parâmetros de variação (raio, força, dano e alvos ignorados).
