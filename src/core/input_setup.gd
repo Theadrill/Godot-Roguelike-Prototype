@@ -20,17 +20,25 @@ func _ready() -> void:
 		_create_joy_button_event(JOY_BUTTON_DPAD_DOWN),
 		_create_joy_motion_event(JOY_AXIS_LEFT_Y, 1.0)
 	])
+	# Botão A (Xbox) / X (PlayStation) / Espaço: PULO
 	_register_action("jump", [
 		_create_key_event(KEY_SPACE),
 		_create_joy_button_event(JOY_BUTTON_A)
 	])
+	# Botão B (Xbox) / Círculo (PlayStation) / Shift: ROLAR
 	_register_action("roll", [
 		_create_key_event(KEY_SHIFT),
 		_create_joy_button_event(JOY_BUTTON_B)
 	])
-	_register_action("attack", [
+	# Botão X (Xbox) / Quadrado (PlayStation) / Botão Esquerdo Mouse: ARMA PRIMÁRIA
+	_register_action("attack_primary", [
 		_create_mouse_button_event(MOUSE_BUTTON_LEFT),
 		_create_joy_button_event(JOY_BUTTON_X)
+	])
+	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse: ARMA SECUNDÁRIA / ESCUDO
+	_register_action("attack_secondary", [
+		_create_mouse_button_event(MOUSE_BUTTON_RIGHT),
+		_create_joy_button_event(JOY_BUTTON_Y)
 	])
 
 func _register_action(action_name: StringName, default_events: Array[InputEvent]) -> void:

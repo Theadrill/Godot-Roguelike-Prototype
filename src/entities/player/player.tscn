@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/roll_state.gd" id="10_roll"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+resource_local_to_scene = true
 size = Vector2(16, 40)
 
 [node name="Player" type="CharacterBody2D"]
@@ -24,6 +25,11 @@ script = ExtResource("1_player")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_1")
+
+[node name="CeilingCheck" type="RayCast2D" parent="."]
+position = Vector2(0, -16)
+target_position = Vector2(0, -26)
+collision_mask = 1
 
 [node name="Visual" type="Node2D" parent="."]
 

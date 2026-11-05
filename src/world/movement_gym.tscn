@@ -89,12 +89,16 @@ polygon = PackedVector2Array(1040, 192, 1160, 192, 1160, 256, 1040, 256)
 
 [node name="Hint1" type="Label" parent="UI_Hints"]
 offset_left = 20.0
-offset_top = 220.0
-offset_right = 260.0
-offset_bottom = 260.0
+offset_top = 210.0
+offset_right = 320.0
+offset_bottom = 270.0
 theme_override_font_sizes/font_size = 10
-text = "A / D ou Analógico: Corrida
-ESPAÇO ou Botão A: Pulo"
+text = "CONTROLES:
+A / D ou Analógico: Mover
+A ou Espaço: Pulo
+B ou Shift: Rolar
+X ou Clique Esquerdo: Arma Primária
+Y ou Clique Direito: Arma Secundária / Escudo"
 
 [node name="Hint2" type="Label" parent="UI_Hints"]
 offset_left = 390.0
@@ -127,7 +131,7 @@ offset_top = 160.0
 offset_right = 1180.0
 offset_bottom = 190.0
 theme_override_font_sizes/font_size = 10
-text = "SHIFT ou Botão B: ROLAR
+text = "B ou Shift: ROLAR
 (Passa pelo vão de 32px)"
 
 [node name="Player" parent="." instance=ExtResource("1_player")]

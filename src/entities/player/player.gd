@@ -30,6 +30,7 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 9
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
+@onready var ceiling_check: RayCast2D = $CeilingCheck
 
 func _ready() -> void:
 	pass
