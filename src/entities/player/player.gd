@@ -60,6 +60,9 @@ func _ready() -> void:
 	if not weapon:
 		weapon = WeaponData.new()
 
+	if hitbox:
+		hitbox.attacker = self
+
 	if hurtbox:
 		hurtbox.hit_received.connect(_on_hit_received)
 
