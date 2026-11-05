@@ -67,6 +67,19 @@ func physics_update(delta: float) -> void:
 		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState
 		if attack_state:
 			attack_state.is_upward = true
+			attack_state.is_downward = false
+		state_machine.transition_to("attack")
+		return
+
+	# Check Downward Attack (Player is below soldier, e.g. on lower platform)
+	# dy is positive when player is below.
+	if anti_air_cooldown_timer <= 0.0 and dist <= 24.0 and dy >= 16.0 and dy <= 58.0:
+		anti_air_cooldown_timer = 0.9
+		soldier.velocity.x = 0.0
+		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState
+		if attack_state:
+			attack_state.is_upward = false
+			attack_state.is_downward = true
 		state_machine.transition_to("attack")
 		return
 
@@ -76,6 +89,7 @@ func physics_update(delta: float) -> void:
 		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState
 		if attack_state:
 			attack_state.is_upward = false
+			attack_state.is_downward = false
 		state_machine.transition_to("attack")
 		return
 

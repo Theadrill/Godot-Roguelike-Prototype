@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://soldier_enemy_01"]
+[gd_scene load_steps=14 format=3 uid="uid://soldier_enemy_01"]
 
 [ext_resource type="Script" path="res://src/entities/enemies/soldier/soldier.gd" id="1_soldier"]
 [ext_resource type="Script" path="res://src/combat/hitbox.gd" id="2_hitbox"]
@@ -17,6 +17,9 @@ size = Vector2(16, 40)
 size = Vector2(24, 28)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox_up"]
+size = Vector2(28, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox_down"]
 size = Vector2(28, 28)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
@@ -53,6 +56,11 @@ visible = false
 color = Color(1, 0.45, 0.25, 0.85)
 polygon = PackedVector2Array(-14, -40, -10, -62, 0, -66, 10, -62, 14, -40, 0, -48)
 
+[node name="SlashArcDown" type="Polygon2D" parent="Visual"]
+visible = false
+color = Color(1, 0.45, 0.25, 0.85)
+polygon = PackedVector2Array(-14, 0, -10, 22, 0, 26, 10, 22, 14, 0, 0, 8)
+
 [node name="TelegraphMark" type="Node2D" parent="Visual"]
 position = Vector2(0, -48)
 
@@ -86,6 +94,17 @@ script = ExtResource("2_hitbox")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/HitboxUp"]
 position = Vector2(0, -52)
 shape = SubResource("RectangleShape2D_hitbox_up")
+disabled = true
+
+[node name="HitboxDown" type="Area2D" parent="Visual"]
+collision_layer = 16
+collision_mask = 32
+monitoring = false
+script = ExtResource("2_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/HitboxDown"]
+position = Vector2(0, 12)
+shape = SubResource("RectangleShape2D_hitbox_down")
 disabled = true
 
 [node name="Hurtbox" type="Area2D" parent="."]

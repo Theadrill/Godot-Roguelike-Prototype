@@ -13,6 +13,8 @@ const COMBO_WINDOW: float = 0.32
 
 func enter() -> void:
 	player = character as Player
+	if player.hitbox and not player.hitbox.hit_landed.is_connected(_on_hit_landed):
+		player.hitbox.hit_landed.connect(_on_hit_landed)
 	
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
 	if elapsed_sec <= COMBO_WINDOW:
@@ -21,6 +23,13 @@ func enter() -> void:
 		current_step = 0
 		
 	_start_combo_step()
+
+func _on_hit_landed(_target: Hurtbox) -> void:
+	# Pogo bounce when hitting an enemy with midair downward slash
+	if not player.is_on_floor() and player.is_crouch_requested():
+		player.velocity.y = -270.0
+		player.can_double_jump = true
+		CombatFeedback.apply_hit_feedback(0.08, 0.4, 0.7, 0.12)
 
 func _start_combo_step() -> void:
 	combo_buffered = false
@@ -32,6 +41,7 @@ func _start_combo_step() -> void:
 		player.update_facing(input_dir)
 
 	var is_upward: bool = player.is_upward_attack_requested()
+	var is_downward: bool = player.is_crouch_requested()
 	
 	if is_upward:
 		player.velocity.x = 0.0
@@ -41,6 +51,22 @@ func _start_combo_step() -> void:
 			player.hitbox.get_node("CollisionShape2D").position = Vector2(0.0, -36.0)
 			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 32.0)
 		player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.15, -1.0).normalized()
+	elif is_downward:
+		if not player.is_on_floor():
+			# Midair downward slash (plunge / pogo)
+			player.velocity.x = 0.0
+			player.velocity.y = max(player.velocity.y, 80.0)
+			if player.hitbox.has_node("CollisionShape2D"):
+				player.hitbox.get_node("CollisionShape2D").position = Vector2(0.0, 6.0)
+				(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
+			player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.15, 1.0).normalized()
+		else:
+			# Ground low crouch sweep
+			player.velocity.x = player.facing_direction * 25.0
+			if player.hitbox.has_node("CollisionShape2D"):
+				player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -10.0)
+				(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 20.0)
+			player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.1).normalized()
 	else:
 		# Forward physical step
 		var forward_impulse: float = player.weapon.forward_impulses[current_step]
@@ -66,14 +92,14 @@ func _start_combo_step() -> void:
 	
 	player.hitbox.set_active(false)
 	player.hitbox.set_active(true)
-	player.set_slash_visual(true, current_step, is_upward)
+	player.set_slash_visual(true, current_step, is_upward, is_downward)
 
 func exit() -> void:
 	if player.hitbox.has_node("CollisionShape2D"):
 		player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -20.0)
 		(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
 	player.hitbox.set_active(false)
-	player.set_slash_visual(false, 0, false)
+	player.set_slash_visual(false, 0, false, false)
 	combo_buffered = false
 	last_attack_end_msec = Time.get_ticks_msec()
 

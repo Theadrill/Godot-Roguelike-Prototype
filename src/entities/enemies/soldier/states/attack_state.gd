@@ -5,7 +5,8 @@ enum AttackType {
 	NORMAL,
 	YELLOW,
 	RED,
-	UPWARD
+	UPWARD,
+	DOWNWARD
 }
 
 var soldier: Soldier
@@ -13,6 +14,7 @@ var attack_type: AttackType = AttackType.NORMAL
 var attack_phase: int = 0 # 0: Windup/Telegraph, 1: Active, 2: Recovery
 var phase_timer: float = 0.0
 var is_upward: bool = false
+var is_downward: bool = false
 
 # Predictable cycle to allow the player to test and learn all 3 signals:
 # Normal -> Normal -> Yellow -> Red -> Repeat
@@ -27,6 +29,11 @@ func enter() -> void:
 		soldier.is_hyper_armored = true
 		soldier.show_yellow_telegraph()
 		phase_timer = 0.26 # Snappy anti-air telegraph
+	elif is_downward:
+		attack_type = AttackType.DOWNWARD
+		soldier.is_hyper_armored = true
+		soldier.show_yellow_telegraph()
+		phase_timer = 0.26 # Snappy downward strike telegraph
 	else:
 		# Pick attack type from cycle
 		match cycle_index % 4:
@@ -62,21 +69,28 @@ func enter() -> void:
 	attack_phase = 0 # Windup
 	soldier.set_slash_active(false)
 	soldier.set_slash_up_active(false)
+	soldier.set_slash_down_active(false)
 	if soldier.hitbox:
 		soldier.hitbox.set_active(false)
 	if soldier.hitbox_up:
 		soldier.hitbox_up.set_active(false)
+	if soldier.hitbox_down:
+		soldier.hitbox_down.set_active(false)
 
 func exit() -> void:
 	soldier.is_hyper_armored = false
 	soldier.hide_telegraph()
 	soldier.set_slash_active(false)
 	soldier.set_slash_up_active(false)
+	soldier.set_slash_down_active(false)
 	if soldier.hitbox:
 		soldier.hitbox.set_active(false)
 	if soldier.hitbox_up:
 		soldier.hitbox_up.set_active(false)
+	if soldier.hitbox_down:
+		soldier.hitbox_down.set_active(false)
 	is_upward = false
+	is_downward = false
 
 func physics_update(delta: float) -> void:
 	# Gravity
@@ -110,6 +124,16 @@ func _advance_phase() -> void:
 					# Knock player upward and slightly in facing direction
 					soldier.hitbox_up.knockback_direction = Vector2(float(soldier.facing_direction) * 0.35, -1.0).normalized()
 					soldier.hitbox_up.set_active(true)
+			elif attack_type == AttackType.DOWNWARD:
+				phase_timer = 0.16
+				soldier.set_slash_down_active(true)
+				if soldier.hitbox_down:
+					soldier.hitbox_down.damage = soldier.normal_damage
+					soldier.hitbox_down.knockback_force = 240.0
+					soldier.hitbox_down.rumble_strong = 0.7
+					# Knock player downward / low away
+					soldier.hitbox_down.knockback_direction = Vector2(float(soldier.facing_direction) * 0.35, 1.0).normalized()
+					soldier.hitbox_down.set_active(true)
 			else:
 				phase_timer = 0.14
 				soldier.set_slash_active(true)
@@ -145,16 +169,20 @@ func _advance_phase() -> void:
 			phase_timer = 0.28
 			soldier.set_slash_active(false)
 			soldier.set_slash_up_active(false)
+			soldier.set_slash_down_active(false)
 			if soldier.hitbox:
 				soldier.hitbox.set_active(false)
 			if soldier.hitbox_up:
 				soldier.hitbox_up.set_active(false)
+			if soldier.hitbox_down:
+				soldier.hitbox_down.set_active(false)
 			# Hyper-armor expires on recovery
 			soldier.is_hyper_armored = false
 
 		2:
 			# Recovery complete: transition back to Chase or Patrol
 			is_upward = false
+			is_downward = false
 			if soldier.target_player and is_instance_valid(soldier.target_player):
 				state_machine.transition_to("chase")
 			else:

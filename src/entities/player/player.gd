@@ -82,7 +82,7 @@ func _ready() -> void:
 		flash_material.shader = shader
 		body_polygon.material = flash_material
 
-func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false) -> void:
+func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false, is_downward: bool = false) -> void:
 	if slash_effect:
 		slash_effect.visible = is_active
 		if is_active:
@@ -90,6 +90,15 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 				slash_effect.position = Vector2(0.0, -32.0)
 				slash_effect.rotation_degrees = -90.0
 				slash_effect.scale = Vector2(1.2, 1.2)
+			elif is_downward:
+				if not is_on_floor():
+					slash_effect.position = Vector2(0.0, 4.0)
+					slash_effect.rotation_degrees = 90.0
+					slash_effect.scale = Vector2(1.2, 1.2)
+				else:
+					slash_effect.position = Vector2(16.0, -8.0)
+					slash_effect.rotation_degrees = 35.0
+					slash_effect.scale = Vector2(1.1, 1.1)
 			else:
 				slash_effect.position = Vector2(0.0, -20.0)
 				slash_effect.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)

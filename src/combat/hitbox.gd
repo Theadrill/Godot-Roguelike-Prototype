@@ -11,6 +11,8 @@ extends Area2D
 @export var rumble_duration: float = 0.08
 @export var combo_step: int = 1
 
+signal hit_landed(hurtbox: Hurtbox)
+
 var attacker: Node2D
 var knockback_direction: Vector2 = Vector2.RIGHT
 var _hit_targets: Array[Hurtbox] = []
@@ -47,6 +49,7 @@ func _try_hit_area(area: Area2D) -> void:
 			return
 
 		_hit_targets.append(hurtbox)
+		hit_landed.emit(hurtbox)
 		hurtbox.take_hit(damage, knockback_direction * knockback_force, hitstop_duration, self)
 		CombatFeedback.apply_hit_feedback(hitstop_duration, rumble_weak, rumble_strong, rumble_duration)
 
