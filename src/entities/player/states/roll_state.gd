@@ -11,9 +11,9 @@ func enter() -> void:
 	roll_direction = float(player.facing_direction)
 
 	# Decide if player can phase through enemies:
-	# Only disable enemy collision if there is enough clearance behind the FURTHEST enemy in the pack!
-	# If the gap between the solid wall and the enemy boundary is smaller than the player width (16px),
-	# the player cannot phase through and is stopped at the outer enemy body.
+	# Only disable enemy collision if there is GENUINE standing room behind the enemies!
+	# The gap must be at least 26px (16px player width + 10px safe margin)
+	# so the player never lands embedded between an enemy and the wall surface.
 	var can_phase := _check_clearance_behind_enemy()
 	player.set_collision_mask_value(3, not can_phase)
 
@@ -93,14 +93,14 @@ func _check_clearance_behind_enemy() -> bool:
 		# No enemy between wall and player in that segment
 		return true
 
-	# enemy_hit.position is the exact surface boundary of the front enemy closest to the wall!
-	# The gap is the distance from the enemy's front surface to the wall surface.
+	# Surface boundary of the front enemy closest to the wall
 	var enemy_surface_x: float = enemy_hit.position.x
 	var gap_to_wall: float = absf(wall_x - enemy_surface_x)
 
-	# The player body is 16px wide. We require at least 18px of free space
-	# between the front enemy and the wall surface for the player to fit!
-	if gap_to_wall < 18.0:
+	# The player body is 16px wide.
+	# A gap smaller than 26px causes the player (center at 8px from wall) to collide and push into the wall!
+	# We require at least 26px of clean clearance for a safe landing.
+	if gap_to_wall < 26.0:
 		return false # Pinned against the wall! Stop roll at the outer enemy
 
 	return true
