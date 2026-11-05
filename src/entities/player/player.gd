@@ -44,6 +44,7 @@ var last_wall_jump_normal_x: float = 0.0
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
+var enemy_head_stuck_timer: float = 0.0
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -88,6 +89,10 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 
 func _physics_process(delta: float) -> void:
 	var on_enemy: bool = is_standing_on_enemy()
+	if on_enemy:
+		enemy_head_stuck_timer += delta
+	else:
+		enemy_head_stuck_timer = 0.0
 
 	# Decrement timers
 	if is_on_floor():
@@ -138,10 +143,6 @@ func is_standing_on_enemy() -> bool:
 		if collider is CombatDummy or collider is Soldier or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
 			if col.get_normal().y < -0.5:
 				return true
-	if is_on_floor():
-		var fl := get_floor_collider()
-		if fl is CombatDummy or fl is Soldier or (fl is CollisionObject2D and fl.get_collision_layer_value(3)):
-			return true
 	return false
 
 func _prevent_standing_on_enemies() -> void:
@@ -155,9 +156,35 @@ func _prevent_standing_on_enemies() -> void:
 				var push_dir: float = signf(global_position.x - collider.global_position.x)
 				if push_dir == 0.0:
 					push_dir = float(facing_direction)
-				# Slide off sideways forcefully immediately!
-				velocity.x = push_dir * 220.0
-				global_position.x += push_dir * 3.0
+
+				# Raycast wall awareness (Layer 1: Environment):
+				# Check if sliding in push_dir would hit a wall within 24px
+				var space := get_world_2d().direct_space_state
+				if space:
+					var ray_origin := global_position + Vector2(0.0, -10.0)
+					var ray_r := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(24.0, 0.0), 1)
+					ray_r.exclude = [get_rid()]
+					var wall_on_right: bool = not space.intersect_ray(ray_r).is_empty()
+
+					var ray_l := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(-24.0, 0.0), 1)
+					ray_l.exclude = [get_rid()]
+					var wall_on_left: bool = not space.intersect_ray(ray_l).is_empty()
+
+					# Steer away from walls!
+					if push_dir > 0.0 and wall_on_right and not wall_on_left:
+						push_dir = -1.0
+					elif push_dir < 0.0 and wall_on_left and not wall_on_right:
+						push_dir = 1.0
+
+				# Layer 3: Timeout Fail-safe (eject strongly if wedged for > 0.2s)
+				if enemy_head_stuck_timer > 0.2:
+					velocity.y = -120.0
+					velocity.x = push_dir * 260.0
+					global_position.x += push_dir * 4.0
+				else:
+					velocity.x = push_dir * 220.0
+					global_position.x += push_dir * 2.0
+
 				coyote_timer = 0.0
 				jump_buffer_timer = 0.0
 				return
