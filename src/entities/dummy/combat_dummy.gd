@@ -13,7 +13,6 @@ var flash_timer: float = 0.0
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var visual: Node2D = $Visual
 @onready var body_polygon: Polygon2D = $Visual/Body
-@onready var hit_label: Label = $HitLabel
 
 var flash_material: ShaderMaterial
 
@@ -55,13 +54,3 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	
 	# Visual juice: Squash & Stretch
 	visual.scale = Vector2(1.3, 0.75)
-	
-	# Update hit damage feedback
-	hit_label.text = "-%d" % int(damage)
-	hit_label.modulate = Color(1.0, 0.2, 0.2, 1.0)
-	
-	# Floating damage number fade animation
-	var tween := create_tween()
-	hit_label.position.y = -55.0
-	tween.tween_property(hit_label, "position:y", -75.0, 0.35)
-	tween.parallel().tween_property(hit_label, "modulate:a", 0.0, 0.35)

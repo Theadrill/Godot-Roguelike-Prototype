@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=14 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -11,7 +11,8 @@
 [ext_resource type="Script" path="res://src/entities/player/states/wall_jump_state.gd" id="9_wjump"]
 [ext_resource type="Script" path="res://src/entities/player/states/roll_state.gd" id="10_roll"]
 [ext_resource type="Script" path="res://src/entities/player/states/attack_state.gd" id="11_attack"]
-[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="12_hitbox"]
+[ext_resource type="Script" path="res://src/entities/player/states/crouch_state.gd" id="12_crouch"]
+[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="13_hitbox"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -22,7 +23,7 @@ size = Vector2(32, 28)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 1
+collision_mask = 5
 floor_constant_speed = true
 floor_snap_length = 8.0
 script = ExtResource("1_player")
@@ -58,7 +59,7 @@ polygon = PackedVector2Array(8, -16, 32, -4, 30, 4, 8, 14, 18, 0)
 collision_layer = 8
 collision_mask = 64
 monitoring = false
-script = ExtResource("12_hitbox")
+script = ExtResource("13_hitbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox"]
 position = Vector2(20, -20)
@@ -95,3 +96,6 @@ script = ExtResource("10_roll")
 
 [node name="Attack" type="Node" parent="StateMachine"]
 script = ExtResource("11_attack")
+
+[node name="Crouch" type="Node" parent="StateMachine"]
+script = ExtResource("12_crouch")

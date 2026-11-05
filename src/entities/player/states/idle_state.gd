@@ -24,6 +24,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("jump")
 		return
 
+	# Crouch check
+	if Input.is_action_pressed("down"):
+		state_machine.transition_to("crouch")
+		return
+
 	# Attack check
 	if Input.is_action_just_pressed("attack_primary"):
 		state_machine.transition_to("attack")

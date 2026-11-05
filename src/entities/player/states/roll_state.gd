@@ -10,6 +10,9 @@ func enter() -> void:
 	roll_timer = player.roll_duration
 	roll_direction = float(player.facing_direction)
 
+	# Disable collision with enemies (Layer 3) during roll
+	player.set_collision_mask_value(3, false)
+
 	# Shrink collision height to 20px so player passes under low ceilings (32px)
 	_set_crouched(true)
 
@@ -19,6 +22,8 @@ func enter() -> void:
 
 func exit() -> void:
 	_set_crouched(false)
+	# Re-enable collision with enemies (Layer 3) after roll
+	player.set_collision_mask_value(3, true)
 
 func physics_update(delta: float) -> void:
 	roll_timer -= delta
@@ -39,6 +44,9 @@ func physics_update(delta: float) -> void:
 
 		# Safe to stand up
 		if player.is_on_floor():
+			if Input.is_action_pressed("down"):
+				state_machine.transition_to("crouch")
+				return
 			var dir := Input.get_axis("move_left", "move_right")
 			if abs(dir) > 0.1:
 				state_machine.transition_to("run")
