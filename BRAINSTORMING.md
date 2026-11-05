@@ -7,30 +7,38 @@ Documento vivo de concepção do nosso protótipo de Roguevania 2D focado em com
 ## 🏛️ Pilar 1: Identidade, Nome e Premissa da História
 > *Status: Definido*
 
-### 1. Resumo da História (Traição & Vingança Temporal)
-Você era o mais leal comandante da guarda de elite de uma ordem tirânica. Durante um golpe orquestrado por seus próprios irmãos de armas, você foi apunhalado pelas costas, desarmado e jogado para morrer nas profundezas de uma cidadela fortaleza.
+### 1. Resumo da História (O Avatar da Morte & O Dia do Massacre)
+Você é um rapaz comum, um "zé ninguém" sem treino militar, vivendo com sua família nos arredores de um vilarejo pacífico. No dia fatídico, o exército de um General tirânico invade a região em busca de poder profano. Você testemunha impotente a execução brutal de sua mãe e de seu irmão caçula, antes de ser atravessado e morto logo em seguida.
 
-Com seu último suspiro, você conseguiu agarrar e cravar no peito o artefato temporal que seu carrasco empunhava: uma lâmina/ampulheta forjada com a essência do tempo (*A Lâmina Cronos*). 
+Nos confins do além, você é recebido pelo próprio **Deus da Morte**. A divindade revela que o General roubou um fragmento vital do domínio da Morte (uma relíquia capaz de distorcer tempo e mortalidade). Enfraquecido e incapaz de agir diretamente no plano mortal, o Deus da Morte faz um pacto com você: em troca de ser seu **Avatar** terreno para caçar o General e recuperar o que foi roubado, Ele concede a maldição/bênção de **reviver aquele mesmo dia indefinidamente**.
 
-O artefato fundiu-se com a sua alma, criando uma maldição de ódio eterno: **você não pode morrer definitivamente**. Cada vez que seu corpo sucumbe aos ferimentos, o artefato colapsa o tempo ao redor e puxa sua consciência de volta para o momento da traição nas masmorras. 
-
-Para alcançar os traidores no topo da fortaleza, você não tem armas próprias: você precisa **desarmar, roubar e dominar as armas temporais e equipamentos dos próprios guardas e comandantes que o traíram**, usando o poder do tempo roubado deles contra eles mesmos.
+Ao acordar de volta na cama, você descobre que sua mãe e seu irmão ainda estão vivos no refúgio seguro de sua casa, sem memórias da tragédia. **A porta da frente é o limiar**: no momento exato em que você gira a maçaneta e pisa para fora, o dia do massacre recomeça, os invasores atacam, e a sua caçada se inicia.
 
 ---
 
-### 2. Justificativas Narrativas para o Gameplay (O "Porquê" das Mecânicas)
-* **O Loop Roguelike (Morte & Retorno):** A arma temporal alojada em você rebobina o tempo no instante da sua morte física, jogando você de volta à cela de execução, mas mantendo suas memórias e o ódio acumulado.
-* **O Mapa Procedural:** A manipulação constante do fluxo temporal pela fortaleza distorce a arquitetura do castelo a cada rebobinada, fazendo com que as salas, corredores e patrulhas mudem de posição.
-* **Roubo de Armas dos Inimigos:** Como você começa de mãos vazias, a mecânica central de loot é o desarmamento: derrubar sentinelas, arrancar suas lanças, adagas ou arcos temporais e usar suas propriedades até que elas se desgastem ou você encontre uma arma mais mortal.
-* **Habilidades de Tempo:** A mecânica de esquiva e hitstop ganha peso narrativo: desacelerações de tempo momentâneas (bullet time em esquivas perfeitas), cortes rápidos e parry com eco temporal.
+### 2. A Casa da Família (O Hub Central / Progressão Metagame)
+Em vez de um hub vazio ou abstrato, a própria casa é o coração do jogo entre uma tentativa (run) e outra:
+* **A Mãe (A Grande Curandeira):**
+  * Responsável pelos upgrades permanentes de sobrevivência: aumento de vida máxima, frascos de cura (poções), resistência a sangramento/veneno e regeneração.
+* **O Irmão (O Jovem Promissor em Forja/Engenharia):**
+  * Responsável pelos desbloqueios de armamento e suporte: estuda fragmentos de armas roubadas que você traz das incursões, aprimora taxas de durabilidade, forja coldres para carregar mais armas secundárias e cria modificadores de utilidade (gancho, botas com pulo duplo).
+* **O Altar do Deus da Morte (Nos Fundos da Casa):**
+  * Permite investir as essências/almas colhidas dos inimigos para desbloquear poderes de Avatar (habilidade de desaceleração de tempo na esquiva, corte espectral e auras de medo).
 
 ---
 
-### 3. Sugestões de Título para o Jogo:
-1. **Stolen Seconds** (Segundos Roubados) — *Foco no roubo de armas e no tempo emprestado.*
-2. **Chrono Vendetta** — *Direto ao ponto: vingança rápida e temporal.*
-3. **Borrowed Edge** (Lâmina Emprestada) — *Ênfase no fato de que todas as armas são tomadas dos traidores.*
-4. **Hourglass Betrayed** — *Tom mais sombrio e épico.*
+### 3. Integração Perfeita com o Gameplay Roguelike
+* **O "Zé Ninguém" que Rouba Armas:** Como o protagonista não é um mestre espadachim e não tem armas próprias, o combate depende inteiramente do instinto de sobrevivência e do desarmamento. Você parte de mãos vazias (ou com uma ferramenta rudimentar) e **precisa roubar as lanças, arcos, espadas pesadas e armas temporais dos próprios invasores** que você derruba pelo caminho.
+* **O Loop & A Cidade em Ruínas:** A cada morte, a Morte puxa você de volta para a sua cama. Toda vez que você abre a porta de casa, o vilarejo e as fortificações inimigas se reorganizam caoticamente devido às ondas de choque temporal causadas pela relíquia roubada pelo General.
+
+---
+
+### 4. Sugestões de Título para o Jogo:
+1. **Death's Threshold** (O Limiar da Morte) — *Alude à porta de casa que divide a paz familiar do massacre.*
+2. **Borrowed Dawn** (Alvorecer Emprestado) — *Foco no mesmo dia revivido e no poder que não pertence a ele.*
+3. **Mortal Vessel** (Receptáculo Mortal) — *O Zé Ninguém servindo de avatar para uma divindade.*
+4. **Before the Gate** / **Threshold** (Limiar) — *Simples, marcante e direto.*
+5. **Reaper's Kin** (Parentela da Morte) — *Foco no laço familiar e no pacto com a morte.*
 
 ---
 
