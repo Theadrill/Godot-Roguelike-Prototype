@@ -1,0 +1,64 @@
+[gd_scene load_steps=12 format=3 uid="uid://player_scene_01"]
+
+[ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
+[ext_resource type="Script" path="res://src/entities/player/states/idle_state.gd" id="3_idle"]
+[ext_resource type="Script" path="res://src/entities/player/states/run_state.gd" id="4_run"]
+[ext_resource type="Script" path="res://src/entities/player/states/jump_state.gd" id="5_jump"]
+[ext_resource type="Script" path="res://src/entities/player/states/double_jump_state.gd" id="6_dbljump"]
+[ext_resource type="Script" path="res://src/entities/player/states/fall_state.gd" id="7_fall"]
+[ext_resource type="Script" path="res://src/entities/player/states/wall_slide_state.gd" id="8_wslide"]
+[ext_resource type="Script" path="res://src/entities/player/states/wall_jump_state.gd" id="9_wjump"]
+[ext_resource type="Script" path="res://src/entities/player/states/roll_state.gd" id="10_roll"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(16, 40)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
+floor_constant_speed = true
+floor_snap_length = 8.0
+script = ExtResource("1_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="BodyPlaceholder" type="Polygon2D" parent="Visual"]
+color = Color(0.18, 0.58, 0.58, 1)
+polygon = PackedVector2Array(-8, 0, 8, 0, 8, -40, -8, -40)
+
+[node name="HeadbandPlaceholder" type="Polygon2D" parent="Visual"]
+color = Color(0.9, 0.25, 0.25, 1)
+polygon = PackedVector2Array(-8, -32, 10, -32, 10, -36, -8, -36)
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_fsm")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("3_idle")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("4_run")
+
+[node name="Jump" type="Node" parent="StateMachine"]
+script = ExtResource("5_jump")
+
+[node name="DoubleJump" type="Node" parent="StateMachine"]
+script = ExtResource("6_dbljump")
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource("7_fall")
+
+[node name="WallSlide" type="Node" parent="StateMachine"]
+script = ExtResource("8_wslide")
+
+[node name="WallJump" type="Node" parent="StateMachine"]
+script = ExtResource("9_wjump")
+
+[node name="Roll" type="Node" parent="StateMachine"]
+script = ExtResource("10_roll")
