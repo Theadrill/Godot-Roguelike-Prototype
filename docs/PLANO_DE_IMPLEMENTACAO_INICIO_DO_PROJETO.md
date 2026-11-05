@@ -98,3 +98,23 @@ Dar vida ao inimigo de teste para disparar golpes com sinalização visual e val
 
 ### 3. Critério de Aceite
 * O combate 1v1 parece justo, fluido e punitivo, recompensando a iniciativa do jogador.
+
+---
+
+## 🛡️ Fase 4: O Sistema de Defesa, Resposta aos 3 Sinais & Movimentação Avançada
+
+### 1. Visão Geral do Escopo
+Completar o triângulo tático de combate corpo a corpo e as manobras físicas avançadas especificadas no **Pilar 2** do Game Design Document ([`docs/BRAINSTORMING.md`](BRAINSTORMING.md)):
+
+* **Sistema de Escudo / Defesa & Resposta aos 3 Sinais:**
+  * **Bloqueio Simples:** Absorção com *chip damage* (15%) contra ataques pesados/amarelos.
+  * **Parry Perfeito (Aparar):** Janela de precisão que anula 100% do dano e atordoa o inimigo (*stagger* para contra-ataque crítico).
+  * **Penalidade de Quebra de Guarda:** Golpes vermelhos (*Perilous*) quebram a guarda passiva e causam 100% de dano se o jogador não esquivar ou aparar com perfeição.
+* **Ground Slam (Esmagamento Descendente):**
+  * Descida vertical em alta velocidade acionada no ar gerando impacto de área no solo.
+* **Idle Breaks:**
+  * Variações sutis de animação/pose após 5 segundos de inatividade, canceláveis no primeiro frame por qualquer input.
+
+> [!NOTE]
+> **Status:** Aguardando discussão e alinhamento prévio de design com o PO.
+> As escolhas e regras detalhadas deste sistema (mapeamento de botões, janelas exatas em milissegundos para o *Parry*, consumo de estamina/recurso e comportamento do contra-ataque) serão discutidas com o PO antes de elaborar o passo a passo de engenharia e iniciar a implementação.
