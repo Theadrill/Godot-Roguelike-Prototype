@@ -65,59 +65,47 @@ func physics_update(delta: float) -> void:
 func _check_clearance_behind_enemy() -> bool:
 	var space_state := player.get_world_2d().direct_space_state
 	
-	# Ray 1: Find the closest solid wall in roll direction (up to 160px ahead)
+	# Minimum clearance needed between enemy and wall for player to land safely:
+	# 16px player width + 5px safety margin = 21px
+	const CLEARANCE: float = 21.0
+	
+	# Roll reach: how far this roll can travel + clearance needed at destination
+	var roll_dist: float = player.roll_speed * player.roll_duration
+	var max_reach: float = roll_dist + CLEARANCE
+	
+	# 1) Cast ray towards wall on Layer 1 (Environment) - ignores all enemies.
+	# If no wall is within reach of this roll, player CANNOT collide with the wall: roll freely!
 	var wall_query := PhysicsRayQueryParameters2D.create(
-		player.global_position + Vector2(0, -20),
-		player.global_position + Vector2(roll_direction * 160.0, -20),
+		player.global_position + Vector2(0, -10),
+		player.global_position + Vector2(roll_direction * max_reach, -10),
 		1 # Layer 1 (Environment)
 	)
 	var wall_hit := space_state.intersect_ray(wall_query)
-	
 	if wall_hit.is_empty():
-		# No wall ahead: open space, full phasing allowed
 		return true
 
 	var wall_x: float = wall_hit.position.x
 
-	# 1) Check if there is an enemy immediately adjacent/ahead of the player (within 40px)
-	var near_query := PhysicsRayQueryParameters2D.create(
-		player.global_position + Vector2(0, -20),
-		player.global_position + Vector2(roll_direction * 40.0, -20),
-		4 # Layer 3 (Enemies)
-	)
-	near_query.exclude = [player.get_rid()]
-	var near_hit := space_state.intersect_ray(near_query)
-	
-	if near_hit.is_empty():
-		# No enemy right in front of the player to collide with: roll freely
-		return true
-
-	# 2) An enemy is in front of us.
-	# Check clearance to the wall: where is the enemy closest to the wall?
+	# 2) A wall is within roll reach. Now cast back from the wall towards the player on Layer 3 (Enemies).
+	# This finds the enemy closest to the wall.
 	var enemy_query := PhysicsRayQueryParameters2D.create(
-		Vector2(wall_x + (roll_direction * 5.0), player.global_position.y - 20),
-		player.global_position + Vector2(0, -20),
+		Vector2(wall_x + (roll_direction * 4.0), player.global_position.y - 10),
+		player.global_position + Vector2(0, -10),
 		4 # Layer 3 (Enemies)
 	)
+	enemy_query.hit_from_inside = true
 	enemy_query.exclude = [player.get_rid()]
 	var enemy_hit := space_state.intersect_ray(enemy_query)
-	
+
+	# If no enemy between wall and player, roll freely towards the wall (wall physics stops player)
 	if enemy_hit.is_empty():
 		return true
 
-	var front_enemy_x: float = enemy_hit.position.x
-	var gap_to_wall: float = absf(wall_x - front_enemy_x)
-
-	# If the front-most enemy is pinned against the wall (gap < 21px = 16px body + 5px margin):
-	if gap_to_wall < 21.0:
-		# Check if the player has enough clearance between the near enemy and the pinned front enemy!
-		# If this is the SAME enemy (or the enemies are touching/packed with no 21px gap between them):
-		var near_enemy_x: float = near_hit.position.x
-		var space_between_enemies: float = absf(front_enemy_x - near_enemy_x)
-		
-		# If there's no room between the enemies (packed together), player cannot phase
-		if space_between_enemies < 21.0:
-			return false
+	# 3) Check space between the enemy and the wall:
+	# If gap < 21px, enemy is pinned against the wall with no room for player -> cannot phase!
+	var gap_to_wall: float = absf(wall_x - enemy_hit.position.x)
+	if gap_to_wall < CLEARANCE:
+		return false
 
 	return true
 
