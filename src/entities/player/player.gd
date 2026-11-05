@@ -19,6 +19,8 @@ var current_mana: float = 100.0
 @export_range(0.5, 3.0, 0.05) var fall_gravity_multiplier: float = 1.35                     # Snappy fall (Dead Cells)
 @export_range(0.0, 0.3, 0.01, "suffix:s") var coyote_duration: float = 0.12
 @export_range(0.0, 0.3, 0.01, "suffix:s") var jump_buffer_duration: float = 0.12
+@export_range(100.0, 600.0, 10.0, "suffix:px") var hard_landing_min_distance: float = 180.0
+@export_range(0.05, 0.5, 0.01, "suffix:s") var hard_landing_duration: float = 0.18
 
 @export_group("Wall Mechanics")
 @export_range(5.0, 100.0, 5.0, "suffix:px/s") var wall_slide_min_speed: float = 15.0
@@ -48,6 +50,7 @@ var facing_direction: int = 1
 var last_wall_jump_normal_x: float = 0.0
 var wall_fall_start_y: float = 0.0
 var is_wall_recovery_active: bool = false
+var fall_peak_y: float = 0.0
 
 # Soft body collision: movement resistance when pushing through enemies (Dead Cells style)
 @export_range(0.05, 0.9, 0.05) var enemy_overlap_speed_multiplier: float = 0.28

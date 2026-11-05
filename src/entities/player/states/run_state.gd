@@ -5,6 +5,7 @@ var player: Player
 
 func enter() -> void:
 	player = character as Player
+	player.fall_peak_y = player.global_position.y
 
 func physics_update(delta: float) -> void:
 	if not player.is_on_floor():

@@ -30,6 +30,7 @@ func enter() -> void:
 	player.velocity.x = wall_normal.x * h_force
 	player.velocity.y = player.wall_jump_vertical
 	player.update_facing(wall_normal.x)
+	player.fall_peak_y = player.global_position.y
 
 func physics_update(delta: float) -> void:
 	input_lock_timer -= delta
@@ -53,6 +54,7 @@ func physics_update(delta: float) -> void:
 			player.velocity.x = move_toward(player.velocity.x, direction * player.run_speed, (player.run_speed / player.acceleration_time) * delta)
 
 	player.velocity.y += player.gravity * delta
+	player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
 
 	if player.is_on_floor():
 		state_machine.transition_to("idle")

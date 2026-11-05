@@ -11,6 +11,7 @@ func enter() -> void:
 	player = character as Player
 	player.velocity.x = 0.0
 	idle_timer = 0.0
+	player.fall_peak_y = player.global_position.y
 
 func physics_update(delta: float) -> void:
 	# Fall check

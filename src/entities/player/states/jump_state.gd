@@ -8,6 +8,7 @@ func enter() -> void:
 	player.velocity.y = player.jump_velocity
 	player.last_wall_jump_normal_x = 0.0
 	player.is_wall_recovery_active = false
+	player.fall_peak_y = player.global_position.y
 
 func physics_update(delta: float) -> void:
 	# Wall jump check: kick off wall if pressing jump while touching wall in air
@@ -41,6 +42,7 @@ func physics_update(delta: float) -> void:
 		player.velocity.x = move_toward(player.velocity.x, 0.0, (player.run_speed / 0.15) * delta)
 
 	player.velocity.y += player.gravity * delta
+	player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
 
 	if player.velocity.y >= 0.0:
 		state_machine.transition_to("fall")

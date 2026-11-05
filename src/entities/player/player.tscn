@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=19 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://src/combat/hitbox.gd" id="13_hitbox"]
 [ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="14_hurtbox"]
 [ext_resource type="Script" path="res://src/entities/player/states/ledge_climb_state.gd" id="15_ledge_climb"]
+[ext_resource type="Script" path="res://src/entities/player/states/hard_landing_state.gd" id="16_hard_landing"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -143,3 +144,6 @@ script = ExtResource("12_crouch")
 
 [node name="LedgeClimb" type="Node" parent="StateMachine"]
 script = ExtResource("15_ledge_climb")
+
+[node name="HardLanding" type="Node" parent="StateMachine"]
+script = ExtResource("16_hard_landing")

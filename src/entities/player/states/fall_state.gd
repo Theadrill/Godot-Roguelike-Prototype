@@ -5,9 +5,21 @@ var player: Player
 
 func enter() -> void:
 	player = character as Player
+	if player.fall_peak_y == 0.0:
+		player.fall_peak_y = player.global_position.y
+	else:
+		player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
 
 func physics_update(delta: float) -> void:
 	if player.is_on_floor():
+		var total_fall: float = player.global_position.y - player.fall_peak_y
+		player.fall_peak_y = player.global_position.y
+
+		# Hard landing from high altitude (knees impact and quick recovery)
+		if total_fall >= player.hard_landing_min_distance:
+			state_machine.transition_to("hardlanding")
+			return
+
 		if player.jump_buffer_timer > 0.0:
 			player.jump_buffer_timer = 0.0
 			state_machine.transition_to("jump")
