@@ -1,7 +1,11 @@
 extends Node
 
-## Ensures default keyboard and gamepad actions are mapped cleanly.
+## Ensures default keyboard and gamepad actions are mapped cleanly,
+## and provides quick debug reload (R, F5, or Select/Back on gamepad).
+
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	_register_action("move_left", [
 		_create_key_event(KEY_A),
 		_create_key_event(KEY_LEFT),
@@ -40,6 +44,15 @@ func _ready() -> void:
 		_create_mouse_button_event(MOUSE_BUTTON_RIGHT),
 		_create_joy_button_event(JOY_BUTTON_Y)
 	])
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Quick reload inside game window: R, F5, or Select/Back on Gamepad
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		if event.physical_keycode == KEY_R or event.physical_keycode == KEY_F5:
+			get_tree().reload_current_scene()
+	elif event is InputEventJoypadButton and event.is_pressed():
+		if event.button_index == JOY_BUTTON_BACK: # Botão Select / View / Share
+			get_tree().reload_current_scene()
 
 func _register_action(action_name: StringName, default_events: Array[InputEvent]) -> void:
 	if not InputMap.has_action(action_name):
