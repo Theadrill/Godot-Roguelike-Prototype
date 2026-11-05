@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=17 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -25,9 +25,12 @@ size = Vector2(32, 28)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player_hurtbox"]
 size = Vector2(16, 40)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_overlap"]
+size = Vector2(14, 38)
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 1
 floor_constant_speed = true
 floor_snap_length = 8.0
 script = ExtResource("1_player")
@@ -40,6 +43,15 @@ shape = SubResource("RectangleShape2D_1")
 position = Vector2(0, -16)
 target_position = Vector2(0, -26)
 collision_mask = 1
+
+[node name="EnemyOverlapDetector" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyOverlapDetector"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_overlap")
 
 [node name="Hurtbox" type="Area2D" parent="."]
 collision_layer = 32

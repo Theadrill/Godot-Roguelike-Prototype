@@ -7,7 +7,7 @@ func enter() -> void:
 	player = character as Player
 
 func physics_update(delta: float) -> void:
-	if not player.is_on_floor() or player.is_sliding_off_enemy():
+	if not player.is_on_floor():
 		state_machine.transition_to("fall")
 		return
 
@@ -36,8 +36,12 @@ func physics_update(delta: float) -> void:
 		return
 
 	player.update_facing(direction)
-	# Fast acceleration (0.08s)
-	var target_speed := direction * player.run_speed
+	# Fast acceleration (0.08s) with soft body enemy resistance (Dead Cells style)
+	var speed_magnitude := player.run_speed
+	if player.is_pushing_against_enemy(direction):
+		speed_magnitude *= player.enemy_overlap_speed_multiplier
+
+	var target_speed := direction * speed_magnitude
 	var accel_rate := player.run_speed / player.acceleration_time
 	player.velocity.x = move_toward(player.velocity.x, target_speed, accel_rate * delta)
 

@@ -10,12 +10,6 @@ func enter() -> void:
 	roll_timer = player.roll_duration
 	roll_direction = float(player.facing_direction)
 
-	# Decide if player can phase through enemies:
-	# Only disable enemy collision if there is GENUINE standing room behind the enemies!
-	# Minimum gap: 16px (player width) + 5px margin = 21px
-	var can_phase := _check_clearance_behind_enemy()
-	player.set_collision_mask_value(3, not can_phase)
-
 	# Shrink collision height to 20px so player passes under low ceilings (32px)
 	_set_crouched(true)
 
@@ -29,8 +23,6 @@ func enter() -> void:
 
 func exit() -> void:
 	_set_crouched(false)
-	# Re-enable collision with enemies (Layer 3) after roll
-	player.set_collision_mask_value(3, true)
 	if player.hurtbox:
 		player.hurtbox.is_invulnerable = false
 
@@ -67,53 +59,6 @@ func physics_update(delta: float) -> void:
 				state_machine.transition_to("idle")
 		else:
 			state_machine.transition_to("fall")
-
-func _check_clearance_behind_enemy() -> bool:
-	var space_state := player.get_world_2d().direct_space_state
-	
-	# Minimum clearance needed between enemy and wall for player to land safely:
-	# 16px player width + 5px safety margin = 21px
-	const CLEARANCE: float = 21.0
-	
-	# Roll reach: how far this roll can travel + clearance needed at destination
-	var roll_dist: float = player.roll_speed * player.roll_duration
-	var max_reach: float = roll_dist + CLEARANCE
-	
-	# 1) Cast ray towards wall on Layer 1 (Environment) - ignores all enemies.
-	# If no wall is within reach of this roll, player CANNOT collide with the wall: roll freely!
-	var wall_query := PhysicsRayQueryParameters2D.create(
-		player.global_position + Vector2(0, -10),
-		player.global_position + Vector2(roll_direction * max_reach, -10),
-		1 # Layer 1 (Environment)
-	)
-	var wall_hit := space_state.intersect_ray(wall_query)
-	if wall_hit.is_empty():
-		return true
-
-	var wall_x: float = wall_hit.position.x
-
-	# 2) A wall is within roll reach. Now cast back from the wall towards the player on Layer 3 (Enemies).
-	# This finds the enemy closest to the wall.
-	var enemy_query := PhysicsRayQueryParameters2D.create(
-		Vector2(wall_x + (roll_direction * 4.0), player.global_position.y - 10),
-		player.global_position + Vector2(0, -10),
-		4 # Layer 3 (Enemies)
-	)
-	enemy_query.hit_from_inside = true
-	enemy_query.exclude = [player.get_rid()]
-	var enemy_hit := space_state.intersect_ray(enemy_query)
-
-	# If no enemy between wall and player, roll freely towards the wall (wall physics stops player)
-	if enemy_hit.is_empty():
-		return true
-
-	# 3) Check space between the enemy and the wall:
-	# If gap < 21px, enemy is pinned against the wall with no room for player -> cannot phase!
-	var gap_to_wall: float = absf(wall_x - enemy_hit.position.x)
-	if gap_to_wall < CLEARANCE:
-		return false
-
-	return true
 
 func _set_crouched(crouched: bool) -> void:
 	var rect := player.collision_shape.shape as RectangleShape2D

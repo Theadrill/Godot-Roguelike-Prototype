@@ -40,19 +40,20 @@ var facing_direction: int = 1
 # Wall jump tracking: prevents infinite climbing on the same single wall
 var last_wall_jump_normal_x: float = 0.0
 
+# Soft body collision: movement resistance when pushing through enemies (Dead Cells style)
+@export_range(0.05, 0.9, 0.05) var enemy_overlap_speed_multiplier: float = 0.28
+
 # Default gravity from project settings
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
-var enemy_head_stuck_timer: float = 0.0
-var slide_enemy_timer: float = 0.0
-var slide_enemy_dir: float = 0.0
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
 @onready var body_polygon: Polygon2D = $Visual/BodyPlaceholder
 @onready var ceiling_check: RayCast2D = $CeilingCheck
+@onready var enemy_overlap_detector: Area2D = $EnemyOverlapDetector
 @onready var hitbox: Hitbox = $Visual/Hitbox
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var slash_effect: Node2D = $Visual/SlashEffect
@@ -90,45 +91,19 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 				slash_effect.scale = Vector2(1.0 + combo_step * 0.2, 1.0 + combo_step * 0.2)
 
 func _physics_process(delta: float) -> void:
-	var on_enemy: bool = is_standing_on_enemy()
-	if on_enemy:
-		enemy_head_stuck_timer += delta
-		_prevent_standing_on_enemies()
-	else:
-		enemy_head_stuck_timer = 0.0
-
-	# Process uninterrupted slide off enemy head
-	if slide_enemy_timer > 0.0:
-		slide_enemy_timer -= delta
-		if is_on_floor() and not on_enemy:
-			slide_enemy_timer = 0.0
-		else:
-			velocity.x = slide_enemy_dir * 180.0
-
-	var sliding: bool = is_sliding_off_enemy()
-
 	# Decrement timers
 	if is_on_floor():
-		if sliding:
-			# Standing on or actively sliding off enemy head: prevent coyote time and buffers
-			coyote_timer = 0.0
-			jump_buffer_timer = 0.0
-		else:
-			coyote_timer = coyote_duration
-			can_double_jump = true
-			last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
+		coyote_timer = coyote_duration
+		can_double_jump = true
+		last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 
 	if jump_buffer_timer > 0.0:
 		jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
 
-	# Strictly prevent buffering or triggering jumps when touching or sliding off an enemy head
 	if Input.is_action_just_pressed("jump"):
-		if not sliding:
-			jump_buffer_timer = jump_buffer_duration
-		else:
-			jump_buffer_timer = 0.0
+		jump_buffer_timer = jump_buffer_duration
 
 	# Hit flash timer
 	if flash_timer > 0.0:
@@ -148,64 +123,21 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	# Tactile juice: Gamepad rumble & hitstop
 	CombatFeedback.apply_hit_feedback(hitstop, 0.4, 0.7, 0.12)
 
-func is_standing_on_enemy() -> bool:
-	for i in range(get_slide_collision_count()):
-		var col := get_slide_collision(i)
-		var collider := col.get_collider()
-		if collider is CombatDummy or collider is Soldier or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
-			if col.get_normal().y < -0.5:
+## Soft body collision detection:
+## Returns true if the player is actively pressing into an enemy body horizontally.
+func is_pushing_against_enemy(move_direction: float) -> bool:
+	if not enemy_overlap_detector or move_direction == 0.0:
+		return false
+	var overlapping := enemy_overlap_detector.get_overlapping_bodies()
+	for body in overlapping:
+		if body is CharacterBody2D and body != self:
+			var dx: float = body.global_position.x - global_position.x
+			# If moving towards the enemy center or currently deep inside them
+			if move_direction > 0.0 and dx > -8.0:
+				return true
+			elif move_direction < 0.0 and dx < 8.0:
 				return true
 	return false
-
-func is_sliding_off_enemy() -> bool:
-	return is_standing_on_enemy() or slide_enemy_timer > 0.0
-
-func _prevent_standing_on_enemies() -> void:
-	for i in range(get_slide_collision_count()):
-		var col := get_slide_collision(i)
-		var collider := col.get_collider()
-		# If the collider is on Enemy layer (Layer 3) or is an enemy/dummy
-		if collider is CombatDummy or collider is Soldier or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
-			# Normal pointing up means player landed directly on their top head/shoulders
-			if col.get_normal().y < -0.5:
-				# If not already locked in a slide, initiate locked committed slide
-				if slide_enemy_timer <= 0.0:
-					var push_dir: float = signf(global_position.x - collider.global_position.x)
-					if push_dir == 0.0:
-						push_dir = float(facing_direction)
-
-					# Raycast wall awareness (Layer 1: Environment):
-					# Check if sliding in push_dir would hit a wall within 24px
-					var space := get_world_2d().direct_space_state
-					if space:
-						var ray_origin := global_position + Vector2(0.0, -10.0)
-						var ray_r := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(24.0, 0.0), 1)
-						ray_r.exclude = [get_rid()]
-						var wall_on_right: bool = not space.intersect_ray(ray_r).is_empty()
-
-						var ray_l := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(-24.0, 0.0), 1)
-						ray_l.exclude = [get_rid()]
-						var wall_on_left: bool = not space.intersect_ray(ray_l).is_empty()
-
-						# Steer away from walls!
-						if push_dir > 0.0 and wall_on_right and not wall_on_left:
-							push_dir = -1.0
-						elif push_dir < 0.0 and wall_on_left and not wall_on_right:
-							push_dir = 1.0
-
-					slide_enemy_dir = push_dir
-					slide_enemy_timer = 0.22 # Uninterruptible committed slide window
-
-				# Apply slide physics velocity
-				velocity.x = slide_enemy_dir * 180.0
-
-				# Layer 3: Fail-safe hop if stuck on top for more than 0.25s
-				if enemy_head_stuck_timer > 0.25:
-					velocity.y = -100.0
-
-				coyote_timer = 0.0
-				jump_buffer_timer = 0.0
-				return
 
 func update_facing(direction: float) -> void:
 	if direction > 0.0:
@@ -213,4 +145,5 @@ func update_facing(direction: float) -> void:
 		visual.scale.x = 1.0
 	elif direction < 0.0:
 		facing_direction = -1
+		visual.scale.x = -1.0
 		visual.scale.x = -1.0
