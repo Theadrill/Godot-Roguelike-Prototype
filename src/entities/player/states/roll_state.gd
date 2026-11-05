@@ -12,8 +12,6 @@ func enter() -> void:
 
 	# Decide if player can phase through enemies:
 	# Only disable enemy collision if there is GENUINE standing room behind the enemies!
-	# The gap must be at least 26px (16px player width + 10px safe margin)
-	# so the player never lands embedded between an enemy and the wall surface.
 	var can_phase := _check_clearance_behind_enemy()
 	player.set_collision_mask_value(3, not can_phase)
 
@@ -80,9 +78,11 @@ func _check_clearance_behind_enemy() -> bool:
 
 	var wall_x: float = wall_hit.position.x
 
-	# Ray 2: Raycast backwards from the wall towards the player to find the enemy CLOSEST TO THE WALL!
+	# Ray 2: Raycast from the INSIDE/BEHIND the wall (wall_x + 5.0) back towards player!
+	# Because when enemy touches the wall, the contact point is on the wall boundary,
+	# so starting behind the wall surface guarantees we pierce through the enemy body and catch it!
 	var enemy_query := PhysicsRayQueryParameters2D.create(
-		Vector2(wall_x - (roll_direction * 1.0), player.global_position.y - 20),
+		Vector2(wall_x + (roll_direction * 5.0), player.global_position.y - 20),
 		player.global_position + Vector2(0, -20),
 		4 # Layer 3 (Enemies = bitmask 4)
 	)
@@ -93,13 +93,11 @@ func _check_clearance_behind_enemy() -> bool:
 		# No enemy between wall and player in that segment
 		return true
 
-	# Surface boundary of the front enemy closest to the wall
+	# Surface boundary of the enemy facing the wall
 	var enemy_surface_x: float = enemy_hit.position.x
 	var gap_to_wall: float = absf(wall_x - enemy_surface_x)
 
-	# The player body is 16px wide.
-	# A gap smaller than 26px causes the player (center at 8px from wall) to collide and push into the wall!
-	# We require at least 26px of clean clearance for a safe landing.
+	# If the gap between enemy and wall is less than 26px (or negative/zero), they are pinned!
 	if gap_to_wall < 26.0:
 		return false # Pinned against the wall! Stop roll at the outer enemy
 
