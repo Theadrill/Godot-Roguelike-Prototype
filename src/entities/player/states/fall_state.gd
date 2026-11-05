@@ -45,21 +45,29 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("attack")
 		return
 
+	# Horizontal air control (update facing first)
+	var direction := Input.get_axis("move_left", "move_right")
+	if direction != 0.0:
+		player.update_facing(direction)
+
+	# Ledge climb check: mantle onto platform corner if touching or moving towards ledge
+	var is_holding_away: bool = (direction != 0.0 and signf(direction) != float(player.facing_direction))
+	if not is_holding_away:
+		if player.check_ledge():
+			state_machine.transition_to("ledgeclimb")
+			return
+
 	if player.is_on_wall_only():
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:
-			var move_dir: float = Input.get_axis("move_left", "move_right")
-			if signf(move_dir) == -wall_norm:
+			if signf(direction) == -wall_norm:
 				state_machine.transition_to("wallslide")
 				return
 
 	# Gravity (100% normal, falls cleanly through enemies)
 	player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
 
-	# Horizontal air control
-	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:
-		player.update_facing(direction)
 		player.velocity.x = move_toward(
 			player.velocity.x,
 			direction * player.run_speed,

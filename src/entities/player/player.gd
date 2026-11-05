@@ -21,7 +21,10 @@ var current_mana: float = 100.0
 @export_range(0.0, 0.3, 0.01, "suffix:s") var jump_buffer_duration: float = 0.12
 
 @export_group("Wall Mechanics")
-@export_range(10.0, 300.0, 5.0, "suffix:px/s") var wall_slide_speed: float = 70.0
+@export_range(5.0, 100.0, 5.0, "suffix:px/s") var wall_slide_min_speed: float = 15.0
+@export_range(50.0, 500.0, 10.0, "suffix:px/s") var wall_slide_max_speed: float = 220.0
+@export_range(0.0, 3.0, 0.1, "suffix:s") var wall_cling_hold_time: float = 0.5
+@export_range(0.2, 4.0, 0.1, "suffix:s") var wall_slide_accel_duration: float = 1.2
 @export_range(50.0, 500.0, 10.0, "suffix:px/s") var wall_jump_horizontal: float = 240.0
 @export_range(-600.0, -100.0, 10.0, "suffix:px/s") var wall_jump_vertical: float = -330.0
 
@@ -53,6 +56,7 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 9
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
 var attack_cooldown_timer: float = 0.0
+var ledge_target_position: Vector2 = Vector2.ZERO
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -63,6 +67,7 @@ var attack_cooldown_timer: float = 0.0
 @onready var hitbox: Hitbox = $Visual/Hitbox
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var slash_effect: Node2D = $Visual/SlashEffect
+@onready var ledge_climb_visual: Node2D = $Visual/LedgeClimbPlaceholder
 
 func _ready() -> void:
 	current_health = max_health
@@ -215,4 +220,74 @@ func is_upward_attack_requested() -> bool:
 	if absf(joy_x) > 0.35:
 		return absf(joy_y) > absf(joy_x) * 0.85
 
+	return true
+
+func set_ledge_climb_visual(active: bool) -> void:
+	if ledge_climb_visual:
+		ledge_climb_visual.visible = active
+	if body_polygon:
+		body_polygon.visible = not active
+	if visual.has_node("HeadbandPlaceholder"):
+		(visual.get_node("HeadbandPlaceholder") as CanvasItem).visible = not active
+
+## Ledge detection (Dead Cells mantle check):
+## Detects when the player's chest hits a wall edge while open air is above their head,
+## finding the exact floor surface to vault onto.
+func check_ledge() -> bool:
+	if is_crouch_requested():
+		return false
+
+	var space := get_world_2d().direct_space_state
+	if not space:
+		return false
+
+	var face: float = float(facing_direction)
+	var ray_dist: float = 18.0
+
+	# 1. Chest Ray: Must hit solid environment on Layer 1
+	var chest_from := global_position + Vector2(0.0, -22.0)
+	var chest_to := chest_from + Vector2(face * ray_dist, 0.0)
+	var chest_query := PhysicsRayQueryParameters2D.create(chest_from, chest_to, 1)
+	chest_query.exclude = [get_rid()]
+	var chest_hit := space.intersect_ray(chest_query)
+	if chest_hit.is_empty():
+		return false
+
+	var wall_x: float = chest_hit.position.x
+
+	# 2. Head Ray: Must have clear space (no wall above the platform edge)
+	var head_from := global_position + Vector2(0.0, -42.0)
+	var head_to := head_from + Vector2(face * (ray_dist + 4.0), 0.0)
+	var head_query := PhysicsRayQueryParameters2D.create(head_from, head_to, 1)
+	head_query.exclude = [get_rid()]
+	var head_hit := space.intersect_ray(head_query)
+	if not head_hit.is_empty():
+		return false
+
+	# 3. Floor Surface Finder: Cast downwards onto the platform top
+	var floor_from := Vector2(wall_x + (face * 6.0), global_position.y - 50.0)
+	var floor_to := Vector2(wall_x + (face * 6.0), global_position.y - 14.0)
+	var floor_query := PhysicsRayQueryParameters2D.create(floor_from, floor_to, 1)
+	floor_query.exclude = [get_rid()]
+	var floor_hit := space.intersect_ray(floor_query)
+	if floor_hit.is_empty():
+		return false
+
+	# Surface must be a walkable floor (normal pointing upwards)
+	if floor_hit.normal.y > -0.7:
+		return false
+
+	var floor_y: float = floor_hit.position.y
+
+	# 4. Headroom Clearance: Verify 40px standing room above the floor surface
+	var target_x: float = wall_x + (face * 10.0)
+	var ceiling_from := Vector2(target_x, floor_y - 2.0)
+	var ceiling_to := Vector2(target_x, floor_y - 42.0)
+	var ceiling_query := PhysicsRayQueryParameters2D.create(ceiling_from, ceiling_to, 1)
+	ceiling_query.exclude = [get_rid()]
+	var ceiling_hit := space.intersect_ray(ceiling_query)
+	if not ceiling_hit.is_empty():
+		return false
+
+	ledge_target_position = Vector2(target_x, floor_y)
 	return true

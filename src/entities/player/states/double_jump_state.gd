@@ -20,6 +20,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("roll")
 		return
 
+	# Attack in air
+	if Input.is_action_just_pressed("attack_primary") and player.can_attack():
+		state_machine.transition_to("attack")
+		return
+
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:
 		player.update_facing(direction)
@@ -32,5 +37,12 @@ func physics_update(delta: float) -> void:
 	if player.velocity.y >= 0.0:
 		state_machine.transition_to("fall")
 		return
+
+	# Ledge climb check while rising towards corner
+	var is_holding_away: bool = (direction != 0.0 and signf(direction) != float(player.facing_direction))
+	if not is_holding_away:
+		if player.check_ledge():
+			state_machine.transition_to("ledgeclimb")
+			return
 
 	player.move_and_slide()

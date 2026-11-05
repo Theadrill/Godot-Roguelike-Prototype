@@ -45,4 +45,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("fall")
 		return
 
+	# Ledge climb check while rising towards corner
+	var is_holding_away: bool = (direction != 0.0 and signf(direction) != float(player.facing_direction))
+	if not is_holding_away:
+		if player.check_ledge():
+			state_machine.transition_to("ledgeclimb")
+			return
+
 	player.move_and_slide()

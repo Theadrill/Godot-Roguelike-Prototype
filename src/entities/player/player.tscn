@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=18 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/crouch_state.gd" id="12_crouch"]
 [ext_resource type="Script" path="res://src/combat/hitbox.gd" id="13_hitbox"]
 [ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="14_hurtbox"]
+[ext_resource type="Script" path="res://src/entities/player/states/ledge_climb_state.gd" id="15_ledge_climb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -72,6 +73,21 @@ polygon = PackedVector2Array(-8, 0, 8, 0, 8, -40, -8, -40)
 color = Color(0.9, 0.25, 0.25, 1)
 polygon = PackedVector2Array(-8, -32, 10, -32, 10, -36, -8, -36)
 
+[node name="LedgeClimbPlaceholder" type="Node2D" parent="Visual"]
+visible = false
+
+[node name="Body" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder"]
+color = Color(0.18, 0.58, 0.58, 1)
+polygon = PackedVector2Array(-8, 0, 8, 0, 8, -20, -8, -20)
+
+[node name="Headband" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder"]
+color = Color(0.9, 0.25, 0.25, 1)
+polygon = PackedVector2Array(-8, -14, 10, -14, 10, -18, -8, -18)
+
+[node name="Hands" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder"]
+color = Color(0.95, 0.75, 0.5, 1)
+polygon = PackedVector2Array(6, -20, 12, -20, 12, -16, 6, -16)
+
 [node name="SlashEffect" type="Node2D" parent="Visual"]
 visible = false
 position = Vector2(0, -20)
@@ -124,3 +140,6 @@ script = ExtResource("11_attack")
 
 [node name="Crouch" type="Node" parent="StateMachine"]
 script = ExtResource("12_crouch")
+
+[node name="LedgeClimb" type="Node" parent="StateMachine"]
+script = ExtResource("15_ledge_climb")
