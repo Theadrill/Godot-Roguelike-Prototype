@@ -101,14 +101,24 @@ Dar vida ao inimigo de teste para disparar golpes com sinalização visual e val
 
 ---
 
-## 🎒 Fase 4: Arquitetura Modular de Equipamentos & Sockets (`MainHand` / `OffHand`)
+## 🎒 Fase 4: Arquitetura Modular de Equipamentos & Sockets (`MainHand` / `OffHand` / `BackSockets`)
 
-### 1. Visão Geral do Escopo (Resumo)
-Criar a fundação estrutural de encaixe de itens desacoplados do sprite base do protagonista (*Socketed Paperdoll*), evitando que equipamentos sejam desenhados colados ao corpo:
-* **Pontos de Ancoragem (Sockets):**
-  * `MainHandSocket`: Ponto de encaixe relativo para a arma principal (Espada, Adaga, Martelo, Cajado).
-  * `OffHandSocket`: Ponto de encaixe relativo para o escudo/arma secundária.
-* **Placeholders Geométricos Simples:** Sprites monocromáticos minimalistas representando cada categoria de equipamento para validar os pivôs de empunhadura e a troca dinâmica de nós.
+### 1. Visão Geral do Escopo
+Criar a fundação estrutural de encaixe de itens desacoplados do sprite base do protagonista (*Socketed Paperdoll*), evitando que equipamentos sejam desenhados colados ao corpo e conferindo uma silhueta clássica de "arsenal nas costas":
+* **Pontos de Ancoragem (4 Sockets no `$Visual` do Protagonista):**
+  * `MainHandSocket` (`Marker2D` em `Vector2(6, -20)`): Empunhadura ativa da arma principal (Espada, Adaga, Martelo, Cajado).
+  * `OffHandSocket` (`Marker2D` em `Vector2(4, -18)`): Empunhadura ativa para o escudo em guarda/parry ou secundária em ação.
+  * `BackSocketShield` (`Marker2D` em `Vector2(-4, -22)`, rotacionado `-12°`): Ponto de repouso no dorso para o escudo, mantendo-o visível nas costas durante Idle, Run, Jump e Attack.
+  * `BackSocketWeapon` (`Marker2D` em `Vector2(-2, -22)`, rotacionado `+25°`): Ponto de repouso no dorso para a arma secundária em ângulo cruzado ("X" nas costas).
+* **Ciclo de Estados dos Equipamentos:**
+  * *Estado Repouso:* Escudo nas costas (`BackSocketShield`), arma secundária nas costas (`BackSocketWeapon`).
+  * *Estado Ativo:* Ao defender (`LB`/`L1`), o escudo transiciona para a mão esquerda (`OffHandSocket`). Ao atacar/usar arma principal, ela é empunhada no `MainHandSocket`.
+* **Placeholders Geométricos Simples (Regra 4 - Zero Arte Final):** Sprites/Polígonos monocromáticos minimalistas para validação de pivôs:
+  * Espada (lâmina 20x4px)
+  * Adaga (lâmina 10x3px)
+  * Martelo (cabo 24x3px + cabeça pesada 10x12px)
+  * Cajado (haste 30x3px + gema ciano)
+  * Escudo/Broquel (placa rústica 12x18px)
 * **Diretriz de Armaduras:** Deixada para a fase final do projeto para definição madura entre trajes completos (*Dead Cells Skins*) vs. peças/sockets simplificados.
 
 > [!NOTE]
