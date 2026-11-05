@@ -5,29 +5,32 @@ Documento vivo de concepção do nosso protótipo de Roguevania 2D focado em com
 ---
 
 ## 🏛️ Pilar 1: Identidade, Nome e Premissa da História
-> *Status: Em discussão / Definição inicial*
+> *Status: Definido*
 
-### O papel da história neste protótipo:
-A história deve ser **ultra-enxuta (1 a 2 parágrafos)**, servindo apenas como pretexto forte e coeso para:
-1. Justificar por que o protagonista morre e sempre acorda de volta no ponto de partida (o loop do roguelike).
-2. Justificar por que as masmorras mudam de formato a cada run (geração procedural).
-3. Justificar o combate violento e rápido contra aberrações/guardiões.
+### 1. Resumo da História (Traição & Vingança Temporal)
+Você era o mais leal comandante da guarda de elite de uma ordem tirânica. Durante um golpe orquestrado por seus próprios irmãos de armas, você foi apunhalado pelas costas, desarmado e jogado para morrer nas profundezas de uma cidadela fortaleza.
+
+Com seu último suspiro, você conseguiu agarrar e cravar no peito o artefato temporal que seu carrasco empunhava: uma lâmina/ampulheta forjada com a essência do tempo (*A Lâmina Cronos*). 
+
+O artefato fundiu-se com a sua alma, criando uma maldição de ódio eterno: **você não pode morrer definitivamente**. Cada vez que seu corpo sucumbe aos ferimentos, o artefato colapsa o tempo ao redor e puxa sua consciência de volta para o momento da traição nas masmorras. 
+
+Para alcançar os traidores no topo da fortaleza, você não tem armas próprias: você precisa **desarmar, roubar e dominar as armas temporais e equipamentos dos próprios guardas e comandantes que o traíram**, usando o poder do tempo roubado deles contra eles mesmos.
 
 ---
 
-### Opções de Premissa e Título em Avaliação:
+### 2. Justificativas Narrativas para o Gameplay (O "Porquê" das Mecânicas)
+* **O Loop Roguelike (Morte & Retorno):** A arma temporal alojada em você rebobina o tempo no instante da sua morte física, jogando você de volta à cela de execução, mas mantendo suas memórias e o ódio acumulado.
+* **O Mapa Procedural:** A manipulação constante do fluxo temporal pela fortaleza distorce a arquitetura do castelo a cada rebobinada, fazendo com que as salas, corredores e patrulhas mudem de posição.
+* **Roubo de Armas dos Inimigos:** Como você começa de mãos vazias, a mecânica central de loot é o desarmamento: derrubar sentinelas, arrancar suas lanças, adagas ou arcos temporais e usar suas propriedades até que elas se desgastem ou você encontre uma arma mais mortal.
+* **Habilidades de Tempo:** A mecânica de esquiva e hitstop ganha peso narrativo: desacelerações de tempo momentâneas (bullet time em esquivas perfeitas), cortes rápidos e parry com eco temporal.
 
-#### Opção A: *Hollow Spark* (A Faísca Oca)
-* **Conceito**: Um autômato/golem descartado em um abismo industrial de mineração esquecido. Uma faísca de energia mística instável habita sua armadura enferrujada. Quando seu corpo é destruído, a faísca é expelida e reencarna em uma nova carcaça de sucata no fundo do poço, precisando escalar de volta à superfície cortando sentinelas corrompidas.
-* **Vibe**: Máquinas enferrujadas, faíscas metálicas, masmorras de pedra e vapor.
+---
 
-#### Opção B: *BloodBound* / *Vessel* (O Receptáculo de Sangue)
-* **Conceito**: O clássico pacto sombrio (estilo Dead Cells / Bloodborne). Uma gota de essência viva imortal que possui corpos de prisioneiros executados jogados nas catacumbas de um castelo imperial em quarentena. Cada morte dissolve a carne, e a essência parasita o próximo condenado na pilha para tentar romper os portões da fortaleza.
-* **Vibe**: Gótico, espadas pesadas, sangue sombrio, alquimia e castelos em ruínas.
-
-#### Opção C: *Rift Carver* (O Tecelão da Fenda)
-* **Conceito**: Um guerreiro aprisionado em um colapso temporal em uma cidadela flutuante. Cada vez que ele é derrotado, a realidade fratura e o tempo retrocede para o início da fenda, reorganizando os cômodos da fortaleza de forma distorcida. Ele empunha lâminas capazes de cortar a própria matéria cósmica para tentar quebrar o ciclo.
-* **Vibe**: Neon retrô / dark fantasy, fendas cósmicas, movimentação com cortes ultra-velozes.
+### 3. Sugestões de Título para o Jogo:
+1. **Stolen Seconds** (Segundos Roubados) — *Foco no roubo de armas e no tempo emprestado.*
+2. **Chrono Vendetta** — *Direto ao ponto: vingança rápida e temporal.*
+3. **Borrowed Edge** (Lâmina Emprestada) — *Ênfase no fato de que todas as armas são tomadas dos traidores.*
+4. **Hourglass Betrayed** — *Tom mais sombrio e épico.*
 
 ---
 
