@@ -14,6 +14,10 @@ func _ready() -> void:
 			states[child.name.to_lower()] = child
 			child.state_machine = self
 
+	# Ensure owner character is fully ready before entering initial state
+	if owner and not owner.is_node_ready():
+		await owner.ready
+
 	if initial_state:
 		current_state = initial_state
 		current_state.enter()

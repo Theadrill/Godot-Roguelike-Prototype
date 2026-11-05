@@ -100,19 +100,29 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 
 ## Telegraph visual helpers
 func show_yellow_telegraph() -> void:
-	telegraph_mark.visible = true
-	yellow_mark.visible = true
-	red_mark.visible = false
+	if telegraph_mark:
+		telegraph_mark.visible = true
+	if yellow_mark:
+		yellow_mark.visible = true
+	if red_mark:
+		red_mark.visible = false
 
 func show_red_telegraph() -> void:
-	telegraph_mark.visible = true
-	yellow_mark.visible = false
-	red_mark.visible = true
+	if telegraph_mark:
+		telegraph_mark.visible = true
+	if yellow_mark:
+		yellow_mark.visible = false
+	if red_mark:
+		red_mark.visible = true
 
 func hide_telegraph() -> void:
-	telegraph_mark.visible = false
-	yellow_mark.visible = false
-	red_mark.visible = false
+	if telegraph_mark:
+		telegraph_mark.visible = false
+	if yellow_mark:
+		yellow_mark.visible = false
+	if red_mark:
+		red_mark.visible = false
 
 func set_slash_active(active: bool) -> void:
-	slash_arc.visible = active
+	if slash_arc:
+		slash_arc.visible = active
