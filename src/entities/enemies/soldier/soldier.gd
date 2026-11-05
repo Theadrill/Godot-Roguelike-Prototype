@@ -23,6 +23,12 @@ extends CharacterBody2D
 @export_range(15.0, 200.0, 1.0) var perilous_damage: float = 32.0
 @export_range(0.1, 1.5, 0.05, "suffix:s") var telegraph_duration: float = 0.45
 
+@export_group("Respawn (Test Mode)")
+@export var respawn_enabled: bool = false
+@export_range(1.0, 30.0, 0.5, "suffix:s") var respawn_delay: float = 5.0
+
+var spawn_position: Vector2 = Vector2.ZERO
+
 var current_health: float = 60.0
 var facing_direction: int = 1
 var target_player: Player = null
@@ -42,6 +48,7 @@ var flash_material: ShaderMaterial
 @onready var state_machine: StateMachine = $StateMachine
 
 func _ready() -> void:
+	spawn_position = global_position
 	current_health = max_health
 	if initial_facing != 0:
 		update_facing(float(initial_facing))

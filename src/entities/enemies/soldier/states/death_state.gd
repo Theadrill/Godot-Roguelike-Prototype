@@ -2,10 +2,14 @@ class_name SoldierDeathState
 extends State
 
 var soldier: Soldier
-var death_timer: float = 0.5
+var fade_timer: float = 0.5
+var respawn_timer: float = 0.0
+var is_waiting_respawn: bool = false
 
 func enter() -> void:
 	soldier = character as Soldier
+	fade_timer = 0.5
+	is_waiting_respawn = false
 	soldier.is_hyper_armored = false
 	soldier.hide_telegraph()
 	soldier.set_slash_active(false)
@@ -17,7 +21,7 @@ func enter() -> void:
 	if soldier.hurtbox.has_node("CollisionShape2D"):
 		soldier.hurtbox.get_node("CollisionShape2D").set_deferred("disabled", true)
 
-	# Death visual: flatten slightly
+	# Death visual: flatten slightly & tint dark red
 	soldier.visual.scale.y = 0.4
 	soldier.visual.modulate = Color(0.6, 0.2, 0.2, 0.8)
 
@@ -31,8 +35,42 @@ func physics_update(delta: float) -> void:
 	soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
 	soldier.move_and_slide()
 
-	death_timer -= delta
-	soldier.visual.modulate.a = max(0.0, death_timer / 0.5)
+	if not is_waiting_respawn:
+		fade_timer -= delta
+		soldier.visual.modulate.a = max(0.0, fade_timer / 0.5)
 
-	if death_timer <= 0.0:
-		soldier.queue_free()
+		if fade_timer <= 0.0:
+			if soldier.respawn_enabled:
+				# Hide and start respawn timer
+				is_waiting_respawn = true
+				respawn_timer = soldier.respawn_delay
+				soldier.visual.visible = false
+				soldier.velocity = Vector2.ZERO
+			else:
+				# Permanent death in standard gameplay
+				soldier.queue_free()
+	else:
+		# Waiting for respawn delay (e.g. 5 seconds)
+		respawn_timer -= delta
+		if respawn_timer <= 0.0:
+			_respawn_soldier()
+
+func _respawn_soldier() -> void:
+	soldier.global_position = soldier.spawn_position
+	soldier.current_health = soldier.max_health
+	soldier.target_player = null
+	soldier.velocity = Vector2.ZERO
+
+	# Reset visuals
+	soldier.visual.visible = true
+	soldier.visual.modulate = Color.WHITE
+	soldier.visual.scale = Vector2.ONE
+	soldier.update_facing(float(soldier.initial_facing))
+
+	# Re-enable collision and hurtbox
+	soldier.set_collision_layer_value(3, true)
+	soldier.hurtbox.is_invulnerable = false
+	if soldier.hurtbox.has_node("CollisionShape2D"):
+		soldier.hurtbox.get_node("CollisionShape2D").set_deferred("disabled", false)
+
+	state_machine.transition_to("patrol")

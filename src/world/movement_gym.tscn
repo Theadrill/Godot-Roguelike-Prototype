@@ -206,11 +206,13 @@ position = Vector2(310, 288)
 
 [node name="SoldierLeft" parent="." instance=ExtResource("3_soldier")]
 position = Vector2(-150, 288)
+respawn_enabled = true
 
 [node name="Soldier" parent="." instance=ExtResource("3_soldier")]
 position = Vector2(35, 288)
 stationary = true
 initial_facing = 1
+respawn_enabled = true
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(-60, 288)
