@@ -12,8 +12,8 @@ func enter() -> void:
 
 	# Decide if player can phase through enemies:
 	# Only disable enemy collision if there is enough clearance behind the FURTHEST enemy in the pack!
-	# If ANY enemy in the group is backed against a wall with space < 18px (player body width),
-	# player cannot phase through and is stopped at the outer enemy body.
+	# If the gap between the solid wall and the enemy boundary is smaller than the player width (16px),
+	# the player cannot phase through and is stopped at the outer enemy body.
 	var can_phase := _check_clearance_behind_enemy()
 	player.set_collision_mask_value(3, not can_phase)
 
@@ -66,10 +66,10 @@ func physics_update(delta: float) -> void:
 func _check_clearance_behind_enemy() -> bool:
 	var space_state := player.get_world_2d().direct_space_state
 	
-	# Ray 1: Find where the solid wall is in roll direction (up to 120px ahead)
+	# Ray 1: Find where the solid wall is in roll direction (up to 160px ahead)
 	var wall_query := PhysicsRayQueryParameters2D.create(
 		player.global_position + Vector2(0, -20),
-		player.global_position + Vector2(roll_direction * 120.0, -20),
+		player.global_position + Vector2(roll_direction * 160.0, -20),
 		1 # Layer 1 (Environment)
 	)
 	var wall_hit := space_state.intersect_ray(wall_query)
@@ -81,7 +81,6 @@ func _check_clearance_behind_enemy() -> bool:
 	var wall_x: float = wall_hit.position.x
 
 	# Ray 2: Raycast backwards from the wall towards the player to find the enemy CLOSEST TO THE WALL!
-	# This detects the enemy at the very front of the pile (closest to the wall/step).
 	var enemy_query := PhysicsRayQueryParameters2D.create(
 		Vector2(wall_x - (roll_direction * 1.0), player.global_position.y - 20),
 		player.global_position + Vector2(0, -20),
@@ -94,16 +93,15 @@ func _check_clearance_behind_enemy() -> bool:
 		# No enemy between wall and player in that segment
 		return true
 
-	var enemy_collider = enemy_hit.collider
-	var enemy_x: float = enemy_hit.position.x
-	if enemy_collider is Node2D:
-		enemy_x = enemy_collider.global_position.x
+	# enemy_hit.position is the exact surface boundary of the front enemy closest to the wall!
+	# The gap is the distance from the enemy's front surface to the wall surface.
+	var enemy_surface_x: float = enemy_hit.position.x
+	var gap_to_wall: float = absf(wall_x - enemy_surface_x)
 
-	# Gap between wall and the enemy closest to that wall:
-	var gap_to_wall: float = absf(wall_x - enemy_x)
-	# Player width is 16px (requires at least 18px clearance to stand cleanly without entering wall)
+	# The player body is 16px wide. We require at least 18px of free space
+	# between the front enemy and the wall surface for the player to fit!
 	if gap_to_wall < 18.0:
-		return false # The front enemy is pinned against the wall! Stop roll at the outer enemy
+		return false # Pinned against the wall! Stop roll at the outer enemy
 
 	return true
 
