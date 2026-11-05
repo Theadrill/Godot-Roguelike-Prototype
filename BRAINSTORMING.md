@@ -17,10 +17,16 @@ No além, você é recebido pelo próprio **Deus da Morte**. A divindade revela 
 
 Ao acordar de volta na cama, sua família está viva e salva dentro de casa. **A porta da frente é o limiar**: no segundo em que você gira a maçaneta e pisa para fora, o dia do massacre recomeça, a invasão explode e sua missão tem início.
 
-### 2. A Casa da Família (O Hub Central & Metaprogressão)
-* **A Mãe (Curandeira):** Upgrades de sobrevivência permanente (vida máxima, capacidade e potência dos frascos de poção, resistências a efeitos).
-* **O Irmão (Ferreiro/Inventor):** Criação e aprimoramento de armamentos, coldres de armas secundárias e itens de mobilidade (ex: botas de pulo duplo).
-* **O Altar do Deus da Morte (Fundos da Casa):** Desbloqueio e aprimoramento dos poderes do Avatar (desaceleração de tempo na esquiva perfeita, cortes espectrais, auras).
+### 2. A Casa da Família (O Santuário Limiar & Metaprogressão)
+* **A Lore do Refúgio Temporal:** A casa está protegida do fluxo do espaço/tempo como parte da barganha com a Morte. Enquanto o mundo exterior reseta no dia do massacre, **o interior da casa retém memórias, conhecimentos e construções**. É uma bolha segura que só é rompida quando a maçaneta da porta da frente é girada para o exterior. Novos sobreviventes e NPCs resgatados nas runs encontram refúgio na casa, expandindo os serviços disponíveis.
+* **O Irmão (O Aspirante a Forjador):**
+  * Sendo apenas um jovem aprendiz, tudo o que ele cria inicialmente é rústico e improvisado (lâminas brutas, tacos reforçados, arcos simples).
+  * **Projetos de Equipamentos (Blueprints):** Inimigos de elite e baús dropam diagramas e plantas militares. Ao entregá-los ao irmão, ele estuda a engenharia dos invasores e aprende a forjar novas bases de armas e equipamentos utilitários permanentemente.
+* **A Mãe (A Curandeira):**
+  * Desenvolve elixires e poções que concedem vantagens antes de cruzar a porta.
+  * **Ingredientes e Reagentes:** A mãe precisa de ervas medicinais, extratos de monstros e minerais raros (coletados nas fases ou dropados por inimigos) para preparar frascos com mais cargas, curas instantâneas, antídotos ou elixires de dano.
+* **O Toque da Morte (Encantamento & Ascensão):**
+  * As armas rústicas do irmão ganham vida pelo poder do Deus da Morte. Conforme o jogador progride e sobe de nível (investindo a essência/almas colhidas), a Morte aplica encantamentos cada vez maiores: bônus de dano, sangramento, velocidade de ataque, afixos místicos e habilidades ativas especiais.
 
 ---
 
@@ -47,15 +53,15 @@ A movimentação deve dar ao jogador sensação de agilidade máxima e controle 
 
 ---
 
-### 2. Sistema de Armas & Combate
-Como o protagonista é um rapaz comum que se torna Avatar da Morte, temos três opções de fluxo de combate para escolhermos:
-
-* **Opção A (Puro Desarmamento / Roubo)**:
-  * Começa desarmado ou com uma ferramenta rústica; precisa nocautear ou aparar guardas para arrancar suas lanças, espadas e bestas do chão.
-* **Opção B (Armas Espectrais Conjuradas)**:
-  * Como Avatar da Morte, você materializa armas etéreas (foice de sombras, adagas espectrais, chicotes de almas).
-* **Opção C (Híbrida - O Irmão Forja + A Morte Encanta)**:
-  * O irmão forja armas na bancada de casa antes de você sair pela porta (ex: espada curta, lança militar, arco), e nas runs você encontra bênçãos da Morte que conferem afixos, veneno, sangramento ou cortes temporais a elas.
+### 2. Ponto 1: Origem e Sistema das Armas (DEFINIDO)
+* **Base Rústica (O Irmão Aspirante):**
+  * O jogador inicia cada run escolhendo entre as armas base criadas pelo irmão (espada de treino, adaga de caça, lança tosca).
+  * Novas armas e ferramentas são desbloqueadas permanentemente ao encontrar **Projetos de Equipamentos (Blueprints)** nas fases e entregá-los ao irmão no Santuário.
+* **O Toque Mágico da Morte (Encantamentos & Sinergias):**
+  * As armas físicas do irmão servem de catalisador para o poder da Morte.
+  * Conforme você progride e sobe de nível (investindo essências na Morte), desbloqueiam-se graus mais altos de encantamentos: dano necrótico, sangramento, velocidade aumentada e habilidades ativas.
+* **Preparações da Mãe (Frascos & Elixires):**
+  * Coleta de ervas e reagentes nas fases para a mãe preparar poções de cura com mais cargas e elixires de bônus temporários antes de abrir a porta.
 
 ---
 
