@@ -11,6 +11,7 @@ extends CharacterBody2D
 
 @export_group("Perception & Range")
 @export_range(50.0, 400.0, 10.0, "suffix:px") var spot_range: float = 160.0
+@export_range(20.0, 200.0, 5.0, "suffix:px") var back_awareness_range: float = 64.0
 @export_range(10.0, 100.0, 2.0, "suffix:px") var attack_range: float = 26.0
 @export_range(100.0, 600.0, 10.0, "suffix:px") var lose_target_range: float = 240.0
 
@@ -87,6 +88,22 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	if current_health <= 0.0:
 		state_machine.transition_to("death")
 		return
+
+	# Acquire target on hit if null
+	if not target_player or not is_instance_valid(target_player):
+		var tree := get_tree()
+		if tree:
+			var players := tree.get_nodes_in_group("player")
+			if players.size() > 0 and players[0] is Player:
+				target_player = players[0] as Player
+			elif tree.current_scene:
+				var p := tree.current_scene.find_child("Player", true, false)
+				if p is Player:
+					target_player = p as Player
+
+	# Turn towards attacker based on knockback direction
+	if absf(knockback.x) > 1.0:
+		update_facing(-signf(knockback.x))
 
 	# Zero Hyper-Armor Rule:
 	# If NOT hyper-armored, take full knockback and get interrupted into HurtState!

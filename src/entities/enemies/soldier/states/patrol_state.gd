@@ -75,12 +75,12 @@ func _can_see_player() -> bool:
 	var to_player: Vector2 = player.global_position - soldier.global_position
 	var dist: float = to_player.length()
 
-	if dist > soldier.spot_range:
-		return false
-
-	# Must be roughly in facing direction unless very close (within 32px)
 	var dir_to_player: float = signf(to_player.x)
-	if dist > 32.0 and dir_to_player != float(soldier.facing_direction):
+	var is_in_front: bool = (dir_to_player == float(soldier.facing_direction))
+
+	# Range check: spot_range if in front, back_awareness_range if behind
+	var max_allowed_dist: float = soldier.spot_range if is_in_front else soldier.back_awareness_range
+	if dist > max_allowed_dist:
 		return false
 
 	# Check direct line of sight (no walls blocking)
@@ -93,6 +93,9 @@ func _can_see_player() -> bool:
 	var hit := space.intersect_ray(query)
 	if hit.is_empty():
 		soldier.target_player = player
+		# If sensed from behind, turn to face player immediately
+		if not is_in_front and dir_to_player != 0.0:
+			soldier.update_facing(dir_to_player)
 		return true
 
 	return false
