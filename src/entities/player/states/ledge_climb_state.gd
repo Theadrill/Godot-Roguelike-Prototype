@@ -22,6 +22,7 @@ func enter() -> void:
 	# Reset jump allowances
 	player.can_double_jump = true
 	player.coyote_timer = player.coyote_duration
+	player.is_wall_recovery_active = false
 
 func exit() -> void:
 	player.set_ledge_climb_visual(false)

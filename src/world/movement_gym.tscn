@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://c7kd6yq7h3dum" path="res://src/entities/dummy/combat_dummy.tscn" id="2_dummy"]
 [ext_resource type="PackedScene" path="res://src/entities/enemies/soldier/soldier.tscn" id="3_soldier"]
-[ext_resource type="Script" path="res://src/core/game_camera.gd" id="4_camera"]
+[ext_resource type="Script" uid="uid://bu341gq4akkm8" path="res://src/core/game_camera.gd" id="4_camera"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(700, 72)
@@ -205,28 +205,28 @@ position = Vector2(260, 288)
 [node name="CombatDummy2" parent="." unique_id=1953690624 instance=ExtResource("2_dummy")]
 position = Vector2(310, 288)
 
-[node name="SoldierLeft" parent="." instance=ExtResource("3_soldier")]
+[node name="SoldierLeft" parent="." unique_id=1169979355 instance=ExtResource("3_soldier")]
 position = Vector2(-150, 288)
 respawn_enabled = true
 
-[node name="Soldier" parent="." instance=ExtResource("3_soldier")]
+[node name="Soldier" parent="." unique_id=53509489 instance=ExtResource("3_soldier")]
 position = Vector2(35, 288)
 stationary = true
-initial_facing = 1
 respawn_enabled = true
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(-60, 288)
 run_speed = 150.0
+wall_recovery_gravity_multiplier = 0.5
 roll_speed = 170.0
 roll_duration = 0.24
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1090956029]
 position = Vector2(0, -20)
-script = ExtResource("4_camera")
 position_smoothing_enabled = true
 position_smoothing_speed = 7.0
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 drag_left_margin = 0.1
 drag_right_margin = 0.1
+script = ExtResource("4_camera")

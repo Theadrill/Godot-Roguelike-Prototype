@@ -25,7 +25,11 @@ var current_mana: float = 100.0
 @export_range(50.0, 500.0, 10.0, "suffix:px/s") var wall_slide_max_speed: float = 220.0
 @export_range(0.0, 3.0, 0.1, "suffix:s") var wall_cling_hold_time: float = 0.5
 @export_range(0.2, 4.0, 0.1, "suffix:s") var wall_slide_accel_duration: float = 1.2
+@export_range(0.5, 6.0, 0.1, "suffix:s") var wall_grip_duration: float = 2.2
+@export_range(16.0, 200.0, 4.0, "suffix:px") var wall_regrab_min_fall_distance: float = 48.0
+@export_range(0.5, 1.0, 0.05) var wall_recovery_gravity_multiplier: float = 0.85
 @export_range(50.0, 500.0, 10.0, "suffix:px/s") var wall_jump_horizontal: float = 240.0
+@export_range(0.1, 0.8, 0.05) var wall_jump_inward_ratio: float = 0.38
 @export_range(-600.0, -100.0, 10.0, "suffix:px/s") var wall_jump_vertical: float = -330.0
 
 @export_group("Roll & Dodge")
@@ -42,6 +46,8 @@ var facing_direction: int = 1
 
 # Wall jump tracking: prevents infinite climbing on the same single wall
 var last_wall_jump_normal_x: float = 0.0
+var wall_fall_start_y: float = 0.0
+var is_wall_recovery_active: bool = false
 
 # Soft body collision: movement resistance when pushing through enemies (Dead Cells style)
 @export_range(0.05, 0.9, 0.05) var enemy_overlap_speed_multiplier: float = 0.28
@@ -116,6 +122,7 @@ func _physics_process(delta: float) -> void:
 		coyote_timer = coyote_duration
 		can_double_jump = true
 		last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
+		is_wall_recovery_active = false
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 

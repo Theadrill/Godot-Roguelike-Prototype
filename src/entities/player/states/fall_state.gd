@@ -24,13 +24,24 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("jump")
 		return
 
-	# Wall jump check while touching wall (takes precedence over double jump)
+	# Wall jump OR Wall Regrab Recovery check while touching wall
 	if (Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0) and player.is_on_wall_only():
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:
+			# Different wall: kick off with normal wall jump
 			player.jump_buffer_timer = 0.0
 			state_machine.transition_to("walljump")
 			return
+		else:
+			# Same wall recovery: after falling >= min fall distance, pressing jump regrabs the wall!
+			var move_h: float = Input.get_axis("move_left", "move_right")
+			var steering_away: bool = (move_h != 0.0 and signf(move_h) == wall_norm)
+			var fall_dist: float = player.global_position.y - player.wall_fall_start_y
+			if not steering_away and fall_dist >= player.wall_regrab_min_fall_distance:
+				player.jump_buffer_timer = 0.0
+				player.last_wall_jump_normal_x = 0.0
+				state_machine.transition_to("wallslide")
+				return
 
 	if Input.is_action_just_pressed("jump") and player.can_double_jump:
 		state_machine.transition_to("doublejump")
@@ -64,8 +75,11 @@ func physics_update(delta: float) -> void:
 				state_machine.transition_to("wallslide")
 				return
 
-	# Gravity (100% normal, falls cleanly through enemies)
-	player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
+	# Gravity: 100% normal, or slightly floatier (e.g. 0.85x) during wall recovery to give reaction window!
+	var grav_mult: float = player.fall_gravity_multiplier
+	if player.is_wall_recovery_active:
+		grav_mult *= player.wall_recovery_gravity_multiplier
+	player.velocity.y += (player.gravity * grav_mult) * delta
 
 	if direction != 0.0:
 		player.velocity.x = move_toward(

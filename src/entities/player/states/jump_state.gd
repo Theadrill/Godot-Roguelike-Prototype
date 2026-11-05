@@ -7,6 +7,7 @@ func enter() -> void:
 	player = character as Player
 	player.velocity.y = player.jump_velocity
 	player.last_wall_jump_normal_x = 0.0
+	player.is_wall_recovery_active = false
 
 func physics_update(delta: float) -> void:
 	# Wall jump check: kick off wall if pressing jump while touching wall in air
