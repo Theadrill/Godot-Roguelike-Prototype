@@ -7,20 +7,29 @@ var player: Player
 var current_step: int = 0
 var attack_timer: float = 0.0
 var combo_buffered: bool = false
-var combo_reset_timer: float = 0.0
+var last_attack_end_msec: int = -10000
 
 const COMBO_WINDOW: float = 0.32
 
 func enter() -> void:
 	player = character as Player
 	
-	if combo_reset_timer > 0.0:
+	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
+	if elapsed_sec <= COMBO_WINDOW:
 		current_step = (current_step + 1) % player.weapon.combo_durations.size()
 	else:
 		current_step = 0
 		
+	_start_combo_step()
+
+func _start_combo_step() -> void:
 	combo_buffered = false
 	attack_timer = player.weapon.combo_durations[current_step]
+	
+	# Allow reversing direction between combo steps if steering
+	var input_dir: float = Input.get_axis("move_left", "move_right")
+	if abs(input_dir) > 0.1:
+		player.update_facing(input_dir)
 	
 	# Forward physical step
 	var forward_impulse: float = player.weapon.forward_impulses[current_step]
@@ -40,19 +49,15 @@ func enter() -> void:
 	player.hitbox.rumble_strong = player.weapon.rumble_strong
 	player.hitbox.rumble_duration = player.weapon.rumble_duration
 	
+	player.hitbox.set_active(false)
 	player.hitbox.set_active(true)
 	player.set_slash_visual(true, current_step)
 
 func exit() -> void:
 	player.hitbox.set_active(false)
 	player.set_slash_visual(false, 0)
-	combo_reset_timer = COMBO_WINDOW
-
-func update(delta: float) -> void:
-	if combo_reset_timer > 0.0:
-		combo_reset_timer -= delta
-		if combo_reset_timer <= 0.0:
-			current_step = 0
+	combo_buffered = false
+	last_attack_end_msec = Time.get_ticks_msec()
 
 func physics_update(delta: float) -> void:
 	attack_timer -= delta
@@ -78,11 +83,11 @@ func physics_update(delta: float) -> void:
 	if attack_timer <= 0.0:
 		player.hitbox.set_active(false)
 		player.set_slash_visual(false, 0)
+		last_attack_end_msec = Time.get_ticks_msec()
 		
 		if combo_buffered:
-			combo_reset_timer = COMBO_WINDOW
-			# Re-enter attack state for next combo step
-			state_machine.transition_to("attack")
+			current_step = (current_step + 1) % player.weapon.combo_durations.size()
+			_start_combo_step()
 			return
 			
 		if player.is_on_floor():

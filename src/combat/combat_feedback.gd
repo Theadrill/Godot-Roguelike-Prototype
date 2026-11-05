@@ -8,13 +8,12 @@ func trigger_hitstop(duration: float = 0.05) -> void:
 	if _is_frozen:
 		return
 	_is_frozen = true
-	var prev_scale: float = Engine.time_scale
 	Engine.time_scale = 0.0
 	
 	# Timer that ignores Engine.time_scale (process_always = true)
 	await get_tree().create_timer(duration, true, false, true).timeout
 	
-	Engine.time_scale = prev_scale
+	Engine.time_scale = 1.0
 	_is_frozen = false
 
 func trigger_rumble(weak: float = 0.4, strong: float = 0.7, duration: float = 0.08) -> void:
