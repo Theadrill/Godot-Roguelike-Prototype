@@ -112,19 +112,37 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 				if p is Player:
 					target_player = p as Player
 
-	# Turn towards attacker based on knockback direction
-	if absf(knockback.x) > 1.0:
-		update_facing(-signf(knockback.x))
+	# Check attack interruption rules:
+	# - Normal Attack: Interrupted by ANY hit (Hit 1, 2, or 3).
+	# - Yellow Attack: ONLY interrupted by the 3rd hit (finisher) of player combo.
+	# - Red Attack: CANNOT be interrupted under any circumstance.
+	# - Damage is ALWAYS taken in all instances. Knockback & stunlock only occur when interrupted.
+	var incoming_hitbox: Hitbox = hurtbox.last_hitbox
+	var combo_step: int = incoming_hitbox.combo_step if incoming_hitbox else 1
+	var is_finisher: bool = (combo_step >= 3)
 
-	# Zero Hyper-Armor Rule:
-	# If NOT hyper-armored, take full knockback and get interrupted into HurtState!
-	if not is_hyper_armored:
+	var can_interrupt: bool = false
+
+	if state_machine.current_state is SoldierAttackState:
+		var attack_state: SoldierAttackState = state_machine.current_state as SoldierAttackState
+		match attack_state.attack_type:
+			SoldierAttackState.AttackType.NORMAL:
+				can_interrupt = true
+			SoldierAttackState.AttackType.YELLOW:
+				can_interrupt = is_finisher
+			SoldierAttackState.AttackType.RED:
+				can_interrupt = false
+	else:
+		can_interrupt = true
+
+	if can_interrupt:
 		velocity = knockback
+		if absf(knockback.x) > 1.0:
+			update_facing(-signf(knockback.x))
 		state_machine.transition_to("hurt")
 	else:
-		# Hyper-Armor Active:
-		# Still take damage and flash, but resist interruption with minimal pushback
-		velocity = knockback * 0.2
+		# Uninterrupted: takes damage and flashes, but resists knockback completely
+		velocity = Vector2.ZERO
 
 ## Telegraph visual helpers
 func show_yellow_telegraph() -> void:

@@ -81,20 +81,31 @@ func set_slash_visual(is_active: bool, combo_step: int = 0) -> void:
 			slash_effect.scale = Vector2(1.0 + combo_step * 0.2, 1.0 + combo_step * 0.2)
 
 func _physics_process(delta: float) -> void:
+	var on_enemy: bool = is_standing_on_enemy()
+
 	# Decrement timers
 	if is_on_floor():
-		coyote_timer = coyote_duration
-		can_double_jump = true
-		last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
-		_prevent_standing_on_enemies()
+		if on_enemy:
+			# Standing on enemy head: prevent coyote time and slide off
+			coyote_timer = 0.0
+			jump_buffer_timer = 0.0
+			_prevent_standing_on_enemies()
+		else:
+			coyote_timer = coyote_duration
+			can_double_jump = true
+			last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 
 	if jump_buffer_timer > 0.0:
 		jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
 
+	# Strictly prevent buffering or triggering jumps when touching an enemy head
 	if Input.is_action_just_pressed("jump"):
-		jump_buffer_timer = jump_buffer_duration
+		if not on_enemy:
+			jump_buffer_timer = jump_buffer_duration
+		else:
+			jump_buffer_timer = 0.0
 
 	# Hit flash timer
 	if flash_timer > 0.0:
@@ -114,20 +125,35 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	# Tactile juice: Gamepad rumble & hitstop
 	CombatFeedback.apply_hit_feedback(hitstop, 0.4, 0.7, 0.12)
 
+func is_standing_on_enemy() -> bool:
+	for i in range(get_slide_collision_count()):
+		var col := get_slide_collision(i)
+		var collider := col.get_collider()
+		if collider is CombatDummy or collider is Soldier or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
+			if col.get_normal().y < -0.5:
+				return true
+	if is_on_floor():
+		var fl := get_floor_collider()
+		if fl is CombatDummy or fl is Soldier or (fl is CollisionObject2D and fl.get_collision_layer_value(3)):
+			return true
+	return false
+
 func _prevent_standing_on_enemies() -> void:
 	for i in range(get_slide_collision_count()):
 		var col := get_slide_collision(i)
 		var collider := col.get_collider()
 		# If the collider is on Enemy layer (Layer 3) or is an enemy/dummy
-		if collider is CombatDummy or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
+		if collider is CombatDummy or collider is Soldier or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
 			# Normal pointing up means player landed directly on their top head/shoulders
 			if col.get_normal().y < -0.5:
 				var push_dir: float = signf(global_position.x - collider.global_position.x)
 				if push_dir == 0.0:
 					push_dir = float(facing_direction)
-				# Slide off sideways immediately!
-				velocity.x = push_dir * 180.0
-				global_position.x += push_dir * 2.0
+				# Slide off sideways forcefully immediately!
+				velocity.x = push_dir * 220.0
+				global_position.x += push_dir * 3.0
+				coyote_timer = 0.0
+				jump_buffer_timer = 0.0
 				return
 
 func update_facing(direction: float) -> void:

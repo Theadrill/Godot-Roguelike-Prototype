@@ -9,6 +9,7 @@ extends Area2D
 @export var rumble_weak: float = 0.4
 @export var rumble_strong: float = 0.7
 @export var rumble_duration: float = 0.08
+@export var combo_step: int = 1
 
 var attacker: Node2D
 var knockback_direction: Vector2 = Vector2.RIGHT
@@ -46,7 +47,7 @@ func _try_hit_area(area: Area2D) -> void:
 			return
 
 		_hit_targets.append(hurtbox)
-		hurtbox.take_hit(damage, knockback_direction * knockback_force, hitstop_duration)
+		hurtbox.take_hit(damage, knockback_direction * knockback_force, hitstop_duration, self)
 		CombatFeedback.apply_hit_feedback(hitstop_duration, rumble_weak, rumble_strong, rumble_duration)
 
 func _is_blocked_by_wall(hurtbox: Hurtbox) -> bool:

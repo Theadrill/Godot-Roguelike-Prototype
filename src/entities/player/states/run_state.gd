@@ -7,7 +7,7 @@ func enter() -> void:
 	player = character as Player
 
 func physics_update(delta: float) -> void:
-	if not player.is_on_floor():
+	if not player.is_on_floor() or player.is_standing_on_enemy():
 		state_machine.transition_to("fall")
 		return
 

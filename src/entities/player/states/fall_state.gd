@@ -8,6 +8,12 @@ func enter() -> void:
 
 func physics_update(delta: float) -> void:
 	if player.is_on_floor():
+		if player.is_standing_on_enemy():
+			# An enemy head is NOT valid ground: clear jump buffers and remain in fall to slide off
+			player.jump_buffer_timer = 0.0
+			player.coyote_timer = 0.0
+			return
+
 		if player.jump_buffer_timer > 0.0:
 			player.jump_buffer_timer = 0.0
 			state_machine.transition_to("jump")
@@ -18,9 +24,10 @@ func physics_update(delta: float) -> void:
 		return
 
 	if player.coyote_timer > 0.0 and Input.is_action_just_pressed("jump"):
-		player.coyote_timer = 0.0
-		state_machine.transition_to("jump")
-		return
+		if not player.is_standing_on_enemy():
+			player.coyote_timer = 0.0
+			state_machine.transition_to("jump")
+			return
 
 	# Wall jump check while touching wall (takes precedence over double jump)
 	if (Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0) and player.is_on_wall_only():
@@ -31,8 +38,9 @@ func physics_update(delta: float) -> void:
 			return
 
 	if Input.is_action_just_pressed("jump") and player.can_double_jump:
-		state_machine.transition_to("doublejump")
-		return
+		if not player.is_standing_on_enemy():
+			state_machine.transition_to("doublejump")
+			return
 
 	if Input.is_action_just_pressed("roll"):
 		state_machine.transition_to("roll")
@@ -51,14 +59,23 @@ func physics_update(delta: float) -> void:
 				state_machine.transition_to("wallslide")
 				return
 
+	# Gravity
+	player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
+
+	# Horizontal air control
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:
 		player.update_facing(direction)
-		player.velocity.x = move_toward(player.velocity.x, direction * player.run_speed, (player.run_speed / player.acceleration_time) * delta)
+		player.velocity.x = move_toward(
+			player.velocity.x,
+			direction * player.run_speed,
+			(player.run_speed / player.acceleration_time) * delta
+		)
 	else:
-		player.velocity.x = move_toward(player.velocity.x, 0.0, (player.run_speed / 0.15) * delta)
-
-	player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
-	player.velocity.y = min(player.velocity.y, 650.0)
+		player.velocity.x = move_toward(
+			player.velocity.x,
+			0.0,
+			(player.run_speed / player.acceleration_time) * delta
+		)
 
 	player.move_and_slide()

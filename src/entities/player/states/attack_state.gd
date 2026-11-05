@@ -48,6 +48,7 @@ func _start_combo_step() -> void:
 	player.hitbox.rumble_weak = player.weapon.rumble_weak
 	player.hitbox.rumble_strong = player.weapon.rumble_strong
 	player.hitbox.rumble_duration = player.weapon.rumble_duration
+	player.hitbox.combo_step = current_step + 1
 	
 	player.hitbox.set_active(false)
 	player.hitbox.set_active(true)
