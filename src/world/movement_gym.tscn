@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://c7kd6yq7h3dum" path="res://src/entities/dummy/combat_dummy.tscn" id="2_dummy"]
+[ext_resource type="PackedScene" path="res://src/entities/enemies/soldier/soldier.tscn" id="3_soldier"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(400, 72)
@@ -187,10 +188,13 @@ text = "5. WALL JUMP (CHAMINÉ)
 Quique entre as duas paredes!"
 
 [node name="CombatDummy" parent="." unique_id=722785593 instance=ExtResource("2_dummy")]
-position = Vector2(250, 288)
+position = Vector2(260, 288)
 
 [node name="CombatDummy2" parent="." unique_id=1953690624 instance=ExtResource("2_dummy")]
-position = Vector2(300, 288)
+position = Vector2(310, 288)
+
+[node name="Soldier" parent="." instance=ExtResource("3_soldier")]
+position = Vector2(180, 288)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(80, 288)

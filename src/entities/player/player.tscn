@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=16 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/attack_state.gd" id="11_attack"]
 [ext_resource type="Script" path="res://src/entities/player/states/crouch_state.gd" id="12_crouch"]
 [ext_resource type="Script" path="res://src/combat/hitbox.gd" id="13_hitbox"]
+[ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="14_hurtbox"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -20,6 +21,9 @@ size = Vector2(16, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(32, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player_hurtbox"]
+size = Vector2(16, 40)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -36,6 +40,15 @@ shape = SubResource("RectangleShape2D_1")
 position = Vector2(0, -16)
 target_position = Vector2(0, -26)
 collision_mask = 1
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("14_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_player_hurtbox")
 
 [node name="Visual" type="Node2D" parent="."]
 

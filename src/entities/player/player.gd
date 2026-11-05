@@ -42,12 +42,16 @@ var last_wall_jump_normal_x: float = 0.0
 
 # Default gravity from project settings
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
+var flash_timer: float = 0.0
+var flash_material: ShaderMaterial
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
+@onready var body_polygon: Polygon2D = $Visual/BodyPlaceholder
 @onready var ceiling_check: RayCast2D = $CeilingCheck
 @onready var hitbox: Hitbox = $Visual/Hitbox
+@onready var hurtbox: Hurtbox = $Hurtbox
 @onready var slash_effect: Node2D = $Visual/SlashEffect
 
 func _ready() -> void:
@@ -55,6 +59,16 @@ func _ready() -> void:
 	current_mana = max_mana
 	if not weapon:
 		weapon = WeaponData.new()
+
+	if hurtbox:
+		hurtbox.hit_received.connect(_on_hit_received)
+
+	# Setup hit flash shader material
+	var shader := load("res://src/shaders/hit_flash.gdshader") as Shader
+	if shader and body_polygon:
+		flash_material = ShaderMaterial.new()
+		flash_material.shader = shader
+		body_polygon.material = flash_material
 
 func set_slash_visual(is_active: bool, combo_step: int = 0) -> void:
 	if slash_effect:
@@ -78,6 +92,24 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer_timer = jump_buffer_duration
+
+	# Hit flash timer
+	if flash_timer > 0.0:
+		flash_timer -= delta
+		if flash_timer <= 0.0 and flash_material:
+			flash_material.set_shader_parameter("flash_active", false)
+
+func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void:
+	current_health = max(0.0, current_health - damage)
+	velocity = knockback
+
+	# Visual juice: Hit flash pure white
+	if flash_material:
+		flash_timer = hitstop + 0.08
+		flash_material.set_shader_parameter("flash_active", true)
+
+	# Tactile juice: Gamepad rumble & hitstop
+	CombatFeedback.apply_hit_feedback(hitstop, 0.4, 0.7, 0.12)
 
 func _prevent_standing_on_enemies() -> void:
 	for i in range(get_slide_collision_count()):

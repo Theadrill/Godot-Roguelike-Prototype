@@ -59,7 +59,17 @@ func _set_crouched(crouched: bool) -> void:
 		rect.size = Vector2(16.0, 20.0)
 		player.collision_shape.position = Vector2(0.0, -10.0)
 		player.visual.scale.y = 0.5
+		if player.hurtbox and player.hurtbox.has_node("CollisionShape2D"):
+			var h_rect := player.hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
+			if h_rect:
+				h_rect.size = Vector2(16.0, 20.0)
+				player.hurtbox.get_node("CollisionShape2D").position = Vector2(0.0, -10.0)
 	else:
 		rect.size = Vector2(16.0, 40.0)
 		player.collision_shape.position = Vector2(0.0, -20.0)
 		player.visual.scale.y = 1.0
+		if player.hurtbox and player.hurtbox.has_node("CollisionShape2D"):
+			var h_rect := player.hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
+			if h_rect:
+				h_rect.size = Vector2(16.0, 40.0)
+				player.hurtbox.get_node("CollisionShape2D").position = Vector2(0.0, -20.0)

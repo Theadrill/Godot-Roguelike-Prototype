@@ -19,6 +19,10 @@ func enter() -> void:
 	# Shrink collision height to 20px so player passes under low ceilings (32px)
 	_set_crouched(true)
 
+	# Full invulnerability (i-frames) during roll
+	if player.hurtbox:
+		player.hurtbox.is_invulnerable = true
+
 	player.velocity.x = roll_direction * player.roll_speed
 	if player.is_on_floor():
 		player.velocity.y = 0.0
@@ -27,6 +31,8 @@ func exit() -> void:
 	_set_crouched(false)
 	# Re-enable collision with enemies (Layer 3) after roll
 	player.set_collision_mask_value(3, true)
+	if player.hurtbox:
+		player.hurtbox.is_invulnerable = false
 
 func physics_update(delta: float) -> void:
 	roll_timer -= delta
@@ -118,10 +124,20 @@ func _set_crouched(crouched: bool) -> void:
 		rect.size = Vector2(16.0, 20.0)
 		player.collision_shape.position = Vector2(0.0, -10.0)
 		player.visual.scale.y = 0.5
+		if player.hurtbox and player.hurtbox.has_node("CollisionShape2D"):
+			var h_rect := player.hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
+			if h_rect:
+				h_rect.size = Vector2(16.0, 20.0)
+				player.hurtbox.get_node("CollisionShape2D").position = Vector2(0.0, -10.0)
 	else:
 		rect.size = Vector2(16.0, 40.0)
 		player.collision_shape.position = Vector2(0.0, -20.0)
 		player.visual.scale.y = 1.0
+		if player.hurtbox and player.hurtbox.has_node("CollisionShape2D"):
+			var h_rect := player.hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
+			if h_rect:
+				h_rect.size = Vector2(16.0, 40.0)
+				player.hurtbox.get_node("CollisionShape2D").position = Vector2(0.0, -20.0)
 
 		# Depenetration safety: if standing up causes overlap with a wall, push out cleanly
 		var test_col := player.move_and_collide(Vector2.ZERO, true)
