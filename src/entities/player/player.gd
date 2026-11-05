@@ -45,6 +45,8 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 9
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
 var enemy_head_stuck_timer: float = 0.0
+var slide_enemy_timer: float = 0.0
+var slide_enemy_dir: float = 0.0
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -91,16 +93,26 @@ func _physics_process(delta: float) -> void:
 	var on_enemy: bool = is_standing_on_enemy()
 	if on_enemy:
 		enemy_head_stuck_timer += delta
+		_prevent_standing_on_enemies()
 	else:
 		enemy_head_stuck_timer = 0.0
 
+	# Process uninterrupted slide off enemy head
+	if slide_enemy_timer > 0.0:
+		slide_enemy_timer -= delta
+		if is_on_floor() and not on_enemy:
+			slide_enemy_timer = 0.0
+		else:
+			velocity.x = slide_enemy_dir * 180.0
+
+	var sliding: bool = is_sliding_off_enemy()
+
 	# Decrement timers
 	if is_on_floor():
-		if on_enemy:
-			# Standing on enemy head: prevent coyote time and slide off
+		if sliding:
+			# Standing on or actively sliding off enemy head: prevent coyote time and buffers
 			coyote_timer = 0.0
 			jump_buffer_timer = 0.0
-			_prevent_standing_on_enemies()
 		else:
 			coyote_timer = coyote_duration
 			can_double_jump = true
@@ -111,9 +123,9 @@ func _physics_process(delta: float) -> void:
 	if jump_buffer_timer > 0.0:
 		jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
 
-	# Strictly prevent buffering or triggering jumps when touching an enemy head
+	# Strictly prevent buffering or triggering jumps when touching or sliding off an enemy head
 	if Input.is_action_just_pressed("jump"):
-		if not on_enemy:
+		if not sliding:
 			jump_buffer_timer = jump_buffer_duration
 		else:
 			jump_buffer_timer = 0.0
@@ -145,6 +157,9 @@ func is_standing_on_enemy() -> bool:
 				return true
 	return false
 
+func is_sliding_off_enemy() -> bool:
+	return is_standing_on_enemy() or slide_enemy_timer > 0.0
+
 func _prevent_standing_on_enemies() -> void:
 	for i in range(get_slide_collision_count()):
 		var col := get_slide_collision(i)
@@ -153,31 +168,36 @@ func _prevent_standing_on_enemies() -> void:
 		if collider is CombatDummy or collider is Soldier or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
 			# Normal pointing up means player landed directly on their top head/shoulders
 			if col.get_normal().y < -0.5:
-				var push_dir: float = signf(global_position.x - collider.global_position.x)
-				if push_dir == 0.0:
-					push_dir = float(facing_direction)
+				# If not already locked in a slide, initiate locked committed slide
+				if slide_enemy_timer <= 0.0:
+					var push_dir: float = signf(global_position.x - collider.global_position.x)
+					if push_dir == 0.0:
+						push_dir = float(facing_direction)
 
-				# Raycast wall awareness (Layer 1: Environment):
-				# Check if sliding in push_dir would hit a wall within 24px
-				var space := get_world_2d().direct_space_state
-				if space:
-					var ray_origin := global_position + Vector2(0.0, -10.0)
-					var ray_r := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(24.0, 0.0), 1)
-					ray_r.exclude = [get_rid()]
-					var wall_on_right: bool = not space.intersect_ray(ray_r).is_empty()
+					# Raycast wall awareness (Layer 1: Environment):
+					# Check if sliding in push_dir would hit a wall within 24px
+					var space := get_world_2d().direct_space_state
+					if space:
+						var ray_origin := global_position + Vector2(0.0, -10.0)
+						var ray_r := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(24.0, 0.0), 1)
+						ray_r.exclude = [get_rid()]
+						var wall_on_right: bool = not space.intersect_ray(ray_r).is_empty()
 
-					var ray_l := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(-24.0, 0.0), 1)
-					ray_l.exclude = [get_rid()]
-					var wall_on_left: bool = not space.intersect_ray(ray_l).is_empty()
+						var ray_l := PhysicsRayQueryParameters2D.create(ray_origin, ray_origin + Vector2(-24.0, 0.0), 1)
+						ray_l.exclude = [get_rid()]
+						var wall_on_left: bool = not space.intersect_ray(ray_l).is_empty()
 
-					# Steer away from walls!
-					if push_dir > 0.0 and wall_on_right and not wall_on_left:
-						push_dir = -1.0
-					elif push_dir < 0.0 and wall_on_left and not wall_on_right:
-						push_dir = 1.0
+						# Steer away from walls!
+						if push_dir > 0.0 and wall_on_right and not wall_on_left:
+							push_dir = -1.0
+						elif push_dir < 0.0 and wall_on_left and not wall_on_right:
+							push_dir = 1.0
 
-				# Slide off cleanly using physics velocity (no teleporting!)
-				velocity.x = push_dir * 180.0
+					slide_enemy_dir = push_dir
+					slide_enemy_timer = 0.22 # Uninterruptible committed slide window
+
+				# Apply slide physics velocity
+				velocity.x = slide_enemy_dir * 180.0
 
 				# Layer 3: Fail-safe hop if stuck on top for more than 0.25s
 				if enemy_head_stuck_timer > 0.25:

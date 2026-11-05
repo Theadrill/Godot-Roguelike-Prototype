@@ -7,8 +7,10 @@ func enter() -> void:
 	player = character as Player
 
 func physics_update(delta: float) -> void:
-	# Only transition to ground states if standing on real ground (NOT an enemy head)
-	if player.is_on_floor() and not player.is_standing_on_enemy():
+	var sliding: bool = player.is_sliding_off_enemy()
+
+	# Only transition to ground states if standing on real ground (NOT an enemy head and not sliding)
+	if player.is_on_floor() and not sliding:
 		if player.jump_buffer_timer > 0.0:
 			player.jump_buffer_timer = 0.0
 			state_machine.transition_to("jump")
@@ -21,13 +23,13 @@ func physics_update(delta: float) -> void:
 			return
 
 	if player.coyote_timer > 0.0 and Input.is_action_just_pressed("jump"):
-		if not player.is_standing_on_enemy():
+		if not sliding:
 			player.coyote_timer = 0.0
 			state_machine.transition_to("jump")
 			return
 
 	# Wall jump check while touching wall (takes precedence over double jump)
-	if (Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0) and player.is_on_wall_only():
+	if (Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0) and player.is_on_wall_only() and not sliding:
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:
 			player.jump_buffer_timer = 0.0
@@ -35,7 +37,7 @@ func physics_update(delta: float) -> void:
 			return
 
 	if Input.is_action_just_pressed("jump") and player.can_double_jump:
-		if not player.is_standing_on_enemy():
+		if not sliding:
 			state_machine.transition_to("doublejump")
 			return
 
@@ -48,7 +50,7 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("attack")
 		return
 
-	if player.is_on_wall_only():
+	if player.is_on_wall_only() and not sliding:
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:
 			var move_dir: float = Input.get_axis("move_left", "move_right")
@@ -60,7 +62,7 @@ func physics_update(delta: float) -> void:
 	player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
 
 	# Horizontal air control (disabled while actively sliding off an enemy)
-	if not player.is_standing_on_enemy():
+	if not sliding:
 		var direction := Input.get_axis("move_left", "move_right")
 		if direction != 0.0:
 			player.update_facing(direction)

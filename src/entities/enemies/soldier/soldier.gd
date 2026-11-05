@@ -43,7 +43,9 @@ var flash_material: ShaderMaterial
 @onready var yellow_mark: Polygon2D = $Visual/TelegraphMark/YellowMark
 @onready var red_mark: Polygon2D = $Visual/TelegraphMark/RedMark
 @onready var slash_arc: Polygon2D = $Visual/SlashArc
+@onready var slash_arc_up: Polygon2D = $Visual/SlashArcUp
 @onready var hitbox: Hitbox = $Visual/Hitbox
+@onready var hitbox_up: Hitbox = $Visual/HitboxUp
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var state_machine: StateMachine = $StateMachine
 
@@ -55,6 +57,7 @@ func _ready() -> void:
 	hurtbox.hit_received.connect(_on_hit_received)
 	hide_telegraph()
 	set_slash_active(false)
+	set_slash_up_active(false)
 
 	# Setup hit flash shader material
 	var shader := load("res://src/shaders/hit_flash.gdshader") as Shader
@@ -66,6 +69,8 @@ func _ready() -> void:
 	# Set hitbox attacker reference
 	if hitbox:
 		hitbox.attacker = self
+	if hitbox_up:
+		hitbox_up.attacker = self
 
 func _physics_process(delta: float) -> void:
 	# Flash timer update
@@ -128,7 +133,7 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 		match attack_state.attack_type:
 			SoldierAttackState.AttackType.NORMAL:
 				can_interrupt = true
-			SoldierAttackState.AttackType.YELLOW:
+			SoldierAttackState.AttackType.YELLOW, SoldierAttackState.AttackType.UPWARD:
 				can_interrupt = is_finisher
 			SoldierAttackState.AttackType.RED:
 				can_interrupt = false
@@ -172,3 +177,7 @@ func hide_telegraph() -> void:
 func set_slash_active(active: bool) -> void:
 	if slash_arc:
 		slash_arc.visible = active
+
+func set_slash_up_active(active: bool) -> void:
+	if slash_arc_up:
+		slash_arc_up.visible = active

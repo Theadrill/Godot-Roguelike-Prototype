@@ -3,14 +3,23 @@ extends State
 
 var soldier: Soldier
 var los_lost_timer: float = 0.0
+var turn_cooldown_timer: float = 0.0
+var anti_air_cooldown_timer: float = 0.0
 
 func enter() -> void:
 	soldier = character as Soldier
 	los_lost_timer = 0.0
+	turn_cooldown_timer = 0.0
 	soldier.hide_telegraph()
 	soldier.is_hyper_armored = false
 
 func physics_update(delta: float) -> void:
+	# Decrement timers
+	if turn_cooldown_timer > 0.0:
+		turn_cooldown_timer -= delta
+	if anti_air_cooldown_timer > 0.0:
+		anti_air_cooldown_timer -= delta
+
 	# Gravity
 	if not soldier.is_on_floor():
 		soldier.velocity.y += soldier.gravity * delta
@@ -23,6 +32,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	var dx: float = player.global_position.x - soldier.global_position.x
+	var dy: float = player.global_position.y - soldier.global_position.y
 	var dist: float = absf(dx)
 
 	# Target lost by distance
@@ -31,10 +41,13 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("patrol")
 		return
 
-	# Update facing towards player
-	var dir: float = signf(dx)
-	if dir != 0.0:
-		soldier.update_facing(dir)
+	# Update facing towards player with deadzone and cooldown (Anti-flicker)
+	if dist >= 12.0:
+		var desired_dir := signf(dx)
+		if desired_dir != float(soldier.facing_direction):
+			if turn_cooldown_timer <= 0.0:
+				soldier.update_facing(desired_dir)
+				turn_cooldown_timer = 0.25 # Minimum 250ms between 180-degree turns
 
 	# Check Line of Sight
 	if not _has_los_to_player():
@@ -46,9 +59,23 @@ func physics_update(delta: float) -> void:
 	else:
 		los_lost_timer = 0.0
 
-	# Check Attack Range
-	if dist <= soldier.attack_range and absf(player.global_position.y - soldier.global_position.y) < 32.0:
+	# Check Anti-Air Attack (Player directly overhead / landing on head)
+	# dy is negative when player is above. Soldier height is 40px (-40 to 0).
+	if anti_air_cooldown_timer <= 0.0 and dist <= 24.0 and dy >= -58.0 and dy <= -16.0:
+		anti_air_cooldown_timer = 0.9
 		soldier.velocity.x = 0.0
+		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState
+		if attack_state:
+			attack_state.is_upward = true
+		state_machine.transition_to("attack")
+		return
+
+	# Check Horizontal Attack Range
+	if dist <= soldier.attack_range and absf(dy) < 32.0:
+		soldier.velocity.x = 0.0
+		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState
+		if attack_state:
+			attack_state.is_upward = false
 		state_machine.transition_to("attack")
 		return
 
@@ -58,8 +85,11 @@ func physics_update(delta: float) -> void:
 		soldier.move_and_slide()
 		return
 
-	# Move towards player
-	soldier.velocity.x = dir * soldier.chase_speed
+	# Move towards player (smooth deceleration when inside deadzone)
+	if dist >= 8.0:
+		soldier.velocity.x = signf(dx) * soldier.chase_speed
+	else:
+		soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
 	soldier.move_and_slide()
 
 ## Raycast: Ledge check
