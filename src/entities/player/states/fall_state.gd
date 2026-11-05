@@ -38,6 +38,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("roll")
 		return
 
+	# Attack in air
+	if Input.is_action_just_pressed("attack_primary"):
+		state_machine.transition_to("attack")
+		return
+
 	if player.is_on_wall_only():
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:

@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://c7kd6yq7h3dum"]
+
+[ext_resource type="Script" path="res://src/entities/dummy/combat_dummy.gd" id="1_dummy"]
+[ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="2_hurtbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dummy_body"]
+size = Vector2(16, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dummy_hurtbox"]
+size = Vector2(18, 42)
+
+[node name="CombatDummy" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_dummy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_dummy_body")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.48, 0.22, 0.25, 1)
+polygon = PackedVector2Array(-8, -40, 8, -40, 8, 0, -8, 0)
+
+[node name="TargetMark" type="Polygon2D" parent="Visual"]
+color = Color(0.92, 0.72, 0.25, 1)
+polygon = PackedVector2Array(-5, -22, 5, -22, 5, -18, -5, -18)
+
+[node name="TargetMarkV" type="Polygon2D" parent="Visual"]
+color = Color(0.92, 0.72, 0.25, 1)
+polygon = PackedVector2Array(-2, -25, 2, -25, 2, -15, -2, -15)
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+script = ExtResource("2_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_dummy_hurtbox")
+
+[node name="HitLabel" type="Label" parent="."]
+offset_left = -30.0
+offset_top = -55.0
+offset_right = 30.0
+offset_bottom = -35.0
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+vertical_alignment = 1

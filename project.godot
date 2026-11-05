@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 [autoload]
 
 InputSetup="*res://src/core/input_setup.gd"
+CombatFeedback="*res://src/combat/combat_feedback.gd"
 
 [display]
 
@@ -28,6 +29,16 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
+
+[layer_names]
+
+2d_physics/layer_1="Environment"
+2d_physics/layer_2="Player"
+2d_physics/layer_3="Enemies"
+2d_physics/layer_4="PlayerHitbox"
+2d_physics/layer_5="EnemyHitbox"
+2d_physics/layer_6="PlayerHurtbox"
+2d_physics/layer_7="EnemyHurtbox"
 
 [rendering]
 

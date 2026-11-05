@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cjijcwt58gu71"]
 
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://src/entities/dummy/combat_dummy.tscn" id="2_dummy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(400, 72)
@@ -127,8 +128,8 @@ offset_top = 210.0
 offset_right = 320.0
 offset_bottom = 270.0
 theme_override_font_sizes/font_size = 10
-text = "1. CORRIDA & PARADA SECA:
-Analógico ou A / D"
+text = "1. CORRIDA & PARADA SECA: A / D
+ATAQUE (COMBO 3X): X / J / Clique Esq."
 
 [node name="Hint2" type="Label" parent="UI_Hints" unique_id=1001767358]
 offset_left = 360.0
@@ -173,6 +174,9 @@ offset_bottom = 65.0
 theme_override_font_sizes/font_size = 10
 text = "5. WALL JUMP (CHAMINÉ)
 Quique entre as duas paredes!"
+
+[node name="CombatDummy" parent="." instance=ExtResource("2_dummy")]
+position = Vector2(250, 288)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(80, 288)

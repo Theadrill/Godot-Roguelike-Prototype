@@ -26,6 +26,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("roll")
 		return
 
+	# Attack in air
+	if Input.is_action_just_pressed("attack_primary"):
+		state_machine.transition_to("attack")
+		return
+
 	# Air horizontal control
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:

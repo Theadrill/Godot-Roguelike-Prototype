@@ -30,13 +30,25 @@ var last_wall_jump_normal_x: float = 0.0
 # Default gravity from project settings
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 
+@export var weapon: WeaponData
+
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
 @onready var ceiling_check: RayCast2D = $CeilingCheck
+@onready var hitbox: Hitbox = $Visual/Hitbox
+@onready var slash_effect: Node2D = $Visual/SlashEffect
 
 func _ready() -> void:
-	pass
+	if not weapon:
+		weapon = WeaponData.new()
+
+func set_slash_visual(is_active: bool, combo_step: int = 0) -> void:
+	if slash_effect:
+		slash_effect.visible = is_active
+		if is_active:
+			slash_effect.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)
+			slash_effect.scale = Vector2(1.0 + combo_step * 0.2, 1.0 + combo_step * 0.2)
 
 func _physics_process(delta: float) -> void:
 	# Decrement timers

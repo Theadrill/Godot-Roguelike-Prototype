@@ -16,6 +16,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("jump")
 		return
 
+	# Attack check
+	if Input.is_action_just_pressed("attack_primary"):
+		state_machine.transition_to("attack")
+		return
+
 	if Input.is_action_just_pressed("roll"):
 		state_machine.transition_to("roll")
 		return

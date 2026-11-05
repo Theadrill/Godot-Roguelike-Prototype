@@ -34,14 +34,16 @@ func _ready() -> void:
 		_create_key_event(KEY_SHIFT),
 		_create_joy_button_event(JOY_BUTTON_B)
 	])
-	# Botão X (Xbox) / Quadrado (PlayStation) / Botão Esquerdo Mouse: ARMA PRIMÁRIA
+	# Botão X (Xbox) / Quadrado (PlayStation) / Botão Esquerdo Mouse / Tecla J: ARMA PRIMÁRIA
 	_register_action("attack_primary", [
 		_create_mouse_button_event(MOUSE_BUTTON_LEFT),
+		_create_key_event(KEY_J),
 		_create_joy_button_event(JOY_BUTTON_X)
 	])
-	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse: ARMA SECUNDÁRIA / ESCUDO
+	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse / Tecla K: ARMA SECUNDÁRIA / ESCUDO
 	_register_action("attack_secondary", [
 		_create_mouse_button_event(MOUSE_BUTTON_RIGHT),
+		_create_key_event(KEY_K),
 		_create_joy_button_event(JOY_BUTTON_Y)
 	])
 

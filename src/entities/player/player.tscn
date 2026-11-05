@@ -10,10 +10,15 @@
 [ext_resource type="Script" path="res://src/entities/player/states/wall_slide_state.gd" id="8_wslide"]
 [ext_resource type="Script" path="res://src/entities/player/states/wall_jump_state.gd" id="9_wjump"]
 [ext_resource type="Script" path="res://src/entities/player/states/roll_state.gd" id="10_roll"]
+[ext_resource type="Script" path="res://src/entities/player/states/attack_state.gd" id="11_attack"]
+[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="12_hitbox"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
 size = Vector2(16, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(32, 28)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -40,6 +45,25 @@ polygon = PackedVector2Array(-8, 0, 8, 0, 8, -40, -8, -40)
 [node name="HeadbandPlaceholder" type="Polygon2D" parent="Visual"]
 color = Color(0.9, 0.25, 0.25, 1)
 polygon = PackedVector2Array(-8, -32, 10, -32, 10, -36, -8, -36)
+
+[node name="SlashEffect" type="Node2D" parent="Visual"]
+visible = false
+position = Vector2(0, -20)
+
+[node name="SlashArc" type="Polygon2D" parent="Visual/SlashEffect"]
+color = Color(0.9, 0.96, 1, 0.9)
+polygon = PackedVector2Array(8, -16, 32, -4, 30, 4, 8, 14, 18, 0)
+
+[node name="Hitbox" type="Area2D" parent="Visual"]
+collision_layer = 8
+collision_mask = 64
+monitoring = false
+script = ExtResource("12_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox"]
+position = Vector2(20, -20)
+shape = SubResource("RectangleShape2D_hitbox")
+disabled = true
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_fsm")
@@ -68,3 +92,6 @@ script = ExtResource("9_wjump")
 
 [node name="Roll" type="Node" parent="StateMachine"]
 script = ExtResource("10_roll")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("11_attack")
