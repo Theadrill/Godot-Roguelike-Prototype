@@ -6,8 +6,16 @@ var player: Player
 func enter() -> void:
 	player = character as Player
 	player.velocity.y = player.jump_velocity
+	player.last_wall_jump_normal_x = 0.0
 
 func physics_update(delta: float) -> void:
+	# Wall jump check: kick off wall if pressing jump while touching wall in air
+	if Input.is_action_just_pressed("jump") and player.is_on_wall_only():
+		var wall_norm: float = signf(player.get_wall_normal().x)
+		if wall_norm != player.last_wall_jump_normal_x:
+			state_machine.transition_to("walljump")
+			return
+
 	# Double jump check
 	if Input.is_action_just_pressed("jump") and player.can_double_jump:
 		state_machine.transition_to("doublejump")
@@ -17,16 +25,6 @@ func physics_update(delta: float) -> void:
 	if Input.is_action_just_pressed("roll"):
 		state_machine.transition_to("roll")
 		return
-
-	# Wall slide check: latch onto wall immediately when touching
-	if player.is_on_wall_only():
-		var wall_norm: float = signf(player.get_wall_normal().x)
-		if wall_norm != player.last_wall_jump_normal_x:
-			var move_dir: float = Input.get_axis("move_left", "move_right")
-			# Allow latching if pressing toward wall or neutral
-			if signf(move_dir) == -wall_norm or abs(move_dir) < 0.2:
-				state_machine.transition_to("wallslide")
-				return
 
 	# Air horizontal control
 	var direction := Input.get_axis("move_left", "move_right")

@@ -22,6 +22,13 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("jump")
 		return
 
+	# Wall jump check while touching wall (takes precedence over double jump)
+	if Input.is_action_just_pressed("jump") and player.is_on_wall_only():
+		var wall_norm: float = signf(player.get_wall_normal().x)
+		if wall_norm != player.last_wall_jump_normal_x:
+			state_machine.transition_to("walljump")
+			return
+
 	if Input.is_action_just_pressed("jump") and player.can_double_jump:
 		state_machine.transition_to("doublejump")
 		return

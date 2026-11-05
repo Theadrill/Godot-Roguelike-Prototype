@@ -10,17 +10,16 @@ func enter() -> void:
 	player.last_wall_jump_normal_x = 0.0
 
 func physics_update(delta: float) -> void:
+	# Wall jump check if pressing jump while touching wall
+	if Input.is_action_just_pressed("jump") and player.is_on_wall_only():
+		var wall_norm: float = signf(player.get_wall_normal().x)
+		if wall_norm != player.last_wall_jump_normal_x:
+			state_machine.transition_to("walljump")
+			return
+
 	if Input.is_action_just_pressed("roll"):
 		state_machine.transition_to("roll")
 		return
-
-	if player.is_on_wall_only():
-		var wall_norm: float = signf(player.get_wall_normal().x)
-		if wall_norm != player.last_wall_jump_normal_x:
-			var move_dir: float = Input.get_axis("move_left", "move_right")
-			if signf(move_dir) == -wall_norm:
-				state_machine.transition_to("wallslide")
-				return
 
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:
