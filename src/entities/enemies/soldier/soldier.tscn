@@ -43,7 +43,7 @@ polygon = PackedVector2Array(2, -33, 9, -33, 9, -29, 2, -29)
 [node name="SlashArc" type="Polygon2D" parent="Visual"]
 visible = false
 color = Color(1, 0.45, 0.25, 0.85)
-polygon = PackedVector2Array(8, -18, 30, -6, 28, 8, 8, 16, 18, 0)
+polygon = PackedVector2Array(8, -36, 30, -24, 28, -10, 8, -2, 18, -18)
 
 [node name="TelegraphMark" type="Node2D" parent="Visual"]
 position = Vector2(0, -48)

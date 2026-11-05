@@ -30,20 +30,34 @@ func _start_combo_step() -> void:
 	var input_dir: float = Input.get_axis("move_left", "move_right")
 	if abs(input_dir) > 0.1:
 		player.update_facing(input_dir)
+
+	var is_upward: bool = Input.is_action_pressed("up")
 	
-	# Forward physical step
-	var forward_impulse: float = player.weapon.forward_impulses[current_step]
-	player.velocity.x = player.facing_direction * forward_impulse
-	if player.is_on_floor():
-		player.velocity.y = 0.0
+	if is_upward:
+		player.velocity.x = 0.0
+		if not player.is_on_floor():
+			player.velocity.y = min(player.velocity.y, -40.0)
+		if player.hitbox.has_node("CollisionShape2D"):
+			player.hitbox.get_node("CollisionShape2D").position = Vector2(0.0, -36.0)
+			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 32.0)
+		player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.15, -1.0).normalized()
 	else:
-		player.velocity.y = min(player.velocity.y, 40.0)
-		
+		# Forward physical step
+		var forward_impulse: float = player.weapon.forward_impulses[current_step]
+		player.velocity.x = player.facing_direction * forward_impulse
+		if player.is_on_floor():
+			player.velocity.y = 0.0
+		else:
+			player.velocity.y = min(player.velocity.y, 40.0)
+		if player.hitbox.has_node("CollisionShape2D"):
+			player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -20.0)
+			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
+		player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
+
 	# Setup active hitbox with scaling per combo step
 	var step_mult: float = 1.0 + (current_step * 0.25)
 	player.hitbox.damage = player.weapon.base_damage * step_mult
 	player.hitbox.knockback_force = player.weapon.knockback_force * step_mult
-	player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
 	player.hitbox.hitstop_duration = player.weapon.hitstop_duration
 	player.hitbox.rumble_weak = player.weapon.rumble_weak
 	player.hitbox.rumble_strong = player.weapon.rumble_strong
@@ -52,11 +66,14 @@ func _start_combo_step() -> void:
 	
 	player.hitbox.set_active(false)
 	player.hitbox.set_active(true)
-	player.set_slash_visual(true, current_step)
+	player.set_slash_visual(true, current_step, is_upward)
 
 func exit() -> void:
+	if player.hitbox.has_node("CollisionShape2D"):
+		player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -20.0)
+		(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
 	player.hitbox.set_active(false)
-	player.set_slash_visual(false, 0)
+	player.set_slash_visual(false, 0, false)
 	combo_buffered = false
 	last_attack_end_msec = Time.get_ticks_msec()
 

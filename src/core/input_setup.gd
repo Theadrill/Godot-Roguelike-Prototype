@@ -18,6 +18,12 @@ func _ready() -> void:
 		_create_joy_button_event(JOY_BUTTON_DPAD_RIGHT),
 		_create_joy_motion_event(JOY_AXIS_LEFT_X, 1.0)
 	])
+	_register_action("up", [
+		_create_key_event(KEY_W),
+		_create_key_event(KEY_UP),
+		_create_joy_button_event(JOY_BUTTON_DPAD_UP),
+		_create_joy_motion_event(JOY_AXIS_LEFT_Y, -1.0)
+	])
 	_register_action("down", [
 		_create_key_event(KEY_S),
 		_create_key_event(KEY_DOWN),
