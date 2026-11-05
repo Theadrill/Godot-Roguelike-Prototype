@@ -10,8 +10,8 @@ extends CharacterBody2D
 @export var double_jump_velocity: float = -306.0 # Exact +3 tiles (48 px) height
 @export var fall_gravity_multiplier: float = 1.35 # Snappy fall feel (Dead Cells)
 @export var wall_slide_speed: float = 70.0
-@export var wall_jump_horizontal: float = 200.0
-@export var wall_jump_vertical: float = -320.0
+@export var wall_jump_horizontal: float = 240.0   # Solid outward kick
+@export var wall_jump_vertical: float = -330.0
 @export var roll_speed: float = 340.0
 @export var roll_duration: float = 0.35
 
@@ -23,6 +23,9 @@ var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
 var can_double_jump: bool = false
 var facing_direction: int = 1
+
+# Wall jump tracking: prevents infinite climbing on the same single wall
+var last_wall_jump_normal_x: float = 0.0
 
 # Default gravity from project settings
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
@@ -40,6 +43,7 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		coyote_timer = coyote_duration
 		can_double_jump = true
+		last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 

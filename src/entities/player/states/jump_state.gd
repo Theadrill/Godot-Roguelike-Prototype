@@ -13,15 +13,19 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("doublejump")
 		return
 
-	# Roll in air (optional or transition)
+	# Roll in air
 	if Input.is_action_just_pressed("roll"):
 		state_machine.transition_to("roll")
 		return
 
-	# Wall slide check
-	if player.is_on_wall_only() and Input.is_action_pressed("move_left" if player.facing_direction == -1 else "move_right"):
-		state_machine.transition_to("wallslide")
-		return
+	# Wall slide check: only allows opposite wall to prevent single-wall climbing
+	if player.is_on_wall_only():
+		var wall_norm: float = signf(player.get_wall_normal().x)
+		if wall_norm != player.last_wall_jump_normal_x:
+			var move_dir: float = Input.get_axis("move_left", "move_right")
+			if signf(move_dir) == -wall_norm:
+				state_machine.transition_to("wallslide")
+				return
 
 	# Air horizontal control
 	var direction := Input.get_axis("move_left", "move_right")
@@ -31,10 +35,8 @@ func physics_update(delta: float) -> void:
 	else:
 		player.velocity.x = move_toward(player.velocity.x, 0.0, (player.run_speed / 0.15) * delta)
 
-	# Apply upward gravity
 	player.velocity.y += player.gravity * delta
 
-	# Apex / falling transition
 	if player.velocity.y >= 0.0:
 		state_machine.transition_to("fall")
 		return

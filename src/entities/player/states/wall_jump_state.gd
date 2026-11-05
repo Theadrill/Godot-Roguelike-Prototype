@@ -4,12 +4,16 @@ extends State
 var player: Player
 var wall_normal: Vector2 = Vector2.ZERO
 var input_lock_timer: float = 0.0
-const INPUT_LOCK_DURATION: float = 0.12
+const INPUT_LOCK_DURATION: float = 0.18
 
 func enter() -> void:
 	player = character as Player
 	wall_normal = player.get_wall_normal()
-	# Kick away from wall
+
+	# Record wall normal so the player cannot immediately re-grab the same wall
+	player.last_wall_jump_normal_x = sign(wall_normal.x)
+
+	# Firm kick away from the wall
 	player.velocity.x = wall_normal.x * player.wall_jump_horizontal
 	player.velocity.y = player.wall_jump_vertical
 	player.update_facing(wall_normal.x)
@@ -18,8 +22,11 @@ func enter() -> void:
 func physics_update(delta: float) -> void:
 	input_lock_timer -= delta
 
-	# Allow air control after input lock expires
-	if input_lock_timer <= 0.0:
+	# While input is locked, preserve the outward momentum
+	if input_lock_timer > 0.0:
+		pass
+	else:
+		# Player can steer after initial arc
 		var direction := Input.get_axis("move_left", "move_right")
 		if direction != 0.0:
 			player.update_facing(direction)
