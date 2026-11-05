@@ -54,16 +54,35 @@ func _is_blocked_by_wall(hurtbox: Hurtbox) -> bool:
 	if not space:
 		return false
 
-	var origin: Vector2 = (attacker.global_position + Vector2(0.0, -20.0)) if attacker else global_position
-	var target: Vector2 = hurtbox.global_position
-	if hurtbox.has_node("CollisionShape2D"):
-		target = hurtbox.get_node("CollisionShape2D").global_position
-	elif hurtbox.get_parent() is Node2D:
-		target = hurtbox.get_parent().global_position + Vector2(0.0, -20.0)
+	var attack_dir: float = signf(knockback_direction.x)
+	if attack_dir == 0.0:
+		attack_dir = 1.0
 
-	var query := PhysicsRayQueryParameters2D.create(origin, target, 1) # Layer 1: Environment
+	var origin: Vector2 = (attacker.global_position + Vector2(0.0, -20.0)) if attacker else global_position
+
+	# Cast ray forward along attack direction to find if a solid wall is in the swing path
+	var ray_end: Vector2 = origin + Vector2(attack_dir * 96.0, 0.0)
+	var query := PhysicsRayQueryParameters2D.create(origin, ray_end, 1) # Layer 1: Environment
 	if attacker and attacker is CollisionObject2D:
 		query.exclude = [attacker.get_rid()]
 
-	var hit := space.intersect_ray(query)
-	return not hit.is_empty()
+	var wall_hit := space.intersect_ray(query)
+	# If no wall is in the swing path, attack hits freely
+	if wall_hit.is_empty():
+		return false
+
+	# A wall is in the swing path: measure depth along attack direction
+	var wall_dist: float = (wall_hit.position.x - origin.x) * attack_dir
+
+	var target_pos: Vector2 = hurtbox.global_position
+	if hurtbox.has_node("CollisionShape2D"):
+		target_pos = hurtbox.get_node("CollisionShape2D").global_position
+	elif hurtbox.get_parent() is Node2D:
+		target_pos = hurtbox.get_parent().global_position + Vector2(0.0, -20.0)
+
+	var target_dist: float = (target_pos.x - origin.x) * attack_dir
+
+	# Anyone between the attacker and the wall (target_dist <= wall_dist + 2px buffer) takes damage!
+	# Even if pinned flush against the wall.
+	# Anyone past the wall (target_dist > wall_dist + 2px) is protected by the wall.
+	return target_dist > (wall_dist + 2.0)
