@@ -40,7 +40,7 @@ func physics_update(delta: float) -> void:
 	player.move_and_slide()
 
 	# If release down, check ceiling clearance before uncrouching
-	var is_holding_down: bool = Input.is_action_pressed("down") or Input.get_axis("move_left", "move_right") != 0.0 and Input.is_action_pressed("down")
+	var is_holding_down: bool = player.is_crouch_requested()
 	if not is_holding_down:
 		player.ceiling_check.force_raycast_update()
 		if not player.ceiling_check.is_colliding():

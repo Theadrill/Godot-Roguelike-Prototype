@@ -17,7 +17,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Crouch check
-	if Input.is_action_pressed("down"):
+	if player.is_crouch_requested():
 		state_machine.transition_to("crouch")
 		return
 

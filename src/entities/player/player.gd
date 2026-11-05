@@ -43,6 +43,11 @@ var last_wall_jump_normal_x: float = 0.0
 # Soft body collision: movement resistance when pushing through enemies (Dead Cells style)
 @export_range(0.05, 0.9, 0.05) var enemy_overlap_speed_multiplier: float = 0.28
 
+@export_group("Input Tolerance")
+## Deadzone threshold for analog vertical actions (crouch and upward attack).
+## 0.55 (55%) prevents accidental crouches and up-attacks while moving left/right.
+@export_range(0.3, 0.85, 0.05) var vertical_input_threshold: float = 0.55
+
 # Default gravity from project settings
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var flash_timer: float = 0.0
@@ -146,4 +151,51 @@ func update_facing(direction: float) -> void:
 	elif direction < 0.0:
 		facing_direction = -1
 		visual.scale.x = -1.0
-		visual.scale.x = -1.0
+
+## Intent-filtered check for crouching.
+## Prevents accidental crouches when tilting the analog stick diagonally while running.
+func is_crouch_requested() -> bool:
+	if not Input.is_action_pressed("down"):
+		return false
+
+	# Digital keys (Keyboard S / Arrow Down, Gamepad D-Pad Down) have 100% deliberate intent
+	if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_DOWN):
+		return true
+
+	# Left Analog Stick:
+	var joy_y := Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+	var joy_x := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+
+	# Must reach minimum vertical threshold (positive Y is down)
+	if joy_y < vertical_input_threshold:
+		return false
+
+	# If also running/holding horizontal direction, require dominant downward intent
+	if absf(joy_x) > 0.35:
+		return joy_y > absf(joy_x) * 0.85
+
+	return true
+
+## Intent-filtered check for upward aiming / attacking.
+## Prevents accidental upward slashes when tilting the analog stick diagonally while attacking.
+func is_upward_attack_requested() -> bool:
+	if not Input.is_action_pressed("up"):
+		return false
+
+	# Digital keys (Keyboard W / Arrow Up, Gamepad D-Pad Up)
+	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP) or Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_UP):
+		return true
+
+	# Left Analog Stick (negative Y is up):
+	var joy_y := Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
+	var joy_x := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
+
+	# Must reach minimum upward threshold
+	if joy_y > -vertical_input_threshold:
+		return false
+
+	# If holding horizontal direction, require dominant upward intent
+	if absf(joy_x) > 0.35:
+		return absf(joy_y) > absf(joy_x) * 0.85
+
+	return true

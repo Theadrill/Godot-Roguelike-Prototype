@@ -23,13 +23,13 @@ func _ready() -> void:
 		_create_key_event(KEY_UP),
 		_create_joy_button_event(JOY_BUTTON_DPAD_UP),
 		_create_joy_motion_event(JOY_AXIS_LEFT_Y, -1.0)
-	])
+	], 0.55)
 	_register_action("down", [
 		_create_key_event(KEY_S),
 		_create_key_event(KEY_DOWN),
 		_create_joy_button_event(JOY_BUTTON_DPAD_DOWN),
 		_create_joy_motion_event(JOY_AXIS_LEFT_Y, 1.0)
-	])
+	], 0.55)
 	# Botão A (Xbox) / X (PlayStation) / Espaço: PULO
 	_register_action("jump", [
 		_create_key_event(KEY_SPACE),
@@ -62,9 +62,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == JOY_BUTTON_BACK: # Botão Select / View / Share
 			get_tree().reload_current_scene()
 
-func _register_action(action_name: StringName, default_events: Array[InputEvent]) -> void:
+func _register_action(action_name: StringName, default_events: Array[InputEvent], deadzone: float = 0.5) -> void:
 	if not InputMap.has_action(action_name):
-		InputMap.add_action(action_name)
+		InputMap.add_action(action_name, deadzone)
+	else:
+		InputMap.action_set_deadzone(action_name, deadzone)
 	for event in default_events:
 		if not InputMap.action_has_event(action_name, event):
 			InputMap.action_add_event(action_name, event)

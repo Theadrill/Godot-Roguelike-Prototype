@@ -31,7 +31,7 @@ func _start_combo_step() -> void:
 	if abs(input_dir) > 0.1:
 		player.update_facing(input_dir)
 
-	var is_upward: bool = Input.is_action_pressed("up")
+	var is_upward: bool = player.is_upward_attack_requested()
 	
 	if is_upward:
 		player.velocity.x = 0.0

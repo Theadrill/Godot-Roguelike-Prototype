@@ -49,7 +49,7 @@ func physics_update(delta: float) -> void:
 
 		# Safe to stand up
 		if player.is_on_floor():
-			if Input.is_action_pressed("down"):
+			if player.is_crouch_requested():
 				state_machine.transition_to("crouch")
 				return
 			var dir := Input.get_axis("move_left", "move_right")
