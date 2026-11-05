@@ -3,21 +3,34 @@ extends CharacterBody2D
 
 ## Player controller implementing the physics metrics and state management.
 
-# Movement constants calibrated to 16px grid
-@export var run_speed: float = 220.0
-@export var acceleration_time: float = 0.08
-@export var jump_velocity: float = -354.0        # Exact 4 tiles (64 px) height
-@export var double_jump_velocity: float = -306.0 # Exact +3 tiles (48 px) height
-@export var fall_gravity_multiplier: float = 1.35 # Snappy fall feel (Dead Cells)
-@export var wall_slide_speed: float = 70.0
-@export var wall_jump_horizontal: float = 240.0   # Solid outward kick
-@export var wall_jump_vertical: float = -330.0
-@export var roll_speed: float = 340.0
-@export var roll_duration: float = 0.35
+@export_group("Attributes & Stats")
+@export_range(1.0, 1000.0, 1.0, "or_greater") var max_health: float = 100.0
+@export_range(0.0, 500.0, 1.0, "or_greater") var max_mana: float = 100.0
+var current_health: float = 100.0
+var current_mana: float = 100.0
 
-# Coyote Time & Jump Buffering (Pillars of Game Feel)
-@export var coyote_duration: float = 0.12
-@export var jump_buffer_duration: float = 0.12
+@export_group("Horizontal Movement")
+@export_range(50.0, 600.0, 10.0, "suffix:px/s") var run_speed: float = 220.0
+@export_range(0.01, 0.5, 0.01, "suffix:s") var acceleration_time: float = 0.08
+
+@export_group("Jumping & Gravity")
+@export_range(-800.0, -100.0, 10.0, "suffix:px/s") var jump_velocity: float = -354.0        # Exact 4 tiles (64 px)
+@export_range(-800.0, -100.0, 10.0, "suffix:px/s") var double_jump_velocity: float = -306.0 # Exact +3 tiles (48 px)
+@export_range(0.5, 3.0, 0.05) var fall_gravity_multiplier: float = 1.35                     # Snappy fall (Dead Cells)
+@export_range(0.0, 0.3, 0.01, "suffix:s") var coyote_duration: float = 0.12
+@export_range(0.0, 0.3, 0.01, "suffix:s") var jump_buffer_duration: float = 0.12
+
+@export_group("Wall Mechanics")
+@export_range(10.0, 300.0, 5.0, "suffix:px/s") var wall_slide_speed: float = 70.0
+@export_range(50.0, 500.0, 10.0, "suffix:px/s") var wall_jump_horizontal: float = 240.0
+@export_range(-600.0, -100.0, 10.0, "suffix:px/s") var wall_jump_vertical: float = -330.0
+
+@export_group("Roll & Dodge")
+@export_range(100.0, 800.0, 10.0, "suffix:px/s") var roll_speed: float = 240.0
+@export_range(0.1, 1.0, 0.01, "suffix:s") var roll_duration: float = 0.28
+
+@export_group("Combat & Equipment")
+@export var weapon: WeaponData
 
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
@@ -30,8 +43,6 @@ var last_wall_jump_normal_x: float = 0.0
 # Default gravity from project settings
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 
-@export var weapon: WeaponData
-
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
@@ -40,6 +51,8 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 9
 @onready var slash_effect: Node2D = $Visual/SlashEffect
 
 func _ready() -> void:
+	current_health = max_health
+	current_mana = max_mana
 	if not weapon:
 		weapon = WeaponData.new()
 

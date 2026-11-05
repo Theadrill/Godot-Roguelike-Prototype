@@ -3,8 +3,9 @@ extends CharacterBody2D
 
 ## Responsive training target to calibrate combat feedback, hitstop, and knockback.
 
-@export var max_health: float = 1000.0
-@export var friction: float = 800.0
+@export_group("Target Stats")
+@export_range(1.0, 5000.0, 10.0, "or_greater") var max_health: float = 1000.0
+@export_range(100.0, 3000.0, 50.0, "suffix:px/s") var friction: float = 800.0
 
 var current_health: float = 1000.0
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
