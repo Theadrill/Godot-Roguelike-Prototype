@@ -13,8 +13,6 @@ const COMBO_WINDOW: float = 0.32
 
 func enter() -> void:
 	player = character as Player
-	if player.hitbox and not player.hitbox.hit_landed.is_connected(_on_hit_landed):
-		player.hitbox.hit_landed.connect(_on_hit_landed)
 	
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
 	if elapsed_sec <= COMBO_WINDOW:
@@ -23,13 +21,6 @@ func enter() -> void:
 		current_step = 0
 		
 	_start_combo_step()
-
-func _on_hit_landed(_target: Hurtbox) -> void:
-	# Pogo bounce when hitting an enemy with midair downward slash
-	if not player.is_on_floor() and player.is_crouch_requested():
-		player.velocity.y = -270.0
-		player.can_double_jump = true
-		CombatFeedback.apply_hit_feedback(0.08, 0.4, 0.7, 0.12)
 
 func _start_combo_step() -> void:
 	combo_buffered = false
@@ -45,17 +36,14 @@ func _start_combo_step() -> void:
 	
 	if is_upward:
 		player.velocity.x = 0.0
-		if not player.is_on_floor():
-			player.velocity.y = min(player.velocity.y, -40.0)
 		if player.hitbox.has_node("CollisionShape2D"):
 			player.hitbox.get_node("CollisionShape2D").position = Vector2(0.0, -36.0)
 			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 32.0)
 		player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.15, -1.0).normalized()
 	elif is_downward:
 		if not player.is_on_floor():
-			# Midair downward slash (plunge / pogo)
+			# Midair downward slash: maintain pure fall speed, zero upward bounce
 			player.velocity.x = 0.0
-			player.velocity.y = max(player.velocity.y, 80.0)
 			if player.hitbox.has_node("CollisionShape2D"):
 				player.hitbox.get_node("CollisionShape2D").position = Vector2(0.0, 6.0)
 				(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
@@ -71,14 +59,14 @@ func _start_combo_step() -> void:
 		# Forward physical step
 		var forward_impulse: float = player.weapon.forward_impulses[current_step]
 		player.velocity.x = player.facing_direction * forward_impulse
-		if player.is_on_floor():
-			player.velocity.y = 0.0
-		else:
-			player.velocity.y = min(player.velocity.y, 40.0)
 		if player.hitbox.has_node("CollisionShape2D"):
 			player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -20.0)
 			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
 		player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
+
+	# When on ground, clamp vertical speed to 0; when in air, leave gravity/fall speed completely untouched!
+	if player.is_on_floor():
+		player.velocity.y = 0.0
 
 	# Setup active hitbox with scaling per combo step
 	var step_mult: float = 1.0 + (current_step * 0.25)
@@ -101,6 +89,8 @@ func exit() -> void:
 	player.hitbox.set_active(false)
 	player.set_slash_visual(false, 0, false, false)
 	combo_buffered = false
+	if player.attack_cooldown_timer <= 0.0:
+		player.attack_cooldown_timer = player.weapon.attack_cooldown
 	last_attack_end_msec = Time.get_ticks_msec()
 
 func physics_update(delta: float) -> void:
@@ -111,15 +101,15 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("roll")
 		return
 		
-	# Input buffer for next combo hit
+	# Input buffer for next combo hit (only allowed if cooldown ready)
 	if Input.is_action_just_pressed("attack_primary"):
 		combo_buffered = true
 		
-	# Decelerate forward step
+	# Decelerate horizontal impulse on ground; maintain full natural gravity in air
 	if player.is_on_floor():
 		player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
 	else:
-		player.velocity.y += (player.gravity * 0.8) * delta
+		player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
 		
 	player.move_and_slide()
 	
@@ -129,11 +119,19 @@ func physics_update(delta: float) -> void:
 		player.set_slash_visual(false, 0)
 		last_attack_end_msec = Time.get_ticks_msec()
 		
-		if combo_buffered:
-			current_step = (current_step + 1) % player.weapon.combo_durations.size()
+		# If another hit was buffered and we haven't reached the combo finisher
+		if combo_buffered and (current_step + 1 < player.weapon.combo_durations.size()):
+			current_step += 1
 			_start_combo_step()
 			return
 			
+		# Combo chain ended or standalone swing: apply cadence recovery cooldown
+		if current_step + 1 >= player.weapon.combo_durations.size():
+			player.attack_cooldown_timer = player.weapon.combo_finisher_cooldown
+		else:
+			player.attack_cooldown_timer = player.weapon.attack_cooldown
+		
+		current_step = 0
 		if player.is_on_floor():
 			if abs(Input.get_axis("move_left", "move_right")) > 0.1:
 				state_machine.transition_to("run")

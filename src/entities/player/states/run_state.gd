@@ -22,7 +22,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Attack check
-	if Input.is_action_just_pressed("attack_primary"):
+	if Input.is_action_just_pressed("attack_primary") and player.can_attack():
 		state_machine.transition_to("attack")
 		return
 

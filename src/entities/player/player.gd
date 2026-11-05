@@ -52,6 +52,7 @@ var last_wall_jump_normal_x: float = 0.0
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
+var attack_cooldown_timer: float = 0.0
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -124,6 +125,13 @@ func _physics_process(delta: float) -> void:
 		flash_timer -= delta
 		if flash_timer <= 0.0 and flash_material:
 			flash_material.set_shader_parameter("flash_active", false)
+
+	# Attack cadence cooldown timer
+	if attack_cooldown_timer > 0.0:
+		attack_cooldown_timer = max(0.0, attack_cooldown_timer - delta)
+
+func can_attack() -> bool:
+	return attack_cooldown_timer <= 0.0
 
 func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void:
 	current_health = max(0.0, current_health - damage)

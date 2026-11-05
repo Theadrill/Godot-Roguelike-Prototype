@@ -21,3 +21,9 @@ extends Resource
 @export var combo_durations: Array[float] = [0.18, 0.18, 0.28]
 # Forward step impulse on each swing (px/s)
 @export var forward_impulses: Array[float] = [80.0, 100.0, 140.0]
+
+@export_group("Attack Cadence & Recovery")
+## Cooldown after an attack before a new attack can be started (seconds)
+@export_range(0.0, 1.0, 0.02, "suffix:s") var attack_cooldown: float = 0.14
+## Cooldown specifically after completing the full combo finisher (seconds)
+@export_range(0.0, 1.0, 0.02, "suffix:s") var combo_finisher_cooldown: float = 0.22
