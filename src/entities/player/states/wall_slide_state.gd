@@ -7,6 +7,10 @@ func enter() -> void:
 	player = character as Player
 	player.can_double_jump = true
 
+	# Zero out upward velocity immediately so player sticks to the wall without sliding up
+	if player.velocity.y < 0.0:
+		player.velocity.y = 0.0
+
 func physics_update(delta: float) -> void:
 	if player.is_on_floor():
 		state_machine.transition_to("idle")
@@ -19,7 +23,7 @@ func physics_update(delta: float) -> void:
 	# If player releases the directional towards the wall, let go
 	var wall_dir := -player.get_wall_normal().x
 	var input_dir := Input.get_axis("move_left", "move_right")
-	if sign(input_dir) != sign(wall_dir):
+	if signf(input_dir) != signf(wall_dir):
 		state_machine.transition_to("fall")
 		return
 
@@ -30,5 +34,5 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Sliding down with clamped speed
-	player.velocity.y = move_toward(player.velocity.y, player.wall_slide_speed, (player.gravity * 0.5) * delta)
+	player.velocity.y = move_toward(player.velocity.y, player.wall_slide_speed, (player.gravity * 0.8) * delta)
 	player.move_and_slide()
