@@ -231,8 +231,8 @@ func set_ledge_climb_visual(active: bool) -> void:
 		(visual.get_node("HeadbandPlaceholder") as CanvasItem).visible = not active
 
 ## Ledge detection (Dead Cells mantle check):
-## Detects when the player's chest hits a wall edge while open air is above their head,
-## finding the exact floor surface to vault onto.
+## Detects when any part of the player (feet, knees, waist, or chest) hits a wall edge
+## while open air is above, finding the exact floor surface to vault onto.
 func check_ledge() -> bool:
 	if is_crouch_requested():
 		return false
@@ -244,18 +244,41 @@ func check_ledge() -> bool:
 	var face: float = float(facing_direction)
 	var ray_dist: float = 18.0
 
-	# 1. Chest Ray: Must hit solid environment on Layer 1
-	var chest_from := global_position + Vector2(0.0, -22.0)
-	var chest_to := chest_from + Vector2(face * ray_dist, 0.0)
-	var chest_query := PhysicsRayQueryParameters2D.create(chest_from, chest_to, 1)
-	chest_query.exclude = [get_rid()]
-	var chest_hit := space.intersect_ray(chest_query)
-	if chest_hit.is_empty():
+	# 1. Wall Contact: Check lowest contact point at the very bottom of the feet (y = -1.0),
+	# knee height (y = -12.0), and chest height (y = -24.0) so even a 1-pixel contact with a ledge is caught.
+	var wall_hit: Dictionary = {}
+	var low_query := PhysicsRayQueryParameters2D.create(
+		global_position + Vector2(0.0, -1.0),
+		global_position + Vector2(face * ray_dist, -1.0),
+		1
+	)
+	low_query.exclude = [get_rid()]
+	wall_hit = space.intersect_ray(low_query)
+
+	if wall_hit.is_empty():
+		var knee_query := PhysicsRayQueryParameters2D.create(
+			global_position + Vector2(0.0, -12.0),
+			global_position + Vector2(face * ray_dist, -12.0),
+			1
+		)
+		knee_query.exclude = [get_rid()]
+		wall_hit = space.intersect_ray(knee_query)
+
+	if wall_hit.is_empty():
+		var chest_query := PhysicsRayQueryParameters2D.create(
+			global_position + Vector2(0.0, -24.0),
+			global_position + Vector2(face * ray_dist, -24.0),
+			1
+		)
+		chest_query.exclude = [get_rid()]
+		wall_hit = space.intersect_ray(chest_query)
+
+	if wall_hit.is_empty():
 		return false
 
-	var wall_x: float = chest_hit.position.x
+	var wall_x: float = wall_hit.position.x
 
-	# 2. Head Ray: Must have clear space (no wall above the platform edge)
+	# 2. Head Clearance: Upper body / head must have clear space (no wall above the platform edge)
 	var head_from := global_position + Vector2(0.0, -42.0)
 	var head_to := head_from + Vector2(face * (ray_dist + 4.0), 0.0)
 	var head_query := PhysicsRayQueryParameters2D.create(head_from, head_to, 1)
@@ -264,9 +287,9 @@ func check_ledge() -> bool:
 	if not head_hit.is_empty():
 		return false
 
-	# 3. Floor Surface Finder: Cast downwards onto the platform top
+	# 3. Floor Surface Finder: Cast downwards onto the platform top (from above head down to beneath feet)
 	var floor_from := Vector2(wall_x + (face * 6.0), global_position.y - 50.0)
-	var floor_to := Vector2(wall_x + (face * 6.0), global_position.y - 14.0)
+	var floor_to := Vector2(wall_x + (face * 6.0), global_position.y + 6.0)
 	var floor_query := PhysicsRayQueryParameters2D.create(floor_from, floor_to, 1)
 	floor_query.exclude = [get_rid()]
 	var floor_hit := space.intersect_ray(floor_query)
