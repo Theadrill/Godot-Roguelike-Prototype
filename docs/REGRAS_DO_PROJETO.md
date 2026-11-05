@@ -50,13 +50,18 @@
 
 ## 3. Preservação Rígida da Identidade Visual
 
-### Regra 6: Coerência Visual Inegociável (Zero Bagunça Artística)
-Para evitar que o jogo vire uma colcha de retalhos com resoluções e estilos desconexos:
-* **Escala de Resolução Estrita:** Resolução interna travada em **640 × 360 px** (escala 16:9 pixel-perfect).
+### Regra 6: Coerência Visual Inegociável & Direção de Arte (Zero Bagunça)
+Todos os assets visuais (protagonista, inimigos, armas, cenários e NPCs) devem parecer pertencer rigorosamente ao **MESMO jogo e universo visual**:
+* **Proibição de Disparidade de Estilo:** É expressamente proibido misturar assets realistas com estilos cartoon/chibi, ou assets ultra-detalhados com pixel art simplório, a menos que o PO especifique explicitamente.
+* **Proibição de "Mixels" (Densidade de Pixels Idêntica):** Todos os sprites do jogo compartilham a mesma escala nativa de pixels na tela (1 pixel no asset = 1 pixel na resolução 640 × 360). Nenhum asset pode parecer ter pixels menores ou maiores que os outros.
+* **Linguagem Visual e Sombreamento Padronizados:**
+  * Personagens e monstros compartilham a mesma gramática de contorno (outlines escuros) e sombreamento (paleta contida com 2 a 3 tons de sombra por material).
+  * Universo estético: **Dark Fantasy Rústico e Sombrio** (tons terrosos, ferro forjado, pedra úmida, sangue denso e o brilho espectral arroxeado/ciano da Morte).
+* **Escala de Resolução Estrita:** Resolução interna travada em **640 × 360 px** (proporção 16:9 pixel-perfect).
 * **Grade de Tiles Base:** Padrão **16 × 16 pixels**. Qualquer bloco composto deve ser múltiplo exato (32×32, 64×64).
 * **Proporção do Personagem:** Rigorosamente **16 pixels de largura × 40 pixels de altura**.
-* **Pivô nos Pés (Feet-Pivot):** Todo sprite de personagem e inimigo deve ter seu ponto de ancoragem/origem exatamente no **centro-inferior (entre os pés)**, garantindo que animações de corrida, pulo e ataque nunca façam o boneco afundar ou tremer no chão.
-* **Paleta e Renderização:** Sem mistura de estilos. Não mesclar 3D real no viewport. Efeitos mágicos e de fogo utilizam `GPUParticles2D` + Shaders 2D e iluminação dinâmica com `PointLight2D`.
+* **Pivô nos Pés (Feet-Pivot):** Todo sprite de personagem e inimigo deve ter seu ponto de ancoragem/origem exatamente no **centro-inferior (entre os pés)**, garantindo que transições de animação nunca façam o corpo afundar ou tremer no chão.
+* **Efeitos Compatíveis:** Efeitos mágicos e de fogo utilizam `GPUParticles2D` + Shaders 2D e iluminação dinâmica com `PointLight2D` integrados à paleta do jogo.
 
 ---
 
