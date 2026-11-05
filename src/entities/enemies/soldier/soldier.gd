@@ -4,6 +4,8 @@ extends CharacterBody2D
 ## Basic melee soldier enemy implementing FSM, 3-signal tactical combat, and diegetic feedback.
 
 @export_group("Soldier Stats")
+@export var stationary: bool = false
+@export_range(-1, 1, 2) var initial_facing: int = 1
 @export_range(10.0, 1000.0, 5.0) var max_health: float = 60.0
 @export_range(10.0, 300.0, 5.0, "suffix:px/s") var patrol_speed: float = 40.0
 @export_range(30.0, 400.0, 5.0, "suffix:px/s") var chase_speed: float = 85.0
@@ -41,6 +43,8 @@ var flash_material: ShaderMaterial
 
 func _ready() -> void:
 	current_health = max_health
+	if initial_facing != 0:
+		update_facing(float(initial_facing))
 	hurtbox.hit_received.connect(_on_hit_received)
 	hide_telegraph()
 	set_slash_active(false)

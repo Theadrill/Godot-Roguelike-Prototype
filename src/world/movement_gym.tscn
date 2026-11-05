@@ -5,10 +5,13 @@
 [ext_resource type="PackedScene" path="res://src/entities/enemies/soldier/soldier.tscn" id="3_soldier"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
-size = Vector2(400, 72)
+size = Vector2(700, 72)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_left_boundary"]
 size = Vector2(40, 400)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jump_wall"]
+size = Vector2(16, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_step_4tiles"]
 size = Vector2(100, 64)
@@ -44,20 +47,28 @@ position = Vector2(8, 24)
 collision_mask = 0
 
 [node name="Ground1_Col" type="CollisionShape2D" parent="Environment" unique_id=677030247]
-position = Vector2(150, 324)
+position = Vector2(0, 324)
 shape = SubResource("RectangleShape2D_ground1")
 
 [node name="Ground1_Vis" type="Polygon2D" parent="Environment" unique_id=1361034921]
 color = Color(0.15, 0.17, 0.22, 1)
-polygon = PackedVector2Array(-50, 288, 350, 288, 350, 360, -50, 360)
+polygon = PackedVector2Array(-350, 288, 350, 288, 350, 360, -350, 360)
 
 [node name="WallLeftBoundary_Col" type="CollisionShape2D" parent="Environment" unique_id=643261727]
-position = Vector2(-70, 150)
+position = Vector2(-370, 150)
 shape = SubResource("RectangleShape2D_wall_left_boundary")
 
 [node name="WallLeftBoundary_Vis" type="Polygon2D" parent="Environment" unique_id=254504624]
 color = Color(0.12, 0.14, 0.18, 1)
-polygon = PackedVector2Array(-90, -50, -50, -50, -50, 360, -90, 360)
+polygon = PackedVector2Array(-390, -50, -350, -50, -350, 360, -390, 360)
+
+[node name="JumpWall_Col" type="CollisionShape2D" parent="Environment" unique_id=1849102481]
+position = Vector2(-12, 264)
+shape = SubResource("RectangleShape2D_jump_wall")
+
+[node name="JumpWall_Vis" type="Polygon2D" parent="Environment" unique_id=958102374]
+color = Color(0.24, 0.27, 0.35, 1)
+polygon = PackedVector2Array(-20, 240, -4, 240, -4, 288, -20, 288)
 
 [node name="Step4_Col" type="CollisionShape2D" parent="Environment" unique_id=1270975954]
 position = Vector2(400, 256)
@@ -193,11 +204,16 @@ position = Vector2(260, 288)
 [node name="CombatDummy2" parent="." unique_id=1953690624 instance=ExtResource("2_dummy")]
 position = Vector2(310, 288)
 
+[node name="SoldierLeft" parent="." instance=ExtResource("3_soldier")]
+position = Vector2(-150, 288)
+
 [node name="Soldier" parent="." instance=ExtResource("3_soldier")]
-position = Vector2(180, 288)
+position = Vector2(35, 288)
+stationary = true
+initial_facing = 1
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
-position = Vector2(80, 288)
+position = Vector2(-60, 288)
 run_speed = 150.0
 roll_speed = 170.0
 roll_duration = 0.24

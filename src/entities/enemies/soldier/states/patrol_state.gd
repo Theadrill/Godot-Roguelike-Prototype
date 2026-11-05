@@ -22,6 +22,12 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("chase")
 		return
 
+	# If stationary, stay in place watching for player
+	if soldier.stationary:
+		soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+		soldier.move_and_slide()
+		return
+
 	# Handle brief pause at turnarounds
 	if wait_timer > 0.0:
 		wait_timer -= delta
