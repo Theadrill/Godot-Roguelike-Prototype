@@ -22,10 +22,14 @@ func enter() -> void:
 func physics_update(delta: float) -> void:
 	input_lock_timer -= delta
 
-	# Once initial outward kick is delivered, check if we hit the opposite wall to stick!
-	if input_lock_timer <= 0.0 and player.is_on_wall_only():
+	# Check if we hit the opposite wall to stick or chain into next jump
+	if player.is_on_wall_only():
 		var current_wall_norm: float = signf(player.get_wall_normal().x)
 		if current_wall_norm != player.last_wall_jump_normal_x:
+			if Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0:
+				player.jump_buffer_timer = 0.0
+				state_machine.transition_to("walljump")
+				return
 			state_machine.transition_to("wallslide")
 			return
 

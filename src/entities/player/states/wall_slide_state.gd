@@ -15,6 +15,12 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("idle")
 		return
 
+	# Wall jump check FIRST before any detach checks!
+	if Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0:
+		player.jump_buffer_timer = 0.0
+		state_machine.transition_to("walljump")
+		return
+
 	if not player.is_on_wall_only():
 		state_machine.transition_to("fall")
 		return
@@ -22,15 +28,9 @@ func physics_update(delta: float) -> void:
 	var wall_norm: float = signf(player.get_wall_normal().x)
 	var input_dir: float = Input.get_axis("move_left", "move_right")
 
-	# If player explicitly steers AWAY from the wall, let go
-	if signf(input_dir) == wall_norm and abs(input_dir) > 0.2:
+	# If player explicitly steers AWAY from the wall (and didn't jump), let go
+	if signf(input_dir) == wall_norm and abs(input_dir) > 0.4:
 		state_machine.transition_to("fall")
-		return
-
-	# Wall jump check
-	if Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0:
-		player.jump_buffer_timer = 0.0
-		state_machine.transition_to("walljump")
 		return
 
 	# Maintain slight pressure towards wall to keep is_on_wall reliable in Godot 4
