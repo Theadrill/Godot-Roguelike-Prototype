@@ -6,6 +6,9 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(400, 72)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_left_boundary"]
+size = Vector2(40, 400)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_step_4tiles"]
 size = Vector2(100, 64)
 
@@ -37,6 +40,7 @@ size = Vector2(120, 20)
 position = Vector2(8, 24)
 
 [node name="Environment" type="StaticBody2D" parent="." unique_id=479161105]
+collision_layer = 1
 collision_mask = 0
 
 [node name="Ground1_Col" type="CollisionShape2D" parent="Environment" unique_id=677030247]
@@ -46,6 +50,14 @@ shape = SubResource("RectangleShape2D_ground1")
 [node name="Ground1_Vis" type="Polygon2D" parent="Environment" unique_id=1361034921]
 color = Color(0.15, 0.17, 0.22, 1)
 polygon = PackedVector2Array(-50, 288, 350, 288, 350, 360, -50, 360)
+
+[node name="WallLeftBoundary_Col" type="CollisionShape2D" parent="Environment"]
+position = Vector2(-70, 150)
+shape = SubResource("RectangleShape2D_wall_left_boundary")
+
+[node name="WallLeftBoundary_Vis" type="Polygon2D" parent="Environment"]
+color = Color(0.12, 0.14, 0.18, 1)
+polygon = PackedVector2Array(-90, -50, -50, -50, -50, 360, -90, 360)
 
 [node name="Step4_Col" type="CollisionShape2D" parent="Environment" unique_id=1270975954]
 position = Vector2(400, 256)
@@ -180,8 +192,9 @@ position = Vector2(250, 288)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(80, 288)
-roll_speed = 160.0
-roll_duration = 0.2
+run_speed = 150.0
+roll_speed = 170.0
+roll_duration = 0.24000000000000002
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1090956029]
 position = Vector2(0, -20)

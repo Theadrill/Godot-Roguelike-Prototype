@@ -69,6 +69,7 @@ func _physics_process(delta: float) -> void:
 		coyote_timer = coyote_duration
 		can_double_jump = true
 		last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
+		_prevent_standing_on_enemies()
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 
@@ -77,6 +78,22 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer_timer = jump_buffer_duration
+
+func _prevent_standing_on_enemies() -> void:
+	for i in range(get_slide_collision_count()):
+		var col := get_slide_collision(i)
+		var collider := col.get_collider()
+		# If the collider is on Enemy layer (Layer 3) or is an enemy/dummy
+		if collider is CombatDummy or (collider is CollisionObject2D and collider.get_collision_layer_value(3)):
+			# Normal pointing up means player landed directly on their top head/shoulders
+			if col.get_normal().y < -0.5:
+				var push_dir: float = signf(global_position.x - collider.global_position.x)
+				if push_dir == 0.0:
+					push_dir = float(facing_direction)
+				# Slide off sideways immediately!
+				velocity.x = push_dir * 180.0
+				global_position.x += push_dir * 2.0
+				return
 
 func update_facing(direction: float) -> void:
 	if direction > 0.0:
