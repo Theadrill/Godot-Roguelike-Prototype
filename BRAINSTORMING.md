@@ -65,14 +65,25 @@ A movimentação deve dar ao jogador sensação de agilidade máxima e controle 
 
 ---
 
-### 3. O "Juice" e Peso Visceral dos Golpes
-* **Hitstop (Micro-congelamento)**: Pausa de 0.04s a 0.07s na animação ao conectar o golpe na carne/armadura do inimigo, dando sensação de peso físico.
-* **Hit-Flash**: O sprite do inimigo pisca em branco sólido por 0.08s ao levar dano.
-* **Camera Shake (Trauma Base)**: Tremor de tela baseado em estresse decrescente (`trauma * trauma`).
-* **Combo de 3 Golpes**:
-  1. *Hit 1*: Corte horizontal rápido.
-  2. *Hit 2*: Corte diagonal rápido em sentido oposto.
-  3. *Hit 3 (Finisher)*: Estocada pesada ou corte vertical descendente com alto knockback e hitstop acentuado.
+### 3. Ponto 2: Sistema Tático de Defesa & Contra-Ataque (O Sistema dos 3 Sinais)
+Inspirado na legibilidade visual de *Assassin's Creed* com a mecânica de precisão rítmica de *Gears of War* (Active Reload) e a intensidade de *Sekiro*:
+
+#### Tabela de Tipos de Ataques Inimigos:
+| Sinal Visual | Tipo de Golpe | Interrupção por Corte? | Resposta do Jogador (Mecânica de Defesa) |
+| :---: | :---: | :---: | :--- |
+| **Sem Sinal (Normal)** | Golpe padrão | **SIM** (O jogador corta e cancela o ataque do mob) | Corte agressivo, esquiva ou bloqueio simples. |
+| **Amarelo (Pesado)** | Golpe forte | **NÃO** (Inimigo tem hyper-armor durante o golpe) | **Sistema de 3 Níveis de Resposta:**<br>• *Nível 1 (Parry Perfeito):* Nega 100% do dano, atordoa o monstro (*stagger*) e abre janela para contra-ataque crítico.<br>• *Nível 2 (Bloqueio Simples):* Absorve a maior parte do dano (toma apenas 15% de *chip damage* de impacto) e empurra o jogador.<br>• *Nível 3 (Falha / Bloqueio Atrasado):* Toma dano alto e sofre quebra de postura momentânea. |
+| **Vermelho (Perilous)** | Golpe letal | **NÃO** | **Alta Ameaça (Proibido Bloquear):**<br>• *Segurar Escudo:* Proibido. A guarda é esmagada instantaneamente $\rightarrow$ dano completo + estado atordoado/imóvel.<br>• *Respostas Válidas:* **Parry Perfeito** (arriscado, alto reflexo, recompensa massiva) OU **Rolamento com i-frames** (opção segura de reposicionamento). |
+
+---
+
+### 4. Roadmap de Produção em Duas Fases (Engenharia Segura):
+* **Fase 1 (Protótipo Imediato):** 
+  * Mobs têm os sinais visuais (Amarelo e Vermelho).
+  * Como a defesa inicial do jogador é o **Rolamento**, o rolamento é a resposta universal para escapar dos golpes Amarelos e Vermelhos sem precisar de escudo no primeiro dia.
+* **Fase 2 (A Forja do Escudo do Irmão):** 
+  * O irmão forja o primeiro broquel/escudo de madeira.
+  * Implementação da mecânica completa: botão de guarda, janela de Parry (0.12s), chip damage e quebra de postura contra golpes vermelhos.
 
 ---
 
