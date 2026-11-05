@@ -18,12 +18,13 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("roll")
 		return
 
-	# Wall slide check: only allows opposite wall to prevent single-wall climbing
+	# Wall slide check: latch onto wall immediately when touching
 	if player.is_on_wall_only():
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:
 			var move_dir: float = Input.get_axis("move_left", "move_right")
-			if signf(move_dir) == -wall_norm:
+			# Allow latching if pressing toward wall or neutral
+			if signf(move_dir) == -wall_norm or abs(move_dir) < 0.2:
 				state_machine.transition_to("wallslide")
 				return
 

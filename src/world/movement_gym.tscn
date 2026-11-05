@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cjijcwt58gu71"]
+[gd_scene format=3 uid="uid://cjijcwt58gu71"]
 
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
 
@@ -20,6 +20,9 @@ size = Vector2(140, 64)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground3"]
 size = Vector2(400, 72)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mid_platform"]
+size = Vector2(120, 20)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_left"]
 size = Vector2(32, 160)
 
@@ -29,97 +32,96 @@ size = Vector2(32, 220)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_balcony"]
 size = Vector2(120, 20)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mid_platform"]
-size = Vector2(120, 20)
+[node name="MovementGym" type="Node2D" unique_id=650259206]
+position = Vector2(8, 24)
 
-[node name="MovementGym" type="Node2D"]
-
-[node name="Environment" type="StaticBody2D" parent="."]
+[node name="Environment" type="StaticBody2D" parent="." unique_id=479161105]
 collision_mask = 0
 
-[node name="Ground1_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Ground1_Col" type="CollisionShape2D" parent="Environment" unique_id=677030247]
 position = Vector2(150, 324)
 shape = SubResource("RectangleShape2D_ground1")
 
-[node name="Ground1_Vis" type="Polygon2D" parent="Environment"]
+[node name="Ground1_Vis" type="Polygon2D" parent="Environment" unique_id=1361034921]
 color = Color(0.15, 0.17, 0.22, 1)
 polygon = PackedVector2Array(-50, 288, 350, 288, 350, 360, -50, 360)
 
-[node name="Step4_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Step4_Col" type="CollisionShape2D" parent="Environment" unique_id=1270975954]
 position = Vector2(400, 256)
 shape = SubResource("RectangleShape2D_step_4tiles")
 
-[node name="Step4_Vis" type="Polygon2D" parent="Environment"]
+[node name="Step4_Vis" type="Polygon2D" parent="Environment" unique_id=876480704]
 color = Color(0.22, 0.25, 0.32, 1)
 polygon = PackedVector2Array(350, 224, 450, 224, 450, 288, 350, 288)
 
-[node name="Step7_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Step7_Col" type="CollisionShape2D" parent="Environment" unique_id=2136897261]
 position = Vector2(500, 232)
 shape = SubResource("RectangleShape2D_step_7tiles")
 
-[node name="Step7_Vis" type="Polygon2D" parent="Environment"]
+[node name="Step7_Vis" type="Polygon2D" parent="Environment" unique_id=1976320532]
 color = Color(0.28, 0.32, 0.4, 1)
 polygon = PackedVector2Array(450, 176, 550, 176, 550, 288, 450, 288)
 
-[node name="Ground2_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Ground2_Col" type="CollisionShape2D" parent="Environment" unique_id=28844364]
 position = Vector2(725, 324)
 shape = SubResource("RectangleShape2D_ground2")
 
-[node name="Ground2_Vis" type="Polygon2D" parent="Environment"]
+[node name="Ground2_Vis" type="Polygon2D" parent="Environment" unique_id=196877385]
 color = Color(0.15, 0.17, 0.22, 1)
 polygon = PackedVector2Array(600, 288, 850, 288, 850, 360, 600, 360)
 
-[node name="LowCeiling_Col" type="CollisionShape2D" parent="Environment"]
+[node name="LowCeiling_Col" type="CollisionShape2D" parent="Environment" unique_id=1433940830]
 position = Vector2(725, 224)
 shape = SubResource("RectangleShape2D_ceiling")
 
-[node name="LowCeiling_Vis" type="Polygon2D" parent="Environment"]
+[node name="LowCeiling_Vis" type="Polygon2D" parent="Environment" unique_id=1564603603]
 color = Color(0.2, 0.23, 0.3, 1)
 polygon = PackedVector2Array(655, 192, 795, 192, 795, 256, 655, 256)
 
-[node name="Ground3_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Ground3_Col" type="CollisionShape2D" parent="Environment" unique_id=705596450]
 position = Vector2(1100, 324)
 shape = SubResource("RectangleShape2D_ground3")
 
-[node name="Ground3_Vis" type="Polygon2D" parent="Environment"]
+[node name="Ground3_Vis" type="Polygon2D" parent="Environment" unique_id=1147777208]
 color = Color(0.15, 0.17, 0.22, 1)
 polygon = PackedVector2Array(900, 288, 1300, 288, 1300, 360, 900, 360)
 
-[node name="MidPlatform_Col" type="CollisionShape2D" parent="Environment"]
-position = Vector2(895, 201)
+[node name="MidPlatform_Col" type="CollisionShape2D" parent="Environment" unique_id=135090848]
+position = Vector2(908, 158)
 shape = SubResource("RectangleShape2D_mid_platform")
 
-[node name="MidPlatform_Vis" type="Polygon2D" parent="Environment"]
+[node name="MidPlatform_Vis" type="Polygon2D" parent="Environment" unique_id=2047186042]
+position = Vector2(13, -43)
 color = Color(0.2, 0.45, 0.55, 1)
 polygon = PackedVector2Array(835, 191, 955, 191, 955, 211, 835, 211)
 
-[node name="WallLeft_Col" type="CollisionShape2D" parent="Environment"]
+[node name="WallLeft_Col" type="CollisionShape2D" parent="Environment" unique_id=1651596590]
 position = Vector2(1016, 148)
 shape = SubResource("RectangleShape2D_wall_left")
 
-[node name="WallLeft_Vis" type="Polygon2D" parent="Environment"]
+[node name="WallLeft_Vis" type="Polygon2D" parent="Environment" unique_id=1514652002]
 color = Color(0.2, 0.23, 0.3, 1)
 polygon = PackedVector2Array(1000, 68, 1032, 68, 1032, 228, 1000, 228)
 
-[node name="WallRight_Col" type="CollisionShape2D" parent="Environment"]
+[node name="WallRight_Col" type="CollisionShape2D" parent="Environment" unique_id=113246179]
 position = Vector2(1096, 178)
 shape = SubResource("RectangleShape2D_wall_right")
 
-[node name="WallRight_Vis" type="Polygon2D" parent="Environment"]
+[node name="WallRight_Vis" type="Polygon2D" parent="Environment" unique_id=77798678]
 color = Color(0.2, 0.23, 0.3, 1)
 polygon = PackedVector2Array(1080, 68, 1112, 68, 1112, 288, 1080, 288)
 
-[node name="Balcony_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Balcony_Col" type="CollisionShape2D" parent="Environment" unique_id=873059603]
 position = Vector2(1172, 78)
 shape = SubResource("RectangleShape2D_balcony")
 
-[node name="Balcony_Vis" type="Polygon2D" parent="Environment"]
+[node name="Balcony_Vis" type="Polygon2D" parent="Environment" unique_id=289382288]
 color = Color(0.35, 0.4, 0.52, 1)
 polygon = PackedVector2Array(1112, 68, 1232, 68, 1232, 88, 1112, 88)
 
-[node name="UI_Hints" type="Node2D" parent="."]
+[node name="UI_Hints" type="Node2D" parent="." unique_id=1120056627]
 
-[node name="Hint1" type="Label" parent="UI_Hints"]
+[node name="Hint1" type="Label" parent="UI_Hints" unique_id=1766299258]
 offset_left = 20.0
 offset_top = 210.0
 offset_right = 320.0
@@ -128,7 +130,7 @@ theme_override_font_sizes/font_size = 10
 text = "1. CORRIDA & PARADA SECA:
 Analógico ou A / D"
 
-[node name="Hint2" type="Label" parent="UI_Hints"]
+[node name="Hint2" type="Label" parent="UI_Hints" unique_id=1001767358]
 offset_left = 360.0
 offset_top = 190.0
 offset_right = 460.0
@@ -137,7 +139,7 @@ theme_override_font_sizes/font_size = 10
 text = "2. PULO 1 (4 TILES)
 Botão A ou Espaço"
 
-[node name="Hint3" type="Label" parent="UI_Hints"]
+[node name="Hint3" type="Label" parent="UI_Hints" unique_id=1457428758]
 offset_left = 460.0
 offset_top = 140.0
 offset_right = 580.0
@@ -146,7 +148,7 @@ theme_override_font_sizes/font_size = 10
 text = "3. PULO DUPLO (7 TILES)
 Aperte A de novo no ar"
 
-[node name="Hint4" type="Label" parent="UI_Hints"]
+[node name="Hint4" type="Label" parent="UI_Hints" unique_id=490320943]
 offset_left = 540.0
 offset_top = 260.0
 offset_right = 620.0
@@ -154,7 +156,7 @@ offset_bottom = 285.0
 theme_override_font_sizes/font_size = 9
 text = "FOSSO (Coyote)"
 
-[node name="Hint5" type="Label" parent="UI_Hints"]
+[node name="Hint5" type="Label" parent="UI_Hints" unique_id=79683408]
 offset_left = 660.0
 offset_top = 160.0
 offset_right = 800.0
@@ -163,7 +165,7 @@ theme_override_font_sizes/font_size = 10
 text = "4. ROLAR (Teto 32px)
 Botão B ou Shift"
 
-[node name="Hint6" type="Label" parent="UI_Hints"]
+[node name="Hint6" type="Label" parent="UI_Hints" unique_id=1784241779]
 offset_left = 980.0
 offset_top = 35.0
 offset_right = 1140.0
@@ -172,10 +174,10 @@ theme_override_font_sizes/font_size = 10
 text = "5. WALL JUMP (CHAMINÉ)
 Quique entre as duas paredes!"
 
-[node name="Player" parent="." instance=ExtResource("1_player")]
+[node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(80, 288)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1090956029]
 position = Vector2(0, -20)
 position_smoothing_enabled = true
 position_smoothing_speed = 7.0
@@ -183,5 +185,3 @@ drag_horizontal_enabled = true
 drag_vertical_enabled = true
 drag_left_margin = 0.1
 drag_right_margin = 0.1
-drag_top_margin = 0.2
-drag_bottom_margin = 0.2
