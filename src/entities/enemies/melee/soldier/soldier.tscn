@@ -1,14 +1,14 @@
-[gd_scene load_steps=14 format=3 uid="uid://soldier_enemy_01"]
+[gd_scene format=3 uid="uid://dvfocnygtgl7k"]
 
-[ext_resource type="Script" path="res://src/entities/enemies/melee/soldier/soldier.gd" id="1_soldier"]
-[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="2_hitbox"]
-[ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="3_hurtbox"]
-[ext_resource type="Script" path="res://src/core/state_machine.gd" id="4_fsm"]
-[ext_resource type="Script" path="res://src/entities/enemies/melee/soldier/states/patrol_state.gd" id="5_patrol"]
-[ext_resource type="Script" path="res://src/entities/enemies/melee/soldier/states/chase_state.gd" id="6_chase"]
-[ext_resource type="Script" path="res://src/entities/enemies/melee/soldier/states/attack_state.gd" id="7_attack"]
-[ext_resource type="Script" path="res://src/entities/enemies/melee/soldier/states/hurt_state.gd" id="8_hurt"]
-[ext_resource type="Script" path="res://src/entities/enemies/melee/soldier/states/death_state.gd" id="9_death"]
+[ext_resource type="Script" uid="uid://c8350hdkdf3t6" path="res://src/entities/enemies/melee/soldier/soldier.gd" id="1_soldier"]
+[ext_resource type="Script" uid="uid://n8vhvey8hvr4" path="res://src/combat/hitbox.gd" id="2_hitbox"]
+[ext_resource type="Script" uid="uid://dejxgvm25wxjo" path="res://src/combat/hurtbox.gd" id="3_hurtbox"]
+[ext_resource type="Script" uid="uid://dktjcru48rca4" path="res://src/core/state_machine.gd" id="4_fsm"]
+[ext_resource type="Script" uid="uid://cm1gml5qdedpx" path="res://src/entities/enemies/melee/soldier/states/patrol_state.gd" id="5_patrol"]
+[ext_resource type="Script" uid="uid://bjwu7uog85ney" path="res://src/entities/enemies/melee/soldier/states/chase_state.gd" id="6_chase"]
+[ext_resource type="Script" uid="uid://mr7nhijwabqu" path="res://src/entities/enemies/melee/soldier/states/attack_state.gd" id="7_attack"]
+[ext_resource type="Script" uid="uid://db5bg0rx7or7c" path="res://src/entities/enemies/melee/soldier/states/hurt_state.gd" id="8_hurt"]
+[ext_resource type="Script" uid="uid://of0itgap2fa3" path="res://src/entities/enemies/melee/soldier/states/death_state.gd" id="9_death"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 40)
@@ -25,117 +25,116 @@ size = Vector2(28, 28)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
 size = Vector2(18, 42)
 
-[node name="Soldier" type="CharacterBody2D"]
+[node name="Soldier" type="CharacterBody2D" unique_id=397488660]
 collision_layer = 4
-collision_mask = 1
 floor_constant_speed = true
 floor_snap_length = 8.0
 script = ExtResource("1_soldier")
+attack_cooldown = 2.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=871248314]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_body")
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="Node2D" parent="." unique_id=222041688]
 
-[node name="Body" type="Polygon2D" parent="Visual"]
+[node name="Body" type="Polygon2D" parent="Visual" unique_id=1575038935]
 color = Color(0.48, 0.5, 0.55, 1)
 polygon = PackedVector2Array(-8, -40, 8, -40, 8, 0, -8, 0)
 
-[node name="EyeVisor" type="Polygon2D" parent="Visual"]
+[node name="EyeVisor" type="Polygon2D" parent="Visual" unique_id=1847593075]
 color = Color(0.9, 0.6, 0.2, 1)
 polygon = PackedVector2Array(2, -33, 9, -33, 9, -29, 2, -29)
 
-[node name="SlashArc" type="Polygon2D" parent="Visual"]
+[node name="SlashArc" type="Polygon2D" parent="Visual" unique_id=255466437]
 visible = false
 color = Color(1, 0.45, 0.25, 0.85)
 polygon = PackedVector2Array(8, -36, 30, -24, 28, -10, 8, -2, 18, -18)
 
-[node name="SlashArcUp" type="Polygon2D" parent="Visual"]
+[node name="SlashArcUp" type="Polygon2D" parent="Visual" unique_id=1709613398]
 visible = false
 color = Color(1, 0.45, 0.25, 0.85)
 polygon = PackedVector2Array(-14, -40, -10, -62, 0, -66, 10, -62, 14, -40, 0, -48)
 
-[node name="SlashArcDown" type="Polygon2D" parent="Visual"]
+[node name="SlashArcDown" type="Polygon2D" parent="Visual" unique_id=1347700071]
 visible = false
 color = Color(1, 0.45, 0.25, 0.85)
 polygon = PackedVector2Array(-14, 0, -10, 22, 0, 26, 10, 22, 14, 0, 0, 8)
 
-[node name="TelegraphMark" type="Node2D" parent="Visual"]
+[node name="TelegraphMark" type="Node2D" parent="Visual" unique_id=217214315]
 position = Vector2(0, -48)
 
-[node name="WhiteMark" type="Polygon2D" parent="Visual/TelegraphMark"]
+[node name="WhiteMark" type="Polygon2D" parent="Visual/TelegraphMark" unique_id=109443741]
 visible = false
-color = Color(1, 1, 1, 1)
 polygon = PackedVector2Array(0, -8, 6, 0, 0, 8, -6, 0)
 
-[node name="YellowMark" type="Polygon2D" parent="Visual/TelegraphMark"]
+[node name="YellowMark" type="Polygon2D" parent="Visual/TelegraphMark" unique_id=1342329887]
 visible = false
 color = Color(1, 0.85, 0.15, 1)
 polygon = PackedVector2Array(0, -8, 6, 0, 0, 8, -6, 0)
 
-[node name="RedMark" type="Polygon2D" parent="Visual/TelegraphMark"]
+[node name="RedMark" type="Polygon2D" parent="Visual/TelegraphMark" unique_id=1426726430]
 visible = false
 color = Color(1, 0.15, 0.15, 1)
 polygon = PackedVector2Array(-3, -10, 3, -10, 2, -2, -2, -2, -2, 2, 2, 2, 2, 6, -2, 6)
 
-[node name="Hitbox" type="Area2D" parent="Visual"]
+[node name="Hitbox" type="Area2D" parent="Visual" unique_id=355681449]
 collision_layer = 16
 collision_mask = 32
 monitoring = false
 script = ExtResource("2_hitbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox" unique_id=946970490]
 position = Vector2(18, -20)
 shape = SubResource("RectangleShape2D_hitbox")
 disabled = true
 
-[node name="HitboxUp" type="Area2D" parent="Visual"]
+[node name="HitboxUp" type="Area2D" parent="Visual" unique_id=31557406]
 collision_layer = 16
 collision_mask = 32
 monitoring = false
 script = ExtResource("2_hitbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/HitboxUp"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/HitboxUp" unique_id=1283195569]
 position = Vector2(0, -52)
 shape = SubResource("RectangleShape2D_hitbox_up")
 disabled = true
 
-[node name="HitboxDown" type="Area2D" parent="Visual"]
+[node name="HitboxDown" type="Area2D" parent="Visual" unique_id=2121807509]
 collision_layer = 16
 collision_mask = 32
 monitoring = false
 script = ExtResource("2_hitbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/HitboxDown"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/HitboxDown" unique_id=318162519]
 position = Vector2(0, 12)
 shape = SubResource("RectangleShape2D_hitbox_down")
 disabled = true
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=83340973]
 collision_layer = 64
 collision_mask = 0
 script = ExtResource("3_hurtbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1556306437]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_hurtbox")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node" parent="." unique_id=877548797 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("4_fsm")
 initial_state = NodePath("Patrol")
 
-[node name="Patrol" type="Node" parent="StateMachine"]
+[node name="Patrol" type="Node" parent="StateMachine" unique_id=1918558471]
 script = ExtResource("5_patrol")
 
-[node name="Chase" type="Node" parent="StateMachine"]
+[node name="Chase" type="Node" parent="StateMachine" unique_id=951988983]
 script = ExtResource("6_chase")
 
-[node name="Attack" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="StateMachine" unique_id=320978393]
 script = ExtResource("7_attack")
 
-[node name="Hurt" type="Node" parent="StateMachine"]
+[node name="Hurt" type="Node" parent="StateMachine" unique_id=627925454]
 script = ExtResource("8_hurt")
 
-[node name="Death" type="Node" parent="StateMachine"]
+[node name="Death" type="Node" parent="StateMachine" unique_id=1636452605]
 script = ExtResource("9_death")

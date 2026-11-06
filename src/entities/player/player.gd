@@ -92,6 +92,7 @@ var _shield_instance: Node2D = null
 var is_shield_raised: bool = false
 
 func _ready() -> void:
+	add_to_group("player")
 	current_health = max_health
 	current_mana = max_mana
 	if not weapon:

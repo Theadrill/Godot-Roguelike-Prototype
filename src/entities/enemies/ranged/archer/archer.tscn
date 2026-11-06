@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://bpn67vaqb16p5"]
+
+[ext_resource type="Script" uid="uid://vnc57c7arw4c" path="res://src/entities/enemies/ranged/archer/archer.gd" id="1_archer"]
+[ext_resource type="Script" uid="uid://dejxgvm25wxjo" path="res://src/combat/hurtbox.gd" id="2_hurtbox"]
+[ext_resource type="Script" uid="uid://dktjcru48rca4" path="res://src/core/state_machine.gd" id="3_fsm"]
+[ext_resource type="Script" uid="uid://ckp27m7hj4jv6" path="res://src/entities/enemies/ranged/archer/states/patrol_state.gd" id="4_patrol"]
+[ext_resource type="Script" uid="uid://dihmru6n3fltd" path="res://src/entities/enemies/ranged/archer/states/kite_state.gd" id="5_kite"]
+[ext_resource type="Script" uid="uid://u2tkojal00fn" path="res://src/entities/enemies/ranged/archer/states/aim_state.gd" id="6_aim"]
+[ext_resource type="Script" uid="uid://cs6x7i5w3i1en" path="res://src/entities/enemies/ranged/archer/states/shoot_state.gd" id="7_shoot"]
+[ext_resource type="Script" uid="uid://dl2acnhtnkcot" path="res://src/entities/enemies/ranged/archer/states/hurt_state.gd" id="8_hurt"]
+[ext_resource type="Script" uid="uid://ckjxgt3iicnui" path="res://src/entities/enemies/ranged/archer/states/death_state.gd" id="9_death"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(16, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(18, 42)
+
+[node name="Archer" type="CharacterBody2D" unique_id=1934867756]
+collision_layer = 4
+floor_constant_speed = true
+floor_snap_length = 8.0
+script = ExtResource("1_archer")
+arrow_speed = 250.0
+shoot_cooldown = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879905712]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="." unique_id=597041512]
+
+[node name="Body" type="Polygon2D" parent="Visual" unique_id=550065200]
+color = Color(0.25, 0.45, 0.35, 1)
+polygon = PackedVector2Array(-8, -40, 8, -40, 8, 0, -8, 0)
+
+[node name="Hood" type="Polygon2D" parent="Visual" unique_id=2037113740]
+color = Color(0.18, 0.32, 0.25, 1)
+polygon = PackedVector2Array(-9, -42, 9, -42, 9, -32, -9, -32)
+
+[node name="Quiver" type="Polygon2D" parent="Visual" unique_id=2010853405]
+color = Color(0.42, 0.28, 0.16, 1)
+polygon = PackedVector2Array(-7, -34, -4, -36, -2, -18, -6, -18)
+
+[node name="Eyes" type="Polygon2D" parent="Visual" unique_id=1622074974]
+color = Color(0.9, 0.95, 1, 1)
+polygon = PackedVector2Array(2, -31, 7, -31, 7, -28, 2, -28)
+
+[node name="Bow" type="Node2D" parent="Visual" unique_id=409769442]
+position = Vector2(8, -20)
+
+[node name="UpperLimb" type="Polygon2D" parent="Visual/Bow" unique_id=1821537153]
+color = Color(0.55, 0.38, 0.22, 1)
+polygon = PackedVector2Array(0, -2, 5, -8, 6, -15, 0, -18, -2, -17, 4, -13, 3, -7, 0, -2)
+
+[node name="LowerLimb" type="Polygon2D" parent="Visual/Bow" unique_id=536175392]
+color = Color(0.55, 0.38, 0.22, 1)
+polygon = PackedVector2Array(0, 2, 5, 8, 6, 15, 0, 18, -2, 17, 4, 13, 3, 7, 0, 2)
+
+[node name="String" type="Line2D" parent="Visual/Bow" unique_id=330226968]
+points = PackedVector2Array(0, -18, -2, 0, 0, 18)
+width = 1.0
+default_color = Color(0.92, 0.92, 0.95, 0.8)
+
+[node name="ArrowSpawn" type="Marker2D" parent="Visual/Bow" unique_id=907052860]
+position = Vector2(10, 0)
+
+[node name="TelegraphMark" type="Node2D" parent="Visual" unique_id=5769058]
+position = Vector2(0, -48)
+
+[node name="WhiteMark" type="Polygon2D" parent="Visual/TelegraphMark" unique_id=1750447507]
+visible = false
+polygon = PackedVector2Array(0, -8, 6, 0, 0, 8, -6, 0)
+
+[node name="YellowMark" type="Polygon2D" parent="Visual/TelegraphMark" unique_id=443970261]
+visible = false
+color = Color(1, 0.85, 0.15, 1)
+polygon = PackedVector2Array(0, -8, 6, 0, 0, 8, -6, 0)
+
+[node name="RedMark" type="Polygon2D" parent="Visual/TelegraphMark" unique_id=29915603]
+visible = false
+color = Color(1, 0.15, 0.15, 1)
+polygon = PackedVector2Array(-3, -10, 3, -10, 2, -2, -2, -2, -2, 2, 2, 2, 2, 6, -2, 6)
+
+[node name="WallCheck" type="RayCast2D" parent="." unique_id=1419408698]
+position = Vector2(0, -16)
+target_position = Vector2(14, 0)
+
+[node name="LedgeCheck" type="RayCast2D" parent="." unique_id=154651331]
+position = Vector2(14, 0)
+target_position = Vector2(0, 16)
+
+[node name="BackWallCheck" type="RayCast2D" parent="." unique_id=2109402834]
+position = Vector2(0, -16)
+target_position = Vector2(-14, 0)
+
+[node name="BackLedgeCheck" type="RayCast2D" parent="." unique_id=1882452810]
+position = Vector2(-14, 0)
+target_position = Vector2(0, 16)
+
+[node name="SightRay" type="RayCast2D" parent="." unique_id=956198515]
+position = Vector2(0, -20)
+target_position = Vector2(250, 0)
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=530014484]
+collision_layer = 64
+collision_mask = 0
+script = ExtResource("2_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1814156785]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="StateMachine" type="Node" parent="." unique_id=557162061 node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_fsm")
+initial_state = NodePath("Patrol")
+
+[node name="Patrol" type="Node" parent="StateMachine" unique_id=227721578]
+script = ExtResource("4_patrol")
+
+[node name="Kite" type="Node" parent="StateMachine" unique_id=1575549600]
+script = ExtResource("5_kite")
+
+[node name="Aim" type="Node" parent="StateMachine" unique_id=1237377895]
+script = ExtResource("6_aim")
+
+[node name="Shoot" type="Node" parent="StateMachine" unique_id=1124983274]
+script = ExtResource("7_shoot")
+
+[node name="Hurt" type="Node" parent="StateMachine" unique_id=288469852]
+script = ExtResource("8_hurt")
+
+[node name="Death" type="Node" parent="StateMachine" unique_id=1056327960]
+script = ExtResource("9_death")

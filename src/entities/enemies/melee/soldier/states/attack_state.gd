@@ -163,13 +163,16 @@ func _advance_phase() -> void:
 					soldier.hitbox.knockback_direction = Vector2(float(soldier.facing_direction), -0.2).normalized()
 					soldier.hitbox.set_active(true)
 
-				# Slight forward step during forward attack
-				soldier.velocity.x = float(soldier.facing_direction) * 40.0
+				# Slight forward step during forward attack (only if mobile)
+				if soldier.can_move:
+					soldier.velocity.x = float(soldier.facing_direction) * 40.0
+				else:
+					soldier.velocity.x = 0.0
 
 		1:
 			# Advance from Active -> Recovery
 			attack_phase = 2
-			phase_timer = 0.28
+			phase_timer = soldier.attack_cooldown
 			soldier.set_slash_active(false)
 			soldier.set_slash_up_active(false)
 			soldier.set_slash_down_active(false)

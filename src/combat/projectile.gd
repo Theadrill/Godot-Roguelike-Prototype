@@ -42,12 +42,12 @@ func setup(p_direction: Vector2, p_speed: float, p_damage: float, p_shooter: Nod
 	rotation = direction.angle()
 
 	# Set collision masks based on projectile source:
-	# Layer 1 = World/Walls, Layer 2 = Player, Layer 4 = Enemies
+	# Layer 1 = World/Walls, Layer 2 = Player Body, Layer 4 = Enemy Body, Layer 32 = Player Hurtbox, Layer 64 = Enemy Hurtbox
 	collision_mask = 1 # Environment
 	if is_enemy_projectile:
-		collision_mask |= 2 # Can hit Player
+		collision_mask |= 2 | 32 # Can hit Player Body + Player Hurtbox
 	else:
-		collision_mask |= 4 # Can hit Enemies
+		collision_mask |= 4 | 64 # Can hit Enemy Body + Enemy Hurtbox
 
 	if internal_hitbox:
 		internal_hitbox.attacker = shooter
@@ -127,7 +127,7 @@ func _reflect_projectile(player: Player) -> void:
 	_lifetime = 0.0
 
 	# Reconfigure collision masks to hit enemies now
-	collision_mask = 1 | 4 # World + Enemies
+	collision_mask = 1 | 4 | 64 # World + Enemy Body + Enemy Hurtbox
 
 	# Visual juice on parry reflect: pure bright cyan trail
 	modulate = Color(0.4, 0.9, 1.0, 1.0)

@@ -17,6 +17,10 @@ func physics_update(delta: float) -> void:
 	# Decrement timers
 	if turn_cooldown_timer > 0.0:
 		turn_cooldown_timer -= delta
+	if not soldier.can_move:
+		state_machine.transition_to("patrol")
+		return
+
 	if anti_air_cooldown_timer > 0.0:
 		anti_air_cooldown_timer -= delta
 

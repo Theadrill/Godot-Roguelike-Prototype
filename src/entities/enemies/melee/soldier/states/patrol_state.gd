@@ -19,11 +19,18 @@ func physics_update(delta: float) -> void:
 
 	# Check for Player in Line of Sight
 	if _can_see_player():
-		state_machine.transition_to("chase")
-		return
+		if not soldier.can_move:
+			# Immovable: only attack if in attack range; otherwise stay rooted and face player
+			var dist := soldier.global_position.distance_to(soldier.target_player.global_position)
+			if dist <= soldier.attack_range:
+				state_machine.transition_to("attack")
+				return
+		else:
+			state_machine.transition_to("chase")
+			return
 
-	# If stationary, stay in place watching for player
-	if soldier.stationary:
+	# If immovable or stationary, stay in place watching for player
+	if not soldier.can_move or soldier.stationary:
 		soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
 		soldier.move_and_slide()
 		return

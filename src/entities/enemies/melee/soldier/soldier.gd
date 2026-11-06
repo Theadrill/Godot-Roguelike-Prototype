@@ -3,8 +3,13 @@ extends CharacterBody2D
 
 ## Basic melee soldier enemy implementing FSM, 3-signal tactical combat, and diegetic feedback.
 
-@export_group("Soldier Stats")
-@export var stationary: bool = false
+@export_group("Base Stats")
+@export var can_move: bool = true
+@export var takes_knockback: bool = true
+@export var stationary: bool = false:
+	set(val):
+		stationary = val
+		can_move = not val
 @export_range(-1, 1, 2) var initial_facing: int = 1
 @export_range(10.0, 1000.0, 5.0) var max_health: float = 60.0
 @export_range(10.0, 300.0, 5.0, "suffix:px/s") var patrol_speed: float = 40.0
@@ -22,6 +27,7 @@ extends CharacterBody2D
 @export_range(10.0, 150.0, 1.0) var heavy_damage: float = 20.0
 @export_range(15.0, 200.0, 1.0) var perilous_damage: float = 32.0
 @export_range(0.1, 1.5, 0.05, "suffix:s") var telegraph_duration: float = 0.45
+@export_range(0.0, 20.0, 0.05, "suffix:s") var attack_cooldown: float = 0.40
 
 @export_group("Respawn (Test Mode)")
 @export var respawn_enabled: bool = false
@@ -131,6 +137,9 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	var incoming_hitbox: Hitbox = hurtbox.last_hitbox
 	var combo_step: int = incoming_hitbox.combo_step if incoming_hitbox else 1
 	var is_finisher: bool = (combo_step >= 3)
+
+	if not takes_knockback or not can_move:
+		knockback = Vector2.ZERO
 
 	var can_interrupt: bool = false
 
