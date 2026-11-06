@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://c7k0xprojectile01"]
+
+[ext_resource type="Script" path="res://src/combat/projectile.gd" id="1_proj"]
+[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="2_hitbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_col"]
+size = Vector2(14, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
+size = Vector2(16, 6)
+
+[node name="Projectile" type="Area2D"]
+collision_layer = 16
+collision_mask = 5
+script = ExtResource("1_proj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_col")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Shaft" type="Polygon2D" parent="Visual"]
+color = Color(0.55, 0.38, 0.22, 1)
+polygon = PackedVector2Array(-6, -1, 4, -1, 4, 1, -6, 1)
+
+[node name="Head" type="Polygon2D" parent="Visual"]
+color = Color(0.85, 0.9, 0.95, 1)
+polygon = PackedVector2Array(4, -3, 8, 0, 4, 3)
+
+[node name="Fletching" type="Polygon2D" parent="Visual"]
+color = Color(0.92, 0.92, 0.92, 1)
+polygon = PackedVector2Array(-8, -3, -5, -1, -5, 1, -8, 3)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 6
+script = ExtResource("2_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hit")

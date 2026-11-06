@@ -79,7 +79,10 @@ func physics_update(delta: float) -> void:
 
 	# Instant attack out of guard / parry
 	if Input.is_action_just_pressed("attack_primary") and player.can_attack():
-		state_machine.transition_to("attack")
+		if player.is_ranged_weapon_equipped():
+			state_machine.transition_to("rangedattack")
+		else:
+			state_machine.transition_to("attack")
 		return
 
 	# Roll cancel

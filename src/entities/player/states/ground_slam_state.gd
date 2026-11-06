@@ -24,14 +24,14 @@ func enter() -> void:
 
 	# Visual vertical stretch while diving
 	if player.visual:
-		player.visual.scale = Vector2(0.8, 1.25)
+		player.visual.scale = Vector2(0.8 * float(player.facing_direction), 1.25)
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = 90.0
 
 func exit() -> void:
 	has_impacted = false
 	if player.visual:
-		player.visual.scale = Vector2.ONE
+		player.visual.scale = Vector2(float(player.facing_direction), 1.0)
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = -35.0
 
@@ -52,7 +52,7 @@ func physics_update(delta: float) -> void:
 
 		if impact_recovery_timer <= 0.0:
 			if player.visual:
-				player.visual.scale = Vector2.ONE
+				player.visual.scale = Vector2(float(player.facing_direction), 1.0)
 			var dir := Input.get_axis("move_left", "move_right")
 			if abs(dir) > 0.1:
 				state_machine.transition_to("run")
@@ -66,7 +66,7 @@ func _on_slam_impact() -> void:
 
 	# Impact Squash visual
 	if player.visual:
-		player.visual.scale = Vector2(1.5, 0.5)
+		player.visual.scale = Vector2(1.5 * float(player.facing_direction), 0.5)
 
 	# Heavy tactile rumble & screen hitstop
 	CombatFeedback.apply_hit_feedback(0.08, 0.7, 1.0, 0.18)

@@ -4,15 +4,25 @@ extends State
 var player: Player
 
 # Idle breaks architecture
-@export var idle_break_delay: float = 5.0
+@export var idle_break_delay: float = 4.5
 var idle_timer: float = 0.0
+var breath_time: float = 0.0
 var is_in_idle_break: bool = false
 var break_anim_time: float = 0.0
+
+const BASE_BODY_SCALE := Vector2(1.0, 1.0)
+const BASE_BODY_POS := Vector2(0.0, 0.0)
+const BASE_HEADBAND_POS := Vector2(0.0, 0.0)
+const BASE_MAIN_HAND_POS := Vector2(6.0, -20.0)
+const BASE_OFF_HAND_POS := Vector2(7.0, -19.0)
+const BASE_BACK_WEAPON_POS := Vector2(-3.0, -20.0)
+const BASE_BACK_SHIELD_POS := Vector2(-6.0, -20.0)
 
 func enter() -> void:
 	player = character as Player
 	player.velocity.x = 0.0
 	idle_timer = 0.0
+	breath_time = 0.0
 	is_in_idle_break = false
 	break_anim_time = 0.0
 	player.fall_peak_y = player.global_position.y
@@ -23,12 +33,23 @@ func exit() -> void:
 
 func _reset_break_visuals() -> void:
 	is_in_idle_break = false
-	if player and player.body_polygon:
-		player.body_polygon.position.y = 0.0
-	if player and player.visual:
-		var headband := player.visual.get_node_or_null("HeadbandPlaceholder") as Polygon2D
-		if headband:
-			headband.position.y = 0.0
+	if player:
+		if player.body_polygon:
+			player.body_polygon.scale = BASE_BODY_SCALE
+			player.body_polygon.position = BASE_BODY_POS
+		if player.visual:
+			var headband := player.visual.get_node_or_null("HeadbandPlaceholder") as Polygon2D
+			if headband:
+				headband.position = BASE_HEADBAND_POS
+				headband.rotation_degrees = 0.0
+		if player.main_hand_socket:
+			player.main_hand_socket.position = BASE_MAIN_HAND_POS
+		if player.off_hand_socket:
+			player.off_hand_socket.position = BASE_OFF_HAND_POS
+		if player.back_socket_weapon:
+			player.back_socket_weapon.position = BASE_BACK_WEAPON_POS
+		if player.back_socket_shield:
+			player.back_socket_shield.position = BASE_BACK_SHIELD_POS
 
 func physics_update(delta: float) -> void:
 	# Fall check
@@ -52,9 +73,12 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("guard")
 		return
 
-	# Attack check
-	if Input.is_action_just_pressed("attack_primary") and player.can_attack():
-		state_machine.transition_to("attack")
+	# Attack check (Melee vs Ranged - supports holding button)
+	if Input.is_action_pressed("attack_primary") and player.can_attack():
+		if player.is_ranged_weapon_equipped():
+			state_machine.transition_to("rangedattack")
+		else:
+			state_machine.transition_to("attack")
 		return
 
 	# Roll check
@@ -68,21 +92,67 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("run")
 		return
 
-	# Idle breaks timer
+	# Continuous Breathing (Occurs constantly while idle)
+	# Feet (y = 0) stay 100% planted on the ground; only upper body squashes and stretches gently.
+	breath_time += delta
+	var breath_phase: float = sin(breath_time * 2.6)
+	var compression_px: float = (breath_phase + 1.0) * 0.5 * 1.5 # Ranges from 0.0 to 1.5px
+
+	if player.body_polygon:
+		player.body_polygon.position = BASE_BODY_POS # Grounded at 0.0
+		player.body_polygon.scale.y = 1.0 - (compression_px / 40.0)
+		player.body_polygon.scale.x = 1.0 + (compression_px / 40.0) * 0.25
+
+	# Headband & all equipment sockets follow the breathing movement in perfect sync
+	var torso_offset_y: float = compression_px * 0.5
+	if player.main_hand_socket:
+		player.main_hand_socket.position.y = BASE_MAIN_HAND_POS.y + torso_offset_y
+	if player.off_hand_socket:
+		player.off_hand_socket.position.y = BASE_OFF_HAND_POS.y + torso_offset_y
+	if player.back_socket_weapon:
+		player.back_socket_weapon.position.y = BASE_BACK_WEAPON_POS.y + torso_offset_y
+	if player.back_socket_shield:
+		player.back_socket_shield.position.y = BASE_BACK_SHIELD_POS.y + torso_offset_y
+
+	var headband := player.visual.get_node_or_null("HeadbandPlaceholder") as Polygon2D if player.visual else null
+
+	# Idle breaks timer: after standing still for longer, character looks around
 	idle_timer += delta
 	if idle_timer >= idle_break_delay:
 		is_in_idle_break = true
 		break_anim_time += delta
 
-		# Subtle 2px breathing oscillation on torso + micro-wave on headband
-		var breath_offset: float = sin(break_anim_time * 2.5) * 1.5
-		if player.body_polygon:
-			player.body_polygon.position.y = breath_offset
-		if player.visual:
-			var headband := player.visual.get_node_or_null("HeadbandPlaceholder") as Polygon2D
-			if headband:
-				headband.position.y = breath_offset + sin(break_anim_time * 4.0) * 0.8
+		if headband:
+			# Look-around sequence:
+			# 0.0s - 0.8s: Glance over shoulder (headband shifts back)
+			# 0.8s - 1.4s: Return to front
+			# 1.4s - 2.0s: Slight inquisitive head tilt forward
+			# > 2.2s: Resets idle timer and returns to regular breathing
+			if break_anim_time < 0.8:
+				var look_progress: float = clampf(break_anim_time / 0.3, 0.0, 1.0)
+				headband.position.x = lerpf(0.0, -3.5, look_progress)
+				headband.position.y = -compression_px
+				headband.rotation_degrees = lerpf(0.0, 6.0, look_progress)
+			elif break_anim_time < 1.4:
+				var return_progress: float = clampf((break_anim_time - 0.8) / 0.3, 0.0, 1.0)
+				headband.position.x = lerpf(-3.5, 0.0, return_progress)
+				headband.position.y = -compression_px
+				headband.rotation_degrees = lerpf(6.0, 0.0, return_progress)
+			elif break_anim_time < 2.0:
+				headband.position.x = 1.5
+				headband.position.y = -compression_px - 0.8
+				headband.rotation_degrees = -3.0
+			else:
+				# Complete idle break, loop back
+				idle_timer = 0.0
+				break_anim_time = 0.0
+				is_in_idle_break = false
+				headband.position = BASE_HEADBAND_POS
+				headband.rotation_degrees = 0.0
 	else:
-		_reset_break_visuals()
+		if headband:
+			headband.position.x = BASE_HEADBAND_POS.x
+			headband.position.y = -compression_px + (sin(breath_time * 5.2) * 0.3)
+			headband.rotation_degrees = 0.0
 
 	player.move_and_slide()

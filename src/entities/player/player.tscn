@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=24 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/ground_slam_state.gd" id="18_ground_slam"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="19_hud"]
 [ext_resource type="Script" path="res://src/entities/player/states/stagger_state.gd" id="20_stagger"]
+[ext_resource type="Script" path="res://src/entities/player/states/ranged_attack_state.gd" id="21_ranged_attack"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -181,3 +182,6 @@ script = ExtResource("18_ground_slam")
 
 [node name="Stagger" type="Node" parent="StateMachine"]
 script = ExtResource("20_stagger")
+
+[node name="RangedAttack" type="Node" parent="StateMachine"]
+script = ExtResource("21_ranged_attack")

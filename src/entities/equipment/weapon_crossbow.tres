@@ -1,10 +1,16 @@
-[gd_resource type="Resource" script_class="WeaponData" load_steps=3 format=3 uid="uid://weapon_crossbow_tres_01"]
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://weapon_crossbow_tres_01"]
 
 [ext_resource type="Script" path="res://src/combat/weapon_data.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://src/entities/equipment/crossbow_visual.tscn" id="2_visual"]
+[ext_resource type="PackedScene" path="res://src/combat/projectile.tscn" id="3_projectile"]
 
 [resource]
 script = ExtResource("1_script")
+weapon_category = 2
+projectile_scene = ExtResource("3_projectile")
+projectile_speed = 880.0
+charge_time = 0.05
+reload_time = 0.35
 weapon_name = "Heavy Crossbow"
 base_damage = 42.0
 knockback_force = 240.0

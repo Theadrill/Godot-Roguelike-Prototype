@@ -315,6 +315,11 @@ func _unhandled_input(event: InputEvent) -> void:
 func can_attack() -> bool:
 	return attack_cooldown_timer <= 0.0
 
+func is_ranged_weapon_equipped() -> bool:
+	if not weapon:
+		return false
+	return weapon.weapon_category != WeaponData.WeaponCategory.MELEE
+
 func can_defend() -> bool:
 	return parry_cooldown_timer <= 0.0
 
@@ -403,10 +408,12 @@ func update_facing(direction: float) -> void:
 	elif direction < 0.0:
 		new_facing = -1
 
-	if new_facing != 0 and new_facing != facing_direction:
-		facing_direction = new_facing
-		visual.scale.x = float(facing_direction)
-		_update_equipment_depth()
+	if new_facing != 0:
+		var needs_update: bool = (new_facing != facing_direction or visual.scale.x != float(new_facing))
+		if needs_update:
+			facing_direction = new_facing
+			visual.scale.x = float(facing_direction)
+			_update_equipment_depth()
 
 func _update_equipment_depth() -> void:
 	# Right-handed anatomy & 2D perspective:

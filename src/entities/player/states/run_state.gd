@@ -27,9 +27,12 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("guard")
 		return
 
-	# Attack check
-	if Input.is_action_just_pressed("attack_primary") and player.can_attack():
-		state_machine.transition_to("attack")
+	# Attack check (supports holding button)
+	if Input.is_action_pressed("attack_primary") and player.can_attack():
+		if player.is_ranged_weapon_equipped():
+			state_machine.transition_to("rangedattack")
+		else:
+			state_machine.transition_to("attack")
 		return
 
 	if Input.is_action_just_pressed("roll"):

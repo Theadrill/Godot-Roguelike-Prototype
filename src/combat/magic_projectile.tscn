@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://cbh17vgkeh6fs"]
+
+[ext_resource type="Script" path="res://src/combat/projectile.gd" id="1_proj"]
+[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="2_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_col"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
+radius = 8.0
+
+[node name="MagicProjectile" type="Area2D"]
+collision_layer = 16
+collision_mask = 5
+script = ExtResource("1_proj")
+speed = 580.0
+damage = 28.0
+knockback_force = 140.0
+hitstop_duration = 0.05
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_col")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="OuterAura" type="Polygon2D" parent="Visual"]
+color = Color(0.45, 0.2, 0.9, 0.6)
+polygon = PackedVector2Array(-8, 0, -6, -6, 0, -8, 6, -6, 8, 0, 6, 6, 0, 8, -6, 6)
+
+[node name="InnerOrb" type="Polygon2D" parent="Visual"]
+color = Color(0.2, 0.8, 1, 0.9)
+polygon = PackedVector2Array(-5, 0, -3, -4, 0, -5, 3, -4, 5, 0, 3, 4, 0, 5, -3, 4)
+
+[node name="Core" type="Polygon2D" parent="Visual"]
+color = Color(0.95, 0.98, 1, 1)
+polygon = PackedVector2Array(-2, 0, 0, -2, 2, 0, 0, 2)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 6
+script = ExtResource("2_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_hit")

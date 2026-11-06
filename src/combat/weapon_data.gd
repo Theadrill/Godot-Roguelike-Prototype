@@ -3,7 +3,15 @@ extends EquipmentData
 
 ## Data container for weapon combat metrics and cadence.
 
+enum WeaponCategory {
+	MELEE,
+	RANGED_BOW,
+	RANGED_CROSSBOW,
+	RANGED_SPELL
+}
+
 @export_group("Weapon Identity")
+@export var weapon_category: WeaponCategory = WeaponCategory.MELEE
 @export var weapon_name: String = "Broadsword":
 	set(value):
 		weapon_name = value
@@ -14,10 +22,25 @@ extends EquipmentData
 @export_range(0.0, 800.0, 10.0, "suffix:px/s") var knockback_force: float = 160.0
 @export_range(0.0, 0.3, 0.01, "suffix:s") var hitstop_duration: float = 0.05
 
+@export_group("Ranged Metrics (Bow & Crossbow)")
+@export var projectile_scene: PackedScene
+@export_range(200.0, 1600.0, 50.0, "suffix:px/s") var projectile_speed: float = 650.0
+@export_range(0.05, 1.0, 0.02, "suffix:s") var charge_time: float = 0.22 # Draw time for bow
+@export_range(0.05, 1.0, 0.02, "suffix:s") var reload_time: float = 0.32 # Reload time for crossbow
+@export var attack_visual_offset: Vector2 = Vector2.ZERO
+@export var attack_visual_rotation_degrees: float = 0.0
+
 @export_group("Gamepad Vibration")
 @export_range(0.0, 1.0, 0.05) var rumble_weak: float = 0.4
 @export_range(0.0, 1.0, 0.05) var rumble_strong: float = 0.7
 @export_range(0.01, 0.5, 0.01, "suffix:s") var rumble_duration: float = 0.08
+
+@export_group("Attack Behavior")
+## If true, holding the attack button accumulates charge until released to unleash a powered attack/spell.
+## If false, holding the attack button continuously attacks/fires at the weapon's cadence.
+@export var is_charge_attack: bool = false
+@export_range(0.05, 3.0, 0.05, "suffix:s") var max_charge_time: float = 0.5
+@export_range(1.0, 5.0, 0.1) var charge_damage_multiplier: float = 1.8
 
 @export_group("Combo Configuration")
 # Combo cadences (seconds per step)

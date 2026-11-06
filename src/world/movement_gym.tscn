@@ -215,7 +215,7 @@ stationary = true
 respawn_enabled = true
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
-position = Vector2(-12, 240)
+position = Vector2(384, 224)
 run_speed = 150.0
 wall_recovery_gravity_multiplier = 0.5
 roll_speed = 170.0
