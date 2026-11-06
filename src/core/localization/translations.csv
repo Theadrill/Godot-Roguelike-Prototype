@@ -1,0 +1,11 @@
+keys,pt_BR,en_US
+UI_HEALTH,Vida,Health
+UI_FLASK_CHARGES,Chá,Tea
+BARK_TEA_EMPTY_1,"Putz, acabou o chá!","Damn it, out of tea!"
+BARK_TEA_EMPTY_2,"Acabou o chá...","Not a single drop left..."
+BARK_TEA_EMPTY_3,"Devia ter trazido mais chá.","I really should've packed more tea."
+BARK_TEA_EMPTY_4,"Já acabou o chá?...","Out of tea already?..."
+ITEM_TEA_FLASK_NAME,"Garrafa de Chá da Mãe","Mother's Tea Flask"
+ITEM_TEA_FLASK_DESC,"Infusão revigorante preparada pela Mãe antes de cada partida. Restaura 40% da vida.","Invigorating herbal brew prepared with love by Mother. Restores 40% health."
+ITEM_SWORD_BASE_NAME,"Espada do Viajante","Traveler's Blade"
+ITEM_SWORD_BASE_DESC,"Lâmina rústica forjada pelo irmão antes da invasão.","Rustic blade forged by the brother before the invasion."
