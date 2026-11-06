@@ -45,6 +45,8 @@ func exit() -> void:
 	if player.weapon and player._main_weapon_instance:
 		player._main_weapon_instance.position = player.weapon.visual_offset
 		player._main_weapon_instance.rotation_degrees = player.weapon.visual_rotation_degrees
+		player._main_weapon_instance.modulate = Color.WHITE
+		player._main_weapon_instance.scale = Vector2.ONE
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = -35.0
 
@@ -62,8 +64,33 @@ func physics_update(delta: float) -> void:
 			charge_progress = minf(1.0, charge_progress + delta / maxf(0.05, charge_duration))
 
 			var is_aiming_up: bool = Input.is_action_pressed("up") or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP)
+			var base_angle: float = -45.0 if is_aiming_up else 0.0
+
+			# Tremor feedback flag
+			var jitter: float = 0.0
+			if player.weapon.charge_has_tremor:
+				jitter = (randf() - 0.5) * 4.5 * charge_progress
+
 			if player.main_hand_socket:
-				player.main_hand_socket.rotation_degrees = -45.0 if is_aiming_up else 0.0
+				player.main_hand_socket.rotation_degrees = base_angle + jitter
+
+			# Energizing glow feedback flag
+			if player._main_weapon_instance:
+				if player.weapon.charge_has_energize:
+					var pulse: float = sin(float(Time.get_ticks_msec()) * 0.015) * 0.2 if charge_progress >= 1.0 else 0.0
+					var intensity: float = 1.0 + (charge_progress * 1.6) + pulse
+					var energy_col := player.weapon.charge_energy_color
+					player._main_weapon_instance.modulate = Color(
+						1.0 + (energy_col.r * intensity * 0.7),
+						1.0 + (energy_col.g * intensity * 0.7),
+						1.0 + (energy_col.b * intensity * 0.7),
+						1.0
+					)
+					var scale_mult: float = 1.0 + (charge_progress * 0.15)
+					player._main_weapon_instance.scale = Vector2(scale_mult, scale_mult)
+				else:
+					player._main_weapon_instance.modulate = Color.WHITE
+					player._main_weapon_instance.scale = Vector2.ONE
 
 			# Slow tactical movement while aiming bow on floor
 			if player.is_on_floor():
@@ -114,6 +141,11 @@ func _fire_projectile() -> void:
 		return
 	has_fired = true
 	attack_phase = 2 # Enter recovery/reload
+
+	# Reset visual charge aura upon discharge
+	if player._main_weapon_instance:
+		player._main_weapon_instance.modulate = Color.WHITE
+		player._main_weapon_instance.scale = Vector2.ONE
 
 	var weapon := player.weapon
 	var proj_scene: PackedScene = weapon.projectile_scene if weapon.projectile_scene else load("res://src/combat/projectile.tscn")

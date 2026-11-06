@@ -106,6 +106,9 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 
 func exit() -> void:
 	is_charging = false
+	if player._main_weapon_instance:
+		player._main_weapon_instance.modulate = Color.WHITE
+		player._main_weapon_instance.scale = Vector2.ONE
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = -35.0
 	if player.hitbox.has_node("CollisionShape2D"):
@@ -124,10 +127,31 @@ func physics_update(delta: float) -> void:
 		var max_t: float = maxf(0.05, player.weapon.max_charge_time)
 		charge_progress = minf(1.0, charge_progress + delta / max_t)
 
-		# Visual anticipation jitter when charging up
+		# Tremor feedback flag
+		var jitter: float = 0.0
+		if player.weapon.charge_has_tremor:
+			jitter = (randf() - 0.5) * 5.0 * charge_progress
+
 		if player.main_hand_socket:
-			var jitter: float = (randf() - 0.5) * 4.0 * charge_progress
 			player.main_hand_socket.rotation_degrees = -65.0 + jitter
+
+		# Energizing glow feedback flag
+		if player._main_weapon_instance:
+			if player.weapon.charge_has_energize:
+				var pulse: float = sin(float(Time.get_ticks_msec()) * 0.015) * 0.2 if charge_progress >= 1.0 else 0.0
+				var intensity: float = 1.0 + (charge_progress * 1.5) + pulse
+				var energy_col := player.weapon.charge_energy_color
+				player._main_weapon_instance.modulate = Color(
+					1.0 + (energy_col.r * intensity * 0.7),
+					1.0 + (energy_col.g * intensity * 0.7),
+					1.0 + (energy_col.b * intensity * 0.7),
+					1.0
+				)
+				var scale_mult: float = 1.0 + (charge_progress * 0.12)
+				player._main_weapon_instance.scale = Vector2(scale_mult, scale_mult)
+			else:
+				player._main_weapon_instance.modulate = Color.WHITE
+				player._main_weapon_instance.scale = Vector2.ONE
 
 		# Slow foot movement on ground during windup
 		if player.is_on_floor():

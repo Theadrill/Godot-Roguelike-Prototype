@@ -35,12 +35,18 @@ enum WeaponCategory {
 @export_range(0.0, 1.0, 0.05) var rumble_strong: float = 0.7
 @export_range(0.01, 0.5, 0.01, "suffix:s") var rumble_duration: float = 0.08
 
-@export_group("Attack Behavior")
+@export_group("Attack Behavior & Charge FX")
 ## If true, holding the attack button accumulates charge until released to unleash a powered attack/spell.
 ## If false, holding the attack button continuously attacks/fires at the weapon's cadence.
 @export var is_charge_attack: bool = false
 @export_range(0.05, 3.0, 0.05, "suffix:s") var max_charge_time: float = 0.5
 @export_range(1.0, 5.0, 0.1) var charge_damage_multiplier: float = 1.8
+## Flag: activates visual tremor/vibration while holding and building charge.
+@export var charge_has_tremor: bool = true
+## Flag: activates visual energy glow and pulsation while holding and building charge.
+@export var charge_has_energize: bool = false
+## Tint color used for the energizing glow build-up.
+@export var charge_energy_color: Color = Color(0.2, 0.9, 1.0, 1.0)
 
 @export_group("Combo Configuration")
 # Combo cadences (seconds per step)
