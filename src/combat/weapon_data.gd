@@ -1,10 +1,13 @@
 class_name WeaponData
-extends Resource
+extends EquipmentData
 
 ## Data container for weapon combat metrics and cadence.
 
 @export_group("Weapon Identity")
-@export var weapon_name: String = "Broadsword"
+@export var weapon_name: String = "Broadsword":
+	set(value):
+		weapon_name = value
+		equipment_name = value
 
 @export_group("Damage & Feedback")
 @export_range(1.0, 500.0, 1.0, "or_greater") var base_damage: float = 25.0

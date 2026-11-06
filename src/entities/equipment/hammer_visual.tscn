@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://hammer_visual_01"]
+
+[node name="HammerVisual" type="Node2D"]
+
+[node name="Shaft" type="Polygon2D" parent="."]
+color = Color(0.5, 0.32, 0.18, 1)
+polygon = PackedVector2Array(-6, -1.5, 14, -1.5, 14, 1.5, -6, 1.5)
+
+[node name="Head" type="Polygon2D" parent="."]
+color = Color(0.3, 0.32, 0.36, 1)
+polygon = PackedVector2Array(12, -7, 20, -7, 22, -5, 22, 5, 20, 7, 12, 7)
+
+[node name="HeadBand" type="Polygon2D" parent="."]
+color = Color(0.65, 0.5, 0.2, 1)
+polygon = PackedVector2Array(15, -7, 17, -7, 17, 7, 15, 7)

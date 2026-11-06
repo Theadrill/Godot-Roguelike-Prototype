@@ -66,6 +66,25 @@ shape = SubResource("RectangleShape2D_player_hurtbox")
 
 [node name="Visual" type="Node2D" parent="."]
 
+[node name="BackSocketWeapon" type="Marker2D" parent="Visual"]
+z_index = -2
+position = Vector2(-3, -20)
+rotation = -2.00713
+
+[node name="BackSocketShield" type="Marker2D" parent="Visual"]
+z_index = -1
+position = Vector2(-6, -20)
+rotation = -0.14
+
+[node name="MainHandSocket" type="Marker2D" parent="Visual"]
+z_index = 1
+position = Vector2(6, -20)
+rotation = -0.610865
+
+[node name="OffHandSocket" type="Marker2D" parent="Visual"]
+z_index = -1
+position = Vector2(7, -19)
+
 [node name="BodyPlaceholder" type="Polygon2D" parent="Visual"]
 color = Color(0.18, 0.58, 0.58, 1)
 polygon = PackedVector2Array(-8, 0, 8, 0, 8, -40, -8, -40)

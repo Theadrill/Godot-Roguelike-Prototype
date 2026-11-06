@@ -46,11 +46,17 @@ func _ready() -> void:
 		_create_key_event(KEY_J),
 		_create_joy_button_event(JOY_BUTTON_X)
 	])
-	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse / Tecla K: ARMA SECUNDÁRIA / ESCUDO
+	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse / Tecla K: ARMA SECUNDÁRIA
 	_register_action("attack_secondary", [
 		_create_mouse_button_event(MOUSE_BUTTON_RIGHT),
 		_create_key_event(KEY_K),
 		_create_joy_button_event(JOY_BUTTON_Y)
+	])
+	# Botão LB (Xbox) / L1 (PlayStation) / Tecla L ou E: DEFESA / ESCUDO DEDICADO
+	_register_action("defend", [
+		_create_key_event(KEY_L),
+		_create_key_event(KEY_E),
+		_create_joy_button_event(JOY_BUTTON_LEFT_SHOULDER)
 	])
 
 	# Right Analog Stick: Camera look-ahead (espiar adiante)

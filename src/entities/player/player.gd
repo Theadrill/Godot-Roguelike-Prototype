@@ -40,6 +40,8 @@ var current_mana: float = 100.0
 
 @export_group("Combat & Equipment")
 @export var weapon: WeaponData
+@export var secondary_weapon: WeaponData
+@export var shield: ShieldData
 
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
@@ -77,12 +79,35 @@ var ledge_target_position: Vector2 = Vector2.ZERO
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var slash_effect: Node2D = $Visual/SlashEffect
 @onready var ledge_climb_visual: Node2D = $Visual/LedgeClimbPlaceholder
+@onready var main_hand_socket: Marker2D = $Visual/MainHandSocket
+@onready var off_hand_socket: Marker2D = $Visual/OffHandSocket
+@onready var back_socket_shield: Marker2D = $Visual/BackSocketShield
+@onready var back_socket_weapon: Marker2D = $Visual/BackSocketWeapon
+
+var _main_weapon_instance: Node2D = null
+var _secondary_weapon_instance: Node2D = null
+var _shield_instance: Node2D = null
+var is_shield_raised: bool = false
 
 func _ready() -> void:
 	current_health = max_health
 	current_mana = max_mana
 	if not weapon:
-		weapon = WeaponData.new()
+		var default_weapon := load("res://src/entities/equipment/weapon_sword.tres") as WeaponData
+		weapon = default_weapon if default_weapon else WeaponData.new()
+
+	if not secondary_weapon:
+		var default_secondary := load("res://src/entities/equipment/weapon_staff.tres") as WeaponData
+		if default_secondary:
+			secondary_weapon = default_secondary
+
+	if not shield:
+		var default_shield := load("res://src/entities/equipment/shield_buckler.tres") as ShieldData
+		if default_shield:
+			shield = default_shield
+
+	_refresh_equipped_visuals()
+	_update_equipment_depth()
 
 	if hitbox:
 		hitbox.attacker = self
@@ -96,6 +121,77 @@ func _ready() -> void:
 		flash_material = ShaderMaterial.new()
 		flash_material.shader = shader
 		body_polygon.material = flash_material
+
+func equip_weapon(new_weapon: WeaponData) -> void:
+	weapon = new_weapon
+	_update_main_weapon_visual()
+
+func equip_secondary_weapon(new_secondary: WeaponData) -> void:
+	secondary_weapon = new_secondary
+	_update_secondary_weapon_visual()
+
+func equip_shield(new_shield: ShieldData) -> void:
+	shield = new_shield
+	_update_shield_visual()
+
+func set_shield_raised(raised: bool) -> void:
+	if is_shield_raised == raised:
+		return
+	is_shield_raised = raised
+	if not _shield_instance or not is_instance_valid(_shield_instance):
+		return
+
+	var target_socket: Marker2D = off_hand_socket if is_shield_raised else back_socket_shield
+	if _shield_instance.get_parent() != target_socket:
+		_shield_instance.reparent(target_socket, false)
+	_shield_instance.position = shield.visual_offset if shield else Vector2.ZERO
+	_shield_instance.rotation_degrees = shield.visual_rotation_degrees if shield else 0.0
+	_shield_instance.z_index = 0
+
+func _refresh_equipped_visuals() -> void:
+	_update_main_weapon_visual()
+	_update_secondary_weapon_visual()
+	_update_shield_visual()
+
+func _update_main_weapon_visual() -> void:
+	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+		_main_weapon_instance.queue_free()
+		_main_weapon_instance = null
+
+	if weapon and weapon.visual_scene and main_hand_socket:
+		_main_weapon_instance = weapon.visual_scene.instantiate() as Node2D
+		if _main_weapon_instance:
+			main_hand_socket.add_child(_main_weapon_instance)
+			_main_weapon_instance.position = weapon.visual_offset
+			_main_weapon_instance.rotation_degrees = weapon.visual_rotation_degrees
+			_main_weapon_instance.z_index = 0
+
+func _update_secondary_weapon_visual() -> void:
+	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
+		_secondary_weapon_instance.queue_free()
+		_secondary_weapon_instance = null
+
+	if secondary_weapon and secondary_weapon.visual_scene and back_socket_weapon:
+		_secondary_weapon_instance = secondary_weapon.visual_scene.instantiate() as Node2D
+		if _secondary_weapon_instance:
+			back_socket_weapon.add_child(_secondary_weapon_instance)
+			_secondary_weapon_instance.position = secondary_weapon.back_offset
+			_secondary_weapon_instance.rotation_degrees = secondary_weapon.back_rotation_degrees
+			_secondary_weapon_instance.z_index = 0
+
+func _update_shield_visual() -> void:
+	if _shield_instance and is_instance_valid(_shield_instance):
+		_shield_instance.queue_free()
+		_shield_instance = null
+
+	if shield and shield.visual_scene:
+		_shield_instance = shield.visual_scene.instantiate() as Node2D
+		if _shield_instance:
+			var target_socket: Marker2D = off_hand_socket if is_shield_raised else back_socket_shield
+			target_socket.add_child(_shield_instance)
+			_shield_instance.position = shield.visual_offset
+			_shield_instance.rotation_degrees = shield.visual_rotation_degrees
+			_shield_instance.z_index = 0
 
 func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false, is_downward: bool = false) -> void:
 	if slash_effect:
@@ -118,6 +214,17 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 				slash_effect.position = Vector2(0.0, -20.0)
 				slash_effect.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)
 				slash_effect.scale = Vector2(1.0 + combo_step * 0.2, 1.0 + combo_step * 0.2)
+
+	if main_hand_socket:
+		if is_active:
+			if is_upward:
+				main_hand_socket.rotation_degrees = -90.0
+			elif is_downward:
+				main_hand_socket.rotation_degrees = 90.0
+			else:
+				main_hand_socket.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)
+		else:
+			main_hand_socket.rotation_degrees = -35.0
 
 func _physics_process(delta: float) -> void:
 	# Decrement timers
@@ -144,6 +251,53 @@ func _physics_process(delta: float) -> void:
 	# Attack cadence cooldown timer
 	if attack_cooldown_timer > 0.0:
 		attack_cooldown_timer = max(0.0, attack_cooldown_timer - delta)
+
+	# Dynamic Shield raising preview (defend button / LB / L1 / Key E / Key L)
+	if Input.is_action_pressed("defend"):
+		if not is_shield_raised:
+			set_shield_raised(true)
+	else:
+		if is_shield_raised:
+			set_shield_raised(false)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		match event.physical_keycode:
+			KEY_1:
+				var sword_res := load("res://src/entities/equipment/weapon_sword.tres") as WeaponData
+				if sword_res:
+					equip_weapon(sword_res)
+			KEY_2:
+				var dagger_res := load("res://src/entities/equipment/weapon_dagger.tres") as WeaponData
+				if dagger_res:
+					equip_weapon(dagger_res)
+			KEY_3:
+				var hammer_res := load("res://src/entities/equipment/weapon_hammer.tres") as WeaponData
+				if hammer_res:
+					equip_weapon(hammer_res)
+			KEY_4:
+				var staff_res := load("res://src/entities/equipment/weapon_staff.tres") as WeaponData
+				if staff_res:
+					equip_weapon(staff_res)
+			KEY_9:
+				# Cycle secondary weapon on back
+				if secondary_weapon == null:
+					var staff_res := load("res://src/entities/equipment/weapon_staff.tres") as WeaponData
+					equip_secondary_weapon(staff_res)
+				elif secondary_weapon.equipment_name == "Mystic Staff":
+					var hammer_res := load("res://src/entities/equipment/weapon_hammer.tres") as WeaponData
+					equip_secondary_weapon(hammer_res)
+				elif secondary_weapon.equipment_name == "War Hammer":
+					var sword_res := load("res://src/entities/equipment/weapon_sword.tres") as WeaponData
+					equip_secondary_weapon(sword_res)
+				else:
+					equip_secondary_weapon(null)
+			KEY_0:
+				if shield:
+					equip_shield(null)
+				else:
+					var buckler_res := load("res://src/entities/equipment/shield_buckler.tres") as ShieldData
+					equip_shield(buckler_res)
 
 func can_attack() -> bool:
 	return attack_cooldown_timer <= 0.0
@@ -177,12 +331,40 @@ func is_pushing_against_enemy(move_direction: float) -> bool:
 	return false
 
 func update_facing(direction: float) -> void:
+	var new_facing: int = 0
 	if direction > 0.0:
-		facing_direction = 1
-		visual.scale.x = 1.0
+		new_facing = 1
 	elif direction < 0.0:
-		facing_direction = -1
-		visual.scale.x = -1.0
+		new_facing = -1
+
+	if new_facing != 0 and new_facing != facing_direction:
+		facing_direction = new_facing
+		visual.scale.x = float(facing_direction)
+		_update_equipment_depth()
+
+func _update_equipment_depth() -> void:
+	# Right-handed anatomy & 2D perspective:
+	# Facing RIGHT (facing_direction == 1):
+	#   Right hand (MainHand / Weapon) is towards camera -> in front of torso (z_index = 1)
+	#   Left hand (OffHand / Shield in guard) is away from camera -> behind torso (z_index = -1)
+	# Facing LEFT (facing_direction == -1):
+	#   Left hand (OffHand / Shield in guard) is towards camera -> in front of torso (z_index = 1)
+	#   Right hand (MainHand / Weapon) is away from camera -> behind torso (z_index = -1)
+	if facing_direction == 1:
+		if main_hand_socket:
+			main_hand_socket.z_index = 1
+		if off_hand_socket:
+			off_hand_socket.z_index = -1
+	else:
+		if main_hand_socket:
+			main_hand_socket.z_index = -1
+		if off_hand_socket:
+			off_hand_socket.z_index = 1
+
+	if back_socket_shield:
+		back_socket_shield.z_index = -1
+	if back_socket_weapon:
+		back_socket_weapon.z_index = -2
 
 ## Intent-filtered check for crouching.
 ## Prevents accidental crouches when tilting the analog stick diagonally while running.
@@ -239,6 +421,8 @@ func set_ledge_climb_visual(active: bool) -> void:
 		body_polygon.visible = not active
 	if visual.has_node("HeadbandPlaceholder"):
 		(visual.get_node("HeadbandPlaceholder") as CanvasItem).visible = not active
+	if main_hand_socket:
+		main_hand_socket.visible = not active
 
 ## Ledge detection (Dead Cells mantle check):
 ## Detects when any part of the player (feet, knees, waist, or chest) hits a wall edge

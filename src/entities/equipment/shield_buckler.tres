@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ShieldData" load_steps=3 format=3 uid="uid://shield_buckler_tres_01"]
+
+[ext_resource type="Script" path="res://src/combat/shield_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://src/entities/equipment/shield_visual.tscn" id="2_visual"]
+
+[resource]
+script = ExtResource("1_script")
+guard_absorption = 0.85
+parry_window = 0.12
+parry_fail_cooldown = 1.0
+parry_stun_duration = 0.85
+has_repulsion_modifier = false
+repulsion_radius = 120.0
+repulsion_force = 380.0
+equipment_name = "Round Buckler"
+slot_type = 1
+visual_scene = ExtResource("2_visual")
+visual_offset = Vector2(0, 0)
+visual_rotation_degrees = 0.0
