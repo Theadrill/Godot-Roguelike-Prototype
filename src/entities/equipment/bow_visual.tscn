@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://ceb387f7bp2n6"]
+
+[node name="BowVisual" type="Node2D" unique_id=129178002]
+
+[node name="String" type="Line2D" parent="." unique_id=1779923138]
+points = PackedVector2Array(0, -18, 1, 0, 0, 18)
+width = 1.0
+default_color = Color(0.9, 0.92, 0.95, 0.8)
+
+[node name="UpperLimb" type="Polygon2D" parent="." unique_id=1314925538]
+color = Color(0.65, 0.42, 0.2, 1)
+polygon = PackedVector2Array(0, -2, 6, -8, 8, -14, 0, -18, -2, -17, 5, -13, 4, -8, 0, -2)
+
+[node name="LowerLimb" type="Polygon2D" parent="." unique_id=932643118]
+color = Color(0.65, 0.42, 0.2, 1)
+polygon = PackedVector2Array(0, 2, 6, 8, 8, 14, 0, 18, -2, 17, 5, 13, 4, 8, 0, 2)
+
+[node name="Grip" type="Polygon2D" parent="." unique_id=521477904]
+color = Color(0.35, 0.22, 0.1, 1)
+polygon = PackedVector2Array(-2, -3, 3, -3, 3, 3, -2, 3)

@@ -9,25 +9,21 @@ func _ready() -> void:
 	_register_action("move_left", [
 		_create_key_event(KEY_A),
 		_create_key_event(KEY_LEFT),
-		_create_joy_button_event(JOY_BUTTON_DPAD_LEFT),
 		_create_joy_motion_event(JOY_AXIS_LEFT_X, -1.0)
 	])
 	_register_action("move_right", [
 		_create_key_event(KEY_D),
 		_create_key_event(KEY_RIGHT),
-		_create_joy_button_event(JOY_BUTTON_DPAD_RIGHT),
 		_create_joy_motion_event(JOY_AXIS_LEFT_X, 1.0)
 	])
 	_register_action("up", [
 		_create_key_event(KEY_W),
 		_create_key_event(KEY_UP),
-		_create_joy_button_event(JOY_BUTTON_DPAD_UP),
 		_create_joy_motion_event(JOY_AXIS_LEFT_Y, -1.0)
 	], 0.55)
 	_register_action("down", [
 		_create_key_event(KEY_S),
 		_create_key_event(KEY_DOWN),
-		_create_joy_button_event(JOY_BUTTON_DPAD_DOWN),
 		_create_joy_motion_event(JOY_AXIS_LEFT_Y, 1.0)
 	], 0.55)
 	# Botão A (Xbox) / X (PlayStation) / Espaço: PULO
@@ -40,23 +36,29 @@ func _ready() -> void:
 		_create_key_event(KEY_SHIFT),
 		_create_joy_button_event(JOY_BUTTON_B)
 	])
-	# Botão X (Xbox) / Quadrado (PlayStation) / Botão Esquerdo Mouse / Tecla J: ARMA PRIMÁRIA
+	# Botão X (Xbox) / Quadrado (PlayStation) / Botão Esquerdo Mouse / Tecla J: ARMA ATUAL
 	_register_action("attack_primary", [
 		_create_mouse_button_event(MOUSE_BUTTON_LEFT),
 		_create_key_event(KEY_J),
 		_create_joy_button_event(JOY_BUTTON_X)
 	])
-	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse / Tecla K: ARMA SECUNDÁRIA
-	_register_action("attack_secondary", [
+	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse / Teclas K, L, E: DEFESA / ESCUDO
+	_register_action("defend", [
 		_create_mouse_button_event(MOUSE_BUTTON_RIGHT),
 		_create_key_event(KEY_K),
-		_create_joy_button_event(JOY_BUTTON_Y)
-	])
-	# Botão LB (Xbox) / L1 (PlayStation) / Tecla L ou E: DEFESA / ESCUDO DEDICADO
-	_register_action("defend", [
 		_create_key_event(KEY_L),
 		_create_key_event(KEY_E),
+		_create_joy_button_event(JOY_BUTTON_Y)
+	])
+	# Botão LB (Xbox) / L1 (PlayStation) / Tecla 1 (Teclado): TROCAR ARMA EQUIPADA (SWAP)
+	_register_action("swap_weapon", [
+		_create_key_event(KEY_1),
 		_create_joy_button_event(JOY_BUTTON_LEFT_SHOULDER)
+	])
+	# D-Pad Down (Gamepad) / Tecla 2 (Teclado): CICLAR ARMA DE RESERVA (DEBUG)
+	_register_action("cycle_weapon_debug", [
+		_create_key_event(KEY_2),
+		_create_joy_button_event(JOY_BUTTON_DPAD_DOWN)
 	])
 
 	# Right Analog Stick: Camera look-ahead (espiar adiante)

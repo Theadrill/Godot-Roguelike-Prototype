@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=3 format=3 uid="uid://weapon_crossbow_tres_01"]
+
+[ext_resource type="Script" path="res://src/combat/weapon_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://src/entities/equipment/crossbow_visual.tscn" id="2_visual"]
+
+[resource]
+script = ExtResource("1_script")
+weapon_name = "Heavy Crossbow"
+base_damage = 42.0
+knockback_force = 240.0
+hitstop_duration = 0.08
+rumble_weak = 0.5
+rumble_strong = 0.85
+rumble_duration = 0.1
+combo_durations = Array[float]([0.28, 0.28, 0.4])
+forward_impulses = Array[float]([10.0, 15.0, 20.0])
+attack_cooldown = 0.24
+combo_finisher_cooldown = 0.35
+equipment_name = "Heavy Crossbow"
+slot_type = 2
+visual_scene = ExtResource("2_visual")
+visual_offset = Vector2(0, 0)
+visual_rotation_degrees = 0.0
+back_offset = Vector2(4.0, -5.0)
+back_rotation_degrees = 0.0

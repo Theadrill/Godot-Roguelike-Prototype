@@ -118,8 +118,13 @@ Criar a fundação estrutural de encaixe de itens desacoplados do sprite base do
   * Adaga (lâmina 10x3px)
   * Martelo (cabo 24x3px + cabeça pesada 10x12px)
   * Cajado (haste 30x3px + gema ciano)
+  * Arco (haste curva de madeira flexível 36x8px + corda esticada)
+  * Besta / Crossbow (coronha de madeira 20x4px + proa transversal em "T" 26x3px + estribo de ferro)
   * Escudo/Broquel (placa rústica 12x18px)
 * **Diretriz de Armaduras:** Deixada para a fase final do projeto para definição madura entre trajes completos (*Dead Cells Skins*) vs. peças/sockets simplificados.
+
+> [!NOTE]
+> **Backlog Técnico de Inimigos (Anotado para Fase Futura):** O soldado de teste no `movement_gym` atualmente executa apenas golpes para cima engatilhando sempre o sinal AMARELO (ataque pesado/aparável). A rotação completa de ataques (branco/normal, amarelo/pesado e vermelho/perilous) será balanceada na fase de IA/Inimigos sem misturar com o escopo atual de sockets/combate.
 
 > [!NOTE]
 > Esta fase estrutural prepara o terreno para plugar o escudo e as próximas armas sem necessidade de refatoração futura.
@@ -141,8 +146,12 @@ Completar o triângulo tático de combate corpo a corpo e as manobras físicas a
   * Variações sutis de animação/pose após 5 segundos de inatividade, canceláveis no primeiro frame por qualquer input.
 
 ### 2. Decisões de Design Alinhadas com o PO (Em Andamento)
-* **Ponto 1 (Controle & Equipamento):** 
-  * Defesa em **Botão Dedicado** (`LB` / `L1` no Gamepad; tecla dedicada no Teclado). O jogador sempre tem a ferramenta de defesa equipada, sem sacrificar o slot secundário (`Y` / `Triângulo`).
+* **Ponto 1 (Controle & Layout de Combate Estrutural):** 
+  * **`X` (Xbox) / `Quadrado` (PlayStation) / `Clique Esquerdo`:** Ataca com a **arma ativa atual em mãos**.
+  * **`Y` (Xbox) / `Triângulo` (PlayStation) / `Clique Direito`:** **Escudo Dedicado** (sempre a postos para Guarda Contínua / Parry Perfeito). O escudo sai das costas instantaneamente para a mão esquerda.
+  * **`LB` / `L1` (ou Tecla `1` no teclado):** **Troca Rápida de Arma (Weapon Swap)** — alterna imediatamente a arma ativa em mãos com a arma secundária guardada nas costas (ex: Espada ↔ Arco).
+  * **`D-Pad Down` (ou Tecla `2` no teclado):** Atalho de debug para ciclar as armas de reserva disponíveis.
+  * **D-Pad Desmapeado da Movimentação:** D-Pad não controla movimento analógico do herói; fica reservado para uso de itens rápidos/consumíveis no futuro.
   * O escudo é um equipamento evoluível/craftável através do irmão forjador na Casa Santuário (metaprogressão de escudos com atributos e efeitos especiais).
 * **Ponto 2 (Mecânica de Toque vs. Segurar):**
   * *Toque Rápido (Tap):* Janela ativa de Parry Perfeito (~120ms).

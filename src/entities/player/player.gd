@@ -97,7 +97,7 @@ func _ready() -> void:
 		weapon = default_weapon if default_weapon else WeaponData.new()
 
 	if not secondary_weapon:
-		var default_secondary := load("res://src/entities/equipment/weapon_staff.tres") as WeaponData
+		var default_secondary := load("res://src/entities/equipment/weapon_bow.tres") as WeaponData
 		if default_secondary:
 			secondary_weapon = default_secondary
 
@@ -260,44 +260,44 @@ func _physics_process(delta: float) -> void:
 		if is_shield_raised:
 			set_shield_raised(false)
 
+func swap_weapons() -> void:
+	if not secondary_weapon:
+		return
+	var temp: WeaponData = weapon
+	weapon = secondary_weapon
+	secondary_weapon = temp
+	_update_main_weapon_visual()
+	_update_secondary_weapon_visual()
+
+func cycle_reserve_weapon() -> void:
+	var weapon_paths: Array[String] = [
+		"res://src/entities/equipment/weapon_bow.tres",
+		"res://src/entities/equipment/weapon_crossbow.tres",
+		"res://src/entities/equipment/weapon_sword.tres",
+		"res://src/entities/equipment/weapon_hammer.tres",
+		"res://src/entities/equipment/weapon_staff.tres",
+		"res://src/entities/equipment/weapon_dagger.tres"
+	]
+	var current_idx: int = -1
+	if secondary_weapon:
+		for i in range(weapon_paths.size()):
+			if weapon_paths[i].get_file().get_basename() in secondary_weapon.resource_path:
+				current_idx = i
+				break
+
+	var next_idx: int = (current_idx + 1) % weapon_paths.size()
+	var next_res := load(weapon_paths[next_idx]) as WeaponData
+	if weapon and next_res and next_res.equipment_name == weapon.equipment_name:
+		next_idx = (next_idx + 1) % weapon_paths.size()
+		next_res = load(weapon_paths[next_idx]) as WeaponData
+
+	equip_secondary_weapon(next_res)
+
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.is_pressed() and not event.is_echo():
-		match event.physical_keycode:
-			KEY_1:
-				var sword_res := load("res://src/entities/equipment/weapon_sword.tres") as WeaponData
-				if sword_res:
-					equip_weapon(sword_res)
-			KEY_2:
-				var dagger_res := load("res://src/entities/equipment/weapon_dagger.tres") as WeaponData
-				if dagger_res:
-					equip_weapon(dagger_res)
-			KEY_3:
-				var hammer_res := load("res://src/entities/equipment/weapon_hammer.tres") as WeaponData
-				if hammer_res:
-					equip_weapon(hammer_res)
-			KEY_4:
-				var staff_res := load("res://src/entities/equipment/weapon_staff.tres") as WeaponData
-				if staff_res:
-					equip_weapon(staff_res)
-			KEY_9:
-				# Cycle secondary weapon on back
-				if secondary_weapon == null:
-					var staff_res := load("res://src/entities/equipment/weapon_staff.tres") as WeaponData
-					equip_secondary_weapon(staff_res)
-				elif secondary_weapon.equipment_name == "Mystic Staff":
-					var hammer_res := load("res://src/entities/equipment/weapon_hammer.tres") as WeaponData
-					equip_secondary_weapon(hammer_res)
-				elif secondary_weapon.equipment_name == "War Hammer":
-					var sword_res := load("res://src/entities/equipment/weapon_sword.tres") as WeaponData
-					equip_secondary_weapon(sword_res)
-				else:
-					equip_secondary_weapon(null)
-			KEY_0:
-				if shield:
-					equip_shield(null)
-				else:
-					var buckler_res := load("res://src/entities/equipment/shield_buckler.tres") as ShieldData
-					equip_shield(buckler_res)
+	if event.is_action_pressed("swap_weapon") and not event.is_echo():
+		swap_weapons()
+	elif event.is_action_pressed("cycle_weapon_debug") and not event.is_echo():
+		cycle_reserve_weapon()
 
 func can_attack() -> bool:
 	return attack_cooldown_timer <= 0.0
@@ -372,8 +372,8 @@ func is_crouch_requested() -> bool:
 	if not Input.is_action_pressed("down"):
 		return false
 
-	# Digital keys (Keyboard S / Arrow Down, Gamepad D-Pad Down) have 100% deliberate intent
-	if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_DOWN):
+	# Digital keys (Keyboard S / Arrow Down)
+	if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN):
 		return true
 
 	# Left Analog Stick:
@@ -396,8 +396,8 @@ func is_upward_attack_requested() -> bool:
 	if not Input.is_action_pressed("up"):
 		return false
 
-	# Digital keys (Keyboard W / Arrow Up, Gamepad D-Pad Up)
-	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP) or Input.is_joy_button_pressed(0, JOY_BUTTON_DPAD_UP):
+	# Digital keys (Keyboard W / Arrow Up)
+	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
 		return true
 
 	# Left Analog Stick (negative Y is up):

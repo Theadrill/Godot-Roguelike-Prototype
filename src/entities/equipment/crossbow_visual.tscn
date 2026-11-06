@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://crossbow_visual_01"]
+
+[node name="CrossbowVisual" type="Node2D"]
+
+[node name="String" type="Line2D" parent="."]
+points = PackedVector2Array(7, -13, 0, 0, 7, 13)
+width = 1.0
+default_color = Color(0.9, 0.92, 0.95, 0.8)
+
+[node name="Stock" type="Polygon2D" parent="."]
+color = Color(0.48, 0.3, 0.16, 1)
+polygon = PackedVector2Array(-10, -3, 12, -2, 12, 2, -4, 2, -8, 6, -10, 6)
+
+[node name="Limbs" type="Polygon2D" parent="."]
+color = Color(0.35, 0.38, 0.42, 1)
+polygon = PackedVector2Array(9, -13, 12, -13, 12, -2, 12, 2, 12, 13, 9, 13, 8, 2, 8, -2)
+
+[node name="Stirrup" type="Line2D" parent="."]
+points = PackedVector2Array(12, -4, 16, -4, 16, 4, 12, 4)
+width = 1.5
+default_color = Color(0.25, 0.28, 0.3, 1)
+
+[node name="Sight" type="Polygon2D" parent="."]
+color = Color(0.7, 0.55, 0.2, 1)
+polygon = PackedVector2Array(-2, -4, 2, -4, 2, -2, -2, -2)
