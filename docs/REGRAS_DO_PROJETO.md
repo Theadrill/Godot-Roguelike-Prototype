@@ -4,7 +4,8 @@
 > ## LEITURA OBRIGATÓRIA ANTES DE QUALQUER AÇÃO
 > Todo agente ou desenvolvedor que for atuar neste repositório **DEVE OBRIGATORIAMENTE LER PRIMEIRO**:
 > 1. [`docs/BRAINSTORMING.md`](BRAINSTORMING.md) — Contém todos os 3 Pilares oficiais do jogo: Lore/História, Metaprogressão da Casa Santuário, Sistema de Combate dos 3 Sinais, Física de Movimentação, Métricas de Saltos e Geração em 3 Camadas de Biomas.
-> 2. Este arquivo [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md).
+> 2. [`docs/REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md`](REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md) — Arquitetura mandatória de localização nativa (i18n), banco de textos em CSV, convenção de prefixos e motor de barks aleatórios.
+> 3. Este arquivo [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md).
 > 
 > **Não inicie nenhuma tarefa sem carregar estes documentos no contexto.**
 
@@ -83,3 +84,9 @@ Todos os assets visuais (protagonista, inimigos, armas, cenários e NPCs) devem 
 * **PROIBIDO duplicar código ou criar cópias quase idênticas de scripts** para comportamentos físicos, mecânicas de combate ou efeitos visuais similares.
 * **Componentização Obrigatória:** Sempre priorizar componentes desacoplados, nós reutilizáveis e funções parametrizadas (ex: `Hitbox`, `Hurtbox`, `CombatFeedback`, `RadialShockwave`).
 * **Regra de Ouro da Parametrização:** Se duas ou mais mecânicas compartilham a mesma essência física (como a onda de choque do *Ground Slam* e a repulsão de multidão do *Parry de Escudo*), deve ser criado **um único componente modular genérico** que aceita parâmetros de variação (raio, força, dano e alvos ignorados).
+
+### Regra 10: Proibição Estrita de Textos Hardcoded & Uso Mandatório de i18n
+* **Zero Strings Literais:** É terminantemente proibido escrever textos visíveis ao jogador (labels de interface, barks diegéticos, alertas de sistema, diálogos de NPCs e descrições de itens) diretamente como strings literais (*hardcoded*) em scripts `.gd` ou propriedades de cenas `.tscn`.
+* **Centralização no Banco de Localização:** Todo texto deve ser cadastrado obrigatoriamente no catálogo mestre `res://src/core/localization/translations.csv` seguindo a taxonomia de prefixos oficiais (`UI_*`, `BARK_*`, `ITEM_*`, `LORE_*`, `MSG_*`).
+* **Consumo Padronizado:** A recuperação textual em tempo de execução deve ocorrer estritamente através da função nativa `tr("CHAVE")` ou pelo `LocalizationService` (no caso de barks aleatórios com filtro anti-repetição).
+* **Critério de Rejeição:** Qualquer entrega de código contendo strings de exibição soltas fora da base de localização será reprovada sumariamente na checagem de qualidade técnica.
