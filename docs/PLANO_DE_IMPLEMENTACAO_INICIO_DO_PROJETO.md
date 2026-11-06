@@ -173,3 +173,21 @@ Completar o triângulo tático de combate corpo a corpo e as manobras físicas a
   * *Gatilho:* 5.0 segundos de inatividade contínua no chão em `IdleState`.
   * *Comportamento no Greybox:* Micro-ciclo de respiração sutil (oscilação suave de 2px no tronco) e ondulação da faixa na cabeça.
   * *Regra de Ouro:* Cancelamento instantâneo no frame 0 por qualquer input, garantindo resposta imediata sem travar o jogador.
+
+---
+
+## 🍵 Fase 6: Sistema de Vida, Morte, Cura (Garrafa de Chá) & Fundação de Linguagem
+
+### 1. Visão Geral do Escopo
+Implementar a fundação de linguagem do projeto e o loop de vida, cura diegética e penalidades de morte detalhados em [`docs/SISTEMA_VIDA_MORTE_CURA_E_HUB.md`](SISTEMA_VIDA_MORTE_CURA_E_HUB.md):
+* **Passo 0: Fundação do Sistema de Linguagem (i18n Nativo & DB de Textos):**
+  * Tabela mestre CSV compilada nativamente pelo `TranslationServer` da Godot 4 conforme [`docs/REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md`](REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md).
+  * `LocalizationService` com motor anti-repetição imediata para sorteio de barks diegéticos aleatórios.
+  * Zero strings hardcoded em qualquer novo script, label ou estado.
+* **Passo 1: A Garrafa de Chá da Mãe (Health Flask):**
+  * Cura percentual (40% max HP) com canalização no chão de 0.55s.
+  * Preservação da carga se interrompido por golpe inimigo (padrão Nine Sols).
+  * Tentativa de uso sem cargas: disparo de barks aleatórios diegéticos sobre o guerreiro (*"Putz, acabou o chá!"*, *"Acabou o chá..."*, etc.) puxados do banco de tradução.
+* **Passos Seguintes:**
+  * Rali Tático de Vida via Parry Perfeito.
+  * Slow-motion dramático e ciclo de morte / reset para a Casa da Família.

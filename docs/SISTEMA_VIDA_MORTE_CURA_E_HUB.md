@@ -36,22 +36,34 @@ O ciclo de vida e morte de *Severed Dawn* rejeita o niilismo genérico dos rogue
 
 ---
 
-## 2. A Mecânica do Frasco de Cura (Health Flask)
+## 2. A Mecânica da Garrafa de Chá da Mãe (Health Flask)
 
-O frasco de cura opera em valores percentuais para garantir relevância matemática em qualquer estágio de progressão da vida do guerreiro:
+O item de cura do protagonista é a **Garrafa de Chá da Mãe** — preparada com carinho na cozinha da Casa Santuário antes de cada incursão pelo vale. O frasco opera em valores percentuais para garantir relevância matemática em qualquer estágio de progressão da vida do guerreiro:
 
 1. **Parâmetros Base da Run:**
    * **Quantidade Inicial:** `1 carga` por padrão.
    * **Potência Base:** Recupera instantaneamente **40% da Vida Máxima** do jogador.
    * **Canalização / Risco:** O jogador planta os pés no chão por **`0.55s`** (telegraph diegético de brilho esmeralda no peito). Se for atingido por golpe inimigo durante a canalização, a cura é interrompida.
-   * **Comando Padrão:** Botão dedicado (`Q` no Teclado / `D-Pad Cima` ou `LB` no Gamepad).
+   * **Preservação de Carga no Dano (Padrão Nine Sols):** Se interrompido por dano inimigo antes dos 0.55s, o jogador toma dano e a cura falha, mas **a carga não é desperdiçada**. A carga só é debitada ao concluir com sucesso a canalização.
+   * **Comando Padrão:** Botão dedicado (`Q` no Teclado / `D-Pad Cima` no Gamepad).
 
-2. **Progressão Permanente com a Mãe:**
-   * Entregando ervas e ingredientes raros na cozinha da Casa, a Mãe aprimora o frasco para **2, 3 e até 4 cargas**, além de expandir a eficácia (45%, 50%, etc.).
+2. **Tentativa de Cura Sem Cargas (Barks Diegéticos Aleatórios):**
+   * Ao tentar beber com 0 cargas disponíveis, o herói não inicia a animação de canalização; em vez disso, emite um **aviso diegético sutil (Bark)** acima da cabeça sorteado aleatoriamente de um pool textual:
+     * *"Putz, acabou o chá!"*
+     * *"Acabou o chá..."*
+     * *"Devia ter trazido mais chá"*
+     * *"Já acabou o chá?..."*
+   * As frases nunca são hardcoded em código: residem no catálogo/banco de localização do jogo (`res://src/core/localization/translations.csv`) e são puxadas dinamicamente via chave de tradução.
 
-3. **Ganchos de Modificadores (Afixos Especiais):**
+3. **Pré-requisito Arquitetural: Passo 0 — Fundação de Localização (i18n):**
+   * Antes de codificar a mecânica do frasco, é obrigatória a implantação da fundação de linguagem do projeto descrita em [`docs/REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md`](REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md).
+   * Todo sistema novo já nasce consumindo chaves oficiais e suportando internacionalização (inicialmente `pt_BR`, estruturado nativamente para expansão imediata a outros idiomas).
+
+4. **Progressão Permanente com a Mãe:**
+   * Entregando ervas e ingredientes raros na cozinha da Casa, a Mãe aprimora a garrafa para **2, 3 e até 4 cargas**, além de expandir a eficácia (45%, 50%, etc.).
+
+5. **Ganchos de Modificadores (Afixos Especiais):**
    * Mecânicas como *recarregar frações de frasco ao acertar Parries Perfeitos ou executar inimigos* funcionam como **modificadores/amuletos/bênçãos**, e não como habilidade inata básica.
-
 ---
 
 ## 3. O Rali Tático de Vida (Parry-Driven Rally)
