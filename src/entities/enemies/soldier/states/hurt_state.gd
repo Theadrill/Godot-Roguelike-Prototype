@@ -3,14 +3,21 @@ extends State
 
 var soldier: Soldier
 var stun_timer: float = 0.0
+var custom_stun_duration: float = 0.0
 
 func enter() -> void:
 	soldier = character as Soldier
-	stun_timer = 0.22
+	stun_timer = custom_stun_duration if custom_stun_duration > 0.0 else 0.22
+	custom_stun_duration = 0.0
 	soldier.is_hyper_armored = false
 	soldier.hide_telegraph()
 	soldier.set_slash_active(false)
-	soldier.hitbox.set_active(false)
+	if soldier.hitbox:
+		soldier.hitbox.set_active(false)
+	if soldier.hitbox_up:
+		soldier.hitbox_up.set_active(false)
+	if soldier.hitbox_down:
+		soldier.hitbox_down.set_active(false)
 
 func physics_update(delta: float) -> void:
 	# Gravity & friction

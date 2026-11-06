@@ -118,6 +118,7 @@ func _advance_phase() -> void:
 				phase_timer = 0.16
 				soldier.set_slash_up_active(true)
 				if soldier.hitbox_up:
+					soldier.hitbox_up.attack_category = Hitbox.AttackCategory.HEAVY
 					soldier.hitbox_up.damage = soldier.normal_damage
 					soldier.hitbox_up.knockback_force = 240.0
 					soldier.hitbox_up.rumble_strong = 0.7
@@ -128,6 +129,7 @@ func _advance_phase() -> void:
 				phase_timer = 0.16
 				soldier.set_slash_down_active(true)
 				if soldier.hitbox_down:
+					soldier.hitbox_down.attack_category = Hitbox.AttackCategory.HEAVY
 					soldier.hitbox_down.damage = soldier.normal_damage
 					soldier.hitbox_down.knockback_force = 240.0
 					soldier.hitbox_down.rumble_strong = 0.7
@@ -142,18 +144,22 @@ func _advance_phase() -> void:
 				var damage: float = soldier.normal_damage
 				var knockback: float = 140.0
 				var rumble_strong: float = 0.6
+				var category: Hitbox.AttackCategory = Hitbox.AttackCategory.NORMAL
 
 				match attack_type:
 					AttackType.YELLOW:
+						category = Hitbox.AttackCategory.HEAVY
 						damage = soldier.heavy_damage
 						knockback = 220.0
 						rumble_strong = 0.8
 					AttackType.RED:
+						category = Hitbox.AttackCategory.PERILOUS
 						damage = soldier.perilous_damage
 						knockback = 320.0
 						rumble_strong = 1.0
 
 				if soldier.hitbox:
+					soldier.hitbox.attack_category = category
 					soldier.hitbox.damage = damage
 					soldier.hitbox.knockback_force = knockback
 					soldier.hitbox.rumble_strong = rumble_strong

@@ -4,10 +4,11 @@ extends CharacterBody2D
 ## Player controller implementing the physics metrics and state management.
 
 @export_group("Attributes & Stats")
-@export_range(1.0, 1000.0, 1.0, "or_greater") var max_health: float = 100.0
+@export_range(1.0, 1000.0, 1.0, "or_greater") var max_health: float = 250.0
 @export_range(0.0, 500.0, 1.0, "or_greater") var max_mana: float = 100.0
-var current_health: float = 100.0
+var current_health: float = 250.0
 var current_mana: float = 100.0
+var _debug_respawn_timer: float = 0.0
 
 @export_group("Horizontal Movement")
 @export_range(50.0, 600.0, 10.0, "suffix:px/s") var run_speed: float = 220.0
@@ -67,6 +68,7 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 9
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
 var attack_cooldown_timer: float = 0.0
+var parry_cooldown_timer: float = 0.0
 var ledge_target_position: Vector2 = Vector2.ZERO
 
 @onready var state_machine: StateMachine = $StateMachine
@@ -252,13 +254,18 @@ func _physics_process(delta: float) -> void:
 	if attack_cooldown_timer > 0.0:
 		attack_cooldown_timer = max(0.0, attack_cooldown_timer - delta)
 
-	# Dynamic Shield raising preview (defend button / LB / L1 / Key E / Key L)
-	if Input.is_action_pressed("defend"):
-		if not is_shield_raised:
-			set_shield_raised(true)
+	# Parry fail cooldown timer (strict 1.0s penalty on whiff)
+	if parry_cooldown_timer > 0.0:
+		parry_cooldown_timer = max(0.0, parry_cooldown_timer - delta)
+
+	# Debug auto-refill health when reaching zero
+	if current_health <= 0.0:
+		_debug_respawn_timer += delta
+		if _debug_respawn_timer >= 1.5:
+			_debug_respawn_timer = 0.0
+			current_health = max_health
 	else:
-		if is_shield_raised:
-			set_shield_raised(false)
+		_debug_respawn_timer = 0.0
 
 func swap_weapons() -> void:
 	if not secondary_weapon:
@@ -293,16 +300,35 @@ func cycle_reserve_weapon() -> void:
 
 	equip_secondary_weapon(next_res)
 
+func toggle_shield_repulsion() -> void:
+	if shield:
+		shield.has_repulsion_modifier = not shield.has_repulsion_modifier
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("swap_weapon") and not event.is_echo():
 		swap_weapons()
 	elif event.is_action_pressed("cycle_weapon_debug") and not event.is_echo():
 		cycle_reserve_weapon()
+	elif event.is_action_pressed("toggle_shield_repulsion_debug") and not event.is_echo():
+		toggle_shield_repulsion()
 
 func can_attack() -> bool:
 	return attack_cooldown_timer <= 0.0
 
+func can_defend() -> bool:
+	return parry_cooldown_timer <= 0.0
+
+func is_ground_slam_requested() -> bool:
+	var down_held: bool = Input.is_action_pressed("down") or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.get_joy_axis(0, JOY_AXIS_LEFT_Y) > 0.4
+	return down_held and Input.is_action_just_pressed("jump")
+
 func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void:
+	var incoming_hitbox: Hitbox = hurtbox.last_hitbox
+	if state_machine and state_machine.current_state and state_machine.current_state.has_method("handle_incoming_hit"):
+		var handled: bool = state_machine.current_state.handle_incoming_hit(damage, knockback, hitstop, incoming_hitbox)
+		if handled:
+			return
+
 	current_health = max(0.0, current_health - damage)
 	velocity = knockback
 
@@ -313,6 +339,46 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 
 	# Tactile juice: Gamepad rumble & hitstop
 	CombatFeedback.apply_hit_feedback(hitstop, 0.4, 0.7, 0.12)
+
+	# Perilous (Red) Attack hit in neutral:
+	# Triggers fast stun in crouched animation (0.22s) if no parry attempt,
+	# or longer stun (0.55s) if player recently failed a parry.
+	# Yellow attacks: DO NOT STUN.
+	if incoming_hitbox and incoming_hitbox.attack_category == Hitbox.AttackCategory.PERILOUS:
+		var stun_time: float = 0.55 if parry_cooldown_timer > 0.0 else 0.22
+		trigger_stagger(stun_time)
+
+func trigger_stagger(custom_duration: float) -> void:
+	var stagger := state_machine.get_node_or_null("Stagger") as StaggerState
+	if stagger:
+		stagger.duration = custom_duration
+	state_machine.transition_to("stagger")
+
+func set_crouched(crouched: bool) -> void:
+	if not collision_shape:
+		return
+	var rect := collision_shape.shape as RectangleShape2D
+	if not rect:
+		return
+
+	if crouched:
+		rect.size = Vector2(16.0, 20.0)
+		collision_shape.position = Vector2(0.0, -10.0)
+		visual.scale.y = 0.5
+		if hurtbox and hurtbox.has_node("CollisionShape2D"):
+			var h_rect := hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
+			if h_rect:
+				h_rect.size = Vector2(16.0, 20.0)
+				hurtbox.get_node("CollisionShape2D").position = Vector2(0.0, -10.0)
+	else:
+		rect.size = Vector2(16.0, 40.0)
+		collision_shape.position = Vector2(0.0, -20.0)
+		visual.scale.y = 1.0
+		if hurtbox and hurtbox.has_node("CollisionShape2D"):
+			var h_rect := hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
+			if h_rect:
+				h_rect.size = Vector2(16.0, 40.0)
+				hurtbox.get_node("CollisionShape2D").position = Vector2(0.0, -20.0)
 
 ## Soft body collision detection:
 ## Returns true if the player is actively pressing into an enemy body horizontally.

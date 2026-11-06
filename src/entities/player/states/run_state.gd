@@ -22,6 +22,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("crouch")
 		return
 
+	# Guard / Parry check
+	if Input.is_action_just_pressed("defend") and player.can_defend():
+		state_machine.transition_to("guard")
+		return
+
 	# Attack check
 	if Input.is_action_just_pressed("attack_primary") and player.can_attack():
 		state_machine.transition_to("attack")

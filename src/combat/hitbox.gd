@@ -3,6 +3,13 @@ extends Area2D
 
 ## Active attack area delivering damage, knockback, and juice to Hurtboxes.
 
+enum AttackCategory {
+	NORMAL,   ## White signal: Standard attack. 100% absorbed in guard, parriable.
+	HEAVY,    ## Yellow signal: Heavy attack. 85% absorbed (15% chip damage) in guard, 100% reflected + stun if parried.
+	PERILOUS  ## Red signal: Unblockable strike. Breaks guard (100% damage + stagger), 100% reflected + stun if parried.
+}
+
+@export var attack_category: AttackCategory = AttackCategory.NORMAL
 @export var damage: float = 20.0
 @export var knockback_force: float = 160.0
 @export var hitstop_duration: float = 0.05

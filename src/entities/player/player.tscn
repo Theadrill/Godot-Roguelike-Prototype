@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=23 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -16,6 +16,10 @@
 [ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="14_hurtbox"]
 [ext_resource type="Script" path="res://src/entities/player/states/ledge_climb_state.gd" id="15_ledge_climb"]
 [ext_resource type="Script" path="res://src/entities/player/states/hard_landing_state.gd" id="16_hard_landing"]
+[ext_resource type="Script" path="res://src/entities/player/states/guard_state.gd" id="17_guard"]
+[ext_resource type="Script" path="res://src/entities/player/states/ground_slam_state.gd" id="18_ground_slam"]
+[ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="19_hud"]
+[ext_resource type="Script" path="res://src/entities/player/states/stagger_state.gd" id="20_stagger"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -36,6 +40,8 @@ collision_mask = 1
 floor_constant_speed = true
 floor_snap_length = 8.0
 script = ExtResource("1_player")
+
+[node name="HUD" parent="." instance=ExtResource("19_hud")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -20)
@@ -166,3 +172,12 @@ script = ExtResource("15_ledge_climb")
 
 [node name="HardLanding" type="Node" parent="StateMachine"]
 script = ExtResource("16_hard_landing")
+
+[node name="Guard" type="Node" parent="StateMachine"]
+script = ExtResource("17_guard")
+
+[node name="GroundSlam" type="Node" parent="StateMachine"]
+script = ExtResource("18_ground_slam")
+
+[node name="Stagger" type="Node" parent="StateMachine"]
+script = ExtResource("20_stagger")

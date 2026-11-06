@@ -154,6 +154,31 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 		# Uninterrupted: takes damage and flashes, but resists knockback completely
 		velocity = Vector2.ZERO
 
+func apply_parry_stun(duration: float = 0.85) -> void:
+	is_hyper_armored = false
+	hide_telegraph()
+	set_slash_active(false)
+	set_slash_up_active(false)
+	set_slash_down_active(false)
+	if hitbox:
+		hitbox.set_active(false)
+	if hitbox_up:
+		hitbox_up.set_active(false)
+	if hitbox_down:
+		hitbox_down.set_active(false)
+
+	if flash_material:
+		flash_timer = 0.25
+		flash_material.set_shader_parameter("flash_active", true)
+
+	visual.scale = Vector2(visual.scale.x, 0.7)
+	velocity = Vector2.ZERO
+
+	var hurt_state := state_machine.get_node_or_null("Hurt") as SoldierHurtState
+	if hurt_state:
+		hurt_state.custom_stun_duration = duration
+	state_machine.transition_to("hurt")
+
 ## Telegraph visual helpers
 func show_yellow_telegraph() -> void:
 	if telegraph_mark:

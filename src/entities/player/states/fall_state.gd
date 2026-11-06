@@ -55,6 +55,16 @@ func physics_update(delta: float) -> void:
 				state_machine.transition_to("wallslide")
 				return
 
+	# Ground Slam check (Down + Jump in air)
+	if player.is_ground_slam_requested():
+		state_machine.transition_to("groundslam")
+		return
+
+	# Air Guard / Parry check
+	if Input.is_action_just_pressed("defend") and player.can_defend():
+		state_machine.transition_to("guard")
+		return
+
 	if Input.is_action_just_pressed("jump") and player.can_double_jump:
 		state_machine.transition_to("doublejump")
 		return

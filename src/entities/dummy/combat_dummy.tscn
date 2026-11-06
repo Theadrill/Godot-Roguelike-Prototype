@@ -21,7 +21,7 @@ shape = SubResource("RectangleShape2D_dummy_body")
 [node name="Visual" type="Node2D" parent="."]
 
 [node name="Body" type="Polygon2D" parent="Visual"]
-color = Color(0.48, 0.22, 0.25, 1)
+color = Color(0.48, 0.5, 0.55, 1)
 polygon = PackedVector2Array(-8, -40, 8, -40, 8, 0, -8, 0)
 
 [node name="TargetMark" type="Polygon2D" parent="Visual"]
