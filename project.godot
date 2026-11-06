@@ -21,11 +21,6 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 InputSetup="*res://src/core/input_setup.gd"
 CombatFeedback="*res://src/combat/combat_feedback.gd"
 
-[internationalization]
-
-locale/translations=PackedStringArray("res://src/core/localization/translations.en_US.translation", "res://src/core/localization/translations.pt_BR.translation")
-locale/fallback="pt_BR"
-
 [display]
 
 window/size/viewport_width=640
@@ -33,6 +28,11 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://src/core/localization/translations.en_US.translation", "res://src/core/localization/translations.pt_BR.translation")
+locale/fallback="pt_BR"
 
 [layer_names]
 
