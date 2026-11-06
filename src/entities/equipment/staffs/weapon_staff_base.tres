@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://wbt02xpwb1a"]
+
+[ext_resource type="Script" uid="uid://bns3a3ee5ml1" path="res://src/combat/weapon_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://src/entities/equipment/staffs/staff_visual.tscn" id="2_visual"]
+[ext_resource type="PackedScene" uid="uid://cbh17vgkeh6fs" path="res://src/combat/magic_projectile.tscn" id="3_magic"]
+
+[resource]
+script = ExtResource("1_script")
+weapon_category = 3
+weapon_name = "Mystic Staff"
+base_damage = 26.0
+knockback_force = 130.0
+hitstop_duration = 0.04
+projectile_scene = ExtResource("3_magic")
+projectile_speed = 580.0
+charge_time = 0.2
+reload_time = 0.15
+attack_visual_offset = Vector2(4, 0)
+rumble_weak = 0.35
+rumble_strong = 0.6
+rumble_duration = 0.07
+is_charge_attack = true
+max_charge_time = 0.6
+charge_damage_multiplier = 2.4
+combo_durations = Array[float]([0.16, 0.16, 0.25])
+forward_impulses = Array[float]([40.0, 60.0, 90.0])
+attack_cooldown = 0.12
+combo_finisher_cooldown = 0.2
+equipment_name = "Mystic Staff"
+slot_type = 2
+visual_scene = ExtResource("2_visual")
+visual_rotation_degrees = -45.0

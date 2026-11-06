@@ -95,16 +95,16 @@ func _ready() -> void:
 	current_health = max_health
 	current_mana = max_mana
 	if not weapon:
-		var default_weapon := load("res://src/entities/equipment/weapon_sword.tres") as WeaponData
+		var default_weapon := load("res://src/entities/equipment/swords/weapon_sword_base.tres") as WeaponData
 		weapon = default_weapon if default_weapon else WeaponData.new()
 
 	if not secondary_weapon:
-		var default_secondary := load("res://src/entities/equipment/weapon_bow.tres") as WeaponData
+		var default_secondary := load("res://src/entities/equipment/bows/weapon_bow_base.tres") as WeaponData
 		if default_secondary:
 			secondary_weapon = default_secondary
 
 	if not shield:
-		var default_shield := load("res://src/entities/equipment/shield_buckler.tres") as ShieldData
+		var default_shield := load("res://src/entities/equipment/shields/shield_buckler_base.tres") as ShieldData
 		if default_shield:
 			shield = default_shield
 
@@ -278,12 +278,12 @@ func swap_weapons() -> void:
 
 func cycle_reserve_weapon() -> void:
 	var weapon_paths: Array[String] = [
-		"res://src/entities/equipment/weapon_bow.tres",
-		"res://src/entities/equipment/weapon_crossbow.tres",
-		"res://src/entities/equipment/weapon_sword.tres",
-		"res://src/entities/equipment/weapon_hammer.tres",
-		"res://src/entities/equipment/weapon_staff.tres",
-		"res://src/entities/equipment/weapon_dagger.tres"
+		"res://src/entities/equipment/bows/weapon_bow_base.tres",
+		"res://src/entities/equipment/crossbows/weapon_crossbow_base.tres",
+		"res://src/entities/equipment/swords/weapon_sword_base.tres",
+		"res://src/entities/equipment/hammers/weapon_hammer_base.tres",
+		"res://src/entities/equipment/staffs/weapon_staff_base.tres",
+		"res://src/entities/equipment/daggers/weapon_dagger_base.tres"
 	]
 	var current_idx: int = -1
 	if secondary_weapon:

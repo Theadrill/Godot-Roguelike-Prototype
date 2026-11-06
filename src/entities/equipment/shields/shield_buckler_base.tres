@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ShieldData" load_steps=3 format=3 uid="uid://shield_buckler_tres_01"]
 
 [ext_resource type="Script" path="res://src/combat/shield_data.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://src/entities/equipment/shield_visual.tscn" id="2_visual"]
+[ext_resource type="PackedScene" path="res://src/entities/equipment/shields/shield_visual.tscn" id="2_visual"]
 
 [resource]
 script = ExtResource("1_script")

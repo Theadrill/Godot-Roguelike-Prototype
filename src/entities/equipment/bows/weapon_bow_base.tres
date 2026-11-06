@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://d1dsk5evc6cyq"]
 
 [ext_resource type="Script" uid="uid://bns3a3ee5ml1" path="res://src/combat/weapon_data.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://ceb387f7bp2n6" path="res://src/entities/equipment/bow_visual.tscn" id="2_visual"]
+[ext_resource type="PackedScene" uid="uid://ceb387f7bp2n6" path="res://src/entities/equipment/bows/bow_visual.tscn" id="2_visual"]
 [ext_resource type="PackedScene" uid="uid://dvmnvjj5prwv1" path="res://src/combat/projectile.tscn" id="3_projectile"]
 
 [resource]
@@ -13,9 +13,11 @@ knockback_force = 110.0
 hitstop_duration = 0.04
 projectile_scene = ExtResource("3_projectile")
 reload_time = 0.1
+attack_visual_offset = Vector2(4, 0)
 rumble_weak = 0.3
 rumble_strong = 0.55
 rumble_duration = 0.06
+is_charge_attack = true
 combo_durations = Array[float]([0.16, 0.16, 0.24])
 forward_impulses = Array[float]([20.0, 30.0, 40.0])
 attack_cooldown = 0.12
@@ -25,7 +27,5 @@ slot_type = 2
 visual_scene = ExtResource("2_visual")
 visual_offset = Vector2(-4, 2)
 visual_rotation_degrees = 125.0
-attack_visual_offset = Vector2(4, 0)
-attack_visual_rotation_degrees = 0.0
 back_offset = Vector2(4, -5)
 back_rotation_degrees = -65.0
