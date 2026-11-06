@@ -56,6 +56,21 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "● ESCUDO PRONTO"
 
+[node name="FlaskContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FlaskIcon" type="ColorRect" parent="MarginContainer/VBoxContainer/FlaskContainer"]
+custom_minimum_size = Vector2(8, 12)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.2, 0.9, 0.45, 1)
+
+[node name="FlaskLabel" type="Label" parent="MarginContainer/VBoxContainer/FlaskContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "Chá: 1/1 [Q]"
+
 [node name="TierLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 9

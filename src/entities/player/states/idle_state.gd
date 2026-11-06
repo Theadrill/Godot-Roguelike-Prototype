@@ -68,6 +68,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("crouch")
 		return
 
+	# Heal check (Garrafa de Chá da Mãe)
+	if Input.is_action_just_pressed("heal"):
+		state_machine.transition_to("heal")
+		return
+
 	# Guard / Parry check
 	if Input.is_action_just_pressed("defend") and player.can_defend():
 		state_machine.transition_to("guard")

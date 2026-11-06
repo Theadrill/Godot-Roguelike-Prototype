@@ -3,6 +3,15 @@ extends CharacterBody2D
 
 ## Player controller implementing the physics metrics and state management.
 
+signal flask_charges_changed(current: int, max_charges: int)
+
+@export_group("Health Flask (Mother's Tea)")
+@export var max_flask_charges: int = 1
+@export_range(0.1, 1.0, 0.05) var flask_heal_percent: float = 0.40
+@export_range(0.1, 2.0, 0.05, "suffix:s") var flask_channel_duration: float = 0.55
+var current_flask_charges: int = 1
+var _bark_tween: Tween = null
+
 @export_group("Attributes & Stats")
 @export_range(1.0, 1000.0, 1.0, "or_greater") var max_health: float = 250.0
 @export_range(0.0, 500.0, 1.0, "or_greater") var max_mana: float = 100.0
@@ -85,6 +94,7 @@ var ledge_target_position: Vector2 = Vector2.ZERO
 @onready var off_hand_socket: Marker2D = $Visual/OffHandSocket
 @onready var back_socket_shield: Marker2D = $Visual/BackSocketShield
 @onready var back_socket_weapon: Marker2D = $Visual/BackSocketWeapon
+@onready var bark_label: Label = get_node_or_null("BarkLabel") as Label
 
 var _main_weapon_instance: Node2D = null
 var _secondary_weapon_instance: Node2D = null
@@ -95,6 +105,8 @@ func _ready() -> void:
 	add_to_group("player")
 	current_health = max_health
 	current_mana = max_mana
+	current_flask_charges = max_flask_charges
+	flask_charges_changed.emit(current_flask_charges, max_flask_charges)
 	if not weapon:
 		var default_weapon := load("res://src/entities/equipment/swords/weapon_sword_base.tres") as WeaponData
 		weapon = default_weapon if default_weapon else WeaponData.new()
@@ -265,8 +277,28 @@ func _physics_process(delta: float) -> void:
 		if _debug_respawn_timer >= 1.5:
 			_debug_respawn_timer = 0.0
 			current_health = max_health
+			current_flask_charges = max_flask_charges
+			flask_charges_changed.emit(current_flask_charges, max_flask_charges)
 	else:
 		_debug_respawn_timer = 0.0
+
+## Exibe aviso diegético (Bark) suavemente animado flutuando acima da cabeça do guerreiro
+func show_bark(text: String) -> void:
+	if not bark_label:
+		bark_label = get_node_or_null("BarkLabel") as Label
+	if not bark_label:
+		return
+	bark_label.text = text
+	bark_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	bark_label.position = Vector2(-100.0, -56.0)
+	
+	if _bark_tween and _bark_tween.is_valid():
+		_bark_tween.kill()
+		
+	_bark_tween = create_tween()
+	_bark_tween.set_parallel(true)
+	_bark_tween.tween_property(bark_label, "position:y", -70.0, 1.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_bark_tween.tween_property(bark_label, "modulate:a", 0.0, 0.6).set_delay(1.2)
 
 func swap_weapons() -> void:
 	if not secondary_weapon:

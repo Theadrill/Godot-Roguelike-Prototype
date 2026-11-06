@@ -11,6 +11,8 @@ extends CanvasLayer
 @onready var hp_label: Label = $MarginContainer/VBoxContainer/HealthBarContainer/HPLabel
 @onready var status_label: Label = $MarginContainer/VBoxContainer/StatusLabel
 @onready var tier_label: Label = $MarginContainer/VBoxContainer/TierLabel
+@onready var flask_icon: ColorRect = $MarginContainer/VBoxContainer/FlaskContainer/FlaskIcon
+@onready var flask_label: Label = $MarginContainer/VBoxContainer/FlaskContainer/FlaskLabel
 
 var _bar_max_width: float = 180.0
 
@@ -66,3 +68,17 @@ func _process(delta: float) -> void:
 		var rep_text := " [REPULSÃO ATIVA]" if (player.shield and player.shield.has_repulsion_modifier) else ""
 		status_label.text = "● ESCUDO PRONTO%s" % rep_text
 		status_label.modulate = Color(0.7, 0.75, 0.85, 0.75)
+
+	# Health Flask (Mother's Tea) indicator using i18n
+	if flask_label:
+		var flask_name: String = tr("UI_FLASK_CHARGES")
+		if player.current_flask_charges > 0:
+			flask_label.text = "● %s: %d/%d [Q]" % [flask_name, player.current_flask_charges, player.max_flask_charges]
+			flask_label.modulate = Color(0.25, 0.95, 0.5, 1.0)
+			if flask_icon:
+				flask_icon.color = Color(0.2, 0.9, 0.45, 1.0)
+		else:
+			flask_label.text = "○ %s: %d/%d [Q]" % [flask_name, player.current_flask_charges, player.max_flask_charges]
+			flask_label.modulate = Color(0.7, 0.7, 0.7, 0.6)
+			if flask_icon:
+				flask_icon.color = Color(0.4, 0.4, 0.4, 0.5)

@@ -24,6 +24,11 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("roll")
 		return
 
+	# Heal check (Garrafa de Chá da Mãe)
+	if Input.is_action_just_pressed("heal"):
+		state_machine.transition_to("heal")
+		return
+
 	# Jump from crouch
 	if Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0:
 		player.jump_buffer_timer = 0.0

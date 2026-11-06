@@ -60,10 +60,15 @@ func _ready() -> void:
 		_create_key_event(KEY_2),
 		_create_joy_button_event(JOY_BUTTON_DPAD_DOWN)
 	])
-	# D-Pad Up (Gamepad) / Tecla 3 (Teclado): TOGGLE MODIFICADOR REPULSÃO DO ESCUDO (DEBUG)
+	# Botão Q (Teclado) / D-Pad Up (Gamepad): GARRAFA DE CHÁ DA MÃE (CURA)
+	_register_action("heal", [
+		_create_key_event(KEY_Q),
+		_create_joy_button_event(JOY_BUTTON_DPAD_UP)
+	])
+	# Tecla 3 (Teclado) / D-Pad Left (Gamepad): TOGGLE MODIFICADOR REPULSÃO DO ESCUDO (DEBUG)
 	_register_action("toggle_shield_repulsion_debug", [
 		_create_key_event(KEY_3),
-		_create_joy_button_event(JOY_BUTTON_DPAD_UP)
+		_create_joy_button_event(JOY_BUTTON_DPAD_LEFT)
 	])
 
 	# Right Analog Stick: Camera look-ahead (espiar adiante)
