@@ -142,3 +142,27 @@ Ao implementar qualquer funcionalidade que envolva texto:
 * **Zero Dívida Técnica:** Nenhum texto precisará ser "reescrito" ou caçado no código no futuro.
 * **Pronto para Lançamento Global:** A qualquer momento, basta exportar o CSV para tradutores adicionarem novas colunas (`es_ES`, `ja_JP`, `fr_FR`) sem tocar em uma única linha de GDScript.
 * **Consistência de Tom e Lore:** A equipe e a IA mantêm toda a identidade de escrita da família, da Morte e do protagonista centralizada em um único arquivo consultável.
+
+---
+
+## 7. Diretriz de Tradução Humanlike & Contextualização (Anti-Google Translate)
+
+> [!CAUTION]
+> **Proibição Absoluta de Tradução Literal / Tradutor Automático:**
+> O jogo rejeita traduções automáticas frias, secas ou literais que apenas substituem palavras de um dicionário. A IA deve atuar como uma **localizadora humana e roteirista de jogos**, adaptando expressões idiomáticas, gírias e o peso emocional de cada momento.
+
+### 1. Pilares da Tradução Humanlike:
+1. **Sensibilidade de Tom (Dark Fantasy Rústico):** O vocabulário deve soar condizente com um mundo devastado pela tirania e pelo massacre, mantendo a autenticidade de pessoas comuns em uma família simples do campo.
+2. **Transcriação de Barks e Gírias:** Expressões coloquiais como *"Putz, acabou o chá!"* não podem ser vertidas como *"Put, finished the tea"*, mas sim transcriadas para equivalentes naturais em inglês (ex: *"Damn it, out of tea!"* ou *"Well, that's the last drop..."*).
+3. **Contexto de Cena Sempre Ativo:** A IA deve avaliar quem está falando, para quem está falando e o estado físico da personagem (ofegante, frustrado, descansando, assustado) antes de definir a versão em outro idioma.
+
+### 2. Comparativo de Qualidade Obrigatório:
+
+| Chave | Texto Original (`pt_BR`) | ❌ Tradução Robótica (PROIBIDA) | ✅ Tradução Humanlike Oficial (`en_US`) |
+| :--- | :--- | :--- | :--- |
+| `BARK_TEA_EMPTY_1` | "Putz, acabou o chá!" | "Put, the tea is finished!" | "Damn it, out of tea!" |
+| `BARK_TEA_EMPTY_2` | "Acabou o chá..." | "Finished the tea..." | "Not a single drop left..." |
+| `BARK_TEA_EMPTY_3` | "Devia ter trazido mais chá." | "Should have brought more tea." | "I really should've packed more tea." |
+| `BARK_TEA_EMPTY_4` | "Já acabou o chá?..." | "Already ended the tea?..." | "Out of tea already?..." |
+| `ITEM_SWORD_BASE_NAME`| "Espada do Viajante" | "Sword of the Traveler" | "Traveler's Blade" |
+| `LORE_MOTHER_TEA_OFFER`| "Tome com calma, meu filho. O mundo lá fora não tem pressa de te ver morrer." | "Drink with calm, my son. The outside world is not in a hurry to see you die." | "Drink it slowly, love. The horrors out there won't mind waiting for your blood." |
