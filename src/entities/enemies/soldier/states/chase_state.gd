@@ -59,7 +59,7 @@ func physics_update(delta: float) -> void:
 	else:
 		los_lost_timer = 0.0
 
-	# Check Anti-Air Attack (Player directly overhead / landing on head)
+	# 1. Check Anti-Air / Overhead Attack (Player on elevated platform or jumping overhead)
 	# dy is negative when player is above. Soldier height is 40px (-40 to 0).
 	if anti_air_cooldown_timer <= 0.0 and dist <= 24.0 and dy >= -58.0 and dy <= -16.0:
 		anti_air_cooldown_timer = 0.9
@@ -71,7 +71,7 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("attack")
 		return
 
-	# Check Downward Attack (Player is below soldier, e.g. on lower platform)
+	# 2. Check Downward Attack (Player is below soldier, e.g. on lower platform)
 	# dy is positive when player is below.
 	if anti_air_cooldown_timer <= 0.0 and dist <= 24.0 and dy >= 16.0 and dy <= 58.0:
 		anti_air_cooldown_timer = 0.9
@@ -83,7 +83,7 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("attack")
 		return
 
-	# Check Horizontal Attack Range
+	# 3. Check Horizontal Attack Range
 	if dist <= soldier.attack_range and absf(dy) < 32.0:
 		soldier.velocity.x = 0.0
 		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState

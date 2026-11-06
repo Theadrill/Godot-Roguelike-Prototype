@@ -40,6 +40,7 @@ var flash_material: ShaderMaterial
 @onready var visual: Node2D = $Visual
 @onready var body_polygon: Polygon2D = $Visual/Body
 @onready var telegraph_mark: Node2D = $Visual/TelegraphMark
+@onready var white_mark: Polygon2D = $Visual/TelegraphMark/WhiteMark
 @onready var yellow_mark: Polygon2D = $Visual/TelegraphMark/YellowMark
 @onready var red_mark: Polygon2D = $Visual/TelegraphMark/RedMark
 @onready var slash_arc: Polygon2D = $Visual/SlashArc
@@ -180,9 +181,21 @@ func apply_parry_stun(duration: float = 0.85) -> void:
 	state_machine.transition_to("hurt")
 
 ## Telegraph visual helpers
+func show_white_telegraph() -> void:
+	if telegraph_mark:
+		telegraph_mark.visible = true
+	if white_mark:
+		white_mark.visible = true
+	if yellow_mark:
+		yellow_mark.visible = false
+	if red_mark:
+		red_mark.visible = false
+
 func show_yellow_telegraph() -> void:
 	if telegraph_mark:
 		telegraph_mark.visible = true
+	if white_mark:
+		white_mark.visible = false
 	if yellow_mark:
 		yellow_mark.visible = true
 	if red_mark:
@@ -191,6 +204,8 @@ func show_yellow_telegraph() -> void:
 func show_red_telegraph() -> void:
 	if telegraph_mark:
 		telegraph_mark.visible = true
+	if white_mark:
+		white_mark.visible = false
 	if yellow_mark:
 		yellow_mark.visible = false
 	if red_mark:
@@ -199,10 +214,20 @@ func show_red_telegraph() -> void:
 func hide_telegraph() -> void:
 	if telegraph_mark:
 		telegraph_mark.visible = false
+	if white_mark:
+		white_mark.visible = false
 	if yellow_mark:
 		yellow_mark.visible = false
 	if red_mark:
 		red_mark.visible = false
+
+func set_slash_color(col: Color) -> void:
+	if slash_arc:
+		slash_arc.color = col
+	if slash_arc_up:
+		slash_arc_up.color = col
+	if slash_arc_down:
+		slash_arc_down.color = col
 
 func set_slash_active(active: bool) -> void:
 	if slash_arc:
