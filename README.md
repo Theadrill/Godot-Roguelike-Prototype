@@ -8,4 +8,4 @@ Este repositório é um **protótipo de testes pessoais** para desenvolvimento a
 - Este projeto foca inicialmente em mecânica e física; assets artísticos complexos não são o foco nesta fase inicial de testes.
 
 ## Status do Projeto
-- Fase: **Planejamento e Preparação de Ambiente** (Nenhum código de gameplay gerado ainda).
+- Fase Atual: **Fase 6 — Sistema de Vida, Morte, Cura (Garrafa de Chá da Mãe) & Fundação de Localização** (Fases 0 a 5 concluídas e homologadas).
