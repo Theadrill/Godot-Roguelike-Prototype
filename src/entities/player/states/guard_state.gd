@@ -124,6 +124,9 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 		if attacker and attacker.has_method("on_attack_blocked"):
 			attacker.on_attack_blocked(true)
 
+		# Tactical Life Rally: Perfect Parry recovers recent lost health!
+		player.apply_parry_rally()
+
 		# Forge Modifier: Repulsion Shockwave
 		if player.shield and player.shield.has_repulsion_modifier:
 			var shockwave_scene := load("res://src/combat/radial_shockwave.tscn") as PackedScene
@@ -163,6 +166,9 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 			var absorption: float = player.shield.guard_absorption if player.shield else 0.85
 			var chip_damage: float = damage * (1.0 - absorption)
 			player.current_health = max(0.0, player.current_health - chip_damage)
+			if player.current_health > 0.0:
+				player.rally_recoverable_hp = minf(player.rally_recoverable_hp + chip_damage, player.max_health - player.current_health)
+				player.rally_timer = player.RALLY_DURATION
 			block_recoil_timer = 0.18
 			player.velocity.x = -player.facing_direction * 150.0
 
@@ -175,6 +181,9 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 		Hitbox.AttackCategory.PERILOUS:
 			# GUARD BREAK! 100% damage, staggered, shield dropped and put on long cooldown
 			player.current_health = max(0.0, player.current_health - damage)
+			if player.current_health > 0.0:
+				player.rally_recoverable_hp = minf(player.rally_recoverable_hp + damage, player.max_health - player.current_health)
+				player.rally_timer = player.RALLY_DURATION
 			player.velocity = knockback
 			player.parry_cooldown_timer = 1.5 # Guard break penalty
 

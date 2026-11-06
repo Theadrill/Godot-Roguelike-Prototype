@@ -19,6 +19,11 @@ var current_health: float = 250.0
 var current_mana: float = 100.0
 var _debug_respawn_timer: float = 0.0
 
+@export_group("Tactical Life Rally")
+const RALLY_DURATION: float = 2.0
+var rally_recoverable_hp: float = 0.0
+var rally_timer: float = 0.0
+
 @export_group("Horizontal Movement")
 @export_range(50.0, 600.0, 10.0, "suffix:px/s") var run_speed: float = 220.0
 @export_range(0.01, 0.5, 0.01, "suffix:s") var acceleration_time: float = 0.08
@@ -271,6 +276,12 @@ func _physics_process(delta: float) -> void:
 	if parry_cooldown_timer > 0.0:
 		parry_cooldown_timer = max(0.0, parry_cooldown_timer - delta)
 
+	# Tactical Life Rally timer countdown (2.0s window to parry and recover lost health)
+	if rally_timer > 0.0:
+		rally_timer = max(0.0, rally_timer - delta)
+		if rally_timer <= 0.0:
+			rally_recoverable_hp = 0.0
+
 	# Debug auto-refill health when reaching zero
 	if current_health <= 0.0:
 		_debug_respawn_timer += delta
@@ -278,6 +289,8 @@ func _physics_process(delta: float) -> void:
 			_debug_respawn_timer = 0.0
 			current_health = max_health
 			current_flask_charges = max_flask_charges
+			rally_recoverable_hp = 0.0
+			rally_timer = 0.0
 			flask_charges_changed.emit(current_flask_charges, max_flask_charges)
 	else:
 		_debug_respawn_timer = 0.0
@@ -406,6 +419,14 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	current_health = max(0.0, current_health - damage)
 	velocity = knockback
 
+	# Tactical Life Rally: Stores lost health as recoverable for 2.0s
+	if current_health > 0.0:
+		rally_recoverable_hp = minf(rally_recoverable_hp + damage, max_health - current_health)
+		rally_timer = RALLY_DURATION
+	else:
+		rally_recoverable_hp = 0.0
+		rally_timer = 0.0
+
 	# Visual juice: Hit flash pure white
 	if flash_material:
 		flash_timer = hitstop + 0.08
@@ -427,6 +448,25 @@ func trigger_stagger(custom_duration: float) -> void:
 	if stagger:
 		stagger.duration = custom_duration
 	state_machine.transition_to("stagger")
+
+## Recovers recent damage if player lands a Perfect Parry within the 2.0s rally window
+func apply_parry_rally() -> float:
+	if rally_recoverable_hp <= 0.0 or rally_timer <= 0.0:
+		return 0.0
+		
+	var recovered: float = rally_recoverable_hp
+	current_health = minf(current_health + recovered, max_health)
+	rally_recoverable_hp = 0.0
+	rally_timer = 0.0
+	
+	# Visual juice: triggers pure diegetic health bar punch + emerald/white flash
+	var hud := get_node_or_null("HUD") as PlayerHUD
+	if not hud and get_tree() and get_tree().current_scene:
+		hud = get_tree().current_scene.find_child("HUD", true, false) as PlayerHUD
+	if hud and hud.has_method("trigger_rally_restored_effect"):
+		hud.trigger_rally_restored_effect()
+		
+	return recovered
 
 func set_crouched(crouched: bool) -> void:
 	if not collision_shape:

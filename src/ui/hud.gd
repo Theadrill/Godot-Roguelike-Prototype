@@ -13,8 +13,11 @@ extends CanvasLayer
 @onready var tier_label: Label = $MarginContainer/VBoxContainer/TierLabel
 @onready var flask_icon: ColorRect = $MarginContainer/VBoxContainer/FlaskContainer/FlaskIcon
 @onready var flask_label: Label = $MarginContainer/VBoxContainer/FlaskContainer/FlaskLabel
+@onready var margin_container: MarginContainer = $MarginContainer
 
 var _bar_max_width: float = 180.0
+var _shake_tween: Tween = null
+var _flash_tween: Tween = null
 
 func _ready() -> void:
 	if not player:
@@ -45,11 +48,25 @@ func _process(delta: float) -> void:
 	var target_fill_width: float = _bar_max_width * hp_ratio
 	health_bar_fill.size.x = target_fill_width
 
-	# Smooth delayed damage chip bar
-	if health_bar_damage.size.x > target_fill_width:
-		health_bar_damage.size.x = move_toward(health_bar_damage.size.x, target_fill_width, 120.0 * delta)
+	# Tactical Life Rally & Delayed damage chip bar
+	if player.rally_timer > 0.0 and player.rally_recoverable_hp > 0.0:
+		var rally_total: float = minf(cur_hp + player.rally_recoverable_hp, max_hp)
+		var rally_target_width: float = _bar_max_width * (rally_total / max_hp)
+		health_bar_damage.size.x = maxf(target_fill_width, rally_target_width)
+		
+		# Amber glow indicating recoverable rally health
+		if player.rally_timer <= 0.5:
+			# Fast pulse during last 0.5s indicating urgency
+			var pulse: float = (sin(player.rally_timer * 25.0) + 1.0) * 0.5
+			health_bar_damage.color = Color(0.95, 0.55, 0.15, 0.45 + pulse * 0.5)
+		else:
+			health_bar_damage.color = Color(0.95, 0.55, 0.15, 0.95)
 	else:
-		health_bar_damage.size.x = target_fill_width
+		health_bar_damage.color = Color(0.9, 0.35, 0.2, 0.95)
+		if health_bar_damage.size.x > target_fill_width:
+			health_bar_damage.size.x = move_toward(health_bar_damage.size.x, target_fill_width, 120.0 * delta)
+		else:
+			health_bar_damage.size.x = target_fill_width
 
 	# Health text
 	hp_label.text = "HP %d / %d" % [int(ceilf(cur_hp)), int(max_hp)]
@@ -82,3 +99,26 @@ func _process(delta: float) -> void:
 			flask_label.modulate = Color(0.7, 0.7, 0.7, 0.6)
 			if flask_icon:
 				flask_icon.color = Color(0.4, 0.4, 0.4, 0.5)
+
+## Visual juice: Visceral health bar flash + horizontal punch/micro-shake when Parry recovers life
+func trigger_rally_restored_effect() -> void:
+	if not health_bar_fill:
+		return
+
+	# 1. Flash vibrante esmeralda / ciano brilhante na barra verde
+	if _flash_tween and _flash_tween.is_valid():
+		_flash_tween.kill()
+	_flash_tween = create_tween()
+	health_bar_fill.modulate = Color(1.8, 2.5, 1.8, 1.0)
+	_flash_tween.tween_property(health_bar_fill, "modulate", Color.WHITE, 0.22).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+	# 2. Punch / micro-shake horizontal de 2 a 3 pixels no HUD por ~0.15s
+	if margin_container:
+		if _shake_tween and _shake_tween.is_valid():
+			_shake_tween.kill()
+		_shake_tween = create_tween()
+		margin_container.position.x = 3.0
+		_shake_tween.tween_property(margin_container, "position:x", -2.0, 0.04)
+		_shake_tween.tween_property(margin_container, "position:x", 1.5, 0.04)
+		_shake_tween.tween_property(margin_container, "position:x", -0.5, 0.04)
+		_shake_tween.tween_property(margin_container, "position:x", 0.0, 0.03)
