@@ -312,6 +312,42 @@ func _unhandled_input(event: InputEvent) -> void:
 		cycle_reserve_weapon()
 	elif event.is_action_pressed("toggle_shield_repulsion_debug") and not event.is_echo():
 		toggle_shield_repulsion()
+	elif event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_T:
+		cycle_enemy_tier_live()
+
+var player_level: int = 1
+
+func cycle_enemy_tier_live() -> void:
+	match player_level:
+		1:
+			player_level = 4 # Tier 2 (Veterano)
+		4:
+			player_level = 8 # Tier 3 (Elite)
+		_:
+			player_level = 1 # Tier 1 (Recruta)
+
+	var tier_num: int = 1
+	var tier_name: String = "RECRUTA"
+	if player_level >= 8:
+		tier_num = 3
+		tier_name = "ELITE"
+	elif player_level >= 4:
+		tier_num = 2
+		tier_name = "VETERANO"
+
+	var enemies := get_tree().get_nodes_in_group("enemies")
+	for enemy in enemies:
+		if enemy.has_method("apply_tier_by_level"):
+			enemy.apply_tier_by_level(player_level)
+		if enemy.has_method("respawn") and enemy.respawn_enabled:
+			enemy.respawn()
+
+	# Display on HUD
+	var hud := get_node_or_null("HUD") as PlayerHUD
+	if not hud and get_tree() and get_tree().current_scene:
+		hud = get_tree().current_scene.find_child("HUD", true, false) as PlayerHUD
+	if hud and hud.has_method("show_tier_toast"):
+		hud.show_tier_toast(tier_num, tier_name, player_level)
 
 func can_attack() -> bool:
 	return attack_cooldown_timer <= 0.0

@@ -30,7 +30,7 @@ collision_layer = 4
 floor_constant_speed = true
 floor_snap_length = 8.0
 script = ExtResource("1_soldier")
-attack_cooldown = 2.0
+respawn_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=871248314]
 position = Vector2(0, -20)

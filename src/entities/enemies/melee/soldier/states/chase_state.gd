@@ -103,8 +103,9 @@ func physics_update(delta: float) -> void:
 		soldier.move_and_slide()
 		return
 
-	# Move towards player (smooth deceleration when inside deadzone)
-	if dist >= 8.0:
+	# Move towards player, stopping smoothly at melee attack range buffer
+	var desired_spacing: float = maxf(22.0, soldier.attack_range * 0.85)
+	if dist > desired_spacing:
 		soldier.velocity.x = signf(dx) * soldier.chase_speed
 	else:
 		soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)

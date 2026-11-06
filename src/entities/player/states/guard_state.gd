@@ -121,6 +121,8 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 		if attacker and attacker.has_method("apply_parry_stun"):
 			var stun_dur: float = player.shield.parry_stun_duration if player.shield else 0.85
 			attacker.apply_parry_stun(stun_dur)
+		if attacker and attacker.has_method("on_attack_blocked"):
+			attacker.on_attack_blocked(true)
 
 		# Forge Modifier: Repulsion Shockwave
 		if player.shield and player.shield.has_repulsion_modifier:
@@ -142,6 +144,10 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 		return true
 
 	# --- 2. CONTINUOUS SIMPLE GUARD (Holding shield past parry window) ---
+	var blocker_attacker := incoming_hitbox.attacker if incoming_hitbox else null
+	if blocker_attacker and blocker_attacker.has_method("on_attack_blocked"):
+		blocker_attacker.on_attack_blocked(false)
+
 	match category:
 		Hitbox.AttackCategory.NORMAL:
 			# 100% absorbed, 0 damage

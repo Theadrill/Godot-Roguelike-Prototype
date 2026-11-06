@@ -25,14 +25,18 @@ func enter() -> void:
 	soldier = character as Soldier
 	soldier.velocity.x = 0.0
 
-	# Pick attack type from 3-signal cycle (applies to ALL attack directions: Horizontal, Upward, Downward)
-	match cycle_index % 3:
-		0:
-			attack_type = AttackType.NORMAL
-		1:
-			attack_type = AttackType.YELLOW
-		2:
-			attack_type = AttackType.RED
+	# Filter attack type allowed by current active Tier
+	var pool: Array[AttackType] = []
+	if (soldier.allowed_attacks_mask & 1) != 0:
+		pool.append(AttackType.NORMAL)
+	if (soldier.allowed_attacks_mask & 2) != 0:
+		pool.append(AttackType.YELLOW)
+	if (soldier.allowed_attacks_mask & 4) != 0:
+		pool.append(AttackType.RED)
+	if pool.is_empty():
+		pool.append(AttackType.NORMAL)
+
+	attack_type = pool[cycle_index % pool.size()]
 	cycle_index += 1
 
 	# Turn to face player at start of attack (respect deadzone)
@@ -92,8 +96,82 @@ func physics_update(delta: float) -> void:
 	else:
 		soldier.velocity.y = 0.0
 
-	# Friction for any residual knockback/movement
-	soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+	# Active Movement during Cooldown / Recovery (Phase 2)
+	if attack_phase == 2:
+		var cooldown_elapsed: float = soldier.attack_cooldown - phase_timer
+		# 1. Micro-recovery for first 0.16s (follow-through weight)
+		if cooldown_elapsed < 0.16 or not soldier.can_move:
+			soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+		else:
+			# 2. Active Cooldown Movement based on active_behavior
+			var dist_to_player: float = 999.0
+			if soldier.target_player and is_instance_valid(soldier.target_player):
+				var dx: float = soldier.target_player.global_position.x - soldier.global_position.x
+				dist_to_player = absf(dx)
+				if dist_to_player >= 12.0:
+					soldier.update_facing(signf(dx))
+
+			var desired_strike_range: float = maxf(22.0, soldier.attack_range * 0.85)
+			var cooldown_total: float = soldier.attack_cooldown
+			var is_reengaging: bool = phase_timer <= minf(0.45, cooldown_total * 0.35)
+
+			match soldier.active_behavior:
+				Soldier.CooldownBehavior.AGGRESSIVE_STALK:
+					# Moderadamente agressivo: recua um passo para ~38-44px em cooldown, e avança no final para atacar
+					if is_reengaging:
+						if dist_to_player > desired_strike_range and soldier.can_step_forward():
+							soldier.velocity.x = float(soldier.facing_direction) * (soldier.chase_speed * 0.85)
+						else:
+							soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+					else:
+						# Mantém espaçamento de respeito durante o cooldown (não fica colado estático na cara do player)
+						if dist_to_player < 36.0 and soldier.can_step_backward():
+							soldier.velocity.x = -float(soldier.facing_direction) * (soldier.chase_speed * soldier.cooldown_speed_mult * 0.8)
+						elif dist_to_player > 50.0 and soldier.can_step_forward():
+							soldier.velocity.x = float(soldier.facing_direction) * (soldier.chase_speed * soldier.cooldown_speed_mult * 0.8)
+						else:
+							soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+
+				Soldier.CooldownBehavior.DEFENSIVE_RETREAT:
+					# Bem defensivo: abre distância significativa (60-80px), só avança devagar quando o cooldown estiver acabando
+					if is_reengaging:
+						if dist_to_player > desired_strike_range + 8.0 and soldier.can_step_forward():
+							soldier.velocity.x = float(soldier.facing_direction) * (soldier.chase_speed * soldier.cooldown_speed_mult)
+						else:
+							soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+					else:
+						if dist_to_player < 70.0 and soldier.can_step_backward():
+							soldier.velocity.x = -float(soldier.facing_direction) * (soldier.chase_speed * soldier.cooldown_speed_mult * 1.1)
+						else:
+							soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+
+				Soldier.CooldownBehavior.STAND_GROUND:
+					# Sentinela / imóvel
+					soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+
+				Soldier.CooldownBehavior.ADAPTIVE:
+					# Duelista de elite: espaçamento tático ágil (52-70px), recuo rápido e bote veloz no fim do cooldown
+					if soldier.is_adaptive_evading and soldier.can_step_backward():
+						# Player bloqueou ou deu parry: esquiva rápida de emergência
+						soldier.velocity.x = -float(soldier.facing_direction) * (soldier.chase_speed * 1.3)
+					elif is_reengaging:
+						# Bote tático: arrancada rápida para fechar o espaço e emendar o próximo ataque
+						if dist_to_player > desired_strike_range and soldier.can_step_forward():
+							soldier.velocity.x = float(soldier.facing_direction) * (soldier.chase_speed * 1.2)
+						else:
+							soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+					else:
+						# Footsies ágil de média distância: se afasta mais rápido mantendo 52-70px
+						if dist_to_player < 52.0 and soldier.can_step_backward():
+							soldier.velocity.x = -float(soldier.facing_direction) * (soldier.chase_speed * 0.95)
+						elif dist_to_player > 76.0 and soldier.can_step_forward():
+							soldier.velocity.x = float(soldier.facing_direction) * (soldier.chase_speed * 0.9)
+						else:
+							soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+	else:
+		# Friction for any residual knockback/movement during windup and active swing
+		soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
+
 	soldier.move_and_slide()
 
 	phase_timer -= delta
@@ -130,6 +208,8 @@ func _advance_phase() -> void:
 					knockback = 140.0
 					rumble_strong = 0.6
 
+			damage *= soldier.active_damage_multiplier
+
 			if is_upward:
 				phase_timer = 0.16
 				soldier.set_slash_up_active(true)
@@ -163,9 +243,15 @@ func _advance_phase() -> void:
 					soldier.hitbox.knockback_direction = Vector2(float(soldier.facing_direction), -0.2).normalized()
 					soldier.hitbox.set_active(true)
 
-				# Slight forward step during forward attack (only if mobile)
+				# Slight forward step during forward attack (only if mobile and has spacing room)
 				if soldier.can_move:
-					soldier.velocity.x = float(soldier.facing_direction) * 40.0
+					var dist_to_player: float = 999.0
+					if soldier.target_player and is_instance_valid(soldier.target_player):
+						dist_to_player = absf(soldier.target_player.global_position.x - soldier.global_position.x)
+					if dist_to_player > 22.0 and soldier.can_step_forward():
+						soldier.velocity.x = float(soldier.facing_direction) * 40.0
+					else:
+						soldier.velocity.x = 0.0
 				else:
 					soldier.velocity.x = 0.0
 

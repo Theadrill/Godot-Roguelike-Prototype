@@ -10,6 +10,7 @@ extends CanvasLayer
 @onready var health_bar_fill: ColorRect = $MarginContainer/VBoxContainer/HealthBarContainer/FillBar
 @onready var hp_label: Label = $MarginContainer/VBoxContainer/HealthBarContainer/HPLabel
 @onready var status_label: Label = $MarginContainer/VBoxContainer/StatusLabel
+@onready var tier_label: Label = $MarginContainer/VBoxContainer/TierLabel
 
 var _bar_max_width: float = 180.0
 
@@ -19,6 +20,17 @@ func _ready() -> void:
 			player = get_parent() as Player
 		elif get_tree() and get_tree().current_scene:
 			player = get_tree().current_scene.find_child("Player", true, false) as Player
+
+func show_tier_toast(tier_num: int, tier_name: String, player_level: int) -> void:
+	if tier_label:
+		tier_label.text = "⚔️ INIMIGOS: TIER %d [%s] - LV %d (Tecla T)" % [tier_num, tier_name, player_level]
+		match tier_num:
+			1:
+				tier_label.modulate = Color(0.8, 0.85, 0.95, 0.85)
+			2:
+				tier_label.modulate = Color(0.35, 0.85, 1.0, 1.0)
+			3:
+				tier_label.modulate = Color(1.0, 0.35, 0.35, 1.0)
 
 func _process(delta: float) -> void:
 	if not player or not is_instance_valid(player):

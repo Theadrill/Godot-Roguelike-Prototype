@@ -30,7 +30,53 @@ func physics_update(delta: float) -> void:
 	else:
 		archer.velocity.y = 0.0
 
-	archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+	# Active Cooldown Movement (after initial 0.20s recoil)
+	var cooldown_elapsed: float = archer.attack_cooldown - recovery_timer
+	if cooldown_elapsed < 0.20 or not archer.can_move:
+		archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+	else:
+		var dist_to_player: float = 999.0
+		if archer.target_player and is_instance_valid(archer.target_player):
+			var dx: float = archer.target_player.global_position.x - archer.global_position.x
+			dist_to_player = absf(dx)
+			if dist_to_player >= 12.0:
+				archer.update_facing(signf(dx))
+
+		var cooldown_total: float = archer.attack_cooldown
+		var is_reengaging: bool = recovery_timer <= minf(0.40, cooldown_total * 0.30)
+
+		match archer.active_behavior:
+			Archer.CooldownBehavior.DEFENSIVE_RETREAT:
+				if dist_to_player < archer.min_kite_distance * 1.5 and archer.can_step_backward():
+					archer.velocity.x = -float(archer.facing_direction) * (archer.kite_speed * archer.cooldown_speed_mult)
+				else:
+					archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+
+			Archer.CooldownBehavior.AGGRESSIVE_STALK:
+				if is_reengaging:
+					archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+				elif dist_to_player < 80.0 and archer.can_step_backward():
+					archer.velocity.x = -float(archer.facing_direction) * (archer.kite_speed * archer.cooldown_speed_mult * 0.8)
+				elif dist_to_player > 140.0 and archer.can_step_forward():
+					archer.velocity.x = float(archer.facing_direction) * (archer.patrol_speed * archer.cooldown_speed_mult)
+				else:
+					archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+
+			Archer.CooldownBehavior.STAND_GROUND:
+				archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+
+			Archer.CooldownBehavior.ADAPTIVE:
+				if archer.is_adaptive_evading and archer.can_step_backward():
+					archer.velocity.x = -float(archer.facing_direction) * (archer.kite_speed * 1.3)
+				elif is_reengaging:
+					archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+				elif dist_to_player < 110.0 and archer.can_step_backward():
+					archer.velocity.x = -float(archer.facing_direction) * (archer.kite_speed * 0.95)
+				elif dist_to_player > 170.0 and archer.can_step_forward():
+					archer.velocity.x = float(archer.facing_direction) * (archer.patrol_speed * 0.9)
+				else:
+					archer.velocity.x = move_toward(archer.velocity.x, 0.0, archer.friction * delta)
+
 	archer.move_and_slide()
 
 	recovery_timer -= delta
@@ -83,6 +129,8 @@ func _loose_arrow() -> void:
 			final_damage = archer.perilous_damage
 			final_speed = archer.arrow_speed * 1.35
 			tint_color = Color(1.0, 0.25, 0.25, 1.0) # Red perilous tint
+
+	final_damage *= archer.active_damage_multiplier
 
 	var proj := proj_scene.instantiate() as Projectile
 	proj.setup(shoot_dir, final_speed, final_damage, archer, true)

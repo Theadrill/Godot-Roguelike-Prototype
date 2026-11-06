@@ -82,6 +82,8 @@ func _on_area_entered(area: Area2D) -> void:
 			if player.state_machine and player.state_machine.current_state is GuardState:
 				var guard := player.state_machine.current_state as GuardState
 				if guard.is_parry_active:
+					if shooter and shooter.has_method("on_attack_blocked"):
+						shooter.on_attack_blocked(true)
 					_reflect_projectile(player)
 					return
 
@@ -103,6 +105,8 @@ func _on_body_entered(body: Node2D) -> void:
 			if player.state_machine and player.state_machine.current_state is GuardState:
 				var guard := player.state_machine.current_state as GuardState
 				if guard.is_parry_active:
+					if shooter and shooter.has_method("on_attack_blocked"):
+						shooter.on_attack_blocked(true)
 					_reflect_projectile(player)
 					return
 		_has_hit = true

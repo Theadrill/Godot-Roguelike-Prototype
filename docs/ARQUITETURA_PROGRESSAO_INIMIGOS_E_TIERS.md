@@ -48,6 +48,13 @@ A evolução dos inimigos ocorre de forma contínua e dinâmica ao longo dos bio
 2. **Comportamento é Sobrescrito:** O maior tier ativo sempre comanda a atitude da IA no cooldown.
 3. **Sem Duplicação de Cenas:** Cada monstro possui uma única cena `.tscn` com a Ficha de Tiers no Inspector.
 
+### Dinâmica de Cooldown e Footsies (Espaçamento Inteligente):
+Durante a janela de cooldown de ataque, o inimigo não fica congelado colado no jogador:
+* **`STAND_GROUND`:** Posição firme/imóvel (sentinelas, torretas, partes de chefes).
+* **`AGGRESSIVE_STALK` (Moderado):** No meio do cooldown, recua um passo para manter distância de guarda (~38-44px); nos últimos momentos do cooldown (restam <= 0.45s), avança de volta para a distância de corte (~22-24px) e ataca.
+* **`DEFENSIVE_RETREAT` (Defensivo):** Recua consideravelmente (~65-80px) criando zona de segurança enquanto está vulnerável; só avança gradualmente quando o ataque é rearmado.
+* **`ADAPTIVE` (Tático de Elite):** Footsies ágil de média distância (~52-70px) a alta velocidade (0.95x). Se o player bloquear ou der parry, realiza esquiva rápida para trás (1.3x). Nos momentos finais do cooldown, desfere um **bote em arrancada rápida (1.2x)** fechando o espaço instantaneamente para o próximo golpe surpresa.
+
 ---
 
 ## 4. Estrutura Padrão no Inspector do Godot
@@ -57,6 +64,7 @@ Todo inimigo deve exportar estes grupos organizados:
 ```gdscript
 # 1. Base Stats
 @export_group("Base Stats")
+@export var is_elite: bool = false ## Se marcado true no mapa, sempre será Elite 100% garantido
 @export var can_move: bool = true
 @export var takes_knockback: bool = true
 @export var max_health: float = 60.0
@@ -104,6 +112,7 @@ Todo inimigo deve exportar estes grupos organizados:
 @export var tier_3_health_mult: float = 1.75
 @export var tier_3_has_hyper_armor: bool = true
 @export var tier_3_can_be_elite: bool = true
+@export_range(0.0, 1.0, 0.05) var tier_3_elite_chance: float = 0.25
 
 # 7. Respawn & Debug
 @export_group("Respawn (Test Mode)")
