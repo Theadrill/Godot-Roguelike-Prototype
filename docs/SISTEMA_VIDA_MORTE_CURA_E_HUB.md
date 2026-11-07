@@ -176,8 +176,17 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
    * **Regra Cromática Estrita da Morte:** Qualquer elemento visual ligado à Morte (névoa do portal, cartas de bênção, auras e tela de game over) utiliza obrigatoriamente a mesma paleta verde-esmeralda acinzentada do vórtice (`#2E5246` / `#6BBC9E` / `#080D0A`).
    * **Comportamento do Espectro Híbrido:**
      * *Em Repouso (distante):* O arco de pedra ancestral emana apenas a névoa viva verde-esmeralda rodopiando pelo solo.
-     * *Ao Aproximar-se:* A névoa se adensa e dela **se condensa suavemente um espectro esbranquiçado sem pés**, de feições esqueléticas e manto etéreo que se dissolve na fumaça. A Morte projeta a janela **"O Toque da Morte"** (3 bênçãos/modificadores para a run).
+     * *Ao Aproximar-se:* A névoa se adensa e dela **se condensa suavemente um espectro esbranquiçado sem pés**, de feições esqueléticas e manto etéreo que se dissolve na fumaça. A Morte projeta a janela **"O Toque da Morte"** (3 bênçãos/modificadores aleatórios sorteados do pool desbloqueado para a run).
      * *Ao Confirmar & Partir:* O espectro se dissipa de volta na névoa pura, o herói cruza o limiar e a run no Bioma 1 tem início.
+   * **Expansão do Catálogo via Derrota de Bosses:**
+     * A variedade de cartas do Toque da Morte **não é comprada nem desbloqueada por grind**: ela é conquistada superando os grandes desafios do mundo!
+     * O jogador começa com um **Pool Inicial Básico** (6 a 9 modificadores fundamentais de parry, esquiva, dano físico e estamina).
+     * **Ao derrotar cada Boss do jogo:**
+       * Um selo temporal da Morte é rompido.
+       * A tela de triunfo do chefe exibe uma mensagem solene:
+         * *"O ciclo se aprofunda... O pacto se expande."*
+         * `[ Novos modificadores disponíveis no Toque da Morte! ]`
+       * O pool permanente da Morte recebe novos arquétipos avançados e sinergias de alto impacto para enriquecer todas as runs futuras.
 
 8. **Diretriz de Greybox & Placeholders (Fase Atual):**
    * Enquanto a arte final pixel art não for desenhada, todos os elementos da casa (cenário, Mãe, Irmão, Cachorrinha, Gatinha e Espectro da Morte) são implementados como **placeholders geométricos limpos**, preservando proporções, paletas e áreas físicas de colisão.
