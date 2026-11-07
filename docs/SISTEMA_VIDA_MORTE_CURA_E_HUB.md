@@ -115,62 +115,78 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
    * O guerreiro desperta do colapso temporal com vida a 100%, 1 frasco de infusão recarregado e Nível 1.
    * **Baú de Carvalho do Quarto (Skins & Capas):** Baú de roupas onde o jogador pode inspecionar e equipar mantos de lã, capas de viagem com capuz e túnicas costuradas pela Mãe.
 
-2. **A Mãe (Ervanária Medieval, Caldeirão & Personalidade de Mãe):**
+2. **A Mãe (Ervanária Medieval, Caldeirão & Roupas da Família):**
    * **Regra Sagrada de Lore:** A Mãe e o Irmão **NÃO SABEM** que o guerreiro morre em um loop temporal (para eles, o herói acabou de acordar para sua rotina matinal normal de patrulha).
-   * **Acesso & UI de Seleção Inicial (2 Botões Grandes com Cores Sólidas):**
-     * Ao interagir com a Mãe (`RB` / clique), abre uma tela limpa com dois botões/cards grandes:
-       * **[ ELIXIRES ] (O Randomizer Diário da Mãe):**
+   * **Acesso & UI de Seleção Inicial (3 Botões Grandes com Cores Sólidas):**
+     * Ao interagir com a Mãe (`RB` / clique), abre uma tela limpa com três botões/cards grandes:
+       * **[ ELIXIRES DO DIA ] (O Randomizer Diário da Mãe):**
          * A Mãe ferve tachos artesanais frescos a cada despertar. Inicialmente oferece **2 elixires temporários** para a partida:
            1. *Elixir de Folha-de-Fogo:* +20% de dano no primeiro ataque desferido após uma esquiva/rolamento.
            2. *Caldo Revigorante:* Concede +1 carga extra inicial no Frasco de Chá (inicia a run com 2/2 cargas).
-         * **A Personalidade Direta & Bem-Humorada da Mãe (4 Variações):**
-           * *"Eu acordei com vontade de tomar esse daqui, ué!"*
-           * *"Tá achando que eu sou sua empregada, menino?!"*
-           * *"Bebe o que tá no fogo e não reclama, senão vai sair de estômago vazio!"*
-           * *"Quer escolher cardápio? Vai procurar uma estalagem de luxo, folgado!"*
-       * **[ CHÁS ] (Upgrades Permanentes por Ervas Duplicadas):**
+       * **[ CHÁS PERMANENTES ] (Upgrades por Ervas Duplicadas):**
          * Conforme o jogador resgata **Mudas / Feixes de Ervas Raras** nas ruínas (salvos no Baú Transtemporal), a Mãe aprimora permanentemente a linhagem:
-           * *1º Feixe encontrado:* Desbloqueia o preparo (Nível 1).
-           * *Feixes duplicados em runs futuras:* Ingrediente de upgrade (Lv 2 = 2 feixes, Lv 3 = 4 feixes).
-           * *2 Opções Iniciais do Protótipo:*
-             1. *Chá de Raiz-de-Pedra:* +15 HP Máximo fixo na linhagem por nível.
-             2. *Chá de Camomila-da-Montanha:* +5% de eficácia na cura do Frasco por nível.
-   * **Barks Afetivos ao Fechar a Janela:**
-     * *"Vê se não demora para voltar, meu filho."*
-     * *"Leva um casaco, tá ventando lá fora!"*
+           1. *Chá de Raiz-de-Pedra:* +15 HP Máximo fixo na linhagem por nível.
+           2. *Chá de Camomila-da-Montanha:* +5% de eficácia na cura do Frasco por nível.
+       * **[ ROUPAS & TÚNICAS ] (Personalização Cosmética):**
+         * A Mãe costura e tinge tecidos com pigmentos naturais colhidos no vale. Permite alternar a paleta visual do herói:
+           1. *Túnica do Viajante (Padrão):* Tecido cru/bege rústico com bordas marrom-terra.
+           2. *Manto Carmesim da Mãe:* Túnica tingida em vermelho carmesim vibrante com bordas douradas.
+   * **Diálogos de Fechamento da Mãe (Barks Afetivos e Brutos):**
+     * *"Eu acordei com vontade de tomar esse daqui, ué!"*
+     * *"Tá achando que eu sou sua empregada, menino?!"*
+     * *"Bebe o que tá no fogo e não reclama, senão vai sair de estômago vazio!"*
+     * *"Quer escolher cardápio? Vai procurar uma estalagem de luxo, folgado!"*
      * *"Vê se não vai se machucar por aí, ouviu?!"*
-     * *"Que os espíritos antigos te guardem."*
 
-3. **O Irmão (A Forja do Aprendiz — Hub de Upgrades):**
-   * **Regra Sagrada de Lore:** O Irmão não sabe do loop de mortes; reclama apenas que o protagonista acorda tarde ou volta das rondas de mãos vazias.
-   * **Acesso & UI de Seleção Inicial (2 Botões Grandes com Cores Sólidas):**
-     * Ao interagir com o Irmão na bigorna (`RB` / clique), a interface abre em dois botões/cards grandes:
-       * **[ FORJA ] (Upgrades por Receitas Duplicadas):**
-         * O Irmão aprimora armas usando **Receitas Repetidas** resgatadas nas fases e salvas no Baú Transtemporal:
-           * *1ª Receita:* Desbloqueia a arma para sempre na família (Nível 1).
-           * *Receitas duplicadas:* Material de upgrade (2 receitas = Nível 2 com +10% dano base; 4 receitas = Nível 3).
-           * *2 Equipamentos Iniciais para Upgrade no Protótipo:*
-             1. *Espada Rústica (Nível 1):* Dano base 45. Upgrade Nível 2 (2 receitas) -> 52 de dano.
-             2. *Arco de Caça (Nível 1):* Dano base 30. Upgrade Nível 2 (2 receitas) -> 36 de dano.
-       * **[ COLEÇÃO ]:** Catálogo visual das armas aprendidas e nível de cada uma.
-   * **Diálogos de Resposta do Irmão (4 Variações):**
-     * *"Não sou uma fábrica, cara, sou só um!"*
-     * *"Foi o que deu pra afiar antes de você acordar, tá achando ruim?!"*
-     * *"Se você me trouxesse mais aço das suas rondas em vez de voltar de mãos abanando, tinha mais opção!"*
-     * *"Pega logo uma lâmina e não me enrola, meu braço da marreta tá quase caindo!"*
-   * **Barks ao Fechar a Janela:**
-     * *"Essa lâmina vai cortar até pedra!"*
-     * *"Traz mais aço se achar pelo caminho, mano."*
-     * *"O fio dessa espada ficou perfeito."*
+3. **O Irmão (A Forja do Aprendiz — Upgrades Diretos):**
+   * **Acesso Direto à Forja:** Ao falar com o Irmão na bigorna (`RB` / clique), a interface abre **direto na lista de aprimoramentos de armas**, eliminando telas intermediárias.
+   * **Aprimoramento por Receitas Duplicadas:**
+     * *Espada Rústica:* Nível 1 (Dano Base: 15) -> Nível 2 requer 2 receitas repetidas.
+     * *Arco de Caça:* Nível 1 (Dano Base: 12) -> Nível 2 requer 2 receitas repetidas.
+   * **Diálogos de Fechamento do Irmão:**
+     * *"Eu não sou uma fábrica, cara, sou só um!"*
+     * *"Foi o que deu pra forjar antes do meio-dia, folgado!"*
+     * *"Se você não perdesse minhas lâminas por aí, tinha mais opção!"*
+     * *"Cobra menos e ajuda mais no fole da forja na próxima!"*
+     * *"Volta inteiro, tá me ouvindo?"*
 
-4. **O Baú de Equipamentos (O Randomizer do Irmão & Montagem de Loadout):**
-   * Localizado ao lado da forja do Irmão.
-   * A cada despertar, o Irmão disponibiliza opções sorteadas do acervo desbloqueado.
-   * **Armas Básicas Iniciais já Desbloqueadas:**
-     * Slot 1 (Arma Principal): *Espada Rústica*
-     * Slot 2 (Secundária nas costas): *Arco de Caça*
-     * Slot 3 (Escudo): *Broquel de Ferro*
-   * Ao confirmar, equipa o guerreiro com os visuais nas mãos e costas.
+4. **A Galeria de Pedestais de Armamento (Substituindo o Armário/Baú):**
+   * Em vez de um armário abstrato ou baú de menu, o arsenal fica **exposto fisicamente no cenário sobre 9 Pedestais de Pedra** organizados à direita da bigorna:
+     * **6 Pedestais de Armas (Principais e Secundárias):**
+       - *Pedestal 1:* **Espada Rústica** (Desbloqueado desde o início).
+       - *Pedestal 2:* **Trancado** — *Requer descobrir 4 armas nas expedições (1/4).*
+       - *Pedestal 3:* **Trancado** — *Requer derrotar 3 chefões diferentes (0/3).*
+       - *Pedestal 4:* **Trancado** — *Requer derrotar 10 guardas de elite (0/10).*
+       - *Pedestal 5:* **Trancado** — *Requer sugar 500 almas / essências de monstros (0/500).*
+       - *Pedestal 6:* **Trancado** — *Requer derrotar 50 abominações do Caos (0/50).*
+     * **3 Pedestais de Escudos (Slots de Defesa & Parry):**
+       - *Pedestal 1:* **Broquel de Ferro** (Desbloqueado desde o início).
+       - *Pedestal 2:* **Trancado** — *Requer realizar 3 aprimoramentos em escudos na Forja (0/3).*
+       - *Pedestal 3:* **Trancado** — *Requer executar 25 parries perfeitos contra elites (0/25).*
+   * **Fluxo Diegético de Equipar:**
+     * O guerreiro caminha até o pedestal ativo e aperta `RB`:
+       - 1ª Arma escolhida: equipa na **Mão Principal**.
+       - 2ª Arma escolhida: equipa nas **Costas (Secundária)**.
+       - Pedestal de Escudo: equipa no **Braço de Bloqueio/Parry**.
+     * Pedestais trancados exibem silhueta escura e placa inscrita com o objetivo e progresso ao se aproximar.
+
+5. **Sistema de Rastreio Global (Metaprogressão & Estatísticas da Linhagem):**
+   * Centralizado no autoload `ProgressionManager`, gravando dados persistentes entre runs:
+     * **Categorias Oficiais de Inimigos (`EnemyCategory`):**
+       1. `UNDEAD` — Zumbis, esqueletos, mortos-vivos ressuscitados pela anomalia.
+       2. `BEAST` — Criaturas e feras corrompidas da floresta (lobos, morcegos, javalis).
+       3. `ABOMINATION` — Amálgamas grotescas e manifestações puras do Caos temporal.
+       4. `HUMANOID` — Soldados imperiais, guardas de elite e mercenários corrompidos.
+       5. `BOSS` — Portadores do Caos (guardiões dos selos de bioma).
+     * **Métricas Rastreadas:**
+       - Almas / Essências temporais absorvidas (`total_souls_collected`).
+       - Abates por categoria de inimigo (`kills_by_category`).
+       - Elites derrotados (`elite_kills_count`).
+       - Chefes únicos derrotados (`bosses_defeated_list`).
+       - Receitas e armas descobertas (`weapons_discovered_count`).
+       - Upgrades realizados em escudos (`shield_upgrades_performed`).
+       - Parries perfeitos bem-sucedidos (`perfect_parries_count`).
+       - Mortes totais no ciclo (`total_deaths_count`).
 
 5. **Os Pets da Cabana (Preta & Bela — Posições Dinâmicas a Cada Run):**
    * **A Cachorrinha (Preta — Dachshund / Salsichinha):** Fêmea de pelo preto brilhante/carvão, pernas curtas, corpo alongado, orelhas caídas e olhar carinhoso.

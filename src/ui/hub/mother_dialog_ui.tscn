@@ -21,10 +21,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -135.0
-offset_right = 260.0
-offset_bottom = 135.0
+offset_left = -270.0
+offset_top = -140.0
+offset_right = 270.0
+offset_bottom = 140.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -68,7 +68,7 @@ offset_bottom = 10.0
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.8, 1)
 theme_override_font_sizes/font_size = 12
-text = "A MÃE - ERVANÁRIA FAMILIAR"
+text = "A MÃE - ERVANÁRIA & COSTURA"
 vertical_alignment = 1
 
 [node name="BtnClose" type="Button" parent="MainPanel/TopBar"]
@@ -92,9 +92,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 38.0
-offset_right = -16.0
+offset_left = 14.0
+offset_top = 36.0
+offset_right = -14.0
 offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -103,7 +103,7 @@ grow_vertical = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 20.0
+offset_bottom = 18.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.8, 0.75, 0.7, 1)
 theme_override_font_sizes/font_size = 11
@@ -115,33 +115,41 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 26.0
-offset_bottom = -10.0
+offset_top = 22.0
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 10
 
 [node name="BtnCatElixirs" type="Button" parent="MainPanel/CategoryView/CategoriesHBox"]
-custom_minimum_size = Vector2(220, 120)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "[ ELIXIRES DO DIA ]
+theme_override_font_sizes/font_size = 11
+text = "[ ELIXIRES ]
 
-Infusões artesanais frescas
-Preparo temporário para a jornada"
+Infusões frescas
+Bônus da partida"
 
 [node name="BtnCatTeas" type="Button" parent="MainPanel/CategoryView/CategoriesHBox"]
-custom_minimum_size = Vector2(220, 120)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "[ CHÁS PERMANENTES ]
+theme_override_font_sizes/font_size = 11
+text = "[ CHÁS ]
 
-Aprimoramentos da linhagem
-Fortalecimento contínuo com feixes"
+Upgrades da linhagem
+Poder permanente"
+
+[node name="BtnCatClothes" type="Button" parent="MainPanel/CategoryView/CategoriesHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "[ ROUPAS ]
+
+Túnicas da Mãe
+Personalização visual"
 
 [node name="ListViewElixirs" type="Control" parent="MainPanel"]
 visible = false
@@ -195,16 +203,6 @@ custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 color = Color(0.18, 0.14, 0.12, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item1"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.48, 0.35, 0.25, 1)
-editor_only = false
-
 [node name="Name" type="Label" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
@@ -219,7 +217,7 @@ text = "Elixir de Folha-de-Fogo"
 layout_mode = 1
 offset_left = 10.0
 offset_top = 26.0
-offset_right = 340.0
+offset_right = 350.0
 offset_bottom = 50.0
 theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
 theme_override_font_sizes/font_size = 10
@@ -246,16 +244,6 @@ custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 color = Color(0.18, 0.14, 0.12, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.48, 0.35, 0.25, 1)
-editor_only = false
-
 [node name="Name" type="Label" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
@@ -270,7 +258,7 @@ text = "Caldo Revigorante"
 layout_mode = 1
 offset_left = 10.0
 offset_top = 26.0
-offset_right = 340.0
+offset_right = 350.0
 offset_bottom = 50.0
 theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
 theme_override_font_sizes/font_size = 10
@@ -344,16 +332,6 @@ custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 color = Color(0.16, 0.14, 0.13, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.45, 0.4, 0.3, 1)
-editor_only = false
-
 [node name="Name" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
@@ -415,16 +393,6 @@ custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 color = Color(0.16, 0.14, 0.13, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.45, 0.4, 0.3, 1)
-editor_only = false
-
 [node name="Name" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
@@ -480,6 +448,159 @@ grow_horizontal = 0
 grow_vertical = 2
 focus_mode = 2
 text = "Aprimorar"
+
+[node name="ListViewClothes" type="Control" parent="MainPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 36.0
+offset_right = -16.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Header" type="HBoxContainer" parent="MainPanel/ListViewClothes"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 26.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="BtnBack" type="Button" parent="MainPanel/ListViewClothes/Header"]
+layout_mode = 2
+focus_mode = 2
+text = "< Voltar"
+
+[node name="Title" type="Label" parent="MainPanel/ListViewClothes/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.7, 1)
+theme_override_font_sizes/font_size = 11
+text = "ROUPAS & TÚNICAS (Personalização Visual do Herói)"
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel/ListViewClothes"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="MainPanel/ListViewClothes/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Item1" type="ColorRect" parent="MainPanel/ListViewClothes/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+color = Color(0.18, 0.14, 0.12, 1)
+
+[node name="Swatch" type="ColorRect" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item1"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -16.0
+offset_right = 42.0
+offset_bottom = 16.0
+grow_vertical = 2
+color = Color(0.85, 0.72, 0.52, 1)
+
+[node name="Name" type="Label" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item1"]
+layout_mode = 1
+offset_left = 52.0
+offset_top = 8.0
+offset_right = 320.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(1, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "Túnica do Viajante (Padrão)"
+
+[node name="Desc" type="Label" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item1"]
+layout_mode = 1
+offset_left = 52.0
+offset_top = 26.0
+offset_right = 350.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 10
+text = "Tecido cru e resistente de linho natural com bordas marrom."
+
+[node name="BtnEquip" type="Button" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item1"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
+offset_right = -10.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "Vestir"
+
+[node name="Item2" type="ColorRect" parent="MainPanel/ListViewClothes/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+color = Color(0.18, 0.14, 0.12, 1)
+
+[node name="Swatch" type="ColorRect" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -16.0
+offset_right = 42.0
+offset_bottom = 16.0
+grow_vertical = 2
+color = Color(0.78, 0.18, 0.22, 1)
+
+[node name="Name" type="Label" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+offset_left = 52.0
+offset_top = 8.0
+offset_right = 320.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
+theme_override_font_sizes/font_size = 11
+text = "Manto Carmesim da Mãe"
+
+[node name="Desc" type="Label" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+offset_left = 52.0
+offset_top = 26.0
+offset_right = 350.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 10
+text = "Túnica tingida em vermelho carmesim vibrante com bordados."
+
+[node name="BtnEquip" type="Button" parent="MainPanel/ListViewClothes/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
+offset_right = -10.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "Vestir"
 
 [node name="GamepadPromptBar" parent="MainPanel" instance=ExtResource("2_prompt")]
 layout_mode = 1

@@ -68,7 +68,7 @@ offset_bottom = 10.0
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 12
-text = "O IRMÃO - FORJA DO APRENDIZ"
+text = "A FORJA DO IRMÃO - APRIMORAMENTO"
 vertical_alignment = 1
 
 [node name="BtnClose" type="Button" parent="MainPanel/TopBar"]
@@ -87,125 +87,42 @@ grow_vertical = 2
 focus_mode = 2
 text = "X"
 
-[node name="CategoryView" type="Control" parent="MainPanel"]
+[node name="Subtitle" type="Label" parent="MainPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 34.0
+offset_right = -16.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.75, 0.85, 0.92, 1)
+theme_override_font_sizes/font_size = 10
+text = "Use receitas repetidas salvas no baú para reforçar as armas da família:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
-offset_top = 38.0
+offset_top = 54.0
 offset_right = -16.0
 offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PromptLabel" type="Label" parent="MainPanel/CategoryView"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 20.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.75, 0.82, 0.9, 1)
-theme_override_font_sizes/font_size = 11
-text = "Selecione uma área da forja para inspecionar:"
-horizontal_alignment = 1
-
-[node name="CategoriesHBox" type="HBoxContainer" parent="MainPanel/CategoryView"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 26.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 16
-
-[node name="BtnCatForge" type="Button" parent="MainPanel/CategoryView/CategoriesHBox"]
-custom_minimum_size = Vector2(220, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "[ FORJA & UPGRADES ]
-
-Aprimorar armas forjadas
-Aumente dano com receitas repetidas"
-
-[node name="BtnCatArsenal" type="Button" parent="MainPanel/CategoryView/CategoriesHBox"]
-custom_minimum_size = Vector2(220, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "[ ARSENAL DISPONÍVEL ]
-
-Coleção de equipamentos liberados
-Espada, Arco e Broquel prontos"
-
-[node name="ListViewForge" type="Control" parent="MainPanel"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 36.0
-offset_right = -16.0
-offset_bottom = -34.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Header" type="HBoxContainer" parent="MainPanel/ListViewForge"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 26.0
-grow_horizontal = 2
-theme_override_constants/separation = 10
-
-[node name="BtnBack" type="Button" parent="MainPanel/ListViewForge/Header"]
-layout_mode = 2
-focus_mode = 2
-text = "< Voltar"
-
-[node name="Title" type="Label" parent="MainPanel/ListViewForge/Header"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
-theme_override_font_sizes/font_size = 11
-text = "FORJA DE ARMAS (Requer 2 Receitas Duplicadas por nível)"
-vertical_alignment = 1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel/ListViewForge"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 30.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBox" type="VBoxContainer" parent="MainPanel/ListViewForge/ScrollContainer"]
+[node name="VBox" type="VBoxContainer" parent="MainPanel/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="Item1" type="ColorRect" parent="MainPanel/ListViewForge/ScrollContainer/VBox"]
+[node name="Item1" type="ColorRect" parent="MainPanel/ScrollContainer/VBox"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 color = Color(0.14, 0.16, 0.18, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item1"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.35, 0.45, 0.55, 1)
-editor_only = false
-
-[node name="Name" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item1"]
+[node name="Name" type="Label" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 6.0
@@ -213,9 +130,9 @@ offset_right = 260.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/font_size = 11
-text = "Espada Rústica (Mão Principal)"
+text = "Espada Rústica"
 
-[node name="Desc" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item1"]
+[node name="Desc" type="Label" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 22.0
@@ -223,9 +140,9 @@ offset_right = 280.0
 offset_bottom = 38.0
 theme_override_colors/font_color = Color(0.75, 0.78, 0.82, 1)
 theme_override_font_sizes/font_size = 10
-text = "Arma corpo a corpo rápida com combo de 3 golpes."
+text = "Lâmina equilibrada de aço forjado."
 
-[node name="LevelLabel" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item1"]
+[node name="LevelLabel" type="Label" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 38.0
@@ -235,7 +152,7 @@ theme_override_colors/font_color = Color(0.5, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 10
 text = "Nível 1 (Dano: 15)"
 
-[node name="ReqLabel" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item1"]
+[node name="ReqLabel" type="Label" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 170.0
 offset_top = 38.0
@@ -245,7 +162,7 @@ theme_override_colors/font_color = Color(0.9, 0.6, 0.4, 1)
 theme_override_font_sizes/font_size = 10
 text = "Receitas: 0/2"
 
-[node name="BtnUpgrade" type="Button" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item1"]
+[node name="BtnUpgrade" type="Button" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -261,22 +178,12 @@ grow_vertical = 2
 focus_mode = 2
 text = "Aprimorar"
 
-[node name="Item2" type="ColorRect" parent="MainPanel/ListViewForge/ScrollContainer/VBox"]
+[node name="Item2" type="ColorRect" parent="MainPanel/ScrollContainer/VBox"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 color = Color(0.14, 0.16, 0.18, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.35, 0.45, 0.55, 1)
-editor_only = false
-
-[node name="Name" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item2"]
+[node name="Name" type="Label" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 6.0
@@ -284,9 +191,9 @@ offset_right = 260.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/font_size = 11
-text = "Arco de Caça (Secundária nas Costas)"
+text = "Arco de Caça"
 
-[node name="Desc" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item2"]
+[node name="Desc" type="Label" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 22.0
@@ -294,9 +201,9 @@ offset_right = 280.0
 offset_bottom = 38.0
 theme_override_colors/font_color = Color(0.75, 0.78, 0.82, 1)
 theme_override_font_sizes/font_size = 10
-text = "Disparos balísticos de longa distância."
+text = "Arco de madeira curvada para disparos rápidos."
 
-[node name="LevelLabel" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item2"]
+[node name="LevelLabel" type="Label" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
 offset_top = 38.0
@@ -306,7 +213,7 @@ theme_override_colors/font_color = Color(0.5, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 10
 text = "Nível 1 (Dano: 12)"
 
-[node name="ReqLabel" type="Label" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item2"]
+[node name="ReqLabel" type="Label" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 170.0
 offset_top = 38.0
@@ -316,7 +223,7 @@ theme_override_colors/font_color = Color(0.9, 0.6, 0.4, 1)
 theme_override_font_sizes/font_size = 10
 text = "Receitas: 0/2"
 
-[node name="BtnUpgrade" type="Button" parent="MainPanel/ListViewForge/ScrollContainer/VBox/Item2"]
+[node name="BtnUpgrade" type="Button" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -331,107 +238,6 @@ grow_horizontal = 0
 grow_vertical = 2
 focus_mode = 2
 text = "Aprimorar"
-
-[node name="ListViewArsenal" type="Control" parent="MainPanel"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 36.0
-offset_right = -16.0
-offset_bottom = -34.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Header" type="HBoxContainer" parent="MainPanel/ListViewArsenal"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 26.0
-grow_horizontal = 2
-theme_override_constants/separation = 10
-
-[node name="BtnBack" type="Button" parent="MainPanel/ListViewArsenal/Header"]
-layout_mode = 2
-focus_mode = 2
-text = "< Voltar"
-
-[node name="Title" type="Label" parent="MainPanel/ListViewArsenal/Header"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.85, 0.9, 1)
-theme_override_font_sizes/font_size = 11
-text = "ARSENAL LIBERADO (Pronto no baú e suporte de armas)"
-vertical_alignment = 1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel/ListViewArsenal"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 30.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBox" type="VBoxContainer" parent="MainPanel/ListViewArsenal/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="Item1" type="ColorRect" parent="MainPanel/ListViewArsenal/ScrollContainer/VBox"]
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-color = Color(0.14, 0.16, 0.18, 1)
-
-[node name="Label" type="Label" parent="MainPanel/ListViewArsenal/ScrollContainer/VBox/Item1"]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 10.0
-offset_top = -10.0
-offset_right = 400.0
-offset_bottom = 10.0
-grow_vertical = 2
-theme_override_font_sizes/font_size = 11
-text = "⚔ Espada Rústica (Mão Principal - Desbloqueada)"
-
-[node name="Item2" type="ColorRect" parent="MainPanel/ListViewArsenal/ScrollContainer/VBox"]
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-color = Color(0.14, 0.16, 0.18, 1)
-
-[node name="Label" type="Label" parent="MainPanel/ListViewArsenal/ScrollContainer/VBox/Item2"]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 10.0
-offset_top = -10.0
-offset_right = 400.0
-offset_bottom = 10.0
-grow_vertical = 2
-theme_override_font_sizes/font_size = 11
-text = "🏹 Arco de Caça (Secundária nas Costas - Desbloqueado)"
-
-[node name="Item3" type="ColorRect" parent="MainPanel/ListViewArsenal/ScrollContainer/VBox"]
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-color = Color(0.14, 0.16, 0.18, 1)
-
-[node name="Label" type="Label" parent="MainPanel/ListViewArsenal/ScrollContainer/VBox/Item3"]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 10.0
-offset_top = -10.0
-offset_right = 400.0
-offset_bottom = 10.0
-grow_vertical = 2
-theme_override_font_sizes/font_size = 11
-text = "🛡 Broquel de Ferro (Escudo de Parry - Desbloqueado)"
 
 [node name="GamepadPromptBar" parent="MainPanel" instance=ExtResource("2_prompt")]
 layout_mode = 1
@@ -444,3 +250,5 @@ offset_right = 0.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
+confirm_text = "Aprimorar"
+cancel_text = "Fechar"

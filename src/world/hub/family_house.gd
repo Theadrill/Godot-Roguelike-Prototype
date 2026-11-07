@@ -94,8 +94,9 @@ func _ready() -> void:
 		if cam:
 			cam.limit_left = 0
 			cam.limit_top = 0
-			cam.limit_right = 1100
+			cam.limit_right = 1750
 			cam.limit_bottom = 360
+		ProgressionManager.apply_skin_to_player(player)
 
 	_setup_chest_interactions()
 	_setup_npc_interactions()
@@ -105,10 +106,10 @@ func _process(delta: float) -> void:
 	# Condensação suave do Espectro da Morte conforme o jogador se aproxima do portal
 	if death_specter and player and not _is_transitioning:
 		var px: float = player.global_position.x
-		if px < 860.0:
+		if px < 1420.0:
 			death_specter.modulate.a = move_toward(death_specter.modulate.a, 0.0, delta * 2.0)
 		else:
-			var target_alpha: float = clampf((px - 860.0) / 110.0, 0.0, 1.0)
+			var target_alpha: float = clampf((px - 1420.0) / 120.0, 0.0, 1.0)
 			death_specter.modulate.a = move_toward(death_specter.modulate.a, target_alpha, delta * 3.0)
 
 	# Atualiza rotação do shader do vórtice caso ativo
@@ -288,11 +289,11 @@ func _on_blessing_chosen_and_transition(_blessing_id: String) -> void:
 	await get_tree().create_timer(4.8).timeout
 
 	if player:
-		# Personagem caminha automaticamente em direção ao centro do vórtice (x = 1020)
+		# Personagem caminha automaticamente em direção ao centro do vórtice (x = 1580)
 		player.facing_direction = 1
 		player.velocity.x = 80.0
 		var walk_tween := create_tween()
-		walk_tween.tween_property(player, "global_position:x", 1020.0, 1.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+		walk_tween.tween_property(player, "global_position:x", 1580.0, 1.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 		walk_tween.parallel().tween_property(player, "modulate:a", 0.0, 1.4)
 
 	# 5. Dissolução do espectro de volta na névoa
