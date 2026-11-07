@@ -116,9 +116,10 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
    * **Baú de Carvalho do Quarto (Skins & Capas):** Baú de roupas onde o jogador pode inspecionar e equipar mantos de lã, capas de viagem com capuz e túnicas costuradas pela Mãe.
 
 2. **A Mãe (Ervanária Medieval & Caldeirão de Ferro):**
-   * **Acesso ao Sistema:** O jogador interage diretamente com a Mãe (`RB` / clique) para abrir o caldeirão de infusões:
-     * *Elixires da Partida:* Caldos e tônicos temporários que concedem buffs para a run atual.
-     * *Upgrades Permanentes:* Infusões raras preparadas com ervas resgatadas que aumentam atributos definitivos (ex: +10 HP fixo).
+   * **Acesso & UI de Seleção Inicial (2 Botões Grandes):**
+     * Ao interagir com a Mãe (`RB` / clique), a interface abre em uma tela limpa dividida em **dois botões/cards grandes**, cada um com título em destaque e breve explicação embaixo:
+       * **[ ELIXIRES ]:** *"Infusões temporárias preparadas para a jornada atual. Beber múltiplos elixires acumula seus efeitos para esta run."*
+       * **[ CHÁS ]:** *"Preparações com ervas e raízes raras resgatadas das ruínas que aprimoram permanentemente os atributos vitais do guerreiro."*
    * **Barks Afetivos ao Fechar a Janela:** Sempre que o jogador fecha a interface da Mãe, ela solta uma fala carinhosa e aleatória em balão diegético (sorteada sem repetição via `LocalizationService`):
      * *"Vê se não demora para voltar, meu filho."*
      * *"Cuidado com o frio lá fora."*
@@ -126,9 +127,11 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
      * *"Que os espíritos antigos te guardem."*
 
 3. **O Irmão (O Ferreiro Crafter — Forja do Aprendiz):**
-   * **Acesso ao Sistema:** O jogador interage diretamente com o Irmão na bigorna (`RB` / clique).
-   * **Mecânica de Crafting:** O Irmão recebe diagramas, sucatas e fragmentos de aço resgatados das ruínas para forjar novas armas e escudos.
-   * **Conexão com o Baú:** Assim que o Irmão termina de forjar uma arma, ela é guardada na coleção da família e fica imediatamente disponível no Baú de Equipamentos.
+   * **Acesso & UI de Seleção Inicial (2 Botões Grandes):**
+     * Ao interagir com o Irmão na bigorna (`RB` / clique), a interface abre em uma tela dividida em **dois botões/cards grandes**, cada um com título em destaque e breve explicação embaixo:
+       * **[ FORJA ]:** *"Refino e aprimoramento dos armamentos existentes da coleção da família."*
+       * **[ RECEITAS ]:** *"Desbloqueio de novos armamentos estilo Dead Cells — invista materiais e sucatas coletados nas runs para completar receitas de diagramas e disponibilizar novas armas e escudos no Baú da casa."*
+   * **Conexão com o Baú:** Assim que uma receita é completada ou forjada, o item é adicionado ao acervo da família e fica imediatamente disponível no Baú de Equipamentos.
    * **Barks do Aprendiz ao Fechar a Janela:**
      * *"Essa lâmina vai cortar até pedra!"*
      * *"Traz mais aço se achar pelo caminho, mano."*
