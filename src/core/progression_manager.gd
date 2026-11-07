@@ -143,6 +143,37 @@ func record_shield_upgrade() -> void:
 	save_profile()
 	metrics_updated.emit()
 
+const WEAPON_DISPLAY_NAMES: Dictionary = {
+	"sword_base": "Espada do Viajante",
+	"weapon_sword_base": "Espada do Viajante",
+	"shield_base": "Broquel de Ferro",
+	"shield_buckler_base": "Broquel de Ferro",
+	"bow_base": "Arco de Caça",
+	"weapon_bow_base": "Arco de Caça",
+	"dagger_base": "Adagas Gêmeas",
+	"weapon_dagger_base": "Adagas Gêmeas",
+	"hammer_base": "Martelo de Guerra",
+	"weapon_hammer_base": "Martelo de Guerra",
+	"staff_base": "Cajado do Vazio",
+	"weapon_staff_base": "Cajado do Vazio",
+	"crossbow_base": "Besta de Repetição",
+	"weapon_crossbow_base": "Besta de Repetição"
+}
+
+func get_weapon_display_name(weapon_id: String) -> String:
+	var clean_id := weapon_id.to_lower().strip_edges()
+	if WEAPON_DISPLAY_NAMES.has(clean_id):
+		return WEAPON_DISPLAY_NAMES[clean_id]
+	if clean_id.begins_with("weapon_test_"):
+		return "Arma de Teste " + clean_id.trim_prefix("weapon_test_")
+	return clean_id.replace("_", " ").capitalize()
+
+func get_boss_display_name(boss_id: String) -> String:
+	var clean_id := boss_id.to_lower().strip_edges()
+	if clean_id.begins_with("boss_test_"):
+		return "Chefão de Teste " + clean_id.trim_prefix("boss_test_")
+	return clean_id.replace("_", " ").capitalize()
+
 func record_weapon_discovered(weapon_id: String) -> void:
 	if not weapons_discovered_list.has(weapon_id):
 		weapons_discovered_list.append(weapon_id)

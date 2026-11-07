@@ -159,9 +159,11 @@ func _refresh_metrics() -> void:
 	if pm.weapons_discovered_list.is_empty():
 		bbcode += "  • Armas Descobertas: [color=#ffd54f][b]0[/b][/color]\n\n"
 	else:
-		var formatted_weapons: String = ", ".join(pm.weapons_discovered_list)
+		var weapon_names: Array[String] = []
+		for w in pm.weapons_discovered_list:
+			weapon_names.append(pm.get_weapon_display_name(w))
 		bbcode += "  • Armas Descobertas: [color=#ffd54f][b]%d[/b][/color]\n" % pm.weapons_discovered_list.size()
-		bbcode += "    [color=#90a4ae]└ %s[/color]\n\n" % formatted_weapons
+		bbcode += "    [color=#90a4ae]└ %s[/color]\n\n" % ", ".join(weapon_names)
 	
 	# Bestiário e Abates
 	bbcode += "[b][color=#80cbc4]3. Bestiário & Abates por Categoria:[/color][/b]\n"
@@ -173,9 +175,11 @@ func _refresh_metrics() -> void:
 	if pm.bosses_defeated_list.is_empty():
 		bbcode += "  • Chefões Únicos Vencidos: [color=#ff5252][b]0[/b][/color]\n\n"
 	else:
-		var formatted_bosses: String = ", ".join(pm.bosses_defeated_list)
+		var boss_names: Array[String] = []
+		for b in pm.bosses_defeated_list:
+			boss_names.append(pm.get_boss_display_name(b))
 		bbcode += "  • Chefões Únicos Vencidos: [color=#ff5252][b]%d[/b][/color]\n" % pm.bosses_defeated_list.size()
-		bbcode += "    [color=#90a4ae]└ %s[/color]\n\n" % formatted_bosses
+		bbcode += "    [color=#90a4ae]└ %s[/color]\n\n" % ", ".join(boss_names)
 	
 	# Afeto & Hub
 	bbcode += "[b][color=#80cbc4]4. Afeto no Hub:[/color][/b]\n"
