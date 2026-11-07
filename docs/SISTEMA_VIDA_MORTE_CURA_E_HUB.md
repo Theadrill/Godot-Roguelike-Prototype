@@ -116,38 +116,51 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
    * **Baú de Carvalho do Quarto (Skins & Capas):** Baú de roupas onde o jogador pode inspecionar e equipar mantos de lã, capas de viagem com capuz e túnicas costuradas pela Mãe.
 
 2. **A Mãe (Ervanária Medieval & Caldeirão de Ferro):**
-   * **Infusões Silvestres & Upgrades Permanentes:** Ervas raras e raízes da floresta antiga (estilo *Athelas*) preparadas no caldeirão de ferro para aumentar atributos eternos da linhagem (ex: +10 HP Máximo fixo).
-   * **Elixires da Partida (Acumulativos):** A Mãe prepara caldos e tônicos revigorantes antes da jornada. O jogador pode beber múltiplos elixires e empilhar seus efeitos para aquela run específica.
-   * **Tear Medieval & Mesa de Couro (Confecção):** Onde a Mãe tece novas roupas para o guerreiro, mantas para os pets e vestes para a família conforme tecidos e pigmentos são resgatados nas runs.
+   * **Acesso ao Sistema:** O jogador interage diretamente com a Mãe (`RB` / clique) para abrir o caldeirão de infusões:
+     * *Elixires da Partida:* Caldos e tônicos temporários que concedem buffs para a run atual.
+     * *Upgrades Permanentes:* Infusões raras preparadas com ervas resgatadas que aumentam atributos definitivos (ex: +10 HP fixo).
+   * **Barks Afetivos ao Fechar a Janela:** Sempre que o jogador fecha a interface da Mãe, ela solta uma fala carinhosa e aleatória em balão diegético (sorteada sem repetição via `LocalizationService`):
+     * *"Vê se não demora para voltar, meu filho."*
+     * *"Cuidado com o frio lá fora."*
+     * *"Beba todo o chá, ouviu?"*
+     * *"Que os espíritos antigos te guardem."*
 
-3. **O Irmão (A Forja do Aprendiz & Preparação de Armamentos):**
-   * Bigorna de ferro sobre cepo de carvalho, fole de couro e fornalha de carvão.
-   * **Diagramas & Aprendizado:** Recebe diagramas e fragmentos de aço resgatados das ruínas para forjar novas variantes de espadas, machados, arcos e escudos.
-   * **O Expositor / Suporte de Armas da Forja (3 Slots de Equipamento para a Run):**
-     * **Slot 1 (Arma Principal / Mão Hábil):** Escolha da arma principal empunhada.
-     * **Slot 2 (Secundária / Costas):** Arcos, adagas, cajados.
-     * **Slot 3 (Mão Inábil / Escudo):** Broquel de parry, escudo redondo nórdico.
-     * Permite que o guerreiro saia da forja 100% equipado para o combate.
+3. **O Irmão (O Ferreiro Crafter — Forja do Aprendiz):**
+   * **Acesso ao Sistema:** O jogador interage diretamente com o Irmão na bigorna (`RB` / clique).
+   * **Mecânica de Crafting:** O Irmão recebe diagramas, sucatas e fragmentos de aço resgatados das ruínas para forjar novas armas e escudos.
+   * **Conexão com o Baú:** Assim que o Irmão termina de forjar uma arma, ela é guardada na coleção da família e fica imediatamente disponível no Baú de Equipamentos.
+   * **Barks do Aprendiz ao Fechar a Janela:**
+     * *"Essa lâmina vai cortar até pedra!"*
+     * *"Traz mais aço se achar pelo caminho, mano."*
+     * *"O fio dessa espada ficou perfeito."*
 
-4. **Os Pets da Cabana (Preta & Bela — Posições Dinâmicas a Cada Run):**
+4. **O Baú de Equipamentos (Montagem de Loadout):**
+   * Localizado ao lado da forja do Irmão.
+   * O jogador interage com o Baú (`RB` / clique) para montar seu **Loadout de Partida**:
+     * **Slot 1 (Arma Principal):** Escolha entre as armas forjadas pelo Irmão (espadas, machados, etc.).
+     * **Slot 2 (Secundária nas costas):** Arcos, adagas, etc.
+     * **Slot 3 (Escudo):** Broquel de parry ou escudo de absorção.
+   * Ao confirmar, o guerreiro sai da forja 100% armado e pronto para a batalha.
+
+5. **Os Pets da Cabana (Preta & Bela — Posições Dinâmicas a Cada Run):**
    * **A Cachorrinha (Preta — Dachshund / Salsichinha):** Fêmea de pelo preto brilhante/carvão, pernas curtas, corpo alongado, orelhas caídas e olhar carinhoso.
    * **A Gatinha (Bela — Siamês Cinza-Claro / Quase Branca):** Pelo curto e elegante (não felpuda), corpo claro/esbranquiçado com pontas (orelhas, focinho e cauda) em cinza suave.
    * **Comportamento Dinâmico:** A cada nova run / despertar, a Preta e a Bela sorteiam lugares aconchegantes diferentes para repousar entre a Cozinha e a Forja (ex: enroladas perto do fogo da lareira, embaixo da mesa de ervas, sobre uma pele de ovelha ao lado do fole ou cochilando perto do cesto de lenha).
    * **Interação:** O jogador pode se aproximar para fazer carinho (`[E] / [RB]`) com coração diegético, abanar de cauda e ronronar.
 
-5. **A Atmosfera Visual da Casa (O Refúgio Feliz, Fofo e Colorido):**
+6. **A Atmosfera Visual da Casa (O Refúgio Feliz, Fofo e Colorido):**
    * O interior da cabana contrasta fortemente com a desolação sombria das ruínas externas:
    * **Paleta Quente & Viva:** Tons vibrantes de madeira acolhedora, luz âmbar da lareira, potes de cerâmica colorida, feixes de ervas verde-vivas, flores silvestres em jarras, mantas tecidas em tons de amarelo e terracota, e o brilho rubro da fornalha.
    * A casa passa uma sensação genuína de paz, afeto familiar e acolhimento fofo — o motivo pelo qual o guerreiro luta para proteger o santuário.
 
-6. **O Arco de Pedra em Ruínas & A Manifestação Híbrida da Morte:**
+7. **O Arco de Pedra em Ruínas & A Manifestação Híbrida da Morte:**
    * **Regra Cromática Estrita da Morte:** Qualquer elemento visual ligado à Morte (névoa do portal, cartas de bênção, auras e tela de game over) utiliza obrigatoriamente a mesma paleta verde-esmeralda acinzentada do vórtice (`#2E5246` / `#6BBC9E` / `#080D0A`).
    * **Comportamento do Espectro Híbrido:**
      * *Em Repouso (distante):* O arco de pedra ancestral emana apenas a névoa viva verde-esmeralda rodopiando pelo solo.
      * *Ao Aproximar-se:* A névoa se adensa e dela **se condensa suavemente um espectro esbranquiçado sem pés**, de feições esqueléticas e manto etéreo que se dissolve na fumaça. A Morte projeta a janela **"O Toque da Morte"** (3 bênçãos/modificadores para a run).
      * *Ao Confirmar & Partir:* O espectro se dissipa de volta na névoa pura, o herói cruza o limiar e a run no Bioma 1 tem início.
 
-7. **Diretriz de Greybox & Placeholders (Fase Atual):**
+8. **Diretriz de Greybox & Placeholders (Fase Atual):**
    * Enquanto a arte final pixel art não for desenhada, todos os elementos da casa (cenário, Mãe, Irmão, Cachorrinha, Gatinha e Espectro da Morte) são implementados como **placeholders geométricos limpos**, preservando proporções, paletas e áreas físicas de colisão.
    * Os NPCs nesta fase inicial atuam puramente como presenças físicas/cenográficas no ambiente, sem lógicas complexas de loja ou forja ativadas prematuramente.
 
