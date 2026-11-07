@@ -76,7 +76,7 @@ func _on_chest_body_exited(body: Node2D) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _player_near_chest:
-		if event.is_action_pressed("interact") or (event is InputEventKey and event.pressed and event.keycode == KEY_E) or (event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_X):
+		if event.is_action_pressed("interact"):
 			get_viewport().set_input_as_handled()
 			_toggle_weapons()
 

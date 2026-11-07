@@ -42,13 +42,18 @@ func _ready() -> void:
 		_create_key_event(KEY_J),
 		_create_joy_button_event(JOY_BUTTON_X)
 	])
-	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse / Teclas K, L, E: DEFESA / ESCUDO
+	# Botão Y (Xbox) / Triângulo (PlayStation) / Botão Direito Mouse / Teclas K, L: DEFESA / ESCUDO
 	_register_action("defend", [
 		_create_mouse_button_event(MOUSE_BUTTON_RIGHT),
 		_create_key_event(KEY_K),
 		_create_key_event(KEY_L),
-		_create_key_event(KEY_E),
 		_create_joy_button_event(JOY_BUTTON_Y)
+	])
+	# Botão RB (Xbox) / R1 (PlayStation) / Tecla E / Tecla F: INTERAÇÃO
+	_register_action("interact", [
+		_create_key_event(KEY_E),
+		_create_key_event(KEY_F),
+		_create_joy_button_event(JOY_BUTTON_RIGHT_SHOULDER)
 	])
 	# Botão LB (Xbox) / L1 (PlayStation) / Tecla 1 (Teclado): TROCAR ARMA EQUIPADA (SWAP)
 	_register_action("swap_weapon", [
