@@ -16,6 +16,12 @@ func _ready() -> void:
 	# Monitora conexões/desconexões de controles em tempo real
 	Input.joy_connection_changed.connect(_on_joy_connection_changed)
 
+	# Instancia o painel de debug de métricas e persistência globalmente
+	var debug_panel_scene := load("res://src/ui/debug/debug_metrics_panel.tscn") as PackedScene
+	if debug_panel_scene:
+		var panel = debug_panel_scene.instantiate()
+		add_child(panel)
+
 func _open_log_file() -> void:
 	log_file = FileAccess.open(log_path, FileAccess.WRITE)
 	if not log_file:

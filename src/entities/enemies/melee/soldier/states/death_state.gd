@@ -25,6 +25,10 @@ func enter() -> void:
 	soldier.visual.scale.y = 0.4
 	soldier.visual.modulate = Color(0.6, 0.2, 0.2, 0.8)
 
+	# Registra abate e almas colhidas no ProgressionManager
+	ProgressionManager.record_kill(soldier.enemy_category, soldier.is_elite_active)
+	ProgressionManager.add_souls(15 if soldier.is_elite_active else 5)
+
 func physics_update(delta: float) -> void:
 	# Fall to floor if in air
 	if not soldier.is_on_floor():

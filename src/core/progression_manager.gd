@@ -4,10 +4,19 @@ const EnemyCategories = preload("res://src/core/enemy_category.gd")
 
 ## ProgressionManager: Autoload central para gerenciar modificadores temporários da run atual,
 ## níveis permanentes da linhagem (Chás, Forja, Roupas), estatísticas e desbloqueio de pedestais.
+## Inclui persistência criptografada em AES-256 no disco (user://saves/slot_1/meta_progression.dat).
 
 signal run_modifiers_updated
 signal permanent_upgrades_updated
 signal skin_changed(new_skin_id: String)
+signal metrics_updated
+
+const SAVE_DIR: String = "user://saves/slot_1"
+const SAVE_FILE_PATH: String = "user://saves/slot_1/meta_progression.dat"
+const SAVE_SECRET_KEY: String = "SeveredDawn_EncryptedSalt_2026_xK9"
+
+# Debug / Cheat Override (opcional para testes imediatos)
+var debug_unlock_all_pedestals: bool = false
 
 # Modificadores Temporários da Run (Resetados a cada despertar)
 var active_elixir: String = "" # "folha_de_fogo" ou "caldo_revigorante"
@@ -44,16 +53,25 @@ var kills_by_category: Dictionary = {
 }
 var elite_kills_count: int = 0
 var bosses_defeated_list: Array[String] = []
-var weapons_discovered_count: int = 1
+var weapons_discovered_list: Array[String] = ["sword_base", "shield_base"]
 var shield_upgrades_performed: int = 0
 var perfect_parries_count: int = 0
+var rally_hp_recovered: float = 0.0
+var teas_consumed_count: int = 0
 var total_deaths_count: int = 0
+var pet_dog_count: int = 0
+var pet_cat_count: int = 0
+
+func _ready() -> void:
+	load_profile()
 
 func reset_daily_run() -> void:
 	active_elixir = ""
 	active_death_blessing = ""
 	total_deaths_count += 1
+	save_profile()
 	run_modifiers_updated.emit()
+	metrics_updated.emit()
 
 func select_elixir(id: String) -> void:
 	if active_elixir == id:
@@ -68,6 +86,7 @@ func select_death_blessing(id: String) -> void:
 
 func select_skin(skin_id: String) -> void:
 	active_skin_id = skin_id
+	save_profile()
 	skin_changed.emit(active_skin_id)
 
 func get_bonus_max_hp() -> float:
@@ -82,32 +101,70 @@ func get_sword_base_damage() -> float:
 func get_bow_base_damage() -> float:
 	return 12.0 + float(weapon_bow_level - 1) * 2.5
 
-# --- Rastreamento de Eventos de Combate ---
+# --- Rastreamento de Eventos de Combate & Carreira ---
 func add_souls(amount: int) -> void:
 	total_souls_collected += amount
+	save_profile()
+	metrics_updated.emit()
 
 func record_kill(category: EnemyCategories.Category, is_elite: bool = false) -> void:
 	var current: int = kills_by_category.get(category, 0)
 	kills_by_category[category] = current + 1
 	if is_elite:
 		elite_kills_count += 1
+	save_profile()
+	metrics_updated.emit()
 
 func record_boss_defeat(boss_id: String) -> void:
 	if not bosses_defeated_list.has(boss_id):
 		bosses_defeated_list.append(boss_id)
+		var current_boss_kills: int = kills_by_category.get(EnemyCategories.Category.BOSS, 0)
+		kills_by_category[EnemyCategories.Category.BOSS] = current_boss_kills + 1
+		save_profile()
+		metrics_updated.emit()
 
 func record_perfect_parry() -> void:
 	perfect_parries_count += 1
+	save_profile()
+	metrics_updated.emit()
+
+func record_rally_heal(amount: float) -> void:
+	rally_hp_recovered += amount
+	save_profile()
+	metrics_updated.emit()
+
+func record_tea_consumed() -> void:
+	teas_consumed_count += 1
+	save_profile()
+	metrics_updated.emit()
 
 func record_shield_upgrade() -> void:
 	shield_upgrades_performed += 1
+	save_profile()
+	metrics_updated.emit()
+
+func record_weapon_discovered(weapon_id: String) -> void:
+	if not weapons_discovered_list.has(weapon_id):
+		weapons_discovered_list.append(weapon_id)
+		save_profile()
+		metrics_updated.emit()
+
+func record_pet_interact(pet_name: String) -> void:
+	if pet_name.to_lower().contains("dog") or pet_name.to_lower().contains("preta"):
+		pet_dog_count += 1
+	elif pet_name.to_lower().contains("cat") or pet_name.to_lower().contains("bela"):
+		pet_cat_count += 1
+	save_profile()
+	metrics_updated.emit()
 
 # --- Condições de Desbloqueio dos 6 Pedestais de Armas ---
 func is_weapon_pedestal_unlocked(index: int) -> bool:
+	if debug_unlock_all_pedestals:
+		return true
 	match index:
 		0: return true # Espada Rústica inicial
-		1: return true # Arco Rústico liberado para testes de troca/equipamento
-		2: return true # Adagas Gêmeas liberadas para testes de troca (swap)
+		1: return weapons_discovered_list.size() >= 4 or true # Mantém acessível por padrão para testes de swap
+		2: return bosses_defeated_list.size() >= 3 or true # Mantém acessível por padrão para testes de swap
 		3: return elite_kills_count >= 10
 		4: return total_souls_collected >= 500
 		5: return kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0) >= 50
@@ -116,8 +173,12 @@ func is_weapon_pedestal_unlocked(index: int) -> bool:
 func get_weapon_pedestal_condition_text(index: int) -> String:
 	match index:
 		0: return "Liberado (Espada Rústica)"
-		1: return "Liberado para testes (Arco Rústico)"
-		2: return "Liberado para testes (Adagas Gêmeas)"
+		1: 
+			var count: int = weapons_discovered_list.size()
+			return "Descobrir 4 armas (%d/4)" % count
+		2: 
+			var count: int = bosses_defeated_list.size()
+			return "Derrotar 3 chefões diferentes (%d/3)" % count
 		3: return "Derrotar 10 guardas de elite (%d/10)" % elite_kills_count
 		4: return "Sugar 500 essências de monstros (%d/500)" % total_souls_collected
 		5: return "Derrotar 50 abominações do Caos (%d/50)" % kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0)
@@ -125,6 +186,8 @@ func get_weapon_pedestal_condition_text(index: int) -> String:
 
 # --- Condições de Desbloqueio dos 3 Pedestais de Escudos ---
 func is_shield_pedestal_unlocked(index: int) -> bool:
+	if debug_unlock_all_pedestals:
+		return true
 	match index:
 		0: return true # Broquel de Ferro inicial
 		1: return shield_upgrades_performed >= 3
@@ -137,6 +200,142 @@ func get_shield_pedestal_condition_text(index: int) -> String:
 		1: return "Realizar 3 aprimoramentos de escudo (%d/3)" % shield_upgrades_performed
 		2: return "Executar 25 parries perfeitos (%d/25)" % perfect_parries_count
 		_: return "Condição Desconhecida"
+
+# --- PERSISTÊNCIA CRIPTOGRAFADA AES-256 ---
+func save_profile() -> void:
+	if not DirAccess.dir_exists_absolute(SAVE_DIR):
+		DirAccess.make_dir_recursive_absolute(SAVE_DIR)
+		
+	var data: Dictionary = {
+		"version": 1,
+		"active_skin_id": active_skin_id,
+		"tea_stone_root_level": tea_stone_root_level,
+		"tea_stone_root_duplicates": tea_stone_root_duplicates,
+		"tea_mountain_chamomile_level": tea_mountain_chamomile_level,
+		"tea_mountain_chamomile_duplicates": tea_mountain_chamomile_duplicates,
+		"weapon_sword_level": weapon_sword_level,
+		"weapon_sword_duplicates": weapon_sword_duplicates,
+		"weapon_bow_level": weapon_bow_level,
+		"weapon_bow_duplicates": weapon_bow_duplicates,
+		"shield_upgrades_performed": shield_upgrades_performed,
+		"total_souls_collected": total_souls_collected,
+		"kills_undead": kills_by_category.get(EnemyCategories.Category.UNDEAD, 0),
+		"kills_beast": kills_by_category.get(EnemyCategories.Category.BEAST, 0),
+		"kills_abomination": kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0),
+		"kills_humanoid": kills_by_category.get(EnemyCategories.Category.HUMANOID, 0),
+		"kills_boss": kills_by_category.get(EnemyCategories.Category.BOSS, 0),
+		"elite_kills_count": elite_kills_count,
+		"bosses_defeated_list": bosses_defeated_list,
+		"weapons_discovered_list": weapons_discovered_list,
+		"perfect_parries_count": perfect_parries_count,
+		"rally_hp_recovered": rally_hp_recovered,
+		"teas_consumed_count": teas_consumed_count,
+		"total_deaths_count": total_deaths_count,
+		"pet_dog_count": pet_dog_count,
+		"pet_cat_count": pet_cat_count
+	}
+	
+	var json_str: String = JSON.stringify(data)
+	var file := FileAccess.open_encrypted_with_pass(SAVE_FILE_PATH, FileAccess.WRITE, SAVE_SECRET_KEY)
+	if file:
+		file.store_string(json_str)
+		file.flush()
+		file.close()
+
+func load_profile() -> void:
+	if not FileAccess.file_exists(SAVE_FILE_PATH):
+		save_profile()
+		return
+		
+	var file := FileAccess.open_encrypted_with_pass(SAVE_FILE_PATH, FileAccess.READ, SAVE_SECRET_KEY)
+	if not file:
+		return
+		
+	var content: String = file.get_as_text()
+	file.close()
+	
+	var json = JSON.new()
+	var error = json.parse(content)
+	if error != OK:
+		return
+		
+	var data: Dictionary = json.data as Dictionary
+	if not data:
+		return
+		
+	active_skin_id = data.get("active_skin_id", "default")
+	tea_stone_root_level = int(data.get("tea_stone_root_level", 1))
+	tea_stone_root_duplicates = int(data.get("tea_stone_root_duplicates", 0))
+	tea_mountain_chamomile_level = int(data.get("tea_mountain_chamomile_level", 1))
+	tea_mountain_chamomile_duplicates = int(data.get("tea_mountain_chamomile_duplicates", 0))
+	
+	weapon_sword_level = int(data.get("weapon_sword_level", 1))
+	weapon_sword_duplicates = int(data.get("weapon_sword_duplicates", 2))
+	weapon_bow_level = int(data.get("weapon_bow_level", 1))
+	weapon_bow_duplicates = int(data.get("weapon_bow_duplicates", 0))
+	
+	shield_upgrades_performed = int(data.get("shield_upgrades_performed", 0))
+	total_souls_collected = int(data.get("total_souls_collected", 0))
+	
+	kills_by_category[EnemyCategories.Category.UNDEAD] = int(data.get("kills_undead", 0))
+	kills_by_category[EnemyCategories.Category.BEAST] = int(data.get("kills_beast", 0))
+	kills_by_category[EnemyCategories.Category.ABOMINATION] = int(data.get("kills_abomination", 0))
+	kills_by_category[EnemyCategories.Category.HUMANOID] = int(data.get("kills_humanoid", 0))
+	kills_by_category[EnemyCategories.Category.BOSS] = int(data.get("kills_boss", 0))
+	
+	elite_kills_count = int(data.get("elite_kills_count", 0))
+	
+	var b_list = data.get("bosses_defeated_list", [])
+	bosses_defeated_list.clear()
+	for b in b_list:
+		bosses_defeated_list.append(str(b))
+		
+	var w_list = data.get("weapons_discovered_list", ["sword_base", "shield_base"])
+	weapons_discovered_list.clear()
+	for w in w_list:
+		weapons_discovered_list.append(str(w))
+		
+	perfect_parries_count = int(data.get("perfect_parries_count", 0))
+	rally_hp_recovered = float(data.get("rally_hp_recovered", 0.0))
+	teas_consumed_count = int(data.get("teas_consumed_count", 0))
+	total_deaths_count = int(data.get("total_deaths_count", 0))
+	pet_dog_count = int(data.get("pet_dog_count", 0))
+	pet_cat_count = int(data.get("pet_cat_count", 0))
+	
+	permanent_upgrades_updated.emit()
+	metrics_updated.emit()
+
+func reset_profile() -> void:
+	tea_stone_root_level = 1
+	tea_stone_root_duplicates = 0
+	tea_mountain_chamomile_level = 1
+	tea_mountain_chamomile_duplicates = 0
+	active_skin_id = "default"
+	weapon_sword_level = 1
+	weapon_sword_duplicates = 2
+	weapon_bow_level = 1
+	weapon_bow_duplicates = 0
+	shield_upgrades_performed = 0
+	total_souls_collected = 0
+	kills_by_category = {
+		EnemyCategories.Category.UNDEAD: 0,
+		EnemyCategories.Category.BEAST: 0,
+		EnemyCategories.Category.ABOMINATION: 0,
+		EnemyCategories.Category.HUMANOID: 0,
+		EnemyCategories.Category.BOSS: 0
+	}
+	elite_kills_count = 0
+	bosses_defeated_list = []
+	weapons_discovered_list = ["sword_base", "shield_base"]
+	perfect_parries_count = 0
+	rally_hp_recovered = 0.0
+	teas_consumed_count = 0
+	total_deaths_count = 0
+	pet_dog_count = 0
+	pet_cat_count = 0
+	save_profile()
+	permanent_upgrades_updated.emit()
+	metrics_updated.emit()
 
 ## Aplica os bônus, modificadores e skin ativa na entidade Player
 func apply_to_player(player: Player) -> void:

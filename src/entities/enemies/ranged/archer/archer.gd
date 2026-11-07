@@ -14,6 +14,7 @@ enum CooldownBehavior {
 
 @export_group("Base Stats")
 @export var is_elite: bool = false ## Se marcado true, este inimigo sempre será Elite nesta sala/mapa
+@export var enemy_category: EnemyCategories.Category = EnemyCategories.Category.HUMANOID
 @export var can_move: bool = true
 @export var takes_knockback: bool = true
 @export var stationary: bool = false:

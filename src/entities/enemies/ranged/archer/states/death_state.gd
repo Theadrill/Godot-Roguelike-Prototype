@@ -25,6 +25,10 @@ func enter() -> void:
 	archer.visual.scale.y = 0.4
 	archer.visual.modulate = Color(0.6, 0.2, 0.2, 0.8)
 
+	# Registra abate e almas colhidas no ProgressionManager
+	ProgressionManager.record_kill(archer.enemy_category, archer.is_elite_active)
+	ProgressionManager.add_souls(15 if archer.is_elite_active else 5)
+
 func exit() -> void:
 	if archer and archer.visual:
 		archer.visual.visible = true

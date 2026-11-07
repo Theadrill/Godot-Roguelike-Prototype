@@ -85,6 +85,7 @@ func _complete_heal() -> void:
 		var heal_amount: float = player.max_health * player.flask_heal_percent * ProgressionManager.get_tea_heal_multiplier()
 		player.current_health = minf(player.current_health + heal_amount, player.max_health)
 		player.emit_signal("flask_charges_changed", player.current_flask_charges, player.max_flask_charges)
+		ProgressionManager.record_tea_consumed()
 		
 		# Feedback sutil de sucesso: flash de luz rápida
 		if player.flash_material:

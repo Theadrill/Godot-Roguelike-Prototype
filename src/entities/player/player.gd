@@ -552,6 +552,7 @@ func apply_parry_rally() -> float:
 	current_health = minf(current_health + recovered, max_health)
 	rally_recoverable_hp = 0.0
 	rally_timer = 0.0
+	ProgressionManager.record_rally_heal(recovered)
 	
 	# Visual juice: triggers pure diegetic health bar punch + emerald/white flash
 	var hud := get_node_or_null("HUD") as PlayerHUD

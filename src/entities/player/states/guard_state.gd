@@ -109,6 +109,7 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 	if is_parry_active:
 		has_parried = true
 		player.parry_cooldown_timer = 0.0 # Instant reset on success!
+		ProgressionManager.record_perfect_parry()
 
 		# Visual & Tactile Juice
 		CombatFeedback.apply_hit_feedback(0.12, 0.6, 0.9, 0.15)
