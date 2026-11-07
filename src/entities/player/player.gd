@@ -98,8 +98,11 @@ var is_input_locked: bool = false:
 				state_machine.transition_to("idle")
 		elif was_locked:
 			# Evita que o botão B usado para fechar janelas acione roll/dodge indesejado
-			_ignore_roll_timer = 0.25
+			_ignore_roll_timer = 0.35
 			jump_buffer_timer = 0.0
+
+func is_roll_requested() -> bool:
+	return _ignore_roll_timer <= 0.0 and not is_input_locked and Input.is_action_just_pressed("roll")
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D

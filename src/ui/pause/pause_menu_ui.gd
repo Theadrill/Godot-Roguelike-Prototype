@@ -24,6 +24,10 @@ func _setup_buttons() -> void:
 	btn_restart.pressed.connect(_on_restart_pressed)
 
 func _unhandled_input(event: InputEvent) -> void:
+	var debug_panel = get_tree().root.find_child("DebugMetricsPanel", true, false)
+	if debug_panel and debug_panel.visible:
+		return
+
 	if event.is_action_pressed("pause_game"):
 		get_viewport().set_input_as_handled()
 		if visible:
@@ -67,6 +71,8 @@ func open_pause_menu() -> void:
 	btn_resume.grab_focus()
 
 func close_pause_menu() -> void:
+	Input.action_release("roll")
+	Input.action_release("ui_cancel")
 	visible = false
 	get_tree().paused = false
 	var player := get_tree().get_first_node_in_group("player") as Player
@@ -76,7 +82,8 @@ func close_pause_menu() -> void:
 func _on_dev_menu_pressed() -> void:
 	var debug_panel = get_tree().root.find_child("DebugMetricsPanel", true, false)
 	if debug_panel:
-		debug_panel.toggle_panel()
+		visible = false
+		debug_panel.open_from_pause_menu()
 
 func _on_save_quit_pressed() -> void:
 	ProgressionManager.save_profile()

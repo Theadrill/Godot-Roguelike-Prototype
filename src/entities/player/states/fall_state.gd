@@ -69,7 +69,7 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("doublejump")
 		return
 
-	if Input.is_action_just_pressed("roll"):
+	if player.is_roll_requested():
 		state_machine.transition_to("roll")
 		return
 

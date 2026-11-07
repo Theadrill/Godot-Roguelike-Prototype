@@ -36,7 +36,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Roll-cancel: can roll directly onto the platform
-	if Input.is_action_just_pressed("roll"):
+	if player.is_roll_requested():
 		player.global_position = target_pos
 		state_machine.transition_to("roll")
 		return

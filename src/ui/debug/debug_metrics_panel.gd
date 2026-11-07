@@ -2,7 +2,7 @@ class_name DebugMetricsPanel
 extends CanvasLayer
 
 ## Painel de Debug em tempo real para monitorar Métricas, Persistência e Desbloqueio dos Pedestais.
-## Acionado a qualquer momento com a tecla F3 (Teclado) ou botão Select/Back (Gamepad).
+## Acionado a qualquer momento através do Menu de Pausa (Opção DEV) ou tecla F3 (Teclado).
 
 @onready var main_panel: Panel = $MainPanel
 @onready var metrics_scroll: ScrollContainer = $MainPanel/ContentHBox/MetricsScroll
@@ -89,12 +89,21 @@ func _process(delta: float) -> void:
 	if not is_zero_approx(scroll_dir) and metrics_scroll:
 		metrics_scroll.scroll_vertical += int(scroll_dir * 600.0 * delta)
 
+var opened_from_pause: bool = false
+
+func open_from_pause_menu() -> void:
+	opened_from_pause = true
+	if not visible:
+		toggle_panel()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_debug_metrics"):
 		get_viewport().set_input_as_handled()
 		toggle_panel()
 	elif visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
+		Input.action_release("roll")
+		Input.action_release("ui_cancel")
 		toggle_panel()
 
 func toggle_panel() -> void:
@@ -109,16 +118,21 @@ func toggle_panel() -> void:
 		await get_tree().process_frame
 		btn_add_souls.grab_focus()
 	else:
-		var pause_menu = get_tree().root.find_child("PauseMenuUI", true, false)
-		if not pause_menu or not pause_menu.visible:
+		Input.action_release("roll")
+		Input.action_release("ui_cancel")
+		var pause_menu = get_tree().root.find_child("PauseMenuUI", true, false) as PauseMenuUI
+		if opened_from_pause and pause_menu:
+			opened_from_pause = false
+			pause_menu.open_pause_menu()
+			var btn_dev = pause_menu.find_child("BtnDevMenu", true, false) as Button
+			if btn_dev:
+				btn_dev.grab_focus()
+		else:
+			opened_from_pause = false
 			get_tree().paused = false
 			var player := get_tree().get_first_node_in_group("player") as Player
 			if player:
 				player.is_input_locked = false
-		else:
-			var btn_dev = pause_menu.find_child("BtnDevMenu", true, false) as Button
-			if btn_dev:
-				btn_dev.grab_focus()
 
 func _refresh_metrics() -> void:
 	if not metrics_label:
@@ -141,7 +155,13 @@ func _refresh_metrics() -> void:
 	bbcode += "[b][color=#80cbc4]2. Maestria de Combate:[/color][/b]\n"
 	bbcode += "  • Parries Perfeitos: [color=#4fc3f7][b]%d[/b][/color]\n" % pm.perfect_parries_count
 	bbcode += "  • Vida Recuperada (Tactical Rally): [color=#81c784]%.1f HP[/color]\n" % pm.rally_hp_recovered
-	bbcode += "  • Upgrades de Escudo: [color=#ffb74d]%d[/color]\n\n" % pm.shield_upgrades_performed
+	bbcode += "  • Upgrades de Escudo: [color=#ffb74d]%d[/color]\n" % pm.shield_upgrades_performed
+	if pm.weapons_discovered_list.is_empty():
+		bbcode += "  • Armas Descobertas: [color=#ffd54f][b]0[/b][/color]\n\n"
+	else:
+		var formatted_weapons: String = ", ".join(pm.weapons_discovered_list)
+		bbcode += "  • Armas Descobertas: [color=#ffd54f][b]%d[/b][/color]\n" % pm.weapons_discovered_list.size()
+		bbcode += "    [color=#90a4ae]└ %s[/color]\n\n" % formatted_weapons
 	
 	# Bestiário e Abates
 	bbcode += "[b][color=#80cbc4]3. Bestiário & Abates por Categoria:[/color][/b]\n"
@@ -150,7 +170,12 @@ func _refresh_metrics() -> void:
 	bbcode += "  • Abominações do Caos: [color=#ba68c8]%d[/color]\n" % pm.kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0)
 	bbcode += "  • Soldados / Humanoides: %d\n" % pm.kills_by_category.get(EnemyCategories.Category.HUMANOID, 0)
 	bbcode += "  • Guardas de Elite: [color=#ff7043][b]%d[/b][/color]\n" % pm.elite_kills_count
-	bbcode += "  • Chefões Únicos Vencidos: [color=#ff5252][b]%d[/b] (%s)[/color]\n\n" % [pm.bosses_defeated_list.size(), str(pm.bosses_defeated_list)]
+	if pm.bosses_defeated_list.is_empty():
+		bbcode += "  • Chefões Únicos Vencidos: [color=#ff5252][b]0[/b][/color]\n\n"
+	else:
+		var formatted_bosses: String = ", ".join(pm.bosses_defeated_list)
+		bbcode += "  • Chefões Únicos Vencidos: [color=#ff5252][b]%d[/b][/color]\n" % pm.bosses_defeated_list.size()
+		bbcode += "    [color=#90a4ae]└ %s[/color]\n\n" % formatted_bosses
 	
 	# Afeto & Hub
 	bbcode += "[b][color=#80cbc4]4. Afeto no Hub:[/color][/b]\n"

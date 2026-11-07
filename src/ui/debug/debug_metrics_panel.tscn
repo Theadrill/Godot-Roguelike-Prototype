@@ -61,7 +61,7 @@ grow_horizontal = 2
 [node name="Title" type="Label" parent="MainPanel/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "⚙ PAINEL DE DEBUG DE MÉTRICAS & SAVE (F3 / SELECT)"
+text = "⚙ PAINEL DE DEBUG DE MÉTRICAS & METAPROGRESSÃO (F3)"
 
 [node name="BtnClose" type="Button" parent="MainPanel/Header"]
 custom_minimum_size = Vector2(24, 20)

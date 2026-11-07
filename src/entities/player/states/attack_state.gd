@@ -170,7 +170,7 @@ func physics_update(delta: float) -> void:
 		player.move_and_slide()
 
 		# Roll cancel during charge
-		if Input.is_action_just_pressed("roll"):
+		if player.is_roll_requested():
 			is_charging = false
 			state_machine.transition_to("roll")
 			return
@@ -184,7 +184,7 @@ func physics_update(delta: float) -> void:
 	attack_timer -= delta
 	
 	# Dodge-cancel: can always roll out of an attack immediately!
-	if Input.is_action_just_pressed("roll"):
+	if player.is_roll_requested():
 		state_machine.transition_to("roll")
 		return
 		

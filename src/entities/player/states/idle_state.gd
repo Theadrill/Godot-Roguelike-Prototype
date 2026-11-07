@@ -93,7 +93,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Roll check
-	if Input.is_action_just_pressed("roll") and player._ignore_roll_timer <= 0.0:
+	if player.is_roll_requested():
 		state_machine.transition_to("roll")
 		return
 
