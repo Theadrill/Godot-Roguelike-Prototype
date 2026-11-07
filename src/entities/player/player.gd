@@ -483,6 +483,9 @@ func die() -> void:
 	rally_recoverable_hp = 0.0
 	rally_timer = 0.0
 	velocity = Vector2.ZERO
+	if hurtbox:
+		hurtbox.set_deferred("monitoring", false)
+		hurtbox.set_deferred("monitorable", false)
 	
 	if death_screen:
 		death_screen.play_death_sequence()
@@ -498,6 +501,9 @@ func _on_death_respawn() -> void:
 	global_position = _spawn_position
 	velocity = Vector2.ZERO
 	is_dead = false
+	if hurtbox:
+		hurtbox.set_deferred("monitoring", true)
+		hurtbox.set_deferred("monitorable", true)
 	state_machine.transition_to("idle")
 
 func _on_death_main_menu() -> void:

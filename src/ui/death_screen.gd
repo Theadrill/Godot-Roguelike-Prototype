@@ -16,6 +16,7 @@ var is_active: bool = false
 var can_accept_input: bool = false
 var _seq_tween: Tween = null
 var _material: ShaderMaterial = null
+var _vortex_time: float = 0.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -24,6 +25,7 @@ func _ready() -> void:
 		_material = spiral_overlay.material as ShaderMaterial
 		if _material:
 			_material.set_shader_parameter("progress", 0.0)
+			_material.set_shader_parameter("vortex_time", 0.0)
 	
 	if content_container:
 		content_container.modulate.a = 0.0
@@ -31,6 +33,11 @@ func _ready() -> void:
 		buttons_container.modulate.a = 0.0
 	
 	_update_localized_texts()
+
+func _process(delta: float) -> void:
+	if is_active and _material:
+		_vortex_time += delta
+		_material.set_shader_parameter("vortex_time", _vortex_time)
 
 func _update_localized_texts() -> void:
 	if title_label:
