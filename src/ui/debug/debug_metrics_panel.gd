@@ -5,6 +5,7 @@ extends CanvasLayer
 ## Acionado a qualquer momento com a tecla F3 (Teclado) ou botão Select/Back (Gamepad).
 
 @onready var main_panel: Panel = $MainPanel
+@onready var metrics_scroll: ScrollContainer = $MainPanel/ContentHBox/MetricsScroll
 @onready var metrics_label: RichTextLabel = $MainPanel/ContentHBox/MetricsScroll/MetricsLabel
 @onready var btn_close: Button = $MainPanel/Header/BtnClose
 
@@ -66,6 +67,27 @@ func _setup_buttons() -> void:
 		ProgressionManager.reset_profile()
 		_refresh_metrics()
 	)
+
+func _process(delta: float) -> void:
+	if not visible:
+		return
+		
+	# Right Analog Stick / Look Up-Down para rolar a lista de métricas
+	var scroll_dir: float = 0.0
+	for joy in Input.get_connected_joypads():
+		var axis_y: float = Input.get_joy_axis(joy, JOY_AXIS_RIGHT_Y)
+		if absf(axis_y) > 0.15:
+			scroll_dir = axis_y
+			break
+			
+	if is_zero_approx(scroll_dir):
+		if Input.is_action_pressed("look_down"):
+			scroll_dir = 1.0
+		elif Input.is_action_pressed("look_up"):
+			scroll_dir = -1.0
+			
+	if not is_zero_approx(scroll_dir) and metrics_scroll:
+		metrics_scroll.scroll_vertical += int(scroll_dir * 600.0 * delta)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_debug_metrics"):

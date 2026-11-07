@@ -80,11 +80,17 @@ func _on_dev_menu_pressed() -> void:
 
 func _on_save_quit_pressed() -> void:
 	ProgressionManager.save_profile()
-	get_tree().paused = false
-	get_tree().quit()
+	var player := get_tree().get_first_node_in_group("player") as Player
+	if player:
+		player.is_input_locked = true
+		player.velocity = Vector2.ZERO
+	get_tree().quit(0)
 
 func _on_restart_pressed() -> void:
 	ProgressionManager.save_profile()
 	ProgressionManager.reset_daily_run()
 	get_tree().paused = false
+	var player := get_tree().get_first_node_in_group("player") as Player
+	if player:
+		player.is_input_locked = false
 	get_tree().change_scene_to_file("res://src/world/hub/family_house.tscn")
