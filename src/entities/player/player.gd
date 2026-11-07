@@ -85,6 +85,16 @@ var attack_cooldown_timer: float = 0.0
 var parry_cooldown_timer: float = 0.0
 var ledge_target_position: Vector2 = Vector2.ZERO
 
+## Trava total de inputs e controles (usado durante menus, diálogos diegéticos e transições)
+var is_input_locked: bool = false:
+	set(value):
+		is_input_locked = value
+		if is_input_locked:
+			jump_buffer_timer = 0.0
+			velocity.x = 0.0
+			if state_machine:
+				state_machine.transition_to("idle")
+
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
@@ -306,11 +316,14 @@ func _physics_process(delta: float) -> void:
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 
-	if jump_buffer_timer > 0.0:
-		jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
+	if is_input_locked:
+		jump_buffer_timer = 0.0
+	else:
+		if jump_buffer_timer > 0.0:
+			jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
 
-	if Input.is_action_just_pressed("jump"):
-		jump_buffer_timer = jump_buffer_duration
+		if Input.is_action_just_pressed("jump"):
+			jump_buffer_timer = jump_buffer_duration
 
 	# Hit flash timer
 	if flash_timer > 0.0:
@@ -389,6 +402,8 @@ func toggle_shield_repulsion() -> void:
 		shield.has_repulsion_modifier = not shield.has_repulsion_modifier
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_input_locked:
+		return
 	if event.is_action_pressed("swap_weapon") and not event.is_echo():
 		swap_weapons()
 	elif event.is_action_pressed("cycle_weapon_debug") and not event.is_echo():

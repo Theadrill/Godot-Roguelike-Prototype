@@ -57,6 +57,12 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("fall")
 		return
 
+	# Se os controles do jogador estiverem travados (menus/diálogos), apenas anima a respiração sem reagir a botões
+	if player.is_input_locked:
+		_process_breathing_visuals(delta)
+		player.move_and_slide()
+		return
+
 	# Jump check (buffered or instant)
 	if player.jump_buffer_timer > 0.0:
 		player.jump_buffer_timer = 0.0
@@ -97,6 +103,10 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("run")
 		return
 
+	_process_breathing_visuals(delta)
+	player.move_and_slide()
+
+func _process_breathing_visuals(delta: float) -> void:
 	# Continuous Breathing (Occurs constantly while idle)
 	# Feet (y = 0) stay 100% planted on the ground; only upper body squashes and stretches gently.
 	breath_time += delta

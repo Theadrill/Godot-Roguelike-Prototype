@@ -8,6 +8,10 @@ func enter() -> void:
 	player.fall_peak_y = player.global_position.y
 
 func physics_update(delta: float) -> void:
+	if player.is_input_locked:
+		state_machine.transition_to("idle")
+		return
+
 	if not player.is_on_floor():
 		state_machine.transition_to("fall")
 		return

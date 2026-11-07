@@ -15,6 +15,10 @@ func exit() -> void:
 	player.set_crouched(false)
 
 func physics_update(delta: float) -> void:
+	if player.is_input_locked:
+		state_machine.transition_to("idle")
+		return
+
 	if not player.is_on_floor():
 		state_machine.transition_to("fall")
 		return

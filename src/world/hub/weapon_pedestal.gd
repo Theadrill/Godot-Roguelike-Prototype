@@ -60,7 +60,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func interact() -> void:
 	if not _player_ref:
 		_player_ref = get_tree().get_first_node_in_group("player") as Player
-	if not _player_ref:
+	if not _player_ref or _player_ref.is_input_locked:
 		return
 
 	var is_unlocked: bool = _check_is_unlocked()

@@ -154,8 +154,11 @@ func _setup_portal_and_uis() -> void:
 
 	if touch_of_death_ui:
 		touch_of_death_ui.blessing_chosen.connect(_on_blessing_chosen_and_transition)
+		touch_of_death_ui.closed.connect(_on_death_ui_closed)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if player and player.is_input_locked:
+		return
 	if event.is_action_pressed("interact"):
 		if _player_near_chest:
 			get_viewport().set_input_as_handled()
@@ -172,14 +175,20 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # --- Interação com a Mãe ---
 func _on_mother_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if player and player.is_input_locked:
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_open_mother_menu()
 
 func _open_mother_menu() -> void:
 	if mother_ui and not mother_ui.visible and not _is_transitioning:
+		if player:
+			player.is_input_locked = true
 		mother_ui.open_ui()
 
 func _on_mother_ui_closed() -> void:
+	if player:
+		player.is_input_locked = false
 	# O diálogo diegético acontece exclusivamente ao fechar a janela
 	if not player or not mother_bark:
 		return
@@ -193,14 +202,20 @@ func _on_mother_ui_closed() -> void:
 
 # --- Interação com o Irmão ---
 func _on_brother_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if player and player.is_input_locked:
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_open_brother_menu()
 
 func _open_brother_menu() -> void:
 	if brother_ui and not brother_ui.visible and not _is_transitioning:
+		if player:
+			player.is_input_locked = true
 		brother_ui.open_ui()
 
 func _on_brother_ui_closed() -> void:
+	if player:
+		player.is_input_locked = false
 	# O diálogo diegético acontece exclusivamente ao fechar a janela
 	if not player or not brother_bark:
 		return
@@ -214,11 +229,13 @@ func _on_brother_ui_closed() -> void:
 
 # --- Interação com o Baú de Armas ---
 func _on_chest_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if player and player.is_input_locked:
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_toggle_weapons()
 
 func _toggle_weapons() -> void:
-	if not player:
+	if not player or player.is_input_locked:
 		return
 	ProgressionManager.are_weapons_equipped = not ProgressionManager.are_weapons_equipped
 	if ProgressionManager.are_weapons_equipped:
@@ -237,22 +254,33 @@ func _toggle_weapons() -> void:
 
 # --- Interação com a Morte & Sequência do Portal ---
 func _on_exit_portal_entered(body: Node2D) -> void:
-	if _is_transitioning or body != player:
+	if _is_transitioning or body != player or (player and player.is_input_locked):
 		return
 	_player_near_death = true
 	_open_death_menu()
 
 func _on_exit_portal_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if player and player.is_input_locked:
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_open_death_menu()
 
 func _open_death_menu() -> void:
 	if touch_of_death_ui and not touch_of_death_ui.visible and not _is_transitioning:
+		if player:
+			player.is_input_locked = true
 		touch_of_death_ui.open_ui()
+
+func _on_death_ui_closed() -> void:
+	if player:
+		player.is_input_locked = false
 
 func _on_blessing_chosen_and_transition(_blessing_id: String) -> void:
 	if _is_transitioning:
 		return
+	_is_transitioning = true
+	if player:
+		player.is_input_locked = true
 	_is_transitioning = true
 
 	# 1. Ativa o vórtice na porta escura e anima o preenchimento da espiral esmeralda

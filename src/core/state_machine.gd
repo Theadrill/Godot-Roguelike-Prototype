@@ -23,6 +23,8 @@ func _ready() -> void:
 		current_state.enter()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if owner and "is_input_locked" in owner and owner.is_input_locked:
+		return
 	if current_state:
 		current_state.handle_input(event)
 

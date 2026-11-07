@@ -71,6 +71,22 @@ theme_override_font_sizes/font_size = 12
 text = "O TOQUE DA MORTE - LISTA DE BÊNÇÃOS"
 vertical_alignment = 1
 
+[node name="BtnClose" type="Button" parent="MainPanel/TopBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -11.0
+offset_right = -8.0
+offset_bottom = 11.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "X"
+
 [node name="Subtitle" type="Label" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 10
@@ -234,4 +250,4 @@ offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
 confirm_text = "Escolher"
-cancel_text = "Seguir sem Bênção"
+cancel_text = "Voltar"
