@@ -10,8 +10,12 @@ extends Node2D
 @onready var pet_spots: Node2D = $PetSpots
 @onready var exit_portal_area: Area2D = $ExitPortalArea
 @onready var fade_rect: ColorRect = $FadeCanvas/FadeRect
+@onready var chest_area: Area2D = get_node_or_null("ChestArea") as Area2D
+@onready var rack_area: Area2D = get_node_or_null("RackArea") as Area2D
 
 var _is_transitioning: bool = false
+var _is_weapons_equipped: bool = false
+var _player_near_chest: bool = false
 
 func _ready() -> void:
 	# Fade-in suave do despertar
@@ -30,6 +34,8 @@ func _ready() -> void:
 		var hud: CanvasLayer = player.get_node_or_null("HUD") as CanvasLayer
 		if hud:
 			hud.visible = false
+		# Personagem acorda sem armas no refúgio familiar
+		player.hide_equipment_visuals()
 
 	# Configura câmera para os limites exatos da cabana (0 a 1100 px horizontais, 0 a 360 verticais)
 	if player:
@@ -42,6 +48,48 @@ func _ready() -> void:
 
 	if exit_portal_area:
 		exit_portal_area.body_entered.connect(_on_exit_portal_entered)
+
+	# Conecta interação nos baús e suportes de armas (clique ou botão de ação)
+	_setup_chest_interactions()
+
+func _setup_chest_interactions() -> void:
+	if chest_area:
+		chest_area.input_event.connect(_on_chest_input_event)
+		chest_area.body_entered.connect(_on_chest_body_entered)
+		chest_area.body_exited.connect(_on_chest_body_exited)
+	if rack_area:
+		rack_area.input_event.connect(_on_chest_input_event)
+		rack_area.body_entered.connect(_on_chest_body_entered)
+		rack_area.body_exited.connect(_on_chest_body_exited)
+
+func _on_chest_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_toggle_weapons()
+
+func _on_chest_body_entered(body: Node2D) -> void:
+	if body == player or (body and body.is_in_group("player")):
+		_player_near_chest = true
+
+func _on_chest_body_exited(body: Node2D) -> void:
+	if body == player or (body and body.is_in_group("player")):
+		_player_near_chest = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _player_near_chest:
+		if event.is_action_pressed("interact") or (event is InputEventKey and event.pressed and event.keycode == KEY_E) or (event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_X):
+			get_viewport().set_input_as_handled()
+			_toggle_weapons()
+
+func _toggle_weapons() -> void:
+	if not player:
+		return
+	_is_weapons_equipped = not _is_weapons_equipped
+	if _is_weapons_equipped:
+		player.show_equipment_visuals()
+		player.show_bark("Armas equipadas!")
+	else:
+		player.hide_equipment_visuals()
+		player.show_bark("Armas guardadas.")
 
 ## Sorteia dois lugares aconchegantes distintos a cada despertar para a Dachshund e a Gatinha
 func _randomize_pet_positions() -> void:

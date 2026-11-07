@@ -107,6 +107,7 @@ var _secondary_weapon_instance: Node2D = null
 var _shield_instance: Node2D = null
 var is_shield_raised: bool = false
 var is_dead: bool = false
+var are_weapons_hidden: bool = false
 var _spawn_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
@@ -181,6 +182,34 @@ func _refresh_equipped_visuals() -> void:
 	_update_secondary_weapon_visual()
 	_update_shield_visual()
 
+## Oculta os visuais de armamento (personagem desarmado no refúgio)
+func hide_equipment_visuals() -> void:
+	are_weapons_hidden = true
+	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+		_main_weapon_instance.visible = false
+	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
+		_secondary_weapon_instance.visible = false
+	if _shield_instance and is_instance_valid(_shield_instance):
+		_shield_instance.visible = false
+
+## Restaura e exibe os visuais de armamento ao se preparar no baú
+func show_equipment_visuals() -> void:
+	are_weapons_hidden = false
+	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+		_main_weapon_instance.visible = true
+	else:
+		_update_main_weapon_visual()
+
+	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
+		_secondary_weapon_instance.visible = true
+	else:
+		_update_secondary_weapon_visual()
+
+	if _shield_instance and is_instance_valid(_shield_instance):
+		_shield_instance.visible = true
+	else:
+		_update_shield_visual()
+
 func _update_main_weapon_visual() -> void:
 	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
 		_main_weapon_instance.queue_free()
@@ -193,6 +222,7 @@ func _update_main_weapon_visual() -> void:
 			_main_weapon_instance.position = weapon.visual_offset
 			_main_weapon_instance.rotation_degrees = weapon.visual_rotation_degrees
 			_main_weapon_instance.z_index = 0
+			_main_weapon_instance.visible = not are_weapons_hidden
 
 func _update_secondary_weapon_visual() -> void:
 	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
@@ -206,6 +236,7 @@ func _update_secondary_weapon_visual() -> void:
 			_secondary_weapon_instance.position = secondary_weapon.back_offset
 			_secondary_weapon_instance.rotation_degrees = secondary_weapon.back_rotation_degrees
 			_secondary_weapon_instance.z_index = 0
+			_secondary_weapon_instance.visible = not are_weapons_hidden
 
 func _update_shield_visual() -> void:
 	if _shield_instance and is_instance_valid(_shield_instance):
@@ -220,6 +251,7 @@ func _update_shield_visual() -> void:
 			_shield_instance.position = shield.visual_offset
 			_shield_instance.rotation_degrees = shield.visual_rotation_degrees
 			_shield_instance.z_index = 0
+			_shield_instance.visible = not are_weapons_hidden
 
 func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false, is_downward: bool = false) -> void:
 	if slash_effect:

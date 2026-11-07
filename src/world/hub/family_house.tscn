@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://family_house_hub_01"]
+[gd_scene format=3 uid="uid://u7okiv8tkn77"]
 
-[ext_resource type="Script" path="res://src/world/hub/family_house.gd" id="1_house"]
+[ext_resource type="Script" uid="uid://xo33rwwhn3ri" path="res://src/world/hub/family_house.gd" id="1_house"]
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="2_player"]
-[ext_resource type="Script" path="res://src/core/game_camera.gd" id="3_camera"]
+[ext_resource type="Script" uid="uid://bu341gq4akkm8" path="res://src/core/game_camera.gd" id="3_camera"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(1100, 72)
@@ -22,274 +22,299 @@ size = Vector2(20, 200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
 size = Vector2(40, 80)
 
-[node name="FamilyHouse" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chest"]
+size = Vector2(40, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rack"]
+size = Vector2(48, 48)
+
+[node name="FamilyHouse" type="Node2D" unique_id=1798535553]
+position = Vector2(0, -16)
 script = ExtResource("1_house")
 
-[node name="Environment" type="StaticBody2D" parent="."]
+[node name="Environment" type="StaticBody2D" parent="." unique_id=542139499]
 collision_mask = 0
 
-[node name="Ground_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Ground_Col" type="CollisionShape2D" parent="Environment" unique_id=555697539]
 position = Vector2(550, 324)
 shape = SubResource("RectangleShape2D_ground")
 
-[node name="Ceiling_Col" type="CollisionShape2D" parent="Environment"]
+[node name="Ceiling_Col" type="CollisionShape2D" parent="Environment" unique_id=774861380]
 position = Vector2(430, 60)
 shape = SubResource("RectangleShape2D_ceiling")
 
-[node name="WallLeft_Col" type="CollisionShape2D" parent="Environment"]
+[node name="WallLeft_Col" type="CollisionShape2D" parent="Environment" unique_id=1157170510]
 position = Vector2(-15, 180)
 shape = SubResource("RectangleShape2D_wall_left")
 
-[node name="WallRight_Col" type="CollisionShape2D" parent="Environment"]
+[node name="WallRight_Col" type="CollisionShape2D" parent="Environment" unique_id=1281402109]
 position = Vector2(1115, 180)
 shape = SubResource("RectangleShape2D_wall_right")
 
-[node name="WallHouseEnd_Col" type="CollisionShape2D" parent="Environment"]
+[node name="WallHouseEnd_Col" type="CollisionShape2D" parent="Environment" unique_id=1225849930]
 position = Vector2(860, 140)
 shape = SubResource("RectangleShape2D_wall_house_end")
 
-[node name="Background_House" type="Polygon2D" parent="."]
-color = Color(0.28, 0.20, 0.15, 1)
+[node name="Background_House" type="Polygon2D" parent="." unique_id=1721112863]
+color = Color(0.28, 0.2, 0.15, 1)
 polygon = PackedVector2Array(0, 85, 850, 85, 850, 288, 0, 288)
 
-[node name="Background_Yard" type="Polygon2D" parent="."]
-color = Color(0.07, 0.10, 0.11, 1)
+[node name="Background_Yard" type="Polygon2D" parent="." unique_id=42726251]
+color = Color(0.07, 0.1, 0.11, 1)
 polygon = PackedVector2Array(850, 80, 1100, 80, 1100, 288, 850, 288)
 
-[node name="Beams_Visual" type="Polygon2D" parent="."]
+[node name="Beams_Visual" type="Polygon2D" parent="." unique_id=2117529579]
+position = Vector2(0, 7)
+scale = Vector2(0.9878008, 1.2685574)
 color = Color(0.16, 0.11, 0.08, 1)
 polygon = PackedVector2Array(0, 60, 860, 60, 860, 95, 850, 180, 840, 180, 840, 95, 560, 95, 560, 180, 550, 180, 550, 95, 270, 95, 270, 180, 260, 180, 260, 95, 0, 95)
 
-[node name="Floor_Visual_House" type="Polygon2D" parent="."]
+[node name="Floor_Visual_House" type="Polygon2D" parent="." unique_id=1509788789]
 color = Color(0.38, 0.26, 0.18, 1)
 polygon = PackedVector2Array(0, 288, 850, 288, 850, 360, 0, 360)
 
-[node name="Floor_Visual_Yard" type="Polygon2D" parent="."]
-color = Color(0.18, 0.20, 0.18, 1)
+[node name="Floor_Visual_Yard" type="Polygon2D" parent="." unique_id=1731514101]
+color = Color(0.18, 0.2, 0.18, 1)
 polygon = PackedVector2Array(850, 288, 1100, 288, 1100, 360, 850, 360)
 
-[node name="Props" type="Node2D" parent="."]
+[node name="Props" type="Node2D" parent="." unique_id=1091402892]
 
-[node name="Bed_Wood" type="Polygon2D" parent="Props"]
-color = Color(0.48, 0.32, 0.20, 1)
+[node name="Bed_Wood" type="Polygon2D" parent="Props" unique_id=145196593]
+color = Color(0.48, 0.32, 0.2, 1)
 polygon = PackedVector2Array(30, 276, 110, 276, 110, 288, 30, 288)
 
-[node name="Bed_Blanket" type="Polygon2D" parent="Props"]
+[node name="Bed_Blanket" type="Polygon2D" parent="Props" unique_id=551411287]
 color = Color(0.65, 0.28, 0.22, 1)
 polygon = PackedVector2Array(40, 270, 105, 270, 105, 276, 40, 276)
 
-[node name="Bed_Pillow" type="Polygon2D" parent="Props"]
+[node name="Bed_Pillow" type="Polygon2D" parent="Props" unique_id=1959038899]
 color = Color(0.92, 0.88, 0.82, 1)
 polygon = PackedVector2Array(32, 266, 46, 266, 46, 276, 32, 276)
 
-[node name="Hearth_Chimney" type="Polygon2D" parent="Props"]
+[node name="Hearth_Chimney" type="Polygon2D" parent="Props" unique_id=1114540675]
 color = Color(0.24, 0.22, 0.24, 1)
 polygon = PackedVector2Array(142, 85, 173, 85, 175, 240, 140, 240)
 
-[node name="Hearth_Stone" type="Polygon2D" parent="Props"]
-color = Color(0.30, 0.28, 0.30, 1)
+[node name="Hearth_Stone" type="Polygon2D" parent="Props" unique_id=1153748271]
+color = Color(0.3, 0.28, 0.3, 1)
 polygon = PackedVector2Array(138, 230, 177, 230, 180, 288, 135, 288)
 
-[node name="Hearth_Fire" type="Polygon2D" parent="Props"]
+[node name="Hearth_Fire" type="Polygon2D" parent="Props" unique_id=147652422]
 color = Color(0.95, 0.55, 0.15, 1)
 polygon = PackedVector2Array(150, 274, 165, 274, 168, 286, 147, 286)
 
-[node name="Chest_Skins" type="Polygon2D" parent="Props"]
+[node name="Chest_Skins" type="Polygon2D" parent="Props" unique_id=526108299]
 color = Color(0.42, 0.25, 0.15, 1)
 polygon = PackedVector2Array(210, 274, 236, 274, 236, 288, 210, 288)
 
-[node name="Chest_IronBands" type="Polygon2D" parent="Props"]
-color = Color(0.20, 0.22, 0.25, 1)
+[node name="Chest_IronBands" type="Polygon2D" parent="Props" unique_id=1028341861]
+color = Color(0.2, 0.22, 0.25, 1)
 polygon = PackedVector2Array(214, 274, 216, 274, 216, 288, 214, 288, 230, 274, 232, 274, 232, 288, 230, 288)
 
-[node name="Herbs_Table" type="Polygon2D" parent="Props"]
-color = Color(0.45, 0.32, 0.20, 1)
+[node name="Herbs_Table" type="Polygon2D" parent="Props" unique_id=1334859480]
+color = Color(0.45, 0.32, 0.2, 1)
 polygon = PackedVector2Array(320, 268, 365, 268, 365, 288, 320, 288)
 
-[node name="Herbs_Jars" type="Polygon2D" parent="Props"]
-color = Color(0.30, 0.65, 0.45, 1)
+[node name="Herbs_Jars" type="Polygon2D" parent="Props" unique_id=267980754]
+color = Color(0.3, 0.65, 0.45, 1)
 polygon = PackedVector2Array(324, 260, 332, 260, 332, 268, 324, 268)
 
-[node name="Herbs_Jars2" type="Polygon2D" parent="Props"]
-color = Color(0.85, 0.60, 0.25, 1)
+[node name="Herbs_Jars2" type="Polygon2D" parent="Props" unique_id=1733555587]
+color = Color(0.85, 0.6, 0.25, 1)
 polygon = PackedVector2Array(348, 262, 356, 262, 356, 268, 348, 268)
 
-[node name="Mother_Cauldron" type="Polygon2D" parent="Props"]
-color = Color(0.18, 0.20, 0.22, 1)
+[node name="Mother_Cauldron" type="Polygon2D" parent="Props" unique_id=1231470747]
+color = Color(0.18, 0.2, 0.22, 1)
 polygon = PackedVector2Array(380, 270, 404, 270, 400, 288, 384, 288)
 
-[node name="Mother_Placeholder" type="Node2D" parent="Props"]
+[node name="Mother_Placeholder" type="Node2D" parent="Props" unique_id=1771846736]
 position = Vector2(430, 288)
 
-[node name="Body" type="Polygon2D" parent="Props/Mother_Placeholder"]
+[node name="Body" type="Polygon2D" parent="Props/Mother_Placeholder" unique_id=2081364084]
 color = Color(0.68, 0.38, 0.32, 1)
 polygon = PackedVector2Array(-8, -34, 8, -34, 10, 0, -10, 0)
 
-[node name="Apron" type="Polygon2D" parent="Props/Mother_Placeholder"]
+[node name="Apron" type="Polygon2D" parent="Props/Mother_Placeholder" unique_id=1703183051]
 color = Color(0.88, 0.85, 0.78, 1)
 polygon = PackedVector2Array(-5, -28, 5, -28, 7, 0, -7, 0)
 
-[node name="Head" type="Polygon2D" parent="Props/Mother_Placeholder"]
-color = Color(0.85, 0.70, 0.58, 1)
+[node name="Head" type="Polygon2D" parent="Props/Mother_Placeholder" unique_id=1470560025]
+color = Color(0.85, 0.7, 0.58, 1)
 polygon = PackedVector2Array(-5, -44, 5, -44, 5, -34, -5, -34)
 
-[node name="Hair" type="Polygon2D" parent="Props/Mother_Placeholder"]
+[node name="Hair" type="Polygon2D" parent="Props/Mother_Placeholder" unique_id=279838422]
 color = Color(0.35, 0.22, 0.16, 1)
 polygon = PackedVector2Array(-6, -46, 6, -46, 6, -38, -6, -38)
 
-[node name="Woodpile" type="Polygon2D" parent="Props"]
+[node name="Woodpile" type="Polygon2D" parent="Props" unique_id=68860340]
 color = Color(0.38, 0.25, 0.18, 1)
 polygon = PackedVector2Array(610, 274, 638, 274, 638, 288, 610, 288)
 
-[node name="Anvil_Base" type="Polygon2D" parent="Props"]
+[node name="Anvil_Base" type="Polygon2D" parent="Props" unique_id=1470754799]
 color = Color(0.35, 0.25, 0.18, 1)
 polygon = PackedVector2Array(692, 272, 712, 272, 715, 288, 689, 288)
 
-[node name="Anvil_Iron" type="Polygon2D" parent="Props"]
+[node name="Anvil_Iron" type="Polygon2D" parent="Props" unique_id=1741357629]
 color = Color(0.25, 0.28, 0.32, 1)
 polygon = PackedVector2Array(686, 262, 720, 262, 712, 272, 690, 272)
 
-[node name="Brother_Placeholder" type="Node2D" parent="Props"]
+[node name="Brother_Placeholder" type="Node2D" parent="Props" unique_id=889332580]
 position = Vector2(745, 288)
 
-[node name="Body" type="Polygon2D" parent="Props/Brother_Placeholder"]
+[node name="Body" type="Polygon2D" parent="Props/Brother_Placeholder" unique_id=1423323571]
 color = Color(0.32, 0.42, 0.52, 1)
 polygon = PackedVector2Array(-8, -34, 8, -34, 9, 0, -9, 0)
 
-[node name="Apron" type="Polygon2D" parent="Props/Brother_Placeholder"]
-color = Color(0.42, 0.30, 0.20, 1)
+[node name="Apron" type="Polygon2D" parent="Props/Brother_Placeholder" unique_id=1364507712]
+color = Color(0.42, 0.3, 0.2, 1)
 polygon = PackedVector2Array(-6, -26, 6, -26, 7, 0, -7, 0)
 
-[node name="Head" type="Polygon2D" parent="Props/Brother_Placeholder"]
-color = Color(0.85, 0.70, 0.58, 1)
+[node name="Head" type="Polygon2D" parent="Props/Brother_Placeholder" unique_id=22532264]
+color = Color(0.85, 0.7, 0.58, 1)
 polygon = PackedVector2Array(-5, -44, 5, -44, 5, -34, -5, -34)
 
-[node name="Hair" type="Polygon2D" parent="Props/Brother_Placeholder"]
-color = Color(0.50, 0.32, 0.20, 1)
+[node name="Hair" type="Polygon2D" parent="Props/Brother_Placeholder" unique_id=278006561]
+color = Color(0.5, 0.32, 0.2, 1)
 polygon = PackedVector2Array(-6, -46, 6, -46, 6, -38, -6, -38)
 
-[node name="Weapon_Rack" type="Polygon2D" parent="Props"]
-color = Color(0.40, 0.28, 0.18, 1)
+[node name="Weapon_Rack" type="Polygon2D" parent="Props" unique_id=473835769]
+color = Color(0.4, 0.28, 0.18, 1)
 polygon = PackedVector2Array(790, 252, 824, 252, 824, 288, 790, 288)
 
-[node name="Rack_Sword_Silhouette" type="Polygon2D" parent="Props"]
-color = Color(0.65, 0.70, 0.75, 1)
+[node name="Rack_Sword_Silhouette" type="Polygon2D" parent="Props" unique_id=1803944265]
+color = Color(0.65, 0.7, 0.75, 1)
 polygon = PackedVector2Array(798, 256, 801, 256, 801, 284, 798, 284)
 
-[node name="Rack_Shield_Silhouette" type="Polygon2D" parent="Props"]
+[node name="Rack_Shield_Silhouette" type="Polygon2D" parent="Props" unique_id=1030777737]
 color = Color(0.55, 0.48, 0.35, 1)
 polygon = PackedVector2Array(808, 260, 818, 260, 818, 274, 808, 274)
 
-[node name="Death_Arch_LeftPillar" type="Polygon2D" parent="Props"]
+[node name="Death_Arch_LeftPillar" type="Polygon2D" parent="Props" unique_id=1273472510]
 color = Color(0.24, 0.26, 0.25, 1)
 polygon = PackedVector2Array(970, 180, 990, 180, 990, 288, 970, 288)
 
-[node name="Death_Arch_RightPillar" type="Polygon2D" parent="Props"]
+[node name="Death_Arch_RightPillar" type="Polygon2D" parent="Props" unique_id=557369057]
 color = Color(0.24, 0.26, 0.25, 1)
 polygon = PackedVector2Array(1050, 180, 1070, 180, 1070, 288, 1050, 288)
 
-[node name="Death_Arch_Top" type="Polygon2D" parent="Props"]
-color = Color(0.20, 0.22, 0.21, 1)
+[node name="Death_Arch_Top" type="Polygon2D" parent="Props" unique_id=138177590]
+color = Color(0.2, 0.22, 0.21, 1)
 polygon = PackedVector2Array(960, 160, 1080, 160, 1070, 180, 970, 180)
 
-[node name="Death_Mist_Glow" type="Polygon2D" parent="Props"]
+[node name="Death_Mist_Glow" type="Polygon2D" parent="Props" unique_id=504445813]
 color = Color(0.18, 0.32, 0.26, 0.55)
 polygon = PackedVector2Array(985, 180, 1055, 180, 1065, 288, 975, 288)
 
-[node name="Death_Specter_Placeholder" type="Node2D" parent="Props"]
+[node name="Death_Specter_Placeholder" type="Node2D" parent="Props" unique_id=619751921]
 position = Vector2(1020, 235)
 
-[node name="Shroud" type="Polygon2D" parent="Props/Death_Specter_Placeholder"]
-color = Color(0.85, 0.92, 0.88, 0.70)
+[node name="Shroud" type="Polygon2D" parent="Props/Death_Specter_Placeholder" unique_id=1632197100]
+color = Color(0.85, 0.92, 0.88, 0.7)
 polygon = PackedVector2Array(-10, -20, 10, -20, 14, 25, 0, 35, -14, 25)
 
-[node name="Skull" type="Polygon2D" parent="Props/Death_Specter_Placeholder"]
-color = Color(0.92, 0.95, 0.92, 0.90)
+[node name="Skull" type="Polygon2D" parent="Props/Death_Specter_Placeholder" unique_id=806036170]
+color = Color(0.92, 0.95, 0.92, 0.9)
 polygon = PackedVector2Array(-5, -30, 5, -30, 6, -20, -6, -20)
 
-[node name="Eyes" type="Polygon2D" parent="Props/Death_Specter_Placeholder"]
+[node name="Eyes" type="Polygon2D" parent="Props/Death_Specter_Placeholder" unique_id=1369165399]
 color = Color(0.42, 0.74, 0.62, 1)
 polygon = PackedVector2Array(-3, -26, -1, -26, -1, -24, -3, -24, 1, -26, 3, -26, 3, -24, 1, -24)
 
-[node name="PetSpots" type="Node2D" parent="."]
+[node name="PetSpots" type="Node2D" parent="." unique_id=389682967]
 
-[node name="SpotHearth" type="Marker2D" parent="PetSpots"]
+[node name="SpotHearth" type="Marker2D" parent="PetSpots" unique_id=1339871188]
 position = Vector2(185, 288)
 
-[node name="SpotTable" type="Marker2D" parent="PetSpots"]
+[node name="SpotTable" type="Marker2D" parent="PetSpots" unique_id=1526980156]
 position = Vector2(340, 288)
 
-[node name="SpotWoodpile" type="Marker2D" parent="PetSpots"]
+[node name="SpotWoodpile" type="Marker2D" parent="PetSpots" unique_id=1854831618]
 position = Vector2(595, 288)
 
-[node name="SpotRack" type="Marker2D" parent="PetSpots"]
+[node name="SpotRack" type="Marker2D" parent="PetSpots" unique_id=915577099]
 position = Vector2(835, 288)
 
-[node name="Pets" type="Node2D" parent="."]
+[node name="Pets" type="Node2D" parent="." unique_id=72458175]
 
-[node name="DogDachshund" type="Node2D" parent="Pets"]
+[node name="DogDachshund" type="Node2D" parent="Pets" unique_id=726040519]
 position = Vector2(185, 288)
 
-[node name="Body" type="Polygon2D" parent="Pets/DogDachshund"]
-color = Color(0.70, 0.38, 0.20, 1)
+[node name="Body" type="Polygon2D" parent="Pets/DogDachshund" unique_id=321722656]
+color = Color(0.7, 0.38, 0.2, 1)
 polygon = PackedVector2Array(-10, -8, 10, -8, 10, -2, -10, -2)
 
-[node name="Paws" type="Polygon2D" parent="Pets/DogDachshund"]
+[node name="Paws" type="Polygon2D" parent="Pets/DogDachshund" unique_id=1529519943]
 color = Color(0.55, 0.28, 0.15, 1)
 polygon = PackedVector2Array(-8, -2, -6, -2, -6, 0, -8, 0, 6, -2, 8, -2, 8, 0, 6, 0)
 
-[node name="Head" type="Polygon2D" parent="Pets/DogDachshund"]
-color = Color(0.70, 0.38, 0.20, 1)
+[node name="Head" type="Polygon2D" parent="Pets/DogDachshund" unique_id=282844490]
+color = Color(0.7, 0.38, 0.2, 1)
 polygon = PackedVector2Array(9, -12, 16, -9, 16, -4, 9, -4)
 
-[node name="Ear" type="Polygon2D" parent="Pets/DogDachshund"]
+[node name="Ear" type="Polygon2D" parent="Pets/DogDachshund" unique_id=1626939072]
 color = Color(0.48, 0.24, 0.12, 1)
 polygon = PackedVector2Array(9, -11, 12, -11, 11, -3, 9, -5)
 
-[node name="Tail" type="Polygon2D" parent="Pets/DogDachshund"]
-color = Color(0.70, 0.38, 0.20, 1)
+[node name="Tail" type="Polygon2D" parent="Pets/DogDachshund" unique_id=1483004156]
+color = Color(0.7, 0.38, 0.2, 1)
 polygon = PackedVector2Array(-10, -7, -14, -10, -13, -7, -10, -5)
 
-[node name="CatSiamese" type="Node2D" parent="Pets"]
+[node name="CatSiamese" type="Node2D" parent="Pets" unique_id=1433953204]
 position = Vector2(340, 288)
 
-[node name="Body" type="Polygon2D" parent="Pets/CatSiamese"]
-color = Color(0.92, 0.90, 0.85, 1)
+[node name="Body" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1647375905]
+color = Color(0.92, 0.9, 0.85, 1)
 polygon = PackedVector2Array(-6, -10, 6, -10, 7, -2, -7, -2)
 
-[node name="Paws" type="Polygon2D" parent="Pets/CatSiamese"]
+[node name="Paws" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1512633005]
 color = Color(0.45, 0.45, 0.48, 1)
 polygon = PackedVector2Array(-5, -2, -3, -2, -3, 0, -5, 0, 3, -2, 5, -2, 5, 0, 3, 0)
 
-[node name="Head" type="Polygon2D" parent="Pets/CatSiamese"]
-color = Color(0.92, 0.90, 0.85, 1)
+[node name="Head" type="Polygon2D" parent="Pets/CatSiamese" unique_id=299250991]
+color = Color(0.92, 0.9, 0.85, 1)
 polygon = PackedVector2Array(4, -15, 10, -15, 11, -8, 5, -8)
 
-[node name="FaceMask" type="Polygon2D" parent="Pets/CatSiamese"]
-color = Color(0.40, 0.40, 0.45, 1)
+[node name="FaceMask" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1461857696]
+color = Color(0.4, 0.4, 0.45, 1)
 polygon = PackedVector2Array(7, -13, 11, -12, 11, -9, 7, -9)
 
-[node name="Ears" type="Polygon2D" parent="Pets/CatSiamese"]
-color = Color(0.40, 0.40, 0.45, 1)
+[node name="Ears" type="Polygon2D" parent="Pets/CatSiamese" unique_id=545951066]
+color = Color(0.4, 0.4, 0.45, 1)
 polygon = PackedVector2Array(5, -17, 7, -15, 5, -15, 8, -17, 10, -15, 8, -15)
 
-[node name="Tail" type="Polygon2D" parent="Pets/CatSiamese"]
+[node name="Tail" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1599018127]
 color = Color(0.45, 0.45, 0.48, 1)
 polygon = PackedVector2Array(-6, -8, -11, -12, -9, -7, -6, -6)
 
-[node name="ExitPortalArea" type="Area2D" parent="."]
+[node name="ChestArea" type="Area2D" parent="." unique_id=739182910]
+position = Vector2(223, 278)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChestArea" unique_id=1849182041]
+shape = SubResource("RectangleShape2D_chest")
+
+[node name="RackArea" type="Area2D" parent="." unique_id=384729102]
+position = Vector2(807, 268)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RackArea" unique_id=948291840]
+shape = SubResource("RectangleShape2D_rack")
+
+[node name="ExitPortalArea" type="Area2D" parent="." unique_id=438728389]
 position = Vector2(1020, 248)
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitPortalArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitPortalArea" unique_id=1193208525]
 shape = SubResource("RectangleShape2D_exit")
 
-[node name="Player" parent="." instance=ExtResource("2_player")]
+[node name="Player" parent="." unique_id=154546396 instance=ExtResource("2_player")]
 position = Vector2(80, 288)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(0, -20)
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=276118842]
+position = Vector2(0, 8)
 limit_left = 0
 limit_top = 0
 limit_right = 1100
@@ -302,30 +327,33 @@ drag_left_margin = 0.1
 drag_right_margin = 0.1
 script = ExtResource("3_camera")
 
-[node name="CinematicBars" type="CanvasLayer" parent="."]
+[node name="CinematicBars" type="CanvasLayer" parent="." unique_id=537017744]
 layer = 95
 
-[node name="TopBar" type="ColorRect" parent="CinematicBars"]
+[node name="TopBar" type="ColorRect" parent="CinematicBars" unique_id=1083240852]
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 85.0
+offset_top = 1.0
+offset_bottom = 86.0
 grow_horizontal = 2
 color = Color(0, 0, 0, 1)
 
-[node name="BottomBar" type="ColorRect" parent="CinematicBars"]
+[node name="BottomBar" type="ColorRect" parent="CinematicBars" unique_id=2035115153]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -55.0
+offset_top = -54.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
 color = Color(0, 0, 0, 1)
 
-[node name="FadeCanvas" type="CanvasLayer" parent="."]
+[node name="FadeCanvas" type="CanvasLayer" parent="." unique_id=2041753992]
 layer = 105
 
-[node name="FadeRect" type="ColorRect" parent="FadeCanvas"]
+[node name="FadeRect" type="ColorRect" parent="FadeCanvas" unique_id=682275419]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
