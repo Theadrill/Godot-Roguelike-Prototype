@@ -5,8 +5,8 @@ extends Node2D
 ## Santuário temporal protegido da anomalia. O guerreiro desperta aqui após a morte.
 
 @onready var player: Player = $Player
-@onready var dog_pet: Node2D = $Pets/DogDachshund
-@onready var cat_pet: Node2D = $Pets/CatSiamese
+@onready var dog_pet: Node2D = $Pets/DogPreta
+@onready var cat_pet: Node2D = $Pets/CatBela
 @onready var pet_spots: Node2D = $PetSpots
 @onready var exit_portal_area: Area2D = $ExitPortalArea
 @onready var fade_rect: ColorRect = $FadeCanvas/FadeRect

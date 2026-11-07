@@ -129,11 +129,11 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
      * **Slot 3 (Mão Inábil / Escudo):** Broquel de parry, escudo redondo nórdico.
      * Permite que o guerreiro saia da forja 100% equipado para o combate.
 
-4. **Os Pets da Cabana (Posições Dinâmicas a Cada Run):**
-   * **A Cachorrinha (Dachshund / Salsichinha):** Fêmea de pernas curtas e corpo alongado, orelhas caídas e olhar carinhoso.
-   * **A Gatinha (Siamês Cinza-Claro / Quase Branca):** Pelo curto e elegante (não felpuda), corpo claro/esbranquiçado com pontas (orelhas, focinho e cauda) em cinza suave.
-   * **Comportamento Dinâmico:** A cada nova run / despertar, a cachorrinha e a gatinha sorteiam lugares aconchegantes diferentes para repousar entre a Cozinha e a Forja (ex: enroladas perto do fogo da lareira, embaixo da mesa de ervas, sobre uma pele de ovelha ao lado do fole ou cochilando perto do cesto de lenha).
-   * **Interação:** O jogador pode se aproximar para fazer carinho (`[E] / [X]`) com coração diegético, abanar de cauda e ronronar.
+4. **Os Pets da Cabana (Preta & Bela — Posições Dinâmicas a Cada Run):**
+   * **A Cachorrinha (Preta — Dachshund / Salsichinha):** Fêmea de pelo preto brilhante/carvão, pernas curtas, corpo alongado, orelhas caídas e olhar carinhoso.
+   * **A Gatinha (Bela — Siamês Cinza-Claro / Quase Branca):** Pelo curto e elegante (não felpuda), corpo claro/esbranquiçado com pontas (orelhas, focinho e cauda) em cinza suave.
+   * **Comportamento Dinâmico:** A cada nova run / despertar, a Preta e a Bela sorteiam lugares aconchegantes diferentes para repousar entre a Cozinha e a Forja (ex: enroladas perto do fogo da lareira, embaixo da mesa de ervas, sobre uma pele de ovelha ao lado do fole ou cochilando perto do cesto de lenha).
+   * **Interação:** O jogador pode se aproximar para fazer carinho (`[E] / [RB]`) com coração diegético, abanar de cauda e ronronar.
 
 5. **A Atmosfera Visual da Casa (O Refúgio Feliz, Fofo e Colorido):**
    * O interior da cabana contrasta fortemente com a desolação sombria das ruínas externas:

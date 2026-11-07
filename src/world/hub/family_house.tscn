@@ -241,53 +241,53 @@ position = Vector2(835, 288)
 
 [node name="Pets" type="Node2D" parent="." unique_id=72458175]
 
-[node name="DogDachshund" type="Node2D" parent="Pets" unique_id=726040519]
+[node name="DogPreta" type="Node2D" parent="Pets" unique_id=726040519]
 position = Vector2(185, 288)
 
-[node name="Body" type="Polygon2D" parent="Pets/DogDachshund" unique_id=321722656]
-color = Color(0.7, 0.38, 0.2, 1)
+[node name="Body" type="Polygon2D" parent="Pets/DogPreta" unique_id=321722656]
+color = Color(0.13, 0.13, 0.15, 1)
 polygon = PackedVector2Array(-10, -8, 10, -8, 10, -2, -10, -2)
 
-[node name="Paws" type="Polygon2D" parent="Pets/DogDachshund" unique_id=1529519943]
-color = Color(0.55, 0.28, 0.15, 1)
+[node name="Paws" type="Polygon2D" parent="Pets/DogPreta" unique_id=1529519943]
+color = Color(0.08, 0.08, 0.1, 1)
 polygon = PackedVector2Array(-8, -2, -6, -2, -6, 0, -8, 0, 6, -2, 8, -2, 8, 0, 6, 0)
 
-[node name="Head" type="Polygon2D" parent="Pets/DogDachshund" unique_id=282844490]
-color = Color(0.7, 0.38, 0.2, 1)
+[node name="Head" type="Polygon2D" parent="Pets/DogPreta" unique_id=282844490]
+color = Color(0.13, 0.13, 0.15, 1)
 polygon = PackedVector2Array(9, -12, 16, -9, 16, -4, 9, -4)
 
-[node name="Ear" type="Polygon2D" parent="Pets/DogDachshund" unique_id=1626939072]
-color = Color(0.48, 0.24, 0.12, 1)
+[node name="Ear" type="Polygon2D" parent="Pets/DogPreta" unique_id=1626939072]
+color = Color(0.08, 0.08, 0.1, 1)
 polygon = PackedVector2Array(9, -11, 12, -11, 11, -3, 9, -5)
 
-[node name="Tail" type="Polygon2D" parent="Pets/DogDachshund" unique_id=1483004156]
-color = Color(0.7, 0.38, 0.2, 1)
+[node name="Tail" type="Polygon2D" parent="Pets/DogPreta" unique_id=1483004156]
+color = Color(0.13, 0.13, 0.15, 1)
 polygon = PackedVector2Array(-10, -7, -14, -10, -13, -7, -10, -5)
 
-[node name="CatSiamese" type="Node2D" parent="Pets" unique_id=1433953204]
+[node name="CatBela" type="Node2D" parent="Pets" unique_id=1433953204]
 position = Vector2(340, 288)
 
-[node name="Body" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1647375905]
+[node name="Body" type="Polygon2D" parent="Pets/CatBela" unique_id=1647375905]
 color = Color(0.92, 0.9, 0.85, 1)
 polygon = PackedVector2Array(-6, -10, 6, -10, 7, -2, -7, -2)
 
-[node name="Paws" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1512633005]
+[node name="Paws" type="Polygon2D" parent="Pets/CatBela" unique_id=1512633005]
 color = Color(0.45, 0.45, 0.48, 1)
 polygon = PackedVector2Array(-5, -2, -3, -2, -3, 0, -5, 0, 3, -2, 5, -2, 5, 0, 3, 0)
 
-[node name="Head" type="Polygon2D" parent="Pets/CatSiamese" unique_id=299250991]
+[node name="Head" type="Polygon2D" parent="Pets/CatBela" unique_id=299250991]
 color = Color(0.92, 0.9, 0.85, 1)
 polygon = PackedVector2Array(4, -15, 10, -15, 11, -8, 5, -8)
 
-[node name="FaceMask" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1461857696]
+[node name="FaceMask" type="Polygon2D" parent="Pets/CatBela" unique_id=1461857696]
 color = Color(0.4, 0.4, 0.45, 1)
 polygon = PackedVector2Array(7, -13, 11, -12, 11, -9, 7, -9)
 
-[node name="Ears" type="Polygon2D" parent="Pets/CatSiamese" unique_id=545951066]
+[node name="Ears" type="Polygon2D" parent="Pets/CatBela" unique_id=545951066]
 color = Color(0.4, 0.4, 0.45, 1)
 polygon = PackedVector2Array(5, -17, 7, -15, 5, -15, 8, -17, 10, -15, 8, -15)
 
-[node name="Tail" type="Polygon2D" parent="Pets/CatSiamese" unique_id=1599018127]
+[node name="Tail" type="Polygon2D" parent="Pets/CatBela" unique_id=1599018127]
 color = Color(0.45, 0.45, 0.48, 1)
 polygon = PackedVector2Array(-6, -8, -11, -12, -9, -7, -6, -6)
 
