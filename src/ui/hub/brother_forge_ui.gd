@@ -3,7 +3,7 @@ extends CanvasLayer
 
 const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
 
-signal closed
+signal closed(did_upgrade: bool)
 
 @onready var weapon_1_level_label: Label = $MainPanel/ScrollContainer/VBox/Item1/LevelLabel
 @onready var weapon_1_req_label: Label = $MainPanel/ScrollContainer/VBox/Item1/ReqLabel
@@ -14,6 +14,8 @@ signal closed
 @onready var btn_upgrade_weapon_2: Button = $MainPanel/ScrollContainer/VBox/Item2/BtnUpgrade
 
 @onready var prompt_bar: GamepadPromptBar = $MainPanel/GamepadPromptBar
+
+var did_upgrade_weapon: bool = false
 
 func _ready() -> void:
 	visible = false
@@ -29,13 +31,14 @@ func _setup_buttons() -> void:
 
 func open_ui() -> void:
 	visible = true
+	did_upgrade_weapon = false
 	_refresh_display()
 	await get_tree().process_frame
 	btn_upgrade_weapon_1.grab_focus()
 
 func close_ui() -> void:
 	visible = false
-	closed.emit()
+	closed.emit(did_upgrade_weapon)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
@@ -50,11 +53,13 @@ func _on_weapon_upgrade(weapon_id: String) -> void:
 			ProgressionManager.weapon_sword_duplicates -= 2
 			ProgressionManager.weapon_sword_level += 1
 			ProgressionManager.permanent_upgrades_updated.emit()
+			did_upgrade_weapon = true
 	elif weapon_id == "bow":
 		if ProgressionManager.weapon_bow_duplicates >= 2:
 			ProgressionManager.weapon_bow_duplicates -= 2
 			ProgressionManager.weapon_bow_level += 1
 			ProgressionManager.permanent_upgrades_updated.emit()
+			did_upgrade_weapon = true
 	_refresh_display()
 
 func _refresh_display() -> void:

@@ -379,7 +379,7 @@ func is_bark_active() -> bool:
 	return bark_label.modulate.a > 0.01 and _bark_tween != null and _bark_tween.is_valid() and _bark_tween.is_running()
 
 ## Exibe aviso diegético (Bark) suavemente animado flutuando acima da cabeça do guerreiro
-func show_bark(text: String) -> void:
+func show_bark(text: String, custom_duration: float = 0.0) -> void:
 	if not bark_label:
 		bark_label = get_node_or_null("BarkLabel") as Label
 	if not bark_label:
@@ -392,7 +392,7 @@ func show_bark(text: String) -> void:
 	if _bark_tween and _bark_tween.is_valid():
 		_bark_tween.kill()
 		
-	var duration: float = maxf(3.5, clampf(float(text.length()) * 0.08, 3.5, 6.0))
+	var duration: float = custom_duration if custom_duration > 0.0 else maxf(3.5, clampf(float(text.length()) * 0.08, 3.5, 6.0))
 	_bark_tween = create_tween()
 	_bark_tween.set_parallel(true)
 	_bark_tween.tween_property(bark_label, "position:y", -70.0, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)

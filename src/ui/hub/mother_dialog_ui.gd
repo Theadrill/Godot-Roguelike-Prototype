@@ -3,7 +3,7 @@ extends CanvasLayer
 
 const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
 
-signal closed
+signal closed(did_take_tea: bool)
 
 @onready var category_view: Control = $MainPanel/CategoryView
 @onready var list_view_elixirs: Control = $MainPanel/ListViewElixirs
@@ -35,6 +35,7 @@ signal closed
 
 enum ViewState { CATEGORIES, ELIXIRS_LIST, TEAS_LIST, CLOTHES_LIST }
 var current_view: ViewState = ViewState.CATEGORIES
+var did_take_tea_or_elixir: bool = false
 
 func _ready() -> void:
 	visible = false
@@ -64,11 +65,12 @@ func _setup_buttons() -> void:
 
 func open_ui() -> void:
 	visible = true
+	did_take_tea_or_elixir = false
 	_switch_to_view(ViewState.CATEGORIES)
 
 func close_ui() -> void:
 	visible = false
-	closed.emit()
+	closed.emit(did_take_tea_or_elixir)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
@@ -102,6 +104,7 @@ func _switch_to_view(new_view: ViewState) -> void:
 
 func _on_elixir_selected(elixir_id: String) -> void:
 	ProgressionManager.select_elixir(elixir_id)
+	did_take_tea_or_elixir = true
 	_refresh_display()
 
 func _on_tea_upgrade(tea_id: String) -> void:
@@ -110,11 +113,13 @@ func _on_tea_upgrade(tea_id: String) -> void:
 			ProgressionManager.tea_stone_root_duplicates -= 2
 			ProgressionManager.tea_stone_root_level += 1
 			ProgressionManager.permanent_upgrades_updated.emit()
+			did_take_tea_or_elixir = true
 	elif tea_id == "mountain_chamomile":
 		if ProgressionManager.tea_mountain_chamomile_duplicates >= 2:
 			ProgressionManager.tea_mountain_chamomile_duplicates -= 2
 			ProgressionManager.tea_mountain_chamomile_level += 1
 			ProgressionManager.permanent_upgrades_updated.emit()
+			did_take_tea_or_elixir = true
 	_refresh_display()
 
 func _on_skin_selected(skin_id: String) -> void:

@@ -25,7 +25,7 @@ var active_skin_id: String = "default" # "default" (Viajante) ou "crimson" (Mant
 
 # Aprimoramentos Permanentes da Forja (Irmão)
 var weapon_sword_level: int = 1
-var weapon_sword_duplicates: int = 0
+var weapon_sword_duplicates: int = 2 # 2 receitas disponíveis inicialmente para teste de aprimoramento e diálogos
 
 var weapon_bow_level: int = 1
 var weapon_bow_duplicates: int = 0

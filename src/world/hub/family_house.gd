@@ -39,6 +39,7 @@ var _player_near_mother: bool = false
 var _player_near_brother: bool = false
 var _player_near_death: bool = false
 var _vortex_time: float = 0.0
+var _dialogue_sequence_token: int = 0
 
 const MOTHER_REFUSAL_BARKS: Array[String] = [
 	"BARK_MOTHER_REFUSAL_1",
@@ -186,20 +187,42 @@ func _open_mother_menu() -> void:
 			player.is_input_locked = true
 		mother_ui.open_ui()
 
-func _on_mother_ui_closed() -> void:
+func _on_mother_ui_closed(did_take_tea: bool = false) -> void:
 	await get_tree().create_timer(0.08).timeout
 	if player:
 		player.is_input_locked = false
-	# O diálogo diegético acontece exclusivamente ao fechar a janela
 	if not player or not mother_bark:
 		return
-	player.show_bark(tr("PROMPT_HERO_TO_MOTHER"))
-	var timer := get_tree().create_timer(1.4)
-	timer.timeout.connect(func() -> void:
-		if mother_bark and is_instance_valid(mother_bark):
-			var random_line: String = tr(MOTHER_REFUSAL_BARKS.pick_random())
-			mother_bark.show_bark(random_line, 5.0, Color(1.0, 0.88, 0.7, 1.0))
-	)
+		
+	if did_take_tea:
+		var variation: int = randi() % 3
+		var sequence: Array[Dictionary] = []
+		match variation:
+			0:
+				sequence = [
+					{"speaker": "player", "text": "BARK_TEA_CUTE_H1", "duration": 3.4, "delay": 2.8},
+					{"speaker": "mother", "text": "BARK_TEA_CUTE_M1", "duration": 4.0, "delay": 3.5, "color": Color(1.0, 0.88, 0.7, 1.0)}
+				]
+			1:
+				sequence = [
+					{"speaker": "player", "text": "BARK_TEA_CUTE_H2", "duration": 3.4, "delay": 2.8},
+					{"speaker": "mother", "text": "BARK_TEA_CUTE_M2", "duration": 4.0, "delay": 3.5, "color": Color(1.0, 0.88, 0.7, 1.0)}
+				]
+			2:
+				sequence = [
+					{"speaker": "mother", "text": "BARK_TEA_CUTE_M3_A", "duration": 3.0, "delay": 2.2, "color": Color(1.0, 0.88, 0.7, 1.0)},
+					{"speaker": "player", "text": "BARK_TEA_CUTE_H3", "duration": 3.4, "delay": 2.8},
+					{"speaker": "mother", "text": "BARK_TEA_CUTE_M3_B", "duration": 4.2, "delay": 3.8, "color": Color(1.0, 0.88, 0.7, 1.0)}
+				]
+		_play_dialogue_sequence(sequence)
+	else:
+		player.show_bark(tr("PROMPT_HERO_TO_MOTHER"), 3.0)
+		var timer := get_tree().create_timer(1.8)
+		timer.timeout.connect(func() -> void:
+			if mother_bark and is_instance_valid(mother_bark):
+				var random_line: String = tr(MOTHER_REFUSAL_BARKS.pick_random())
+				mother_bark.show_bark(random_line, 5.0, Color(1.0, 0.88, 0.7, 1.0))
+		)
 
 # --- Interação com o Irmão ---
 func _on_brother_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
@@ -214,20 +237,66 @@ func _open_brother_menu() -> void:
 			player.is_input_locked = true
 		brother_ui.open_ui()
 
-func _on_brother_ui_closed() -> void:
+func _on_brother_ui_closed(did_upgrade: bool = false) -> void:
 	await get_tree().create_timer(0.08).timeout
 	if player:
 		player.is_input_locked = false
-	# O diálogo diegético acontece exclusivamente ao fechar a janela
 	if not player or not brother_bark:
 		return
-	player.show_bark(tr("PROMPT_HERO_TO_BROTHER"))
-	var timer := get_tree().create_timer(1.4)
-	timer.timeout.connect(func() -> void:
-		if brother_bark and is_instance_valid(brother_bark):
-			var random_line: String = tr(BROTHER_EXCUSE_BARKS.pick_random())
-			brother_bark.show_bark(random_line, 5.0, Color(0.85, 0.92, 1.0, 1.0))
-	)
+		
+	if did_upgrade:
+		var variation: int = randi() % 3
+		var sequence: Array[Dictionary] = []
+		match variation:
+			0:
+				sequence = [
+					{"speaker": "player", "text": "BARK_FORGE_CUTE_H1", "duration": 3.6, "delay": 3.0},
+					{"speaker": "brother", "text": "BARK_FORGE_CUTE_B1", "duration": 4.0, "delay": 3.5, "color": Color(0.85, 0.92, 1.0, 1.0)}
+				]
+			1:
+				sequence = [
+					{"speaker": "player", "text": "BARK_FORGE_CUTE_H2", "duration": 3.4, "delay": 2.8},
+					{"speaker": "brother", "text": "BARK_FORGE_CUTE_B2", "duration": 4.0, "delay": 3.5, "color": Color(0.85, 0.92, 1.0, 1.0)}
+				]
+			2:
+				sequence = [
+					{"speaker": "player", "text": "BARK_FORGE_CUTE_H3_A", "duration": 3.5, "delay": 2.8},
+					{"speaker": "brother", "text": "BARK_FORGE_CUTE_B3", "duration": 3.2, "delay": 2.4, "color": Color(0.85, 0.92, 1.0, 1.0)},
+					{"speaker": "player", "text": "BARK_FORGE_CUTE_H3_B", "duration": 3.8, "delay": 3.2}
+				]
+		_play_dialogue_sequence(sequence)
+	else:
+		player.show_bark(tr("PROMPT_HERO_TO_BROTHER"), 3.0)
+		var timer := get_tree().create_timer(1.8)
+		timer.timeout.connect(func() -> void:
+			if brother_bark and is_instance_valid(brother_bark):
+				var random_line: String = tr(BROTHER_EXCUSE_BARKS.pick_random())
+				brother_bark.show_bark(random_line, 5.0, Color(0.85, 0.92, 1.0, 1.0))
+		)
+
+func _play_dialogue_sequence(steps: Array[Dictionary]) -> void:
+	_dialogue_sequence_token += 1
+	var seq_id: int = _dialogue_sequence_token
+	for step in steps:
+		if seq_id != _dialogue_sequence_token:
+			return
+		var speaker: String = step.get("speaker", "player")
+		var text: String = tr(step.get("text", ""))
+		var duration: float = step.get("duration", 3.5)
+		var delay_after: float = step.get("delay", 3.2)
+		var color: Color = step.get("color", Color.WHITE)
+		
+		if speaker == "player":
+			if player and is_instance_valid(player):
+				player.show_bark(text, duration)
+		elif speaker == "mother":
+			if mother_bark and is_instance_valid(mother_bark):
+				mother_bark.show_bark(text, duration, color)
+		elif speaker == "brother":
+			if brother_bark and is_instance_valid(brother_bark):
+				brother_bark.show_bark(text, duration, color)
+				
+		await get_tree().create_timer(delay_after).timeout
 
 # --- Interação com o Baú de Armas ---
 func _on_chest_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
