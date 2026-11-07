@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://df7283b9a01x4"]
+
+[ext_resource type="Script" path="res://src/ui/hub/npc_bark.gd" id="1_script"]
+
+[node name="NpcBark" type="Node2D" unique_id=5050501]
+z_index = 30
+script = ExtResource("1_script")
+
+[node name="Label" type="Label" parent="." unique_id=5050502]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_top = -54.0
+offset_right = 110.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 9
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

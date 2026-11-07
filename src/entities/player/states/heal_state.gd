@@ -74,7 +74,7 @@ func _complete_heal() -> void:
 	is_channeling = false
 	if player.current_flask_charges > 0:
 		player.current_flask_charges -= 1
-		var heal_amount: float = player.max_health * player.flask_heal_percent
+		var heal_amount: float = player.max_health * player.flask_heal_percent * ProgressionManager.get_tea_heal_multiplier()
 		player.current_health = minf(player.current_health + heal_amount, player.max_health)
 		player.emit_signal("flask_charges_changed", player.current_flask_charges, player.max_flask_charges)
 		

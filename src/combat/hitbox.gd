@@ -57,7 +57,22 @@ func _try_hit_area(area: Area2D) -> void:
 
 		_hit_targets.append(hurtbox)
 		hit_landed.emit(hurtbox)
-		hurtbox.take_hit(damage, knockback_direction * knockback_force, hitstop_duration, self)
+
+		var final_damage: float = damage
+		if attacker and attacker.has_meta("mod_olhar_da_ruina") and attacker.get_meta("mod_olhar_da_ruina"):
+			var target_entity: Node2D = hurtbox.get_parent() as Node2D
+			if target_entity:
+				var is_target_stunned: bool = false
+				if target_entity.has_method("is_in_stun") and target_entity.is_in_stun():
+					is_target_stunned = true
+				elif "state_machine" in target_entity and target_entity.state_machine and target_entity.state_machine.current_state and target_entity.state_machine.current_state.name.to_lower().contains("hurt"):
+					is_target_stunned = true
+				elif target_entity.has_meta("is_stunned") and target_entity.get_meta("is_stunned"):
+					is_target_stunned = true
+				if is_target_stunned:
+					final_damage *= 1.25
+
+		hurtbox.take_hit(final_damage, knockback_direction * knockback_force, hitstop_duration, self)
 		CombatFeedback.apply_hit_feedback(hitstop_duration, rumble_weak, rumble_strong, rumble_duration)
 
 func _is_blocked_by_wall(hurtbox: Hurtbox) -> bool:

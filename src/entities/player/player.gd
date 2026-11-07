@@ -137,6 +137,7 @@ func _ready() -> void:
 
 	_refresh_equipped_visuals()
 	_update_equipment_depth()
+	ProgressionManager.apply_to_player(self)
 
 	if hitbox:
 		hitbox.attacker = self
@@ -525,6 +526,7 @@ func die() -> void:
 		_on_death_respawn()
 
 func _on_death_respawn() -> void:
+	ProgressionManager.reset_daily_run()
 	current_health = max_health
 	current_flask_charges = max_flask_charges
 	rally_recoverable_hp = 0.0

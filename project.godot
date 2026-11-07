@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 
 InputSetup="*res://src/core/input_setup.gd"
 CombatFeedback="*res://src/combat/combat_feedback.gd"
+ProgressionManager="*res://src/core/progression_manager.gd"
 
 [display]
 

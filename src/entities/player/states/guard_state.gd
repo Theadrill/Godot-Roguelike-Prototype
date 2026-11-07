@@ -127,19 +127,24 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 		# Tactical Life Rally: Perfect Parry recovers recent lost health!
 		player.apply_parry_rally()
 
-		# Forge Modifier: Repulsion Shockwave
-		if player.shield and player.shield.has_repulsion_modifier:
+		# Forge Modifier & Death Blessing: Repulsion / Spectral Shockwave
+		var has_spectral: bool = player.has_meta("mod_onda_espectral") and player.get_meta("mod_onda_espectral")
+		if (player.shield and player.shield.has_repulsion_modifier) or has_spectral:
 			var shockwave_scene := load("res://src/combat/radial_shockwave.tscn") as PackedScene
 			if shockwave_scene:
 				var sw := shockwave_scene.instantiate() as RadialShockwave
 				sw.global_position = player.global_position + Vector2(0.0, -18.0)
+				var wave_color := Color(0.42, 0.85, 0.7, 0.95) if has_spectral else Color(0.3, 0.85, 1.0, 0.9)
+				var wave_radius: float = 80.0 if has_spectral else (player.shield.repulsion_radius if player.shield else 60.0)
+				var wave_force: float = 300.0 if has_spectral else (player.shield.repulsion_force if player.shield else 220.0)
+				var wave_dmg: float = 8.0 if has_spectral else 0.0
 				sw.setup(
-					player.shield.repulsion_radius,
-					player.shield.repulsion_force,
-					0.0, # 0 damage: pure repulsion to isolate the 1v1
-					attacker, # Ignores the stunned attacker
+					wave_radius,
+					wave_force,
+					wave_dmg,
+					attacker, # Ignores the parried attacker
 					player,
-					Color(0.3, 0.85, 1.0, 0.9)
+					wave_color
 				)
 				player.get_parent().add_child(sw)
 

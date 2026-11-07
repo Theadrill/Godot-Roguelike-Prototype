@@ -4,18 +4,63 @@ extends Node2D
 ## Hub do Jogo: A Cabana Rústica Medieval da Família
 ## Santuário temporal protegido da anomalia. O guerreiro desperta aqui após a morte.
 
+const NpcBark = preload("res://src/ui/hub/npc_bark.gd")
+const MotherDialogUI = preload("res://src/ui/hub/mother_dialog_ui.gd")
+const BrotherForgeUI = preload("res://src/ui/hub/brother_forge_ui.gd")
+const TouchOfDeathUI = preload("res://src/ui/hub/touch_of_death_ui.gd")
+
 @onready var player: Player = $Player
 @onready var dog_pet: Node2D = $Pets/DogPreta
 @onready var cat_pet: Node2D = $Pets/CatBela
 @onready var pet_spots: Node2D = $PetSpots
 @onready var exit_portal_area: Area2D = $ExitPortalArea
 @onready var fade_rect: ColorRect = $FadeCanvas/FadeRect
+
 @onready var chest_area: Area2D = get_node_or_null("ChestArea") as Area2D
 @onready var rack_area: Area2D = get_node_or_null("RackArea") as Area2D
 
+@onready var mother_area: Area2D = get_node_or_null("Props/Mother_Placeholder/MotherArea") as Area2D
+@onready var mother_bark: NpcBark = get_node_or_null("Props/Mother_Placeholder/Bark") as NpcBark
+
+@onready var brother_area: Area2D = get_node_or_null("Props/Brother_Placeholder/BrotherArea") as Area2D
+@onready var brother_bark: NpcBark = get_node_or_null("Props/Brother_Placeholder/Bark") as NpcBark
+
+@onready var death_specter: Node2D = get_node_or_null("Props/Death_Specter_Placeholder") as Node2D
+@onready var death_bark: NpcBark = get_node_or_null("Props/Death_Specter_Placeholder/Bark") as NpcBark
+
+@onready var mother_ui: MotherDialogUI = get_node_or_null("MotherDialogUI") as MotherDialogUI
+@onready var brother_ui: BrotherForgeUI = get_node_or_null("BrotherForgeUI") as BrotherForgeUI
+@onready var touch_of_death_ui: TouchOfDeathUI = get_node_or_null("TouchOfDeathUI") as TouchOfDeathUI
+
 var _is_transitioning: bool = false
-var _is_weapons_equipped: bool = false
 var _player_near_chest: bool = false
+var _player_near_mother: bool = false
+var _player_near_brother: bool = false
+
+var _mother_banter_cooldown: float = 0.0
+var _brother_banter_cooldown: float = 0.0
+var _death_banter_played: bool = false
+
+const MOTHER_REFUSAL_BARKS: Array[String] = [
+	"BARK_MOTHER_REFUSAL_1",
+	"BARK_MOTHER_REFUSAL_2",
+	"BARK_MOTHER_REFUSAL_3",
+	"BARK_MOTHER_REFUSAL_4"
+]
+
+const BROTHER_EXCUSE_BARKS: Array[String] = [
+	"BARK_BROTHER_EXCUSE_1",
+	"BARK_BROTHER_EXCUSE_2",
+	"BARK_BROTHER_EXCUSE_3",
+	"BARK_BROTHER_EXCUSE_4"
+]
+
+const DEATH_SARCASTIC_BARKS: Array[String] = [
+	"BARK_DEATH_SARCASTIC_1",
+	"BARK_DEATH_SARCASTIC_2",
+	"BARK_DEATH_SARCASTIC_3",
+	"BARK_DEATH_SARCASTIC_4"
+]
 
 func _ready() -> void:
 	# Fade-in suave do despertar
@@ -26,19 +71,24 @@ func _ready() -> void:
 		tween.tween_property(fade_rect, "modulate:a", 0.0, 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		tween.tween_callback(func() -> void: fade_rect.visible = false)
 
+	# Espectro da Morte inicia invisível e se condensa conforme o guerreiro se aproxima
+	if death_specter:
+		death_specter.modulate.a = 0.0
+
 	# Posicionamento dinâmico dos pets entre cozinha e forja
 	_randomize_pet_positions()
 
-	# Oculta HUD de combate dentro da cabana para visão limpa e cinematográfica
+	# Configurações iniciais do jogador na cabana
 	if player:
 		var hud: CanvasLayer = player.get_node_or_null("HUD") as CanvasLayer
 		if hud:
 			hud.visible = false
+		
 		# Personagem acorda sem armas no refúgio familiar
+		ProgressionManager.are_weapons_equipped = false
 		player.hide_equipment_visuals()
 
-	# Configura câmera para os limites exatos da cabana (0 a 1100 px horizontais, 0 a 360 verticais)
-	if player:
+		# Configura câmera para os limites da cabana
 		var cam: Camera2D = player.get_node_or_null("Camera2D") as Camera2D
 		if cam:
 			cam.limit_left = 0
@@ -46,50 +96,220 @@ func _ready() -> void:
 			cam.limit_right = 1100
 			cam.limit_bottom = 360
 
-	if exit_portal_area:
-		exit_portal_area.body_entered.connect(_on_exit_portal_entered)
-
-	# Conecta interação nos baús e suportes de armas (clique ou botão de ação)
+	# Conexões de interação
 	_setup_chest_interactions()
+	_setup_npc_interactions()
+	_setup_portal_and_uis()
+
+func _process(delta: float) -> void:
+	if _mother_banter_cooldown > 0.0:
+		_mother_banter_cooldown -= delta
+	if _brother_banter_cooldown > 0.0:
+		_brother_banter_cooldown -= delta
+
+	# Condensação suave do Espectro da Morte ao se aproximar do portal (x: 880 -> 1000)
+	if death_specter and player and not _is_transitioning:
+		var px: float = player.global_position.x
+		if px < 860.0:
+			death_specter.modulate.a = move_toward(death_specter.modulate.a, 0.0, delta * 2.0)
+		else:
+			var target_alpha: float = clampf((px - 860.0) / 120.0, 0.0, 1.0)
+			death_specter.modulate.a = move_toward(death_specter.modulate.a, target_alpha, delta * 3.0)
 
 func _setup_chest_interactions() -> void:
 	if chest_area:
 		chest_area.input_event.connect(_on_chest_input_event)
-		chest_area.body_entered.connect(_on_chest_body_entered)
-		chest_area.body_exited.connect(_on_chest_body_exited)
+		chest_area.body_entered.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = true)
+		chest_area.body_exited.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = false)
 	if rack_area:
 		rack_area.input_event.connect(_on_chest_input_event)
-		rack_area.body_entered.connect(_on_chest_body_entered)
-		rack_area.body_exited.connect(_on_chest_body_exited)
+		rack_area.body_entered.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = true)
+		rack_area.body_exited.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = false)
 
+func _setup_npc_interactions() -> void:
+	if mother_area:
+		mother_area.body_entered.connect(_on_mother_body_entered)
+		mother_area.body_exited.connect(_on_mother_body_exited)
+		mother_area.input_event.connect(_on_mother_input_event)
+
+	if brother_area:
+		brother_area.body_entered.connect(_on_brother_body_entered)
+		brother_area.body_exited.connect(_on_brother_body_exited)
+		brother_area.input_event.connect(_on_brother_input_event)
+
+func _setup_portal_and_uis() -> void:
+	if exit_portal_area:
+		exit_portal_area.body_entered.connect(_on_exit_portal_entered)
+
+	if mother_ui:
+		mother_ui.closed.connect(_on_mother_ui_closed)
+
+	if brother_ui:
+		brother_ui.closed.connect(_on_brother_ui_closed)
+
+	if touch_of_death_ui:
+		touch_of_death_ui.blessing_chosen.connect(_on_blessing_chosen_and_transition)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("interact"):
+		if _player_near_chest:
+			get_viewport().set_input_as_handled()
+			_toggle_weapons()
+		elif _player_near_mother:
+			get_viewport().set_input_as_handled()
+			_open_mother_menu()
+		elif _player_near_brother:
+			get_viewport().set_input_as_handled()
+			_open_brother_menu()
+
+# --- Interação com a Mãe ---
+func _on_mother_body_entered(body: Node2D) -> void:
+	if body != player:
+		return
+	_player_near_mother = true
+	if _mother_banter_cooldown <= 0.0 and not _is_modal_open():
+		_mother_banter_cooldown = 12.0
+		_play_mother_banter()
+
+func _on_mother_body_exited(body: Node2D) -> void:
+	if body == player:
+		_player_near_mother = false
+
+func _on_mother_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_open_mother_menu()
+
+func _play_mother_banter() -> void:
+	if not player or not mother_bark:
+		return
+	player.show_bark(tr("PROMPT_HERO_TO_MOTHER"))
+	var timer := get_tree().create_timer(1.3)
+	timer.timeout.connect(func() -> void:
+		if mother_bark and is_instance_valid(mother_bark):
+			var random_line: String = tr(MOTHER_REFUSAL_BARKS.pick_random())
+			mother_bark.show_bark(random_line, 2.6, Color(1.0, 0.88, 0.7, 1.0))
+	)
+
+func _open_mother_menu() -> void:
+	if mother_ui and not mother_ui.visible:
+		mother_ui.open_ui()
+
+func _on_mother_ui_closed(farewell_text: String) -> void:
+	if mother_bark:
+		mother_bark.show_bark(farewell_text, 2.8, Color(1.0, 0.95, 0.85, 1.0))
+
+# --- Interação com o Irmão ---
+func _on_brother_body_entered(body: Node2D) -> void:
+	if body != player:
+		return
+	_player_near_brother = true
+	if _brother_banter_cooldown <= 0.0 and not _is_modal_open():
+		_brother_banter_cooldown = 12.0
+		_play_brother_banter()
+
+func _on_brother_body_exited(body: Node2D) -> void:
+	if body == player:
+		_player_near_brother = false
+
+func _on_brother_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_open_brother_menu()
+
+func _play_brother_banter() -> void:
+	if not player or not brother_bark:
+		return
+	player.show_bark(tr("PROMPT_HERO_TO_BROTHER"))
+	var timer := get_tree().create_timer(1.3)
+	timer.timeout.connect(func() -> void:
+		if brother_bark and is_instance_valid(brother_bark):
+			var random_line: String = tr(BROTHER_EXCUSE_BARKS.pick_random())
+			brother_bark.show_bark(random_line, 2.6, Color(0.85, 0.92, 1.0, 1.0))
+	)
+
+func _open_brother_menu() -> void:
+	if brother_ui and not brother_ui.visible:
+		brother_ui.open_ui()
+
+func _on_brother_ui_closed(farewell_text: String) -> void:
+	if brother_bark:
+		brother_bark.show_bark(farewell_text, 2.8, Color(0.9, 0.95, 1.0, 1.0))
+
+# --- Interação com o Baú de Armas ---
 func _on_chest_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_toggle_weapons()
 
-func _on_chest_body_entered(body: Node2D) -> void:
-	if body == player or (body and body.is_in_group("player")):
-		_player_near_chest = true
-
-func _on_chest_body_exited(body: Node2D) -> void:
-	if body == player or (body and body.is_in_group("player")):
-		_player_near_chest = false
-
-func _unhandled_input(event: InputEvent) -> void:
-	if _player_near_chest:
-		if event.is_action_pressed("interact"):
-			get_viewport().set_input_as_handled()
-			_toggle_weapons()
-
 func _toggle_weapons() -> void:
 	if not player:
 		return
-	_is_weapons_equipped = not _is_weapons_equipped
-	if _is_weapons_equipped:
+	
+	ProgressionManager.are_weapons_equipped = not ProgressionManager.are_weapons_equipped
+	
+	if ProgressionManager.are_weapons_equipped:
+		# Garante que os dados de armas básicas estejam carregados
+		if not player.weapon:
+			player.weapon = load("res://src/entities/equipment/swords/weapon_sword_base.tres") as WeaponData
+		if not player.secondary_weapon:
+			player.secondary_weapon = load("res://src/entities/equipment/bows/weapon_bow_base.tres") as WeaponData
+		if not player.shield:
+			player.shield = load("res://src/entities/equipment/shields/shield_buckler_base.tres") as ShieldData
+
 		player.show_equipment_visuals()
-		player.show_bark("Armas equipadas!")
+		player.show_bark(tr("MSG_EQUIPPED_BASIC"))
 	else:
 		player.hide_equipment_visuals()
-		player.show_bark("Armas guardadas.")
+		player.show_bark(tr("MSG_STASHED_WEAPONS"))
+
+# --- Interação com a Morte & Portal de Saída ---
+func _on_exit_portal_entered(body: Node2D) -> void:
+	if _is_transitioning or not (body is Player or body.is_in_group("player")):
+		return
+
+	if not _death_banter_played:
+		_death_banter_played = true
+		player.show_bark(tr("PROMPT_HERO_TO_DEATH"))
+		var timer := get_tree().create_timer(1.2)
+		timer.timeout.connect(func() -> void:
+			if death_bark:
+				var random_sarcasm: String = tr(DEATH_SARCASTIC_BARKS.pick_random())
+				death_bark.show_bark(random_sarcasm, 3.0, Color(0.42, 0.85, 0.7, 1.0))
+			# Abre menu do Toque da Morte após o diálogo
+			var menu_timer := get_tree().create_timer(1.0)
+			menu_timer.timeout.connect(func() -> void:
+				if touch_of_death_ui:
+					touch_of_death_ui.open_ui()
+			)
+		)
+	else:
+		if touch_of_death_ui:
+			touch_of_death_ui.open_ui()
+
+func _on_blessing_chosen_and_transition(_blessing_id: String) -> void:
+	if _is_transitioning:
+		return
+	_is_transitioning = true
+
+	# Dissolução suave do Espectro da Morte de volta na névoa
+	if death_specter:
+		var death_tween := create_tween()
+		death_tween.tween_property(death_specter, "modulate:a", 0.0, 0.5)
+
+	# Aplica todos os modificadores de run e upgrades no jogador
+	if player:
+		ProgressionManager.apply_to_player(player)
+
+	# Fade out para a run
+	if fade_rect:
+		fade_rect.visible = true
+		fade_rect.modulate.a = 0.0
+		var tween := create_tween()
+		tween.tween_property(fade_rect, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		await tween.finished
+
+	get_tree().change_scene_to_file("res://src/world/movement_gym.tscn")
+
+func _is_modal_open() -> bool:
+	return (mother_ui and mother_ui.visible) or (brother_ui and brother_ui.visible) or (touch_of_death_ui and touch_of_death_ui.visible)
 
 ## Sorteia dois lugares aconchegantes distintos a cada despertar para a Dachshund e a Gatinha
 func _randomize_pet_positions() -> void:
@@ -108,18 +328,3 @@ func _randomize_pet_positions() -> void:
 		var cat_marker := spots[1] as Marker2D
 		if cat_marker:
 			cat_pet.global_position = cat_marker.global_position
-
-## Cruzar o arco de pedra ancestral leva o guerreiro para a run (por enquanto, o movement_gym)
-func _on_exit_portal_entered(body: Node2D) -> void:
-	if _is_transitioning or not (body is Player or body.is_in_group("player")):
-		return
-
-	_is_transitioning = true
-	if fade_rect:
-		fade_rect.visible = true
-		fade_rect.modulate.a = 0.0
-		var tween := create_tween()
-		tween.tween_property(fade_rect, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-		await tween.finished
-
-	get_tree().change_scene_to_file("res://src/world/movement_gym.tscn")

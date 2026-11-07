@@ -88,6 +88,11 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	var charge_mult: float = 1.0 + charge_ratio * (player.weapon.charge_damage_multiplier - 1.0)
 	var total_mult: float = step_mult * charge_mult
 
+	# Elixir de Folha-de-Fogo: +20% no primeiro ataque pós-esquiva
+	if player.has_meta("has_post_roll_buff") and player.get_meta("has_post_roll_buff"):
+		total_mult *= 1.20
+		player.set_meta("has_post_roll_buff", false)
+
 	player.hitbox.damage = player.weapon.base_damage * total_mult
 	player.hitbox.knockback_force = player.weapon.knockback_force * total_mult
 	player.hitbox.hitstop_duration = player.weapon.hitstop_duration * (1.0 + charge_ratio * 0.5)

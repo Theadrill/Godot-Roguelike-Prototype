@@ -25,6 +25,8 @@ func exit() -> void:
 	_set_crouched(false)
 	if player.hurtbox:
 		player.hurtbox.is_invulnerable = false
+	if player.has_meta("mod_folha_de_fogo") and player.get_meta("mod_folha_de_fogo"):
+		player.set_meta("has_post_roll_buff", true)
 
 func physics_update(delta: float) -> void:
 	roll_timer -= delta

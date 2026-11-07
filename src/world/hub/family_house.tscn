@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://xo33rwwhn3ri" path="res://src/world/hub/family_house.gd" id="1_house"]
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="2_player"]
 [ext_resource type="Script" uid="uid://bu341gq4akkm8" path="res://src/core/game_camera.gd" id="3_camera"]
+[ext_resource type="PackedScene" path="res://src/ui/hub/npc_bark.tscn" id="4_bark"]
+[ext_resource type="PackedScene" path="res://src/ui/hub/mother_dialog_ui.tscn" id="5_mother_ui"]
+[ext_resource type="PackedScene" path="res://src/ui/hub/brother_forge_ui.tscn" id="6_brother_ui"]
+[ext_resource type="PackedScene" path="res://src/ui/hub/touch_of_death_ui.tscn" id="7_death_ui"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(1100, 72)
@@ -27,6 +31,9 @@ size = Vector2(40, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rack"]
 size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc"]
+size = Vector2(50, 60)
 
 [node name="FamilyHouse" type="Node2D" unique_id=1798535553]
 position = Vector2(0, -16)
@@ -151,6 +158,17 @@ polygon = PackedVector2Array(-5, -44, 5, -44, 5, -34, -5, -34)
 color = Color(0.35, 0.22, 0.16, 1)
 polygon = PackedVector2Array(-6, -46, 6, -46, 6, -38, -6, -38)
 
+[node name="MotherArea" type="Area2D" parent="Props/Mother_Placeholder" unique_id=1771846737]
+position = Vector2(0, -20)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Props/Mother_Placeholder/MotherArea" unique_id=1771846738]
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="Bark" parent="Props/Mother_Placeholder" unique_id=1771846739 instance=ExtResource("4_bark")]
+position = Vector2(0, -48)
+
 [node name="Woodpile" type="Polygon2D" parent="Props" unique_id=68860340]
 color = Color(0.38, 0.25, 0.18, 1)
 polygon = PackedVector2Array(610, 274, 638, 274, 638, 288, 610, 288)
@@ -181,6 +199,17 @@ polygon = PackedVector2Array(-5, -44, 5, -44, 5, -34, -5, -34)
 [node name="Hair" type="Polygon2D" parent="Props/Brother_Placeholder" unique_id=278006561]
 color = Color(0.5, 0.32, 0.2, 1)
 polygon = PackedVector2Array(-6, -46, 6, -46, 6, -38, -6, -38)
+
+[node name="BrotherArea" type="Area2D" parent="Props/Brother_Placeholder" unique_id=889332581]
+position = Vector2(0, -20)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Props/Brother_Placeholder/BrotherArea" unique_id=889332582]
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="Bark" parent="Props/Brother_Placeholder" unique_id=889332583 instance=ExtResource("4_bark")]
+position = Vector2(0, -48)
 
 [node name="Weapon_Rack" type="Polygon2D" parent="Props" unique_id=473835769]
 color = Color(0.4, 0.28, 0.18, 1)
@@ -224,6 +253,9 @@ polygon = PackedVector2Array(-5, -30, 5, -30, 6, -20, -6, -20)
 [node name="Eyes" type="Polygon2D" parent="Props/Death_Specter_Placeholder" unique_id=1369165399]
 color = Color(0.42, 0.74, 0.62, 1)
 polygon = PackedVector2Array(-3, -26, -1, -26, -1, -24, -3, -24, 1, -26, 3, -26, 3, -24, 1, -24)
+
+[node name="Bark" parent="Props/Death_Specter_Placeholder" unique_id=619751922 instance=ExtResource("4_bark")]
+position = Vector2(0, -36)
 
 [node name="PetSpots" type="Node2D" parent="." unique_id=389682967]
 
@@ -365,3 +397,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="MotherDialogUI" parent="." unique_id=4040401 instance=ExtResource("5_mother_ui")]
+
+[node name="BrotherForgeUI" parent="." unique_id=4040402 instance=ExtResource("6_brother_ui")]
+
+[node name="TouchOfDeathUI" parent="." unique_id=4040403 instance=ExtResource("7_death_ui")]

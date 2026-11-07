@@ -1,0 +1,388 @@
+[gd_scene format=3 uid="uid://c8n4y2j8q5p1a"]
+
+[ext_resource type="Script" path="res://src/ui/hub/mother_dialog_ui.gd" id="1_script"]
+
+[node name="MotherDialogUI" type="CanvasLayer" unique_id=1010101]
+layer = 110
+script = ExtResource("1_script")
+
+[node name="Dimmer" type="ColorRect" parent="." unique_id=1010102]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="MainPanel" type="Panel" parent="." unique_id=1010103]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -125.0
+offset_right = 250.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Bg" type="ColorRect" parent="MainPanel" unique_id=1010104]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.1, 0.09, 1)
+
+[node name="Border" type="ReferenceRect" parent="MainPanel" unique_id=1010105]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.48, 0.35, 0.25, 1)
+border_width = 2.0
+editor_only = false
+
+[node name="Header" type="ColorRect" parent="MainPanel" unique_id=1010106]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 32.0
+grow_horizontal = 2
+color = Color(0.25, 0.16, 0.12, 1)
+
+[node name="Title" type="Label" parent="MainPanel/Header" unique_id=1010107]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 12.0
+offset_top = -11.0
+offset_right = 320.0
+offset_bottom = 12.0
+grow_vertical = 2
+text = "A MÃE - ERVANÁRIA FAMILIAR"
+vertical_alignment = 1
+
+[node name="BtnClose" type="Button" parent="MainPanel/Header" unique_id=1010108]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -12.0
+offset_right = -6.0
+offset_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "X"
+
+[node name="TabContainer" type="HBoxContainer" parent="MainPanel" unique_id=1010109]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 38.0
+offset_right = -12.0
+offset_bottom = 66.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="BtnTabElixirs" type="Button" parent="MainPanel/TabContainer" unique_id=1010110]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "[ ELIXIRES DO DIA ]"
+
+[node name="BtnTabTeas" type="Button" parent="MainPanel/TabContainer" unique_id=1010111]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "[ CHÁS PERMANENTES ]"
+
+[node name="Content" type="Control" parent="MainPanel" unique_id=1010112]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 72.0
+offset_right = -12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelElixirs" type="Control" parent="MainPanel/Content" unique_id=1010113]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Cards" type="HBoxContainer" parent="MainPanel/Content/PanelElixirs" unique_id=1010117]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Card1" type="ColorRect" parent="MainPanel/Content/PanelElixirs/Cards" unique_id=1010118]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.18, 0.14, 0.12, 1)
+
+[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010119]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.55, 0.38, 0.25, 1)
+editor_only = false
+
+[node name="Title" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010120]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 220.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(1, 0.75, 0.4, 1)
+text = "Elixir de Folha-de-Fogo"
+
+[node name="Desc" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010121]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 34.0
+offset_right = 224.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 11
+text = "+20% de dano no 1º golpe após esquivar/rolar."
+autowrap_mode = 2
+
+[node name="BtnSelect" type="Button" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010122]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -36.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Selecionar"
+
+[node name="Card2" type="ColorRect" parent="MainPanel/Content/PanelElixirs/Cards" unique_id=1010123]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.18, 0.14, 0.12, 1)
+
+[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010124]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.55, 0.38, 0.25, 1)
+editor_only = false
+
+[node name="Title" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010125]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 220.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+text = "Caldo Revigorante"
+
+[node name="Desc" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010126]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 34.0
+offset_right = 224.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 11
+text = "+1 Carga inicial no Frasco de Chá (inicia a run com 2/2)."
+autowrap_mode = 2
+
+[node name="BtnSelect" type="Button" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010127]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -36.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Selecionar"
+
+[node name="PanelTeas" type="Control" parent="MainPanel/Content" unique_id=1010128]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Cards" type="HBoxContainer" parent="MainPanel/Content/PanelTeas" unique_id=1010130]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Card1" type="ColorRect" parent="MainPanel/Content/PanelTeas/Cards" unique_id=1010131]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.16, 0.14, 0.13, 1)
+
+[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010132]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.45, 0.4, 0.3, 1)
+editor_only = false
+
+[node name="Title" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010133]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.9, 0.8, 0.5, 1)
+text = "Chá de Raiz-de-Pedra"
+
+[node name="Desc" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010134]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 224.0
+offset_bottom = 62.0
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_font_sizes/font_size = 11
+text = "+15 HP Máximo fixo na linhagem por nível."
+autowrap_mode = 2
+
+[node name="LevelLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010135]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 66.0
+offset_right = 220.0
+offset_bottom = 84.0
+theme_override_colors/font_color = Color(0.5, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 11
+text = "Nível 1 (+0 HP)"
+
+[node name="ReqLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010136]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 86.0
+offset_right = 220.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.8, 0.5, 0.4, 1)
+theme_override_font_sizes/font_size = 10
+text = "Feixes Repetidos: 0/2"
+
+[node name="BtnUpgrade" type="Button" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010137]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -36.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Aprimorar"
+
+[node name="Card2" type="ColorRect" parent="MainPanel/Content/PanelTeas/Cards" unique_id=1010138]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.16, 0.14, 0.13, 1)
+
+[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010139]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.45, 0.4, 0.3, 1)
+editor_only = false
+
+[node name="Title" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010140]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.9, 0.8, 0.5, 1)
+text = "Chá de Camomila"
+
+[node name="Desc" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010141]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 224.0
+offset_bottom = 62.0
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_font_sizes/font_size = 11
+text = "+5% eficácia de cura do Frasco por nível."
+autowrap_mode = 2
+
+[node name="LevelLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010142]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 66.0
+offset_right = 220.0
+offset_bottom = 84.0
+theme_override_colors/font_color = Color(0.5, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 11
+text = "Nível 1 (+0% Cura)"
+
+[node name="ReqLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010143]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 86.0
+offset_right = 220.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0.8, 0.5, 0.4, 1)
+theme_override_font_sizes/font_size = 10
+text = "Feixes Repetidos: 0/2"
+
+[node name="BtnUpgrade" type="Button" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010144]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -36.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Aprimorar"
