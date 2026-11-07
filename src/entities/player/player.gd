@@ -370,12 +370,21 @@ func _physics_process(delta: float) -> void:
 		if rally_timer <= 0.0:
 			rally_recoverable_hp = 0.0
 
+## Verifica se o balão de fala diegético (Bark) ainda está visível ou se dissipando
+func is_bark_active() -> bool:
+	if not bark_label:
+		bark_label = get_node_or_null("BarkLabel") as Label
+	if not bark_label or not bark_label.visible:
+		return false
+	return bark_label.modulate.a > 0.01 and _bark_tween != null and _bark_tween.is_valid() and _bark_tween.is_running()
+
 ## Exibe aviso diegético (Bark) suavemente animado flutuando acima da cabeça do guerreiro
 func show_bark(text: String) -> void:
 	if not bark_label:
 		bark_label = get_node_or_null("BarkLabel") as Label
 	if not bark_label:
 		return
+	bark_label.visible = true
 	bark_label.text = text
 	bark_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	bark_label.position = Vector2(-100.0, -56.0)
@@ -388,6 +397,10 @@ func show_bark(text: String) -> void:
 	_bark_tween.set_parallel(true)
 	_bark_tween.tween_property(bark_label, "position:y", -70.0, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_bark_tween.tween_property(bark_label, "modulate:a", 0.0, 0.8).set_delay(maxf(1.0, duration - 0.8))
+	_bark_tween.chain().tween_callback(func() -> void:
+		if bark_label:
+			bark_label.visible = false
+	)
 
 func swap_weapons() -> void:
 	if not secondary_weapon:

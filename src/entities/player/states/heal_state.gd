@@ -19,10 +19,11 @@ func enter() -> void:
 		state_machine.transition_to("fall")
 		return
 
-	# Se não tiver cargas de chá: não canaliza, dispara bark imediatamente
+	# Se não tiver cargas de chá: não canaliza, dispara bark apenas se o anterior tiver se dissipado completamente
 	if player.current_flask_charges <= 0:
-		var bark_text: String = LocalizationService.get_random_variant("BARK_TEA_EMPTY", 4)
-		player.show_bark(bark_text)
+		if not player.is_bark_active():
+			var bark_text: String = LocalizationService.get_random_variant("BARK_TEA_EMPTY", 4)
+			player.show_bark(bark_text)
 		state_machine.transition_to("idle")
 		return
 	
