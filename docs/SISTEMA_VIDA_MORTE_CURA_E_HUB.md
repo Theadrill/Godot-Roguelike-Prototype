@@ -115,35 +115,51 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
    * O guerreiro desperta do colapso temporal com vida a 100%, 1 frasco de infusão recarregado e Nível 1.
    * **Baú de Carvalho do Quarto (Skins & Capas):** Baú de roupas onde o jogador pode inspecionar e equipar mantos de lã, capas de viagem com capuz e túnicas costuradas pela Mãe.
 
-2. **A Mãe (Ervanária Medieval & Caldeirão de Ferro):**
+2. **A Mãe (Ervanária Medieval, Caldeirão & Personalidade de Mãe):**
    * **Acesso & UI de Seleção Inicial (2 Botões Grandes):**
-     * Ao interagir com a Mãe (`RB` / clique), a interface abre em uma tela limpa dividida em **dois botões/cards grandes**, cada um com título em destaque e breve explicação embaixo:
-       * **[ ELIXIRES ]:** *"Infusões temporárias preparadas para a jornada atual. Beber múltiplos elixires acumula seus efeitos para esta run."*
-       * **[ CHÁS ]:** *"Preparações com ervas e raízes raras resgatadas das ruínas que aprimoram permanentemente os atributos vitais do guerreiro."*
-   * **Barks Afetivos ao Fechar a Janela:** Sempre que o jogador fecha a interface da Mãe, ela solta uma fala carinhosa e aleatória em balão diegético (sorteada sem repetição via `LocalizationService`):
+     * Ao interagir com a Mãe (`RB` / clique), a interface abre em uma tela limpa dividida em **dois botões/cards grandes**:
+       * **[ ELIXIRES ] (O Randomizer Diário da Mãe):**
+         * A Mãe ferve tachos artesanais frescos a cada novo despertar. Ela oferece **2 ou 3 opções sorteadas de elixires temporários** para você beber antes de sair (acumulam efeitos para a run).
+         * **A Personalidade Direta & Hilária da Mãe:**
+           * Protagonista: *"Mãe, eu queria aquele chá de [nome]..."*
+           * Mãe: *"Eu acordei com vontade de tomar esse daqui, ué!"*
+           * Mãe: *"Tá achando que eu sou sua empregada, menino?!"*
+           * Mãe: *"Bebe o que tá no fogo e não reclama, senão vai sair de estômago vazio!"*
+       * **[ CHÁS ] (Upgrades Permanentes por Ervas Duplicadas):**
+         * Conforme o jogador resgata **Mudas / Feixes de Ervas Raras** nas ruínas (salvos no Baú Transtemporal), a Mãe aprimora permanentemente a linhagem da família:
+           * *1º Feixe encontrado:* Desbloqueia o chá na coleção (Nível 1).
+           * *Feixes duplicados encontrados em runs futuras:* Atuam como ingrediente de upgrade (Lv 2 requer 2 feixes repetidos; Lv 3 requer 4 feixes repetidos).
+           * *Exemplos:* *Raiz-de-Pedra* (+15 HP fixo por nível), *Folha-de-Athelas* (+5% eficácia da Garrafa de Chá por nível).
+   * **Barks Afetivos e Cuidadosos ao Fechar a Janela:**
      * *"Vê se não demora para voltar, meu filho."*
-     * *"Cuidado com o frio lá fora."*
-     * *"Beba todo o chá, ouviu?"*
+     * *"Leva um casaco, tá ventando lá fora!"*
+     * *"Vê se não morre de novo, ouviu?!"*
      * *"Que os espíritos antigos te guardem."*
 
-3. **O Irmão (O Ferreiro Crafter — Forja do Aprendiz):**
+3. **O Irmão (A Forja do Aprendiz — Hub de Upgrades):**
    * **Acesso & UI de Seleção Inicial (2 Botões Grandes):**
-     * Ao interagir com o Irmão na bigorna (`RB` / clique), a interface abre em uma tela dividida em **dois botões/cards grandes**, cada um com título em destaque e breve explicação embaixo:
-       * **[ FORJA ]:** *"Refino e aprimoramento dos armamentos existentes da coleção da família."*
-       * **[ RECEITAS ]:** *"Desbloqueio de novos armamentos estilo Dead Cells — invista materiais e sucatas coletados nas runs para completar receitas de diagramas e disponibilizar novas armas e escudos no Baú da casa."*
-   * **Conexão com o Baú:** Assim que uma receita é completada ou forjada, o item é adicionado ao acervo da família e fica imediatamente disponível no Baú de Equipamentos.
+     * Ao interagir com o Irmão na bigorna (`RB` / clique), a interface abre em **dois botões/cards grandes**:
+       * **[ FORJA ] (Upgrades por Receitas Duplicadas):**
+         * O Irmão é o mestre de upgrades. Não existem moedas ou lingotes artificiais: o aprimoramento é alimentado por **Receitas Repetidas** resgatadas nas fases e salvas no Baú Transtemporal:
+           * *1ª Receita encontrada no mundo:* Desbloqueia a arma para sempre no acervo da família (Nível 1).
+           * *Receitas duplicadas em runs futuras:* Servem como material de aprimoramento (ex: 2 receitas repetidas da mesma espada -> Nível 2 com +10% dano; 4 receitas -> Nível 3 com bônus de impacto).
+           * *Zero lixo:* Nenhuma receita repetida encontrada nas fases é desperdiçada.
+       * **[ COLEÇÃO ]:**
+         * Catálogo visual de todas as armas, arcos e escudos já dominados pelo clã, mostrando o nível atual de maestria de cada um.
    * **Barks do Aprendiz ao Fechar a Janela:**
      * *"Essa lâmina vai cortar até pedra!"*
      * *"Traz mais aço se achar pelo caminho, mano."*
      * *"O fio dessa espada ficou perfeito."*
 
-4. **O Baú de Equipamentos (Montagem de Loadout):**
+4. **O Baú de Equipamentos (O Randomizer do Irmão & Montagem de Loadout):**
    * Localizado ao lado da forja do Irmão.
-   * O jogador interage com o Baú (`RB` / clique) para montar seu **Loadout de Partida**:
-     * **Slot 1 (Arma Principal):** Escolha entre as armas forjadas pelo Irmão (espadas, machados, etc.).
-     * **Slot 2 (Secundária nas costas):** Arcos, adagas, etc.
-     * **Slot 3 (Escudo):** Broquel de parry ou escudo de absorção.
-   * Ao confirmar, o guerreiro sai da forja 100% armado e pronto para a batalha.
+   * **O Randomizer de Loadout & A Lore do Irmão:**
+     * Para manter cada run estratégica e impedir que o jogador use sempre a mesma arma repetitiva, o Irmão não consegue manter todo o arsenal polido ao mesmo tempo:
+       * **Protagonista:** *"Ué, só essas armas hoje?"*
+       * **Irmão:** *"Eu não sou uma fábrica, cara, sou só um! Foi o que deu pra afiar e forjar antes de você acordar."*
+     * A cada despertar, o Irmão disponibiliza **2 ou 3 opções sorteadas de Armas Principais** (do acervo desbloqueado), **2 de Secundárias** e **2 de Escudos**.
+     * Se você aprimorou uma arma para o Nível 2 ou 3 na forja, sempre que ela for sorteada pelo irmão, ela já vem naquele nível aprimorado!
+     * Ao confirmar a seleção, o guerreiro equipa o loadout e sai pronto para a batalha.
 
 5. **Os Pets da Cabana (Preta & Bela — Posições Dinâmicas a Cada Run):**
    * **A Cachorrinha (Preta — Dachshund / Salsichinha):** Fêmea de pelo preto brilhante/carvão, pernas curtas, corpo alongado, orelhas caídas e olhar carinhoso.
