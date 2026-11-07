@@ -57,6 +57,10 @@ func _try_open_pause_menu() -> void:
 func open_pause_menu() -> void:
 	visible = true
 	get_tree().paused = true
+	var player := get_tree().get_first_node_in_group("player") as Player
+	if player:
+		player.is_input_locked = true
+		player.velocity = Vector2.ZERO
 	if prompt_bar:
 		prompt_bar.refresh_prompts()
 	await get_tree().process_frame
@@ -65,6 +69,9 @@ func open_pause_menu() -> void:
 func close_pause_menu() -> void:
 	visible = false
 	get_tree().paused = false
+	var player := get_tree().get_first_node_in_group("player") as Player
+	if player:
+		player.is_input_locked = false
 
 func _on_dev_menu_pressed() -> void:
 	var debug_panel = get_tree().root.find_child("DebugMetricsPanel", true, false)

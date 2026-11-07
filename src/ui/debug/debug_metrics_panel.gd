@@ -78,9 +78,25 @@ func _unhandled_input(event: InputEvent) -> void:
 func toggle_panel() -> void:
 	visible = not visible
 	if visible:
+		get_tree().paused = true
+		var player := get_tree().get_first_node_in_group("player") as Player
+		if player:
+			player.is_input_locked = true
+			player.velocity = Vector2.ZERO
 		_refresh_metrics()
 		await get_tree().process_frame
 		btn_add_souls.grab_focus()
+	else:
+		var pause_menu = get_tree().root.find_child("PauseMenuUI", true, false)
+		if not pause_menu or not pause_menu.visible:
+			get_tree().paused = false
+			var player := get_tree().get_first_node_in_group("player") as Player
+			if player:
+				player.is_input_locked = false
+		else:
+			var btn_dev = pause_menu.find_child("BtnDevMenu", true, false) as Button
+			if btn_dev:
+				btn_dev.grab_focus()
 
 func _refresh_metrics() -> void:
 	if not metrics_label:
