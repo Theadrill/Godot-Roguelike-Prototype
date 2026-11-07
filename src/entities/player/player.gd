@@ -100,18 +100,26 @@ var ledge_target_position: Vector2 = Vector2.ZERO
 @onready var back_socket_shield: Marker2D = $Visual/BackSocketShield
 @onready var back_socket_weapon: Marker2D = $Visual/BackSocketWeapon
 @onready var bark_label: Label = get_node_or_null("BarkLabel") as Label
+@onready var death_screen: DeathScreen = get_node_or_null("DeathScreen") as DeathScreen
 
 var _main_weapon_instance: Node2D = null
 var _secondary_weapon_instance: Node2D = null
 var _shield_instance: Node2D = null
 var is_shield_raised: bool = false
+var is_dead: bool = false
+var _spawn_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	add_to_group("player")
+	_spawn_position = global_position
 	current_health = max_health
 	current_mana = max_mana
 	current_flask_charges = max_flask_charges
 	flask_charges_changed.emit(current_flask_charges, max_flask_charges)
+	
+	if death_screen:
+		death_screen.respawn_requested.connect(_on_death_respawn)
+		death_screen.main_menu_requested.connect(_on_death_main_menu)
 	if not weapon:
 		var default_weapon := load("res://src/entities/equipment/swords/weapon_sword_base.tres") as WeaponData
 		weapon = default_weapon if default_weapon else WeaponData.new()
@@ -247,6 +255,15 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 			main_hand_socket.rotation_degrees = -35.0
 
 func _physics_process(delta: float) -> void:
+	if is_dead:
+		velocity.x = move_toward(velocity.x, 0.0, 900.0 * delta)
+		if not is_on_floor():
+			velocity.y += gravity * delta
+		else:
+			velocity.y = 0.0
+		move_and_slide()
+		return
+
 	# Decrement timers
 	if is_on_floor():
 		coyote_timer = coyote_duration
@@ -281,19 +298,6 @@ func _physics_process(delta: float) -> void:
 		rally_timer = max(0.0, rally_timer - delta)
 		if rally_timer <= 0.0:
 			rally_recoverable_hp = 0.0
-
-	# Debug auto-refill health when reaching zero
-	if current_health <= 0.0:
-		_debug_respawn_timer += delta
-		if _debug_respawn_timer >= 1.5:
-			_debug_respawn_timer = 0.0
-			current_health = max_health
-			current_flask_charges = max_flask_charges
-			rally_recoverable_hp = 0.0
-			rally_timer = 0.0
-			flask_charges_changed.emit(current_flask_charges, max_flask_charges)
-	else:
-		_debug_respawn_timer = 0.0
 
 ## Exibe aviso diegético (Bark) suavemente animado flutuando acima da cabeça do guerreiro
 func show_bark(text: String) -> void:
@@ -410,6 +414,9 @@ func is_ground_slam_requested() -> bool:
 	return down_held and Input.is_action_just_pressed("jump")
 
 func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void:
+	if is_dead:
+		return
+
 	var incoming_hitbox: Hitbox = hurtbox.last_hitbox
 	if state_machine and state_machine.current_state and state_machine.current_state.has_method("handle_incoming_hit"):
 		var handled: bool = state_machine.current_state.handle_incoming_hit(damage, knockback, hitstop, incoming_hitbox)
@@ -419,13 +426,13 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	current_health = max(0.0, current_health - damage)
 	velocity = knockback
 
+	if current_health <= 0.0:
+		die()
+		return
+
 	# Tactical Life Rally: Stores lost health as recoverable for 2.0s
-	if current_health > 0.0:
-		rally_recoverable_hp = minf(rally_recoverable_hp + damage, max_health - current_health)
-		rally_timer = RALLY_DURATION
-	else:
-		rally_recoverable_hp = 0.0
-		rally_timer = 0.0
+	rally_recoverable_hp = minf(rally_recoverable_hp + damage, max_health - current_health)
+	rally_timer = RALLY_DURATION
 
 	# Visual juice: Hit flash pure white
 	if flash_material:
@@ -467,6 +474,35 @@ func apply_parry_rally() -> float:
 		hud.trigger_rally_restored_effect()
 		
 	return recovered
+
+## Dispara a sequência canônica da Morte do Guerreiro (Vórtice Espiral & Decisão Liminar)
+func die() -> void:
+	if is_dead:
+		return
+	is_dead = true
+	rally_recoverable_hp = 0.0
+	rally_timer = 0.0
+	velocity = Vector2.ZERO
+	
+	if death_screen:
+		death_screen.play_death_sequence()
+	else:
+		_on_death_respawn()
+
+func _on_death_respawn() -> void:
+	current_health = max_health
+	current_flask_charges = max_flask_charges
+	rally_recoverable_hp = 0.0
+	rally_timer = 0.0
+	flask_charges_changed.emit(current_flask_charges, max_flask_charges)
+	global_position = _spawn_position
+	velocity = Vector2.ZERO
+	is_dead = false
+	state_machine.transition_to("idle")
+
+func _on_death_main_menu() -> void:
+	Engine.time_scale = 1.0
+	get_tree().reload_current_scene()
 
 func set_crouched(crouched: bool) -> void:
 	if not collision_shape:

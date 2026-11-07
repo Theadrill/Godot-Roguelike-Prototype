@@ -1,0 +1,111 @@
+[gd_scene load_steps=6 format=3 uid="uid://death_screen_scene_01"]
+
+[ext_resource type="Script" path="res://src/ui/death_screen.gd" id="1_script"]
+[ext_resource type="Shader" path="res://src/shaders/death_spiral.gdshader" id="2_shader"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/xbox/btn_a.png" id="3_btn_a"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/xbox/btn_b.png" id="4_btn_b"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_spiral"]
+shader = ExtResource("2_shader")
+shader_parameter/progress = 0.0
+shader_parameter/spiral_arms = 4.0
+shader_parameter/spiral_speed = 3.5
+shader_parameter/color_mist = Color(0.16, 0.28, 0.24, 1)
+shader_parameter/color_edge = Color(0.35, 0.65, 0.54, 1)
+shader_parameter/color_void = Color(0.03, 0.05, 0.04, 1)
+
+[node name="DeathScreen" type="CanvasLayer"]
+process_mode = 3
+layer = 100
+visible = false
+script = ExtResource("1_script")
+
+[node name="SpiralOverlay" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_spiral")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.05, 0.04, 1)
+
+[node name="ContentContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="ContentContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.94, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.08, 0.06, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+text = "O Sangue Cessa..."
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="ContentContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.72, 0.65, 0.85)
+theme_override_colors/font_outline_color = Color(0.04, 0.08, 0.06, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 9
+text = "A anomalia temporal se manifesta. O dia será refeito."
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="ContentContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="ContentContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="RespawnOption" type="HBoxContainer" parent="ContentContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="IconA" type="TextureRect" parent="ContentContainer/VBoxContainer/ButtonsContainer/RespawnOption"]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_btn_a")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="ContentContainer/VBoxContainer/ButtonsContainer/RespawnOption"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.92, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.08, 0.06, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 9
+text = "Voltar para o Espaço Liminar"
+
+[node name="MenuOption" type="HBoxContainer" parent="ContentContainer/VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="IconB" type="TextureRect" parent="ContentContainer/VBoxContainer/ButtonsContainer/MenuOption"]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_btn_b")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="ContentContainer/VBoxContainer/ButtonsContainer/MenuOption"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.72, 0.7, 0.8)
+theme_override_colors/font_outline_color = Color(0.04, 0.08, 0.06, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 9
+text = "Menu Principal"

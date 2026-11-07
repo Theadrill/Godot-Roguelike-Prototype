@@ -212,6 +212,8 @@ position = Vector2(-327, 288)
 [node name="Soldier" parent="." unique_id=53509489 instance=ExtResource("3_soldier")]
 position = Vector2(35, 288)
 max_health = 165.0
+attack_cooldown = 1.0
+tier_1_attacks = 3
 tier_2_behavior = 1
 
 [node name="Archer" parent="." unique_id=1638382328 instance=ExtResource("4_archer")]

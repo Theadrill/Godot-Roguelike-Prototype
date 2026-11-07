@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=26 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -22,6 +22,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/stagger_state.gd" id="20_stagger"]
 [ext_resource type="Script" path="res://src/entities/player/states/ranged_attack_state.gd" id="21_ranged_attack"]
 [ext_resource type="Script" path="res://src/entities/player/states/heal_state.gd" id="22_heal"]
+[ext_resource type="PackedScene" path="res://src/ui/death_screen.tscn" id="23_death_screen"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -44,6 +45,8 @@ floor_snap_length = 8.0
 script = ExtResource("1_player")
 
 [node name="HUD" parent="." instance=ExtResource("19_hud")]
+
+[node name="DeathScreen" parent="." instance=ExtResource("23_death_screen")]
 
 [node name="BarkLabel" type="Label" parent="."]
 z_index = 25

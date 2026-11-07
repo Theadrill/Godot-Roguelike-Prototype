@@ -73,8 +73,8 @@ func _process(delta: float) -> void:
 
 	# Shield & Revive status indicator
 	if player.current_health <= 0.0:
-		status_label.text = "● REVIVENDO (DEBUG)..."
-		status_label.modulate = Color(1.0, 0.35, 0.35, 1.0)
+		status_label.text = "● O SANGUE CESSA..."
+		status_label.modulate = Color(0.55, 0.72, 0.65, 0.9)
 	elif player.parry_cooldown_timer > 0.0:
 		status_label.text = "● ESCUDO BLOQUEADO: %.1fs" % player.parry_cooldown_timer
 		status_label.modulate = Color(1.0, 0.45, 0.4, 0.95)
