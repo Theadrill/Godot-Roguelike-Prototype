@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://src/world/hub/weapon_pedestal.tscn" id="9_pedestal"]
 [ext_resource type="Resource" path="res://src/entities/equipment/swords/weapon_sword_base.tres" id="10_sword"]
 [ext_resource type="Resource" path="res://src/entities/equipment/shields/shield_buckler_base.tres" id="11_buckler"]
+[ext_resource type="Resource" path="res://src/entities/equipment/bows/weapon_bow_base.tres" id="12_bow"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_portal"]
 shader = ExtResource("8_death_shader")
@@ -23,10 +24,10 @@ shader_parameter/color_edge = Color(0.42, 0.74, 0.62, 1)
 shader_parameter/color_void = Color(0.03, 0.05, 0.04, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
-size = Vector2(1750, 72)
+size = Vector2(1140, 72)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ceiling"]
-size = Vector2(1450, 48)
+size = Vector2(920, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_left"]
 size = Vector2(30, 360)
@@ -57,11 +58,11 @@ script = ExtResource("1_house")
 collision_mask = 0
 
 [node name="Ground_Col" type="CollisionShape2D" parent="Environment" unique_id=555697539]
-position = Vector2(875, 324)
+position = Vector2(570, 324)
 shape = SubResource("RectangleShape2D_ground")
 
 [node name="Ceiling_Col" type="CollisionShape2D" parent="Environment" unique_id=774861380]
-position = Vector2(725, 60)
+position = Vector2(460, 60)
 shape = SubResource("RectangleShape2D_ceiling")
 
 [node name="WallLeft_Col" type="CollisionShape2D" parent="Environment" unique_id=1157170510]
@@ -69,39 +70,39 @@ position = Vector2(-15, 180)
 shape = SubResource("RectangleShape2D_wall_left")
 
 [node name="WallRight_Col" type="CollisionShape2D" parent="Environment" unique_id=1281402109]
-position = Vector2(1765, 180)
+position = Vector2(1155, 180)
 shape = SubResource("RectangleShape2D_wall_right")
 
 [node name="WallHouseEnd_Col" type="CollisionShape2D" parent="Environment" unique_id=1225849930]
-position = Vector2(1420, 140)
+position = Vector2(920, 140)
 shape = SubResource("RectangleShape2D_wall_house_end")
 
 [node name="Background_House" type="Polygon2D" parent="." unique_id=1721112863]
 z_index = -20
 color = Color(0.28, 0.2, 0.15, 1)
-polygon = PackedVector2Array(0, 85, 1420, 85, 1420, 288, 0, 288)
+polygon = PackedVector2Array(0, 85, 920, 85, 920, 288, 0, 288)
 
 [node name="Background_Yard" type="Polygon2D" parent="." unique_id=42726251]
 z_index = -20
 color = Color(0.07, 0.1, 0.11, 1)
-polygon = PackedVector2Array(1420, 80, 1750, 80, 1750, 288, 1420, 288)
+polygon = PackedVector2Array(920, 80, 1140, 80, 1140, 288, 920, 288)
 
 [node name="Beams_Visual" type="Polygon2D" parent="." unique_id=2117529579]
 z_index = -15
 position = Vector2(0, 7)
 scale = Vector2(0.9878008, 1.2685574)
 color = Color(0.16, 0.11, 0.08, 1)
-polygon = PackedVector2Array(0, 60, 1440, 60, 1440, 95, 1420, 180, 1410, 180, 1410, 95, 850, 95, 850, 180, 840, 180, 840, 95, 560, 95, 560, 180, 550, 180, 550, 95, 270, 95, 270, 180, 260, 180, 260, 95, 0, 95)
+polygon = PackedVector2Array(0, 60, 930, 60, 930, 95, 920, 180, 910, 180, 910, 95, 680, 95, 680, 180, 670, 180, 670, 95, 410, 95, 410, 180, 400, 180, 400, 95, 0, 95)
 
 [node name="Floor_Visual_House" type="Polygon2D" parent="." unique_id=1509788789]
 z_index = -10
 color = Color(0.38, 0.26, 0.18, 1)
-polygon = PackedVector2Array(0, 288, 1420, 288, 1420, 360, 0, 360)
+polygon = PackedVector2Array(0, 288, 920, 288, 920, 360, 0, 360)
 
 [node name="Floor_Visual_Yard" type="Polygon2D" parent="." unique_id=1731514101]
 z_index = -10
 color = Color(0.18, 0.2, 0.18, 1)
-polygon = PackedVector2Array(1420, 288, 1750, 288, 1750, 360, 1420, 360)
+polygon = PackedVector2Array(920, 288, 1140, 288, 1140, 360, 920, 360)
 
 [node name="Props" type="Node2D" parent="." unique_id=1091402892]
 
@@ -118,35 +119,51 @@ color = Color(0.92, 0.88, 0.82, 1)
 polygon = PackedVector2Array(32, 266, 46, 266, 46, 276, 32, 276)
 
 [node name="Hearth_Chimney" type="Polygon2D" parent="Props" unique_id=1114540675]
-color = Color(0.24, 0.22, 0.24, 1)
-polygon = PackedVector2Array(142, 85, 173, 85, 175, 240, 140, 240)
+color = Color(0.25, 0.22, 0.2, 1)
+polygon = PackedVector2Array(160, 85, 210, 85, 215, 288, 155, 288)
 
-[node name="Hearth_Stone" type="Polygon2D" parent="Props" unique_id=1153748271]
-color = Color(0.3, 0.28, 0.3, 1)
-polygon = PackedVector2Array(138, 230, 177, 230, 180, 288, 135, 288)
+[node name="Hearth_Opening" type="Polygon2D" parent="Props" unique_id=1958611868]
+color = Color(0.1, 0.08, 0.07, 1)
+polygon = PackedVector2Array(165, 240, 205, 240, 205, 288, 165, 288)
 
-[node name="Hearth_Fire" type="Polygon2D" parent="Props" unique_id=147652422]
-color = Color(0.95, 0.55, 0.15, 1)
-polygon = PackedVector2Array(150, 274, 165, 274, 168, 286, 147, 286)
+[node name="Hearth_Fire" type="Polygon2D" parent="Props" unique_id=1622340882]
+color = Color(0.95, 0.5, 0.1, 1)
+polygon = PackedVector2Array(172, 270, 185, 250, 198, 270, 185, 285)
 
-[node name="Chest_Skins" type="Polygon2D" parent="Props" unique_id=526108299]
-color = Color(0.42, 0.25, 0.15, 1)
-polygon = PackedVector2Array(210, 274, 236, 274, 236, 288, 210, 288)
+[node name="Chest_Wood" type="Polygon2D" parent="Props" unique_id=1934241031]
+color = Color(0.42, 0.28, 0.18, 1)
+polygon = PackedVector2Array(220, 268, 245, 268, 245, 288, 220, 288)
 
-[node name="Chest_IronBands" type="Polygon2D" parent="Props" unique_id=1028341861]
-color = Color(0.2, 0.22, 0.25, 1)
-polygon = PackedVector2Array(214, 274, 216, 274, 216, 288, 214, 288, 230, 274, 232, 274, 232, 288, 230, 288)
+[node name="Chest_Lock" type="Polygon2D" parent="Props" unique_id=1528652309]
+color = Color(0.8, 0.7, 0.2, 1)
+polygon = PackedVector2Array(230, 274, 235, 274, 235, 278, 230, 278)
 
-[node name="Herbs_Table" type="Polygon2D" parent="Props" unique_id=1334859480]
-color = Color(0.45, 0.32, 0.2, 1)
-polygon = PackedVector2Array(320, 268, 365, 268, 365, 288, 320, 288)
+[node name="Table_Surface" type="Polygon2D" parent="Props" unique_id=1543328475]
+color = Color(0.4, 0.26, 0.16, 1)
+polygon = PackedVector2Array(310, 268, 370, 268, 370, 274, 310, 274)
 
-[node name="Herbs_Jars" type="Polygon2D" parent="Props" unique_id=267980754]
-color = Color(0.3, 0.65, 0.45, 1)
-polygon = PackedVector2Array(324, 260, 332, 260, 332, 268, 324, 268)
+[node name="Table_Leg_L" type="Polygon2D" parent="Props" unique_id=1130985558]
+color = Color(0.3, 0.2, 0.12, 1)
+polygon = PackedVector2Array(315, 274, 320, 274, 320, 288, 315, 288)
 
-[node name="Herbs_Jars2" type="Polygon2D" parent="Props" unique_id=1733555587]
-color = Color(0.85, 0.6, 0.25, 1)
+[node name="Table_Leg_R" type="Polygon2D" parent="Props" unique_id=1832049008]
+color = Color(0.3, 0.2, 0.12, 1)
+polygon = PackedVector2Array(360, 274, 365, 274, 365, 288, 360, 288)
+
+[node name="Chair_L" type="Polygon2D" parent="Props" unique_id=2056263531]
+color = Color(0.35, 0.22, 0.14, 1)
+polygon = PackedVector2Array(295, 260, 305, 260, 305, 288, 295, 288)
+
+[node name="Chair_R" type="Polygon2D" parent="Props" unique_id=1020081297]
+color = Color(0.35, 0.22, 0.14, 1)
+polygon = PackedVector2Array(375, 260, 385, 260, 385, 288, 375, 288)
+
+[node name="Table_Teacup" type="Polygon2D" parent="Props" unique_id=1605335191]
+color = Color(0.85, 0.85, 0.8, 1)
+polygon = PackedVector2Array(325, 262, 333, 262, 333, 268, 325, 268)
+
+[node name="Table_Teapot" type="Polygon2D" parent="Props" unique_id=168051280]
+color = Color(0.55, 0.5, 0.45, 1)
 polygon = PackedVector2Array(348, 262, 356, 262, 356, 268, 348, 268)
 
 [node name="Mother_Cauldron" type="Polygon2D" parent="Props" unique_id=1231470747]
@@ -185,18 +202,18 @@ position = Vector2(0, -48)
 
 [node name="Woodpile" type="Polygon2D" parent="Props" unique_id=68860340]
 color = Color(0.38, 0.25, 0.18, 1)
-polygon = PackedVector2Array(610, 274, 638, 274, 638, 288, 610, 288)
+polygon = PackedVector2Array(475, 274, 503, 274, 503, 288, 475, 288)
 
 [node name="Anvil_Base" type="Polygon2D" parent="Props" unique_id=1470754799]
 color = Color(0.35, 0.25, 0.18, 1)
-polygon = PackedVector2Array(692, 272, 712, 272, 715, 288, 689, 288)
+polygon = PackedVector2Array(514, 272, 534, 272, 537, 288, 511, 288)
 
 [node name="Anvil_Iron" type="Polygon2D" parent="Props" unique_id=1741357629]
 color = Color(0.25, 0.28, 0.32, 1)
-polygon = PackedVector2Array(686, 262, 720, 262, 712, 272, 690, 272)
+polygon = PackedVector2Array(508, 262, 542, 262, 534, 272, 512, 272)
 
 [node name="Brother_Placeholder" type="Node2D" parent="Props" unique_id=889332580]
-position = Vector2(745, 288)
+position = Vector2(560, 288)
 
 [node name="Body" type="Polygon2D" parent="Props/Brother_Placeholder" unique_id=1423323571]
 color = Color(0.32, 0.42, 0.52, 1)
@@ -228,73 +245,74 @@ position = Vector2(0, -48)
 [node name="Pedestals" type="Node2D" parent="Props"]
 
 [node name="Pedestal_Weapon_1" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(830, 288)
+position = Vector2(605, 288)
 equipment_data = ExtResource("10_sword")
 
 [node name="Pedestal_Weapon_2" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(885, 288)
+position = Vector2(635, 288)
 pedestal_index = 1
+equipment_data = ExtResource("12_bow")
 
 [node name="Pedestal_Weapon_3" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(940, 288)
+position = Vector2(665, 288)
 pedestal_index = 2
 
 [node name="Pedestal_Weapon_4" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(995, 288)
+position = Vector2(695, 288)
 pedestal_index = 3
 
 [node name="Pedestal_Weapon_5" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(1050, 288)
+position = Vector2(725, 288)
 pedestal_index = 4
 
 [node name="Pedestal_Weapon_6" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(1105, 288)
+position = Vector2(755, 288)
 pedestal_index = 5
 
 [node name="Gallery_Divider" type="Polygon2D" parent="Props/Pedestals"]
 color = Color(0.24, 0.22, 0.2, 1)
-polygon = PackedVector2Array(1146, 220, 1154, 220, 1156, 288, 1144, 288)
+polygon = PackedVector2Array(776, 220, 782, 220, 784, 288, 774, 288)
 
 [node name="Pedestal_Shield_1" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(1195, 288)
+position = Vector2(805, 288)
 is_shield_pedestal = true
 equipment_data = ExtResource("11_buckler")
 
 [node name="Pedestal_Shield_2" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(1255, 288)
+position = Vector2(835, 288)
 is_shield_pedestal = true
 pedestal_index = 1
 
 [node name="Pedestal_Shield_3" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
-position = Vector2(1315, 288)
+position = Vector2(865, 288)
 is_shield_pedestal = true
 pedestal_index = 2
 
 [node name="Death_Arch_LeftPillar" type="Polygon2D" parent="Props" unique_id=1273472510]
 color = Color(0.24, 0.26, 0.25, 1)
-polygon = PackedVector2Array(1530, 180, 1550, 180, 1550, 288, 1530, 288)
+polygon = PackedVector2Array(990, 180, 1010, 180, 1010, 288, 990, 288)
 
 [node name="Death_Arch_RightPillar" type="Polygon2D" parent="Props" unique_id=557369057]
 color = Color(0.24, 0.26, 0.25, 1)
-polygon = PackedVector2Array(1610, 180, 1630, 180, 1630, 288, 1610, 288)
+polygon = PackedVector2Array(1070, 180, 1090, 180, 1090, 288, 1070, 288)
 
 [node name="Death_Arch_Top" type="Polygon2D" parent="Props" unique_id=138177590]
 color = Color(0.2, 0.22, 0.21, 1)
-polygon = PackedVector2Array(1520, 160, 1640, 160, 1630, 180, 1530, 180)
+polygon = PackedVector2Array(980, 160, 1100, 160, 1090, 180, 990, 180)
 
 [node name="Death_Door_Backing" type="Polygon2D" parent="Props" unique_id=504445813]
 color = Color(0.04, 0.06, 0.05, 1)
-polygon = PackedVector2Array(1545, 180, 1615, 180, 1620, 288, 1540, 288)
+polygon = PackedVector2Array(1005, 180, 1075, 180, 1080, 288, 1000, 288)
 
 [node name="Death_Vortex_Portal" type="ColorRect" parent="Props" unique_id=504445814]
 material = SubResource("ShaderMaterial_portal")
-offset_left = 1540.0
+offset_left = 1000.0
 offset_top = 175.0
-offset_right = 1620.0
+offset_right = 1080.0
 offset_bottom = 288.0
 
 [node name="Death_Specter_Placeholder" type="Node2D" parent="Props" unique_id=619751921]
-position = Vector2(1580, 235)
+position = Vector2(1040, 235)
 
 [node name="Shroud" type="Polygon2D" parent="Props/Death_Specter_Placeholder" unique_id=1632197100]
 color = Color(0.85, 0.92, 0.88, 0.7)
@@ -309,7 +327,7 @@ color = Color(0.42, 0.74, 0.62, 1)
 polygon = PackedVector2Array(-3, -26, -1, -26, -1, -24, -3, -24, 1, -26, 3, -26, 3, -24, 1, -24)
 
 [node name="Bark" parent="Props/Death_Specter_Placeholder" unique_id=619751922 instance=ExtResource("4_bark")]
-position = Vector2(-90, -42)
+position = Vector2(-75, -42)
 
 [node name="PetSpots" type="Node2D" parent="." unique_id=389682967]
 
@@ -320,10 +338,10 @@ position = Vector2(185, 288)
 position = Vector2(340, 288)
 
 [node name="SpotWoodpile" type="Marker2D" parent="PetSpots" unique_id=1854831618]
-position = Vector2(595, 288)
+position = Vector2(490, 288)
 
 [node name="SpotRack" type="Marker2D" parent="PetSpots" unique_id=915577099]
-position = Vector2(835, 288)
+position = Vector2(580, 288)
 
 [node name="Pets" type="Node2D" parent="." unique_id=72458175]
 
@@ -386,7 +404,7 @@ collision_mask = 2
 shape = SubResource("RectangleShape2D_chest")
 
 [node name="ExitPortalArea" type="Area2D" parent="." unique_id=438728389]
-position = Vector2(1580, 248)
+position = Vector2(1040, 248)
 collision_layer = 1
 collision_mask = 2
 
@@ -400,7 +418,7 @@ position = Vector2(80, 288)
 position = Vector2(0, 8)
 limit_left = 0
 limit_top = 0
-limit_right = 1750
+limit_right = 1140
 limit_bottom = 360
 position_smoothing_enabled = true
 position_smoothing_speed = 7.0

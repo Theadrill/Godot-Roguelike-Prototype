@@ -24,7 +24,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Roll from crouch
-	if Input.is_action_just_pressed("roll"):
+	if Input.is_action_just_pressed("roll") and player._ignore_roll_timer <= 0.0:
 		state_machine.transition_to("roll")
 		return
 

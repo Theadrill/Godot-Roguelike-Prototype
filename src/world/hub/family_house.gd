@@ -88,13 +88,13 @@ func _ready() -> void:
 		if hud:
 			hud.visible = false
 		ProgressionManager.are_weapons_equipped = false
-		player.hide_equipment_visuals()
+		player.clear_all_equipment()
 
 		var cam: Camera2D = player.get_node_or_null("Camera2D") as Camera2D
 		if cam:
 			cam.limit_left = 0
 			cam.limit_top = 0
-			cam.limit_right = 1750
+			cam.limit_right = 1140
 			cam.limit_bottom = 360
 		ProgressionManager.apply_skin_to_player(player)
 
@@ -106,10 +106,10 @@ func _process(delta: float) -> void:
 	# Condensação suave do Espectro da Morte conforme o jogador se aproxima do portal
 	if death_specter and player and not _is_transitioning:
 		var px: float = player.global_position.x
-		if px < 1420.0:
+		if px < 920.0:
 			death_specter.modulate.a = move_toward(death_specter.modulate.a, 0.0, delta * 2.0)
 		else:
-			var target_alpha: float = clampf((px - 1420.0) / 120.0, 0.0, 1.0)
+			var target_alpha: float = clampf((px - 920.0) / 90.0, 0.0, 1.0)
 			death_specter.modulate.a = move_toward(death_specter.modulate.a, target_alpha, delta * 3.0)
 
 	# Atualiza rotação do shader do vórtice caso ativo
@@ -187,6 +187,7 @@ func _open_mother_menu() -> void:
 		mother_ui.open_ui()
 
 func _on_mother_ui_closed() -> void:
+	await get_tree().create_timer(0.08).timeout
 	if player:
 		player.is_input_locked = false
 	# O diálogo diegético acontece exclusivamente ao fechar a janela
@@ -214,6 +215,7 @@ func _open_brother_menu() -> void:
 		brother_ui.open_ui()
 
 func _on_brother_ui_closed() -> void:
+	await get_tree().create_timer(0.08).timeout
 	if player:
 		player.is_input_locked = false
 	# O diálogo diegético acontece exclusivamente ao fechar a janela
@@ -272,6 +274,7 @@ func _open_death_menu() -> void:
 		touch_of_death_ui.open_ui()
 
 func _on_death_ui_closed() -> void:
+	await get_tree().create_timer(0.08).timeout
 	if player:
 		player.is_input_locked = false
 
@@ -281,7 +284,6 @@ func _on_blessing_chosen_and_transition(_blessing_id: String) -> void:
 	_is_transitioning = true
 	if player:
 		player.is_input_locked = true
-	_is_transitioning = true
 
 	# 1. Ativa o vórtice na porta escura e anima o preenchimento da espiral esmeralda
 	if death_vortex_portal:
@@ -317,11 +319,11 @@ func _on_blessing_chosen_and_transition(_blessing_id: String) -> void:
 	await get_tree().create_timer(4.8).timeout
 
 	if player:
-		# Personagem caminha automaticamente em direção ao centro do vórtice (x = 1580)
+		# Personagem caminha automaticamente em direção ao centro do vórtice (x = 1040)
 		player.facing_direction = 1
 		player.velocity.x = 80.0
 		var walk_tween := create_tween()
-		walk_tween.tween_property(player, "global_position:x", 1580.0, 1.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+		walk_tween.tween_property(player, "global_position:x", 1040.0, 1.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 		walk_tween.parallel().tween_property(player, "modulate:a", 0.0, 1.4)
 
 	# 5. Dissolução do espectro de volta na névoa

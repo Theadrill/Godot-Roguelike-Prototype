@@ -86,14 +86,20 @@ var parry_cooldown_timer: float = 0.0
 var ledge_target_position: Vector2 = Vector2.ZERO
 
 ## Trava total de inputs e controles (usado durante menus, diálogos diegéticos e transições)
+var _ignore_roll_timer: float = 0.0
 var is_input_locked: bool = false:
 	set(value):
+		var was_locked: bool = is_input_locked
 		is_input_locked = value
 		if is_input_locked:
 			jump_buffer_timer = 0.0
 			velocity.x = 0.0
 			if state_machine:
 				state_machine.transition_to("idle")
+		elif was_locked:
+			# Evita que o botão B usado para fechar janelas acione roll/dodge indesejado
+			_ignore_roll_timer = 0.25
+			jump_buffer_timer = 0.0
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -202,6 +208,22 @@ func hide_equipment_visuals() -> void:
 		_secondary_weapon_instance.visible = false
 	if _shield_instance and is_instance_valid(_shield_instance):
 		_shield_instance.visible = false
+
+## Limpa todo o equipamento (usado no despertar na casa familiar)
+func clear_all_equipment() -> void:
+	weapon = null
+	secondary_weapon = null
+	shield = null
+	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+		_main_weapon_instance.queue_free()
+		_main_weapon_instance = null
+	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
+		_secondary_weapon_instance.queue_free()
+		_secondary_weapon_instance = null
+	if _shield_instance and is_instance_valid(_shield_instance):
+		_shield_instance.queue_free()
+		_shield_instance = null
+	are_weapons_hidden = true
 
 ## Restaura e exibe os visuais de armamento ao se preparar no baú
 func show_equipment_visuals() -> void:
@@ -315,6 +337,9 @@ func _physics_process(delta: float) -> void:
 		is_wall_recovery_active = false
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
+
+	if _ignore_roll_timer > 0.0:
+		_ignore_roll_timer = max(0.0, _ignore_roll_timer - delta)
 
 	if is_input_locked:
 		jump_buffer_timer = 0.0
@@ -448,7 +473,7 @@ func cycle_enemy_tier_live() -> void:
 		hud.show_tier_toast(tier_num, tier_name, player_level)
 
 func can_attack() -> bool:
-	return attack_cooldown_timer <= 0.0
+	return weapon != null and attack_cooldown_timer <= 0.0
 
 func is_ranged_weapon_equipped() -> bool:
 	if not weapon:
@@ -456,7 +481,7 @@ func is_ranged_weapon_equipped() -> bool:
 	return weapon.weapon_category != WeaponData.WeaponCategory.MELEE
 
 func can_defend() -> bool:
-	return parry_cooldown_timer <= 0.0
+	return shield != null and parry_cooldown_timer <= 0.0
 
 func is_ground_slam_requested() -> bool:
 	var down_held: bool = Input.is_action_pressed("down") or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.get_joy_axis(0, JOY_AXIS_LEFT_Y) > 0.4

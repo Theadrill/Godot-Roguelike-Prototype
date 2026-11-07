@@ -3,23 +3,25 @@
 [ext_resource type="Script" path="res://src/world/hub/weapon_pedestal.gd" id="1_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
-size = Vector2(36, 48)
+size = Vector2(28, 48)
 
 [node name="WeaponPedestal" type="Node2D"]
 script = ExtResource("1_script")
 
 [node name="Base" type="Polygon2D" parent="."]
 color = Color(0.35, 0.38, 0.42, 1)
-polygon = PackedVector2Array(-12, -14, 12, -14, 15, 0, -15, 0)
+polygon = PackedVector2Array(-11, -12, 11, -12, 13, 0, -13, 0)
 
 [node name="Pillar" type="Polygon2D" parent="Base"]
 color = Color(0.28, 0.3, 0.34, 1)
-polygon = PackedVector2Array(-9, -14, 9, -14, 10, -4, -10, -4)
+polygon = PackedVector2Array(-8, -12, 8, -12, 9, -4, -9, -4)
 
-[node name="ItemVisual" type="Polygon2D" parent="."]
-position = Vector2(0, -24)
+[node name="ItemHolder" type="Node2D" parent="."]
+position = Vector2(0, -22)
+
+[node name="ItemVisualFallback" type="Polygon2D" parent="ItemHolder"]
 color = Color(0.85, 0.9, 0.95, 1)
-polygon = PackedVector2Array(-3, -12, 3, -12, 4, 8, 0, 12, -4, 8)
+polygon = PackedVector2Array(-2.5, -12, 2.5, -12, 3, 6, 0, 10, -3, 6)
 
 [node name="LockVisual" type="Polygon2D" parent="."]
 visible = false
@@ -34,9 +36,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -80.0
+offset_left = -70.0
 offset_top = -68.0
-offset_right = 80.0
+offset_right = 70.0
 offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 0
