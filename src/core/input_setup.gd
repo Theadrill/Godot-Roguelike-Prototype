@@ -135,12 +135,9 @@ func _ready() -> void:
 	], 0.4)
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Quick reload inside game window: R, F5, or Select/Back on Gamepad
+	# Quick reload inside game window: R ou F5 no Teclado
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		if event.physical_keycode == KEY_R or event.physical_keycode == KEY_F5:
-			get_tree().reload_current_scene()
-	elif event is InputEventJoypadButton and event.is_pressed():
-		if event.button_index == JOY_BUTTON_BACK: # Botão Select / View / Share
 			get_tree().reload_current_scene()
 
 func _register_action(action_name: StringName, default_events: Array[InputEvent], deadzone: float = 0.5) -> void:
