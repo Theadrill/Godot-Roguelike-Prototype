@@ -498,13 +498,18 @@ func _on_death_respawn() -> void:
 	rally_recoverable_hp = 0.0
 	rally_timer = 0.0
 	flask_charges_changed.emit(current_flask_charges, max_flask_charges)
-	global_position = _spawn_position
 	velocity = Vector2.ZERO
 	is_dead = false
 	if hurtbox:
 		hurtbox.set_deferred("monitoring", true)
 		hurtbox.set_deferred("monitorable", true)
 	state_machine.transition_to("idle")
+
+	var current_scene := get_tree().current_scene
+	if current_scene and current_scene.scene_file_path != "res://src/world/hub/family_house.tscn":
+		get_tree().change_scene_to_file("res://src/world/hub/family_house.tscn")
+	else:
+		global_position = _spawn_position
 
 func _on_death_main_menu() -> void:
 	Engine.time_scale = 1.0
