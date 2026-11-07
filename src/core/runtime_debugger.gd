@@ -22,6 +22,12 @@ func _ready() -> void:
 		var panel = debug_panel_scene.instantiate()
 		add_child(panel)
 
+	# Instancia o Menu de Pausa oficial globalmente
+	var pause_menu_scene := load("res://src/ui/pause/pause_menu_ui.tscn") as PackedScene
+	if pause_menu_scene:
+		var pause_menu = pause_menu_scene.instantiate()
+		add_child(pause_menu)
+
 func _open_log_file() -> void:
 	log_file = FileAccess.open(log_path, FileAccess.WRITE)
 	if not log_file:

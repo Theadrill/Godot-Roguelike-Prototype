@@ -86,3 +86,8 @@ BARK_FORGE_CUTE_B2,"Essa eu caprichei, fala sério!","I really outdid myself on 
 BARK_FORGE_CUTE_H3_A,"Como você conseguiu fazer isso?","How did you manage to do that?"
 BARK_FORGE_CUTE_B3,"Hã? Ficou ruim?","Huh? Did it turn out bad?"
 BARK_FORGE_CUTE_H3_B,"Não cara, tá sensacional!","No way man, it's sensational!"
+UI_PAUSE_TITLE,Jogo Pausado,Game Paused
+UI_PAUSE_RESUME,Continuar,Resume
+UI_PAUSE_DEV_MENU,"Painel DEV & Métricas","DEV & Metrics Panel"
+UI_PAUSE_SAVE_QUIT,"Salvar e Sair","Save & Quit"
+UI_PAUSE_RESTART,"Recarregar do Zero","Restart from Scratch"

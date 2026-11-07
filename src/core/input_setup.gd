@@ -75,10 +75,14 @@ func _ready() -> void:
 		_create_key_event(KEY_3),
 		_create_joy_button_event(JOY_BUTTON_DPAD_LEFT)
 	])
-	# Tecla F3 (Teclado) / Botão Select-Back (Gamepad): PAINEL DE DEBUG DE MÉTRICAS & TELEMETRIA
+	# Tecla F3 (Teclado): ATALHO DEV DIRETO PARA PAINEL DE MÉTRICAS
 	_register_action("toggle_debug_metrics", [
-		_create_key_event(KEY_F3),
-		_create_joy_button_event(JOY_BUTTON_BACK)
+		_create_key_event(KEY_F3)
+	])
+	# Tecla ESC (Teclado) / Botão Start (Gamepad): MENU DE PAUSA
+	_register_action("pause_game", [
+		_create_key_event(KEY_ESCAPE),
+		_create_joy_button_event(JOY_BUTTON_START)
 	])
 
 	# Right Analog Stick: Camera look-ahead (espiar adiante)
