@@ -1,12 +1,13 @@
-[gd_scene format=3 uid="uid://d3a1m7k9p4y2b"]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/ui/hub/touch_of_death_ui.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://src/ui/components/gamepad_prompt_bar.tscn" id="2_prompt"]
 
-[node name="TouchOfDeathUI" type="CanvasLayer" unique_id=3030301]
+[node name="TouchOfDeathUI" type="CanvasLayer"]
 layer = 110
 script = ExtResource("1_script")
 
-[node name="Dimmer" type="ColorRect" parent="." unique_id=3030302]
+[node name="Dimmer" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,20 +15,20 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.03, 0.05, 0.04, 0.8)
 
-[node name="MainPanel" type="Panel" parent="." unique_id=3030303]
+[node name="MainPanel" type="Panel" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -125.0
-offset_right = 250.0
-offset_bottom = 125.0
+offset_left = -260.0
+offset_top = -135.0
+offset_right = 260.0
+offset_bottom = 135.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Bg" type="ColorRect" parent="MainPanel" unique_id=3030304]
+[node name="Bg" type="ColorRect" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +37,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.08, 0.06, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel" unique_id=3030305]
+[node name="Border" type="ReferenceRect" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,68 +48,65 @@ border_color = Color(0.18, 0.32, 0.27, 1)
 border_width = 2.0
 editor_only = false
 
-[node name="Header" type="ColorRect" parent="MainPanel" unique_id=3030306]
+[node name="TopBar" type="ColorRect" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 32.0
+offset_bottom = 30.0
 grow_horizontal = 2
 color = Color(0.08, 0.15, 0.12, 1)
 
-[node name="Title" type="Label" parent="MainPanel/Header" unique_id=3030307]
+[node name="Title" type="Label" parent="MainPanel/TopBar"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 12.0
-offset_top = -11.0
+offset_top = -10.0
 offset_right = 320.0
-offset_bottom = 12.0
+offset_bottom = 10.0
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.42, 0.74, 0.62, 1)
-text = "O TOQUE DA MORTE"
+theme_override_font_sizes/font_size = 12
+text = "O TOQUE DA MORTE - LISTA DE BÊNÇÃOS"
 vertical_alignment = 1
 
-[node name="Subtitle" type="Label" parent="MainPanel" unique_id=3030308]
+[node name="Subtitle" type="Label" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 12.0
-offset_top = 36.0
-offset_right = -12.0
-offset_bottom = 54.0
+offset_left = 16.0
+offset_top = 34.0
+offset_right = -16.0
+offset_bottom = 50.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.65, 0.8, 0.72, 1)
-theme_override_font_sizes/font_size = 11
-text = "A Morte estende sua sombra sobre o teu limiar. Escolha uma bênção:"
+theme_override_font_sizes/font_size = 10
+text = "A Morte observa tua marcha. Escolha uma bênção para a partida:"
 
-[node name="Content" type="Control" parent="MainPanel" unique_id=3030309]
+[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = 58.0
-offset_right = -12.0
-offset_bottom = -44.0
+offset_left = 16.0
+offset_top = 54.0
+offset_right = -16.0
+offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Cards" type="HBoxContainer" parent="MainPanel/Content" unique_id=3030310]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 12
-
-[node name="Card1" type="ColorRect" parent="MainPanel/Content/Cards" unique_id=3030311]
+[node name="VBox" type="VBoxContainer" parent="MainPanel/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Item1" type="ColorRect" parent="MainPanel/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
 color = Color(0.08, 0.12, 0.1, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/Content/Cards/Card1" unique_id=3030312]
+[node name="Border" type="ReferenceRect" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -118,46 +116,48 @@ grow_vertical = 2
 border_color = Color(0.18, 0.32, 0.27, 1)
 editor_only = false
 
-[node name="Title" type="Label" parent="MainPanel/Content/Cards/Card1" unique_id=3030313]
+[node name="Name" type="Label" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 10.0
-offset_right = 220.0
-offset_bottom = 28.0
+offset_top = 6.0
+offset_right = 260.0
+offset_bottom = 22.0
 theme_override_colors/font_color = Color(0.5, 0.85, 0.7, 1)
+theme_override_font_sizes/font_size = 11
 text = "Onda Espectral"
 
-[node name="Desc" type="Label" parent="MainPanel/Content/Cards/Card1" unique_id=3030314]
+[node name="Desc" type="Label" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 32.0
-offset_right = 222.0
-offset_bottom = 98.0
+offset_top = 22.0
+offset_right = 350.0
+offset_bottom = 46.0
 theme_override_colors/font_color = Color(0.8, 0.9, 0.85, 1)
-theme_override_font_sizes/font_size = 11
-text = "O Parry Perfeito emite uma onda de choque que repele e desestabiliza inimigos ao redor."
-autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "O Parry Perfeito emite onda de choque que repele e desestabiliza inimigos."
 
-[node name="BtnChoose" type="Button" parent="MainPanel/Content/Cards/Card1" unique_id=3030315]
+[node name="BtnChoose" type="Button" parent="MainPanel/ScrollContainer/VBox/Item1"]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -34.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
 offset_right = -10.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Escolher Bênção"
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "Escolher"
 
-[node name="Card2" type="ColorRect" parent="MainPanel/Content/Cards" unique_id=3030316]
+[node name="Item2" type="ColorRect" parent="MainPanel/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
-size_flags_horizontal = 3
 color = Color(0.08, 0.12, 0.1, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/Content/Cards/Card2" unique_id=3030317]
+[node name="Border" type="ReferenceRect" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -167,51 +167,71 @@ grow_vertical = 2
 border_color = Color(0.18, 0.32, 0.27, 1)
 editor_only = false
 
-[node name="Title" type="Label" parent="MainPanel/Content/Cards/Card2" unique_id=3030318]
+[node name="Name" type="Label" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 10.0
-offset_right = 220.0
-offset_bottom = 28.0
+offset_top = 6.0
+offset_right = 260.0
+offset_bottom = 22.0
 theme_override_colors/font_color = Color(0.5, 0.85, 0.7, 1)
+theme_override_font_sizes/font_size = 11
 text = "Olhar da Ruína"
 
-[node name="Desc" type="Label" parent="MainPanel/Content/Cards/Card2" unique_id=3030319]
+[node name="Desc" type="Label" parent="MainPanel/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 32.0
-offset_right = 222.0
-offset_bottom = 98.0
+offset_top = 22.0
+offset_right = 350.0
+offset_bottom = 46.0
 theme_override_colors/font_color = Color(0.8, 0.9, 0.85, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "Causa +25% de dano contra qualquer inimigo que estiver atordoado (Stun)."
-autowrap_mode = 2
 
-[node name="BtnChoose" type="Button" parent="MainPanel/Content/Cards/Card2" unique_id=3030320]
+[node name="BtnChoose" type="Button" parent="MainPanel/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
+offset_right = -10.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "Escolher"
+
+[node name="ItemSkip" type="ColorRect" parent="MainPanel/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+color = Color(0.06, 0.09, 0.08, 1)
+
+[node name="BtnSkip" type="Button" parent="MainPanel/ScrollContainer/VBox/ItemSkip"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 6.0
+offset_right = -10.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+text = "Seguir sem Bênção"
+
+[node name="GamepadPromptBar" parent="MainPanel" instance=ExtResource("2_prompt")]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -34.0
-offset_right = -10.0
-offset_bottom = -8.0
+offset_top = -24.0
+offset_right = 0.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Escolher Bênção"
-
-[node name="BtnSkip" type="Button" parent="MainPanel" unique_id=3030321]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -90.0
-offset_top = -36.0
-offset_right = 90.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Seguir sem Bênção"
+confirm_text = "Escolher"
+cancel_text = "Seguir sem Bênção"

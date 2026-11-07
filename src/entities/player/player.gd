@@ -345,10 +345,11 @@ func show_bark(text: String) -> void:
 	if _bark_tween and _bark_tween.is_valid():
 		_bark_tween.kill()
 		
+	var duration: float = maxf(3.5, clampf(float(text.length()) * 0.08, 3.5, 6.0))
 	_bark_tween = create_tween()
 	_bark_tween.set_parallel(true)
-	_bark_tween.tween_property(bark_label, "position:y", -70.0, 1.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_bark_tween.tween_property(bark_label, "modulate:a", 0.0, 0.6).set_delay(1.2)
+	_bark_tween.tween_property(bark_label, "position:y", -70.0, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_bark_tween.tween_property(bark_label, "modulate:a", 0.0, 0.8).set_delay(maxf(1.0, duration - 0.8))
 
 func swap_weapons() -> void:
 	if not secondary_weapon:

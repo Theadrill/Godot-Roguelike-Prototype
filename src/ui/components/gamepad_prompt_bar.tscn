@@ -1,0 +1,70 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/ui/components/gamepad_prompt_bar.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/xbox/btn_navigate_all_directions.png" id="2_nav"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/xbox/btn_a.png" id="3_a"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/xbox/btn_b.png" id="4_b"]
+
+[node name="GamepadPromptBar" type="HBoxContainer"]
+offset_right = 360.0
+offset_bottom = 20.0
+theme_override_constants/separation = 16
+alignment = 1
+script = ExtResource("1_script")
+
+[node name="PromptNav" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="PromptNav"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_nav")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="PromptNav"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "Navegar"
+vertical_alignment = 1
+
+[node name="PromptConfirm" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="PromptConfirm"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_a")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="PromptConfirm"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "Confirmar"
+vertical_alignment = 1
+
+[node name="PromptCancel" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="PromptCancel"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_b")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="PromptCancel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "Voltar / Fechar"
+vertical_alignment = 1

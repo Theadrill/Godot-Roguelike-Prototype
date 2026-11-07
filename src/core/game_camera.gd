@@ -20,6 +20,13 @@ extends Camera2D
 var base_offset: Vector2 = Vector2.ZERO
 var target_offset: Vector2 = Vector2.ZERO
 
+var trauma: float = 0.0
+@export var max_shake_offset: Vector2 = Vector2(5.0, 4.0)
+@export var trauma_decay: float = 0.8
+
+func add_trauma(amount: float) -> void:
+	trauma = clampf(trauma + amount, 0.0, 1.0)
+
 func _ready() -> void:
 	base_offset = offset
 
@@ -38,3 +45,12 @@ func _physics_process(delta: float) -> void:
 		# Released: smoothly glide back to default base offset
 		target_offset = base_offset
 		offset = offset.lerp(target_offset, return_speed * delta)
+
+	# Trauma-based subtle screen shake decay
+	if trauma > 0.0:
+		trauma = maxf(0.0, trauma - trauma_decay * delta)
+		var shake := Vector2(
+			randf_range(-1.0, 1.0) * max_shake_offset.x * (trauma * trauma),
+			randf_range(-1.0, 1.0) * max_shake_offset.y * (trauma * trauma)
+		)
+		offset += shake

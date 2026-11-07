@@ -94,6 +94,41 @@ func _ready() -> void:
 		_create_key_event(KEY_KP_2)
 	], 0.15)
 
+	# UI Navigation: D-Pad, Left Stick, A (Confirmar), B (Cancelar)
+	_register_action("ui_accept", [
+		_create_key_event(KEY_ENTER),
+		_create_key_event(KEY_SPACE),
+		_create_joy_button_event(JOY_BUTTON_A)
+	])
+	_register_action("ui_cancel", [
+		_create_key_event(KEY_ESCAPE),
+		_create_joy_button_event(JOY_BUTTON_B)
+	])
+	_register_action("ui_up", [
+		_create_key_event(KEY_UP),
+		_create_key_event(KEY_W),
+		_create_joy_button_event(JOY_BUTTON_DPAD_UP),
+		_create_joy_motion_event(JOY_AXIS_LEFT_Y, -1.0)
+	], 0.4)
+	_register_action("ui_down", [
+		_create_key_event(KEY_DOWN),
+		_create_key_event(KEY_S),
+		_create_joy_button_event(JOY_BUTTON_DPAD_DOWN),
+		_create_joy_motion_event(JOY_AXIS_LEFT_Y, 1.0)
+	], 0.4)
+	_register_action("ui_left", [
+		_create_key_event(KEY_LEFT),
+		_create_key_event(KEY_A),
+		_create_joy_button_event(JOY_BUTTON_DPAD_LEFT),
+		_create_joy_motion_event(JOY_AXIS_LEFT_X, -1.0)
+	], 0.4)
+	_register_action("ui_right", [
+		_create_key_event(KEY_RIGHT),
+		_create_key_event(KEY_D),
+		_create_joy_button_event(JOY_BUTTON_DPAD_RIGHT),
+		_create_joy_motion_event(JOY_AXIS_LEFT_X, 1.0)
+	], 0.4)
+
 func _unhandled_input(event: InputEvent) -> void:
 	# Quick reload inside game window: R, F5, or Select/Back on Gamepad
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():

@@ -7,6 +7,17 @@
 [ext_resource type="PackedScene" path="res://src/ui/hub/mother_dialog_ui.tscn" id="5_mother_ui"]
 [ext_resource type="PackedScene" path="res://src/ui/hub/brother_forge_ui.tscn" id="6_brother_ui"]
 [ext_resource type="PackedScene" path="res://src/ui/hub/touch_of_death_ui.tscn" id="7_death_ui"]
+[ext_resource type="Shader" path="res://src/shaders/death_spiral.gdshader" id="8_death_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_portal"]
+shader = ExtResource("8_death_shader")
+shader_parameter/progress = 0.0
+shader_parameter/vortex_time = 0.0
+shader_parameter/spiral_arms = 4.0
+shader_parameter/spiral_speed = 3.2
+shader_parameter/color_mist = Color(0.18, 0.32, 0.26, 1)
+shader_parameter/color_edge = Color(0.42, 0.74, 0.62, 1)
+shader_parameter/color_void = Color(0.03, 0.05, 0.04, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(1100, 72)
@@ -235,9 +246,16 @@ polygon = PackedVector2Array(1050, 180, 1070, 180, 1070, 288, 1050, 288)
 color = Color(0.2, 0.22, 0.21, 1)
 polygon = PackedVector2Array(960, 160, 1080, 160, 1070, 180, 970, 180)
 
-[node name="Death_Mist_Glow" type="Polygon2D" parent="Props" unique_id=504445813]
-color = Color(0.18, 0.32, 0.26, 0.55)
-polygon = PackedVector2Array(985, 180, 1055, 180, 1065, 288, 975, 288)
+[node name="Death_Door_Backing" type="Polygon2D" parent="Props" unique_id=504445813]
+color = Color(0.04, 0.06, 0.05, 1)
+polygon = PackedVector2Array(985, 180, 1055, 180, 1060, 288, 980, 288)
+
+[node name="Death_Vortex_Portal" type="ColorRect" parent="Props" unique_id=504445814]
+material = SubResource("ShaderMaterial_portal")
+offset_left = 980.0
+offset_top = 175.0
+offset_right = 1060.0
+offset_bottom = 288.0
 
 [node name="Death_Specter_Placeholder" type="Node2D" parent="Props" unique_id=619751921]
 position = Vector2(1020, 235)
@@ -255,7 +273,7 @@ color = Color(0.42, 0.74, 0.62, 1)
 polygon = PackedVector2Array(-3, -26, -1, -26, -1, -24, -3, -24, 1, -26, 3, -26, 3, -24, 1, -24)
 
 [node name="Bark" parent="Props/Death_Specter_Placeholder" unique_id=619751922 instance=ExtResource("4_bark")]
-position = Vector2(0, -36)
+position = Vector2(-90, -42)
 
 [node name="PetSpots" type="Node2D" parent="." unique_id=389682967]
 
@@ -341,7 +359,7 @@ shape = SubResource("RectangleShape2D_rack")
 
 [node name="ExitPortalArea" type="Area2D" parent="." unique_id=438728389]
 position = Vector2(1020, 248)
-collision_layer = 0
+collision_layer = 1
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitPortalArea" unique_id=1193208525]

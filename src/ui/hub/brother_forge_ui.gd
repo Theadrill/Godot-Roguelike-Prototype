@@ -1,77 +1,85 @@
 class_name BrotherForgeUI
 extends CanvasLayer
 
-signal closed(farewell_text: String)
+const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
 
-@onready var panel_forge: Control = $MainPanel/Content/PanelForge
-@onready var panel_arsenal: Control = $MainPanel/Content/PanelArsenal
-@onready var btn_tab_forge: Button = $MainPanel/TabContainer/BtnTabForge
-@onready var btn_tab_arsenal: Button = $MainPanel/TabContainer/BtnTabArsenal
+signal closed
 
-@onready var weapon_1_level_label: Label = $MainPanel/Content/PanelForge/Cards/Card1/LevelLabel
-@onready var weapon_1_req_label: Label = $MainPanel/Content/PanelForge/Cards/Card1/ReqLabel
-@onready var btn_upgrade_weapon_1: Button = $MainPanel/Content/PanelForge/Cards/Card1/BtnUpgrade
+@onready var category_view: Control = $MainPanel/CategoryView
+@onready var list_view_forge: Control = $MainPanel/ListViewForge
+@onready var list_view_arsenal: Control = $MainPanel/ListViewArsenal
 
-@onready var weapon_2_level_label: Label = $MainPanel/Content/PanelForge/Cards/Card2/LevelLabel
-@onready var weapon_2_req_label: Label = $MainPanel/Content/PanelForge/Cards/Card2/ReqLabel
-@onready var btn_upgrade_weapon_2: Button = $MainPanel/Content/PanelForge/Cards/Card2/BtnUpgrade
+@onready var btn_cat_forge: Button = $MainPanel/CategoryView/CategoriesHBox/BtnCatForge
+@onready var btn_cat_arsenal: Button = $MainPanel/CategoryView/CategoriesHBox/BtnCatArsenal
 
-const FAREWELL_BARKS: Array[String] = [
-	"BARK_BROTHER_FAREWELL_1",
-	"BARK_BROTHER_FAREWELL_2",
-	"BARK_BROTHER_FAREWELL_3",
-	"BARK_BROTHER_FAREWELL_4"
-]
+@onready var btn_back_forge: Button = $MainPanel/ListViewForge/Header/BtnBack
+@onready var weapon_1_level_label: Label = $MainPanel/ListViewForge/ScrollContainer/VBox/Item1/LevelLabel
+@onready var weapon_1_req_label: Label = $MainPanel/ListViewForge/ScrollContainer/VBox/Item1/ReqLabel
+@onready var btn_upgrade_weapon_1: Button = $MainPanel/ListViewForge/ScrollContainer/VBox/Item1/BtnUpgrade
 
-var _current_tab: int = 0
+@onready var weapon_2_level_label: Label = $MainPanel/ListViewForge/ScrollContainer/VBox/Item2/LevelLabel
+@onready var weapon_2_req_label: Label = $MainPanel/ListViewForge/ScrollContainer/VBox/Item2/ReqLabel
+@onready var btn_upgrade_weapon_2: Button = $MainPanel/ListViewForge/ScrollContainer/VBox/Item2/BtnUpgrade
+
+@onready var btn_back_arsenal: Button = $MainPanel/ListViewArsenal/Header/BtnBack
+
+@onready var prompt_bar: GamepadPromptBar = $MainPanel/GamepadPromptBar
+
+enum ViewState { CATEGORIES, FORGE_LIST, ARSENAL_LIST }
+var current_view: ViewState = ViewState.CATEGORIES
 
 func _ready() -> void:
 	visible = false
-	_switch_tab(0)
 	_setup_buttons()
 
 func _setup_buttons() -> void:
-	btn_tab_forge.pressed.connect(func() -> void: _switch_tab(0))
-	btn_tab_arsenal.pressed.connect(func() -> void: _switch_tab(1))
+	btn_cat_forge.pressed.connect(func() -> void: _switch_to_view(ViewState.FORGE_LIST))
+	btn_cat_arsenal.pressed.connect(func() -> void: _switch_to_view(ViewState.ARSENAL_LIST))
+	
+	btn_back_forge.pressed.connect(func() -> void: _switch_to_view(ViewState.CATEGORIES))
+	btn_back_arsenal.pressed.connect(func() -> void: _switch_to_view(ViewState.CATEGORIES))
 	
 	btn_upgrade_weapon_1.pressed.connect(func() -> void: _on_weapon_upgrade("sword"))
 	btn_upgrade_weapon_2.pressed.connect(func() -> void: _on_weapon_upgrade("bow"))
 	
-	var btn_close: Button = $MainPanel/Header/BtnClose
+	var btn_close: Button = $MainPanel/TopBar/BtnClose
 	if btn_close:
 		btn_close.pressed.connect(close_ui)
 
 func open_ui() -> void:
 	visible = true
-	_current_tab = 0
-	_switch_tab(0)
-	_refresh_display()
+	_switch_to_view(ViewState.CATEGORIES)
 
 func close_ui() -> void:
 	visible = false
-	var random_farewell := tr(FAREWELL_BARKS.pick_random())
-	closed.emit(random_farewell)
+	closed.emit()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("interact"):
+	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
-		close_ui()
+		if current_view != ViewState.CATEGORIES:
+			_switch_to_view(ViewState.CATEGORIES)
+		else:
+			close_ui()
 
-func _switch_tab(tab_index: int) -> void:
-	_current_tab = tab_index
-	panel_forge.visible = (_current_tab == 0)
-	panel_arsenal.visible = (_current_tab == 1)
-	
-	if _current_tab == 0:
-		btn_tab_forge.modulate = Color(0.85, 0.95, 1.0, 1.0)
-		btn_tab_arsenal.modulate = Color(0.7, 0.7, 0.7, 1.0)
-	else:
-		btn_tab_forge.modulate = Color(0.7, 0.7, 0.7, 1.0)
-		btn_tab_arsenal.modulate = Color(0.85, 0.95, 1.0, 1.0)
-	
+func _switch_to_view(new_view: ViewState) -> void:
+	current_view = new_view
+	category_view.visible = (current_view == ViewState.CATEGORIES)
+	list_view_forge.visible = (current_view == ViewState.FORGE_LIST)
+	list_view_arsenal.visible = (current_view == ViewState.ARSENAL_LIST)
+
 	_refresh_display()
+
+	await get_tree().process_frame
+	match current_view:
+		ViewState.CATEGORIES:
+			btn_cat_forge.grab_focus()
+		ViewState.FORGE_LIST:
+			btn_upgrade_weapon_1.grab_focus()
+		ViewState.ARSENAL_LIST:
+			btn_back_arsenal.grab_focus()
 
 func _on_weapon_upgrade(weapon_id: String) -> void:
 	if weapon_id == "sword":
@@ -87,6 +95,9 @@ func _on_weapon_upgrade(weapon_id: String) -> void:
 	_refresh_display()
 
 func _refresh_display() -> void:
+	if prompt_bar:
+		prompt_bar.refresh_prompts()
+
 	# 1. Espada Rústica
 	var sword_dmg: float = ProgressionManager.get_sword_base_damage()
 	weapon_1_level_label.text = "Nível " + str(ProgressionManager.weapon_sword_level) + " (Dano: " + str(sword_dmg) + ")"

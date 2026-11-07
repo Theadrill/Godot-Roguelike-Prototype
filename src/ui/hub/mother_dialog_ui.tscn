@@ -1,12 +1,13 @@
-[gd_scene format=3 uid="uid://c8n4y2j8q5p1a"]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/ui/hub/mother_dialog_ui.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://src/ui/components/gamepad_prompt_bar.tscn" id="2_prompt"]
 
-[node name="MotherDialogUI" type="CanvasLayer" unique_id=1010101]
+[node name="MotherDialogUI" type="CanvasLayer"]
 layer = 110
 script = ExtResource("1_script")
 
-[node name="Dimmer" type="ColorRect" parent="." unique_id=1010102]
+[node name="Dimmer" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,20 +15,20 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.65)
 
-[node name="MainPanel" type="Panel" parent="." unique_id=1010103]
+[node name="MainPanel" type="Panel" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -125.0
-offset_right = 250.0
-offset_bottom = 125.0
+offset_left = -260.0
+offset_top = -135.0
+offset_right = 260.0
+offset_bottom = 135.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Bg" type="ColorRect" parent="MainPanel" unique_id=1010104]
+[node name="Bg" type="ColorRect" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +37,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.12, 0.1, 0.09, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel" unique_id=1010105]
+[node name="Border" type="ReferenceRect" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,28 +48,30 @@ border_color = Color(0.48, 0.35, 0.25, 1)
 border_width = 2.0
 editor_only = false
 
-[node name="Header" type="ColorRect" parent="MainPanel" unique_id=1010106]
+[node name="TopBar" type="ColorRect" parent="MainPanel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 32.0
+offset_bottom = 30.0
 grow_horizontal = 2
 color = Color(0.25, 0.16, 0.12, 1)
 
-[node name="Title" type="Label" parent="MainPanel/Header" unique_id=1010107]
+[node name="Title" type="Label" parent="MainPanel/TopBar"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 12.0
-offset_top = -11.0
+offset_top = -10.0
 offset_right = 320.0
-offset_bottom = 12.0
+offset_bottom = 10.0
 grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 12
 text = "A MÃE - ERVANÁRIA FAMILIAR"
 vertical_alignment = 1
 
-[node name="BtnClose" type="Button" parent="MainPanel/Header" unique_id=1010108]
+[node name="BtnClose" type="Button" parent="MainPanel/TopBar"]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -76,185 +79,272 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = -30.0
-offset_top = -12.0
-offset_right = -6.0
-offset_bottom = 12.0
+offset_top = -11.0
+offset_right = -8.0
+offset_bottom = 11.0
 grow_horizontal = 0
 grow_vertical = 2
+focus_mode = 2
 text = "X"
 
-[node name="TabContainer" type="HBoxContainer" parent="MainPanel" unique_id=1010109]
+[node name="CategoryView" type="Control" parent="MainPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 38.0
+offset_right = -16.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PromptLabel" type="Label" parent="MainPanel/CategoryView"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 12.0
-offset_top = 38.0
-offset_right = -12.0
-offset_bottom = 66.0
+offset_bottom = 20.0
 grow_horizontal = 2
-theme_override_constants/separation = 10
-
-[node name="BtnTabElixirs" type="Button" parent="MainPanel/TabContainer" unique_id=1010110]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "[ ELIXIRES DO DIA ]"
-
-[node name="BtnTabTeas" type="Button" parent="MainPanel/TabContainer" unique_id=1010111]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "[ CHÁS PERMANENTES ]"
-
-[node name="Content" type="Control" parent="MainPanel" unique_id=1010112]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = 72.0
-offset_right = -12.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="PanelElixirs" type="Control" parent="MainPanel/Content" unique_id=1010113]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Cards" type="HBoxContainer" parent="MainPanel/Content/PanelElixirs" unique_id=1010117]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 12
-
-[node name="Card1" type="ColorRect" parent="MainPanel/Content/PanelElixirs/Cards" unique_id=1010118]
-layout_mode = 2
-size_flags_horizontal = 3
-color = Color(0.18, 0.14, 0.12, 1)
-
-[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010119]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.55, 0.38, 0.25, 1)
-editor_only = false
-
-[node name="Title" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010120]
-layout_mode = 1
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 220.0
-offset_bottom = 28.0
-theme_override_colors/font_color = Color(1, 0.75, 0.4, 1)
-text = "Elixir de Folha-de-Fogo"
-
-[node name="Desc" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010121]
-layout_mode = 1
-offset_left = 10.0
-offset_top = 34.0
-offset_right = 224.0
-offset_bottom = 100.0
-theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_colors/font_color = Color(0.8, 0.75, 0.7, 1)
 theme_override_font_sizes/font_size = 11
-text = "+20% de dano no 1º golpe após esquivar/rolar."
-autowrap_mode = 2
+text = "O que deseja consultar com a Mãe?"
+horizontal_alignment = 1
 
-[node name="BtnSelect" type="Button" parent="MainPanel/Content/PanelElixirs/Cards/Card1" unique_id=1010122]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -36.0
-offset_right = -10.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Selecionar"
-
-[node name="Card2" type="ColorRect" parent="MainPanel/Content/PanelElixirs/Cards" unique_id=1010123]
-layout_mode = 2
-size_flags_horizontal = 3
-color = Color(0.18, 0.14, 0.12, 1)
-
-[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010124]
+[node name="CategoriesHBox" type="HBoxContainer" parent="MainPanel/CategoryView"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.55, 0.38, 0.25, 1)
-editor_only = false
-
-[node name="Title" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010125]
-layout_mode = 1
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 220.0
-offset_bottom = 28.0
-theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
-text = "Caldo Revigorante"
-
-[node name="Desc" type="Label" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010126]
-layout_mode = 1
-offset_left = 10.0
-offset_top = 34.0
-offset_right = 224.0
-offset_bottom = 100.0
-theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
-theme_override_font_sizes/font_size = 11
-text = "+1 Carga inicial no Frasco de Chá (inicia a run com 2/2)."
-autowrap_mode = 2
-
-[node name="BtnSelect" type="Button" parent="MainPanel/Content/PanelElixirs/Cards/Card2" unique_id=1010127]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -36.0
-offset_right = -10.0
+offset_top = 26.0
 offset_bottom = -10.0
 grow_horizontal = 2
-grow_vertical = 0
-text = "Selecionar"
+grow_vertical = 2
+theme_override_constants/separation = 16
 
-[node name="PanelTeas" type="Control" parent="MainPanel/Content" unique_id=1010128]
+[node name="BtnCatElixirs" type="Button" parent="MainPanel/CategoryView/CategoriesHBox"]
+custom_minimum_size = Vector2(220, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "[ ELIXIRES DO DIA ]
+
+Infusões artesanais frescas
+Preparo temporário para a jornada"
+
+[node name="BtnCatTeas" type="Button" parent="MainPanel/CategoryView/CategoriesHBox"]
+custom_minimum_size = Vector2(220, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "[ CHÁS PERMANENTES ]
+
+Aprimoramentos da linhagem
+Fortalecimento contínuo com feixes"
+
+[node name="ListViewElixirs" type="Control" parent="MainPanel"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 36.0
+offset_right = -16.0
+offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Cards" type="HBoxContainer" parent="MainPanel/Content/PanelTeas" unique_id=1010130]
+[node name="Header" type="HBoxContainer" parent="MainPanel/ListViewElixirs"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 26.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="BtnBack" type="Button" parent="MainPanel/ListViewElixirs/Header"]
+layout_mode = 2
+focus_mode = 2
+text = "< Voltar"
+
+[node name="Title" type="Label" parent="MainPanel/ListViewElixirs/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "ELIXIRES DO DIA (Escolha 1 para a run)"
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel/ListViewElixirs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="MainPanel/ListViewElixirs/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Item1" type="ColorRect" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+color = Color(0.18, 0.14, 0.12, 1)
+
+[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 12
+border_color = Color(0.48, 0.35, 0.25, 1)
+editor_only = false
 
-[node name="Card1" type="ColorRect" parent="MainPanel/Content/PanelTeas/Cards" unique_id=1010131]
+[node name="Name" type="Label" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item1"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 320.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(1, 0.8, 0.45, 1)
+theme_override_font_sizes/font_size = 11
+text = "Elixir de Folha-de-Fogo"
+
+[node name="Desc" type="Label" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item1"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 26.0
+offset_right = 340.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 10
+text = "+20% de dano no 1º golpe desferido após esquivar/rolar."
+
+[node name="BtnSelect" type="Button" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item1"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
+offset_right = -10.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "Selecionar"
+
+[node name="Item2" type="ColorRect" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+color = Color(0.18, 0.14, 0.12, 1)
+
+[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.48, 0.35, 0.25, 1)
+editor_only = false
+
+[node name="Name" type="Label" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 320.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(0.65, 0.9, 0.65, 1)
+theme_override_font_sizes/font_size = 11
+text = "Caldo Revigorante"
+
+[node name="Desc" type="Label" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 26.0
+offset_right = 340.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 10
+text = "+1 Carga inicial no Frasco de Chá (inicia a partida com 2/2)."
+
+[node name="BtnSelect" type="Button" parent="MainPanel/ListViewElixirs/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
+offset_right = -10.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "Selecionar"
+
+[node name="ListViewTeas" type="Control" parent="MainPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 36.0
+offset_right = -16.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Header" type="HBoxContainer" parent="MainPanel/ListViewTeas"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 26.0
+grow_horizontal = 2
+theme_override_constants/separation = 10
+
+[node name="BtnBack" type="Button" parent="MainPanel/ListViewTeas/Header"]
+layout_mode = 2
+focus_mode = 2
+text = "< Voltar"
+
+[node name="Title" type="Label" parent="MainPanel/ListViewTeas/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.8, 0.5, 1)
+theme_override_font_sizes/font_size = 11
+text = "CHÁS PERMANENTES (Upgrades por Feixes Repetidos)"
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel/ListViewTeas"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="MainPanel/ListViewTeas/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Item1" type="ColorRect" parent="MainPanel/ListViewTeas/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
 color = Color(0.16, 0.14, 0.13, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010132]
+[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -264,66 +354,68 @@ grow_vertical = 2
 border_color = Color(0.45, 0.4, 0.3, 1)
 editor_only = false
 
-[node name="Title" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010133]
+[node name="Name" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 8.0
-offset_right = 220.0
-offset_bottom = 26.0
+offset_top = 6.0
+offset_right = 260.0
+offset_bottom = 22.0
 theme_override_colors/font_color = Color(0.9, 0.8, 0.5, 1)
+theme_override_font_sizes/font_size = 11
 text = "Chá de Raiz-de-Pedra"
 
-[node name="Desc" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010134]
+[node name="Desc" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 28.0
-offset_right = 224.0
-offset_bottom = 62.0
-theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
-theme_override_font_sizes/font_size = 11
+offset_top = 22.0
+offset_right = 280.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 10
 text = "+15 HP Máximo fixo na linhagem por nível."
-autowrap_mode = 2
 
-[node name="LevelLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010135]
+[node name="LevelLabel" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 66.0
-offset_right = 220.0
-offset_bottom = 84.0
+offset_top = 38.0
+offset_right = 160.0
+offset_bottom = 52.0
 theme_override_colors/font_color = Color(0.5, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "Nível 1 (+0 HP)"
 
-[node name="ReqLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010136]
+[node name="ReqLabel" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
 layout_mode = 1
-offset_left = 10.0
-offset_top = 86.0
-offset_right = 220.0
-offset_bottom = 102.0
-theme_override_colors/font_color = Color(0.8, 0.5, 0.4, 1)
+offset_left = 170.0
+offset_top = 38.0
+offset_right = 320.0
+offset_bottom = 52.0
+theme_override_colors/font_color = Color(0.9, 0.6, 0.4, 1)
 theme_override_font_sizes/font_size = 10
-text = "Feixes Repetidos: 0/2"
+text = "Feixes: 0/2"
 
-[node name="BtnUpgrade" type="Button" parent="MainPanel/Content/PanelTeas/Cards/Card1" unique_id=1010137]
+[node name="BtnUpgrade" type="Button" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item1"]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -36.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
 offset_right = -10.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
 text = "Aprimorar"
 
-[node name="Card2" type="ColorRect" parent="MainPanel/Content/PanelTeas/Cards" unique_id=1010138]
+[node name="Item2" type="ColorRect" parent="MainPanel/ListViewTeas/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
-size_flags_horizontal = 3
 color = Color(0.16, 0.14, 0.13, 1)
 
-[node name="Border" type="ReferenceRect" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010139]
+[node name="Border" type="ReferenceRect" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -333,56 +425,70 @@ grow_vertical = 2
 border_color = Color(0.45, 0.4, 0.3, 1)
 editor_only = false
 
-[node name="Title" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010140]
+[node name="Name" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 8.0
-offset_right = 220.0
-offset_bottom = 26.0
+offset_top = 6.0
+offset_right = 260.0
+offset_bottom = 22.0
 theme_override_colors/font_color = Color(0.9, 0.8, 0.5, 1)
-text = "Chá de Camomila"
+theme_override_font_sizes/font_size = 11
+text = "Chá de Camomila-da-Montanha"
 
-[node name="Desc" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010141]
+[node name="Desc" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 28.0
-offset_right = 224.0
-offset_bottom = 62.0
-theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
-theme_override_font_sizes/font_size = 11
+offset_top = 22.0
+offset_right = 280.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 10
 text = "+5% eficácia de cura do Frasco por nível."
-autowrap_mode = 2
 
-[node name="LevelLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010142]
+[node name="LevelLabel" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
 layout_mode = 1
 offset_left = 10.0
-offset_top = 66.0
-offset_right = 220.0
-offset_bottom = 84.0
+offset_top = 38.0
+offset_right = 160.0
+offset_bottom = 52.0
 theme_override_colors/font_color = Color(0.5, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "Nível 1 (+0% Cura)"
 
-[node name="ReqLabel" type="Label" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010143]
+[node name="ReqLabel" type="Label" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
 layout_mode = 1
-offset_left = 10.0
-offset_top = 86.0
-offset_right = 220.0
-offset_bottom = 102.0
-theme_override_colors/font_color = Color(0.8, 0.5, 0.4, 1)
+offset_left = 170.0
+offset_top = 38.0
+offset_right = 320.0
+offset_bottom = 52.0
+theme_override_colors/font_color = Color(0.9, 0.6, 0.4, 1)
 theme_override_font_sizes/font_size = 10
-text = "Feixes Repetidos: 0/2"
+text = "Feixes: 0/2"
 
-[node name="BtnUpgrade" type="Button" parent="MainPanel/Content/PanelTeas/Cards/Card2" unique_id=1010144]
+[node name="BtnUpgrade" type="Button" parent="MainPanel/ListViewTeas/ScrollContainer/VBox/Item2"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -15.0
+offset_right = -10.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+text = "Aprimorar"
+
+[node name="GamepadPromptBar" parent="MainPanel" instance=ExtResource("2_prompt")]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -36.0
-offset_right = -10.0
-offset_bottom = -10.0
+offset_top = -24.0
+offset_right = 0.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Aprimorar"

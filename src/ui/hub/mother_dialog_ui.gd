@@ -1,41 +1,45 @@
 class_name MotherDialogUI
 extends CanvasLayer
 
-signal closed(farewell_text: String)
+const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
 
-@onready var panel_elixirs: Control = $MainPanel/Content/PanelElixirs
-@onready var panel_teas: Control = $MainPanel/Content/PanelTeas
-@onready var btn_tab_elixirs: Button = $MainPanel/TabContainer/BtnTabElixirs
-@onready var btn_tab_teas: Button = $MainPanel/TabContainer/BtnTabTeas
+signal closed
 
-@onready var btn_select_elixir_1: Button = $MainPanel/Content/PanelElixirs/Cards/Card1/BtnSelect
-@onready var btn_select_elixir_2: Button = $MainPanel/Content/PanelElixirs/Cards/Card2/BtnSelect
+@onready var category_view: Control = $MainPanel/CategoryView
+@onready var list_view_elixirs: Control = $MainPanel/ListViewElixirs
+@onready var list_view_teas: Control = $MainPanel/ListViewTeas
 
-@onready var tea_1_level_label: Label = $MainPanel/Content/PanelTeas/Cards/Card1/LevelLabel
-@onready var tea_1_req_label: Label = $MainPanel/Content/PanelTeas/Cards/Card1/ReqLabel
-@onready var btn_upgrade_tea_1: Button = $MainPanel/Content/PanelTeas/Cards/Card1/BtnUpgrade
+@onready var btn_cat_elixirs: Button = $MainPanel/CategoryView/CategoriesHBox/BtnCatElixirs
+@onready var btn_cat_teas: Button = $MainPanel/CategoryView/CategoriesHBox/BtnCatTeas
 
-@onready var tea_2_level_label: Label = $MainPanel/Content/PanelTeas/Cards/Card2/LevelLabel
-@onready var tea_2_req_label: Label = $MainPanel/Content/PanelTeas/Cards/Card2/ReqLabel
-@onready var btn_upgrade_tea_2: Button = $MainPanel/Content/PanelTeas/Cards/Card2/BtnUpgrade
+@onready var btn_back_elixirs: Button = $MainPanel/ListViewElixirs/Header/BtnBack
+@onready var btn_select_elixir_1: Button = $MainPanel/ListViewElixirs/ScrollContainer/VBox/Item1/BtnSelect
+@onready var btn_select_elixir_2: Button = $MainPanel/ListViewElixirs/ScrollContainer/VBox/Item2/BtnSelect
 
-const FAREWELL_BARKS: Array[String] = [
-	"BARK_MOTHER_FAREWELL_1",
-	"BARK_MOTHER_FAREWELL_2",
-	"BARK_MOTHER_FAREWELL_3",
-	"BARK_MOTHER_FAREWELL_4"
-]
+@onready var btn_back_teas: Button = $MainPanel/ListViewTeas/Header/BtnBack
+@onready var tea_1_level_label: Label = $MainPanel/ListViewTeas/ScrollContainer/VBox/Item1/LevelLabel
+@onready var tea_1_req_label: Label = $MainPanel/ListViewTeas/ScrollContainer/VBox/Item1/ReqLabel
+@onready var btn_upgrade_tea_1: Button = $MainPanel/ListViewTeas/ScrollContainer/VBox/Item1/BtnUpgrade
 
-var _current_tab: int = 0
+@onready var tea_2_level_label: Label = $MainPanel/ListViewTeas/ScrollContainer/VBox/Item2/LevelLabel
+@onready var tea_2_req_label: Label = $MainPanel/ListViewTeas/ScrollContainer/VBox/Item2/ReqLabel
+@onready var btn_upgrade_tea_2: Button = $MainPanel/ListViewTeas/ScrollContainer/VBox/Item2/BtnUpgrade
+
+@onready var prompt_bar: GamepadPromptBar = $MainPanel/GamepadPromptBar
+
+enum ViewState { CATEGORIES, ELIXIRS_LIST, TEAS_LIST }
+var current_view: ViewState = ViewState.CATEGORIES
 
 func _ready() -> void:
 	visible = false
-	_switch_tab(0)
 	_setup_buttons()
 
 func _setup_buttons() -> void:
-	btn_tab_elixirs.pressed.connect(func() -> void: _switch_tab(0))
-	btn_tab_teas.pressed.connect(func() -> void: _switch_tab(1))
+	btn_cat_elixirs.pressed.connect(func() -> void: _switch_to_view(ViewState.ELIXIRS_LIST))
+	btn_cat_teas.pressed.connect(func() -> void: _switch_to_view(ViewState.TEAS_LIST))
+	
+	btn_back_elixirs.pressed.connect(func() -> void: _switch_to_view(ViewState.CATEGORIES))
+	btn_back_teas.pressed.connect(func() -> void: _switch_to_view(ViewState.CATEGORIES))
 	
 	btn_select_elixir_1.pressed.connect(func() -> void: _on_elixir_selected("folha_de_fogo"))
 	btn_select_elixir_2.pressed.connect(func() -> void: _on_elixir_selected("caldo_revigorante"))
@@ -43,41 +47,45 @@ func _setup_buttons() -> void:
 	btn_upgrade_tea_1.pressed.connect(func() -> void: _on_tea_upgrade("stone_root"))
 	btn_upgrade_tea_2.pressed.connect(func() -> void: _on_tea_upgrade("mountain_chamomile"))
 	
-	var btn_close: Button = $MainPanel/Header/BtnClose
+	var btn_close: Button = $MainPanel/TopBar/BtnClose
 	if btn_close:
 		btn_close.pressed.connect(close_ui)
 
 func open_ui() -> void:
 	visible = true
-	_current_tab = 0
-	_switch_tab(0)
-	_refresh_display()
+	_switch_to_view(ViewState.CATEGORIES)
 
 func close_ui() -> void:
 	visible = false
-	var random_farewell := tr(FAREWELL_BARKS.pick_random())
-	closed.emit(random_farewell)
+	closed.emit()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("interact"):
+	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
-		close_ui()
+		if current_view != ViewState.CATEGORIES:
+			_switch_to_view(ViewState.CATEGORIES)
+		else:
+			close_ui()
 
-func _switch_tab(tab_index: int) -> void:
-	_current_tab = tab_index
-	panel_elixirs.visible = (_current_tab == 0)
-	panel_teas.visible = (_current_tab == 1)
-	
-	if _current_tab == 0:
-		btn_tab_elixirs.modulate = Color(1.0, 0.9, 0.7, 1.0)
-		btn_tab_teas.modulate = Color(0.7, 0.7, 0.7, 1.0)
-	else:
-		btn_tab_elixirs.modulate = Color(0.7, 0.7, 0.7, 1.0)
-		btn_tab_teas.modulate = Color(1.0, 0.9, 0.7, 1.0)
-	
+func _switch_to_view(new_view: ViewState) -> void:
+	current_view = new_view
+	category_view.visible = (current_view == ViewState.CATEGORIES)
+	list_view_elixirs.visible = (current_view == ViewState.ELIXIRS_LIST)
+	list_view_teas.visible = (current_view == ViewState.TEAS_LIST)
+
 	_refresh_display()
+
+	# Grab focus for gamepad navigation
+	await get_tree().process_frame
+	match current_view:
+		ViewState.CATEGORIES:
+			btn_cat_elixirs.grab_focus()
+		ViewState.ELIXIRS_LIST:
+			btn_select_elixir_1.grab_focus()
+		ViewState.TEAS_LIST:
+			btn_upgrade_tea_1.grab_focus()
 
 func _on_elixir_selected(elixir_id: String) -> void:
 	ProgressionManager.select_elixir(elixir_id)
@@ -97,7 +105,10 @@ func _on_tea_upgrade(tea_id: String) -> void:
 	_refresh_display()
 
 func _refresh_display() -> void:
-	# 1. Elixires
+	if prompt_bar:
+		prompt_bar.refresh_prompts()
+
+	# Elixires
 	var active_elixir: String = ProgressionManager.active_elixir
 	if active_elixir == "folha_de_fogo":
 		btn_select_elixir_1.text = "✓ " + tr("UI_SELECTED")
@@ -113,7 +124,7 @@ func _refresh_display() -> void:
 		btn_select_elixir_2.text = tr("UI_SELECT")
 		btn_select_elixir_2.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
-	# 2. Chás Permanentes
+	# Chás Permanentes
 	var hp_bonus: int = (ProgressionManager.tea_stone_root_level - 1) * 15
 	tea_1_level_label.text = "Nível " + str(ProgressionManager.tea_stone_root_level) + " (+" + str(hp_bonus) + " HP)"
 	tea_1_req_label.text = "Feixes Repetidos: " + str(ProgressionManager.tea_stone_root_duplicates) + "/2"
