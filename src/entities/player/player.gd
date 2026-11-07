@@ -430,8 +430,8 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 		die()
 		return
 
-	# Tactical Life Rally: Stores lost health as recoverable for 2.0s
-	rally_recoverable_hp = minf(rally_recoverable_hp + damage, max_health - current_health)
+	# Tactical Life Rally: Stores ONLY the damage of the most recent hit for 2.0s (resets on each hit)
+	rally_recoverable_hp = minf(damage, max_health - current_health)
 	rally_timer = RALLY_DURATION
 
 	# Visual juice: Hit flash pure white
