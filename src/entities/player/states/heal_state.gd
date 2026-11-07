@@ -8,13 +8,20 @@ extends State
 var player: Player
 var channel_timer: float = 0.0
 var is_channeling: bool = false
-var original_body_color: Color = Color.WHITE
+var original_body_color: Color = Color(0.85, 0.72, 0.52, 1.0)
 
 func enter() -> void:
 	player = character as Player
 	channel_timer = 0.0
 	is_channeling = false
 	
+	if not player:
+		state_machine.transition_to("idle")
+		return
+
+	if player.body_polygon:
+		original_body_color = player.body_polygon.color
+
 	if not player.is_on_floor():
 		state_machine.transition_to("fall")
 		return
@@ -37,16 +44,17 @@ func enter() -> void:
 	player.velocity.x = 0.0
 	
 	if player.body_polygon:
-		original_body_color = player.body_polygon.color
 		player.body_polygon.color = Color(0.2, 0.95, 0.5, 1.0)
 
 func exit() -> void:
-	if player and player.body_polygon:
-		player.body_polygon.color = original_body_color
+	if is_channeling and player:
+		ProgressionManager.apply_skin_to_player(player)
 	is_channeling = false
 
 func handle_incoming_hit(_damage: float, _knockback: Vector2, _hitstop: float, _incoming_hitbox: Hitbox) -> bool:
 	# Padrão Nine Sols: interrompe a canalização imediatamente, preservando a carga intacta
+	if is_channeling and player:
+		ProgressionManager.apply_skin_to_player(player)
 	is_channeling = false
 	state_machine.transition_to("idle")
 	return false # Deixa o dano, recuo e hitstop serem processados normalmente pelo player
@@ -72,7 +80,6 @@ func physics_update(delta: float) -> void:
 		_complete_heal()
 
 func _complete_heal() -> void:
-	is_channeling = false
 	if player.current_flask_charges > 0:
 		player.current_flask_charges -= 1
 		var heal_amount: float = player.max_health * player.flask_heal_percent * ProgressionManager.get_tea_heal_multiplier()
