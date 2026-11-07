@@ -116,50 +116,61 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
    * **Baú de Carvalho do Quarto (Skins & Capas):** Baú de roupas onde o jogador pode inspecionar e equipar mantos de lã, capas de viagem com capuz e túnicas costuradas pela Mãe.
 
 2. **A Mãe (Ervanária Medieval, Caldeirão & Personalidade de Mãe):**
-   * **Acesso & UI de Seleção Inicial (2 Botões Grandes):**
-     * Ao interagir com a Mãe (`RB` / clique), a interface abre em uma tela limpa dividida em **dois botões/cards grandes**:
+   * **Regra Sagrada de Lore:** A Mãe e o Irmão **NÃO SABEM** que o guerreiro morre em um loop temporal (para eles, o herói acabou de acordar para sua rotina matinal normal de patrulha).
+   * **Acesso & UI de Seleção Inicial (2 Botões Grandes com Cores Sólidas):**
+     * Ao interagir com a Mãe (`RB` / clique), abre uma tela limpa com dois botões/cards grandes:
        * **[ ELIXIRES ] (O Randomizer Diário da Mãe):**
-         * A Mãe ferve tachos artesanais frescos a cada novo despertar. Ela oferece **2 ou 3 opções sorteadas de elixires temporários** para você beber antes de sair (acumulam efeitos para a run).
-         * **A Personalidade Direta & Hilária da Mãe:**
-           * Protagonista: *"Mãe, eu queria aquele chá de [nome]..."*
-           * Mãe: *"Eu acordei com vontade de tomar esse daqui, ué!"*
-           * Mãe: *"Tá achando que eu sou sua empregada, menino?!"*
-           * Mãe: *"Bebe o que tá no fogo e não reclama, senão vai sair de estômago vazio!"*
+         * A Mãe ferve tachos artesanais frescos a cada despertar. Inicialmente oferece **2 elixires temporários** para a partida:
+           1. *Elixir de Folha-de-Fogo:* +20% de dano no primeiro ataque desferido após uma esquiva/rolamento.
+           2. *Caldo Revigorante:* Concede +1 carga extra inicial no Frasco de Chá (inicia a run com 2/2 cargas).
+         * **A Personalidade Direta & Bem-Humorada da Mãe (4 Variações):**
+           * *"Eu acordei com vontade de tomar esse daqui, ué!"*
+           * *"Tá achando que eu sou sua empregada, menino?!"*
+           * *"Bebe o que tá no fogo e não reclama, senão vai sair de estômago vazio!"*
+           * *"Quer escolher cardápio? Vai procurar uma estalagem de luxo, folgado!"*
        * **[ CHÁS ] (Upgrades Permanentes por Ervas Duplicadas):**
-         * Conforme o jogador resgata **Mudas / Feixes de Ervas Raras** nas ruínas (salvos no Baú Transtemporal), a Mãe aprimora permanentemente a linhagem da família:
-           * *1º Feixe encontrado:* Desbloqueia o chá na coleção (Nível 1).
-           * *Feixes duplicados encontrados em runs futuras:* Atuam como ingrediente de upgrade (Lv 2 requer 2 feixes repetidos; Lv 3 requer 4 feixes repetidos).
-           * *Exemplos:* *Raiz-de-Pedra* (+15 HP fixo por nível), *Folha-de-Athelas* (+5% eficácia da Garrafa de Chá por nível).
-   * **Barks Afetivos e Cuidadosos ao Fechar a Janela:**
+         * Conforme o jogador resgata **Mudas / Feixes de Ervas Raras** nas ruínas (salvos no Baú Transtemporal), a Mãe aprimora permanentemente a linhagem:
+           * *1º Feixe encontrado:* Desbloqueia o preparo (Nível 1).
+           * *Feixes duplicados em runs futuras:* Ingrediente de upgrade (Lv 2 = 2 feixes, Lv 3 = 4 feixes).
+           * *2 Opções Iniciais do Protótipo:*
+             1. *Chá de Raiz-de-Pedra:* +15 HP Máximo fixo na linhagem por nível.
+             2. *Chá de Camomila-da-Montanha:* +5% de eficácia na cura do Frasco por nível.
+   * **Barks Afetivos ao Fechar a Janela:**
      * *"Vê se não demora para voltar, meu filho."*
      * *"Leva um casaco, tá ventando lá fora!"*
-     * *"Vê se não morre de novo, ouviu?!"*
+     * *"Vê se não vai se machucar por aí, ouviu?!"*
      * *"Que os espíritos antigos te guardem."*
 
 3. **O Irmão (A Forja do Aprendiz — Hub de Upgrades):**
-   * **Acesso & UI de Seleção Inicial (2 Botões Grandes):**
-     * Ao interagir com o Irmão na bigorna (`RB` / clique), a interface abre em **dois botões/cards grandes**:
+   * **Regra Sagrada de Lore:** O Irmão não sabe do loop de mortes; reclama apenas que o protagonista acorda tarde ou volta das rondas de mãos vazias.
+   * **Acesso & UI de Seleção Inicial (2 Botões Grandes com Cores Sólidas):**
+     * Ao interagir com o Irmão na bigorna (`RB` / clique), a interface abre em dois botões/cards grandes:
        * **[ FORJA ] (Upgrades por Receitas Duplicadas):**
-         * O Irmão é o mestre de upgrades. Não existem moedas ou lingotes artificiais: o aprimoramento é alimentado por **Receitas Repetidas** resgatadas nas fases e salvas no Baú Transtemporal:
-           * *1ª Receita encontrada no mundo:* Desbloqueia a arma para sempre no acervo da família (Nível 1).
-           * *Receitas duplicadas em runs futuras:* Servem como material de aprimoramento (ex: 2 receitas repetidas da mesma espada -> Nível 2 com +10% dano; 4 receitas -> Nível 3 com bônus de impacto).
-           * *Zero lixo:* Nenhuma receita repetida encontrada nas fases é desperdiçada.
-       * **[ COLEÇÃO ]:**
-         * Catálogo visual de todas as armas, arcos e escudos já dominados pelo clã, mostrando o nível atual de maestria de cada um.
-   * **Barks do Aprendiz ao Fechar a Janela:**
+         * O Irmão aprimora armas usando **Receitas Repetidas** resgatadas nas fases e salvas no Baú Transtemporal:
+           * *1ª Receita:* Desbloqueia a arma para sempre na família (Nível 1).
+           * *Receitas duplicadas:* Material de upgrade (2 receitas = Nível 2 com +10% dano base; 4 receitas = Nível 3).
+           * *2 Equipamentos Iniciais para Upgrade no Protótipo:*
+             1. *Espada Rústica (Nível 1):* Dano base 45. Upgrade Nível 2 (2 receitas) -> 52 de dano.
+             2. *Arco de Caça (Nível 1):* Dano base 30. Upgrade Nível 2 (2 receitas) -> 36 de dano.
+       * **[ COLEÇÃO ]:** Catálogo visual das armas aprendidas e nível de cada uma.
+   * **Diálogos de Resposta do Irmão (4 Variações):**
+     * *"Não sou uma fábrica, cara, sou só um!"*
+     * *"Foi o que deu pra afiar antes de você acordar, tá achando ruim?!"*
+     * *"Se você me trouxesse mais aço das suas rondas em vez de voltar de mãos abanando, tinha mais opção!"*
+     * *"Pega logo uma lâmina e não me enrola, meu braço da marreta tá quase caindo!"*
+   * **Barks ao Fechar a Janela:**
      * *"Essa lâmina vai cortar até pedra!"*
      * *"Traz mais aço se achar pelo caminho, mano."*
      * *"O fio dessa espada ficou perfeito."*
 
 4. **O Baú de Equipamentos (O Randomizer do Irmão & Montagem de Loadout):**
    * Localizado ao lado da forja do Irmão.
-   * **O Randomizer de Loadout & A Lore do Irmão:**
-     * Para manter cada run estratégica e impedir que o jogador use sempre a mesma arma repetitiva, o Irmão não consegue manter todo o arsenal polido ao mesmo tempo:
-       * **Protagonista:** *"Ué, só essas armas hoje?"*
-       * **Irmão:** *"Eu não sou uma fábrica, cara, sou só um! Foi o que deu pra afiar e forjar antes de você acordar."*
-     * A cada despertar, o Irmão disponibiliza **2 ou 3 opções sorteadas de Armas Principais** (do acervo desbloqueado), **2 de Secundárias** e **2 de Escudos**.
-     * Se você aprimorou uma arma para o Nível 2 ou 3 na forja, sempre que ela for sorteada pelo irmão, ela já vem naquele nível aprimorado!
-     * Ao confirmar a seleção, o guerreiro equipa o loadout e sai pronto para a batalha.
+   * A cada despertar, o Irmão disponibiliza opções sorteadas do acervo desbloqueado.
+   * **Armas Básicas Iniciais já Desbloqueadas:**
+     * Slot 1 (Arma Principal): *Espada Rústica*
+     * Slot 2 (Secundária nas costas): *Arco de Caça*
+     * Slot 3 (Escudo): *Broquel de Ferro*
+   * Ao confirmar, equipa o guerreiro com os visuais nas mãos e costas.
 
 5. **Os Pets da Cabana (Preta & Bela — Posições Dinâmicas a Cada Run):**
    * **A Cachorrinha (Preta — Dachshund / Salsichinha):** Fêmea de pelo preto brilhante/carvão, pernas curtas, corpo alongado, orelhas caídas e olhar carinhoso.
@@ -176,17 +187,16 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
    * **Regra Cromática Estrita da Morte:** Qualquer elemento visual ligado à Morte (névoa do portal, cartas de bênção, auras e tela de game over) utiliza obrigatoriamente a mesma paleta verde-esmeralda acinzentada do vórtice (`#2E5246` / `#6BBC9E` / `#080D0A`).
    * **Comportamento do Espectro Híbrido:**
      * *Em Repouso (distante):* O arco de pedra ancestral emana apenas a névoa viva verde-esmeralda rodopiando pelo solo.
-     * *Ao Aproximar-se:* A névoa se adensa e dela **se condensa suavemente um espectro esbranquiçado sem pés**, de feições esqueléticas e manto etéreo que se dissolve na fumaça. A Morte projeta a janela **"O Toque da Morte"** (3 bênçãos/modificadores aleatórios sorteados do pool desbloqueado para a run).
-     * *Ao Confirmar & Partir:* O espectro se dissipa de volta na névoa pura, o herói cruza o limiar e a run no Bioma 1 tem início.
-   * **Expansão do Catálogo via Derrota de Bosses:**
-     * A variedade de cartas do Toque da Morte **não é comprada nem desbloqueada por grind**: ela é conquistada superando os grandes desafios do mundo!
-     * O jogador começa com um **Pool Inicial Básico** (6 a 9 modificadores fundamentais de parry, esquiva, dano físico e estamina).
-     * **Ao derrotar cada Boss do jogo:**
-       * Um selo temporal da Morte é rompido.
-       * A tela de triunfo do chefe exibe uma mensagem solene:
-         * *"O ciclo se aprofunda... O pacto se expande."*
-         * `[ Novos modificadores disponíveis no Toque da Morte! ]`
-       * O pool permanente da Morte recebe novos arquétipos avançados e sinergias de alto impacto para enriquecer todas as runs futuras.
+     * *Ao Aproximar-se:* A névoa se adensa e dela **se condensa suavemente um espectro esbranquiçado sem pés**, de feições esqueléticas e manto etéreo que se dissolve na fumaça. A Morte projeta a janela **"O Toque da Morte"** com botões de cartas/modificadores para a run.
+   * **2 Feitiços / Modificadores Iniciais do Protótipo:**
+     1. *Onda Espectral:* O Parry Perfeito emite uma onda de choque que repele e desestabiliza inimigos ao redor.
+     2. *Olhar da Ruína:* Causa +25% de dano contra qualquer inimigo que estiver atordoado (Stun).
+   * **Diálogos Bem-Humorados e Sarcásticos da Morte (4 Variações):**
+     * *"Tá achando que poder nasce em árvore? Para de morrer e vai matar os Portadores do Caos!"*
+     * *"Eu sou a Morte, não uma feira livre. Derruba os Portadores do Caos se quiser coisa melhor!"*
+     * *"Não sou loja de feitiço, mortal. Vai cobrar a alma dos Portadores do Caos pra mim!"*
+     * *"Quer mais magia? Para de morrer à toa e vai arrancar a essência dos Portadores do Caos!"*
+   * **Expansão do Pool via Derrota de Bosses:** Ao abater cada Portador do Caos, novos modificadores avançados entram permanentemente no sorteio do Toque da Morte.
 
 8. **Diretriz de Greybox & Placeholders (Fase Atual):**
    * Enquanto a arte final pixel art não for desenhada, todos os elementos da casa (cenário, Mãe, Irmão, Cachorrinha, Gatinha e Espectro da Morte) são implementados como **placeholders geométricos limpos**, preservando proporções, paletas e áreas físicas de colisão.
