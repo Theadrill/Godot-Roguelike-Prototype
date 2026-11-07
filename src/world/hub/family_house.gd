@@ -25,6 +25,12 @@ func _ready() -> void:
 	# Posicionamento dinâmico dos pets entre cozinha e forja
 	_randomize_pet_positions()
 
+	# Oculta HUD de combate dentro da cabana para visão limpa e cinematográfica
+	if player:
+		var hud: CanvasLayer = player.get_node_or_null("HUD") as CanvasLayer
+		if hud:
+			hud.visible = false
+
 	# Configura câmera para os limites exatos da cabana (0 a 1100 px horizontais, 0 a 360 verticais)
 	if player:
 		var cam: Camera2D = player.get_node_or_null("Camera2D") as Camera2D
