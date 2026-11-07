@@ -12,6 +12,7 @@
 [ext_resource type="Resource" path="res://src/entities/equipment/swords/weapon_sword_base.tres" id="10_sword"]
 [ext_resource type="Resource" path="res://src/entities/equipment/shields/shield_buckler_base.tres" id="11_buckler"]
 [ext_resource type="Resource" path="res://src/entities/equipment/bows/weapon_bow_base.tres" id="12_bow"]
+[ext_resource type="Resource" path="res://src/entities/equipment/daggers/weapon_dagger_base.tres" id="13_daggers"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_portal"]
 shader = ExtResource("8_death_shader")
@@ -256,6 +257,7 @@ equipment_data = ExtResource("12_bow")
 [node name="Pedestal_Weapon_3" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
 position = Vector2(665, 288)
 pedestal_index = 2
+equipment_data = ExtResource("13_daggers")
 
 [node name="Pedestal_Weapon_4" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
 position = Vector2(695, 288)

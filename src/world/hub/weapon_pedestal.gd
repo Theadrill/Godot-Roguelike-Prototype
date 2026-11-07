@@ -21,6 +21,9 @@ var _player_ref: Player = null
 var _original_item_y: float = -22.0
 var _custom_visual_instance: Node2D = null
 
+## Registro estático de todos os pedestais próximos para garantir foco exclusivo (sem sobreposição de rótulos)
+static var nearby_pedestals: Array[WeaponPedestal] = []
+
 func _ready() -> void:
 	if item_holder:
 		_original_item_y = item_holder.position.y
@@ -33,22 +36,72 @@ func _ready() -> void:
 
 	_refresh_pedestal_state()
 
+func _exit_tree() -> void:
+	nearby_pedestals.erase(self)
+
 func _process(delta: float) -> void:
 	# Flutuação suave mística do item desbloqueado sobre o pedestal
 	if item_holder and item_holder.visible:
 		var bob: float = sin(Time.get_ticks_msec() * 0.0035 + float(pedestal_index) * 0.8) * 2.5
 		item_holder.position.y = _original_item_y + bob
 
+	# Atualiza o pedestal mais próximo a cada quadro para que apenas um rótulo fique visível
+	if _is_player_near and not nearby_pedestals.is_empty() and nearby_pedestals[0] == self:
+		_update_pedestal_focus()
+
 func _on_body_entered(body: Node2D) -> void:
 	if body is Player or body.is_in_group("player"):
 		_is_player_near = true
 		_player_ref = body as Player
-		_show_hint(true)
+		if not nearby_pedestals.has(self):
+			nearby_pedestals.append(self)
+		_update_pedestal_focus()
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is Player or body.is_in_group("player"):
 		_is_player_near = false
+		nearby_pedestals.erase(self)
 		_show_hint(false)
+		_update_pedestal_focus()
+
+static func _update_pedestal_focus() -> void:
+	if nearby_pedestals.is_empty():
+		return
+
+	var p_ref: Player = nearby_pedestals[0]._player_ref
+	if not p_ref or not is_instance_valid(p_ref):
+		p_ref = nearby_pedestals[0].get_tree().get_first_node_in_group("player") as Player
+	if not p_ref:
+		return
+
+	var px: float = p_ref.global_position.x
+	var closest: WeaponPedestal = null
+	var min_dist: float = 999999.0
+
+	for ped in nearby_pedestals:
+		if is_instance_valid(ped):
+			var d: float = absf(ped.global_position.x - px)
+			if d < min_dist:
+				min_dist = d
+				closest = ped
+
+	for ped in nearby_pedestals:
+		if is_instance_valid(ped):
+			if ped == closest:
+				ped._show_hint(true)
+			else:
+				ped._show_hint(false)
+
+func _is_current_closest() -> bool:
+	if not _player_ref or nearby_pedestals.is_empty():
+		return true
+	var px: float = _player_ref.global_position.x
+	var my_dist: float = absf(global_position.x - px)
+	for other in nearby_pedestals:
+		if is_instance_valid(other) and other != self:
+			if absf(other.global_position.x - px) < my_dist:
+				return false
+	return true
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -56,8 +109,9 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _is_player_near and event.is_action_pressed("interact"):
-		get_viewport().set_input_as_handled()
-		interact()
+		if _is_current_closest():
+			get_viewport().set_input_as_handled()
+			interact()
 
 func interact() -> void:
 	if not _player_ref:
@@ -220,7 +274,7 @@ func _refresh_pedestal_state() -> void:
 func _show_hint(show: bool) -> void:
 	if not info_label:
 		return
-	if not show:
+	if not show or not _is_current_closest():
 		info_label.visible = false
 		return
 

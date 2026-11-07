@@ -107,7 +107,7 @@ func is_weapon_pedestal_unlocked(index: int) -> bool:
 	match index:
 		0: return true # Espada Rústica inicial
 		1: return true # Arco Rústico liberado para testes de troca/equipamento
-		2: return bosses_defeated_list.size() >= 3
+		2: return true # Adagas Gêmeas liberadas para testes de troca (swap)
 		3: return elite_kills_count >= 10
 		4: return total_souls_collected >= 500
 		5: return kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0) >= 50
@@ -117,7 +117,7 @@ func get_weapon_pedestal_condition_text(index: int) -> String:
 	match index:
 		0: return "Liberado (Espada Rústica)"
 		1: return "Liberado para testes (Arco Rústico)"
-		2: return "Derrotar 3 chefões diferentes (%d/3)" % bosses_defeated_list.size()
+		2: return "Liberado para testes (Adagas Gêmeas)"
 		3: return "Derrotar 10 guardas de elite (%d/10)" % elite_kills_count
 		4: return "Sugar 500 essências de monstros (%d/500)" % total_souls_collected
 		5: return "Derrotar 50 abominações do Caos (%d/50)" % kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0)
