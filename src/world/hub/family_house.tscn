@@ -33,7 +33,7 @@ position = Vector2(550, 324)
 shape = SubResource("RectangleShape2D_ground")
 
 [node name="Ceiling_Col" type="CollisionShape2D" parent="Environment"]
-position = Vector2(430, 24)
+position = Vector2(430, 60)
 shape = SubResource("RectangleShape2D_ceiling")
 
 [node name="WallLeft_Col" type="CollisionShape2D" parent="Environment"]
@@ -45,20 +45,20 @@ position = Vector2(1115, 180)
 shape = SubResource("RectangleShape2D_wall_right")
 
 [node name="WallHouseEnd_Col" type="CollisionShape2D" parent="Environment"]
-position = Vector2(860, 100)
+position = Vector2(860, 140)
 shape = SubResource("RectangleShape2D_wall_house_end")
 
 [node name="Background_House" type="Polygon2D" parent="."]
 color = Color(0.28, 0.20, 0.15, 1)
-polygon = PackedVector2Array(0, 48, 850, 48, 850, 288, 0, 288)
+polygon = PackedVector2Array(0, 85, 850, 85, 850, 288, 0, 288)
 
 [node name="Background_Yard" type="Polygon2D" parent="."]
 color = Color(0.07, 0.10, 0.11, 1)
-polygon = PackedVector2Array(850, 0, 1100, 0, 1100, 288, 850, 288)
+polygon = PackedVector2Array(850, 80, 1100, 80, 1100, 288, 850, 288)
 
 [node name="Beams_Visual" type="Polygon2D" parent="."]
 color = Color(0.16, 0.11, 0.08, 1)
-polygon = PackedVector2Array(0, 0, 860, 0, 860, 48, 850, 200, 840, 200, 840, 48, 560, 48, 560, 200, 550, 200, 550, 48, 270, 48, 270, 200, 260, 200, 260, 48, 0, 48)
+polygon = PackedVector2Array(0, 60, 860, 60, 860, 95, 850, 180, 840, 180, 840, 95, 560, 95, 560, 180, 550, 180, 550, 95, 270, 95, 270, 180, 260, 180, 260, 95, 0, 95)
 
 [node name="Floor_Visual_House" type="Polygon2D" parent="."]
 color = Color(0.38, 0.26, 0.18, 1)
@@ -82,9 +82,13 @@ polygon = PackedVector2Array(40, 270, 105, 270, 105, 276, 40, 276)
 color = Color(0.92, 0.88, 0.82, 1)
 polygon = PackedVector2Array(32, 266, 46, 266, 46, 276, 32, 276)
 
+[node name="Hearth_Chimney" type="Polygon2D" parent="Props"]
+color = Color(0.24, 0.22, 0.24, 1)
+polygon = PackedVector2Array(142, 85, 173, 85, 175, 240, 140, 240)
+
 [node name="Hearth_Stone" type="Polygon2D" parent="Props"]
 color = Color(0.30, 0.28, 0.30, 1)
-polygon = PackedVector2Array(140, 240, 175, 240, 180, 288, 135, 288)
+polygon = PackedVector2Array(138, 230, 177, 230, 180, 288, 135, 288)
 
 [node name="Hearth_Fire" type="Polygon2D" parent="Props"]
 color = Color(0.95, 0.55, 0.15, 1)
@@ -304,7 +308,7 @@ layer = 95
 [node name="TopBar" type="ColorRect" parent="CinematicBars"]
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 38.0
+offset_bottom = 85.0
 grow_horizontal = 2
 color = Color(0, 0, 0, 1)
 
@@ -313,7 +317,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -38.0
+offset_top = -55.0
 grow_horizontal = 2
 grow_vertical = 0
 color = Color(0, 0, 0, 1)
