@@ -99,41 +99,57 @@ Ao atingir `0` de HP:
 
 ---
 
-## 5. O Hub: A Casa da Família & O Toque da Morte
+## 5. O Hub: A Cabana Rústica Medieval da Família & O Toque da Morte
 
-A Casa é um espaço seguro dividido em setores:
+A Cabana é o santuário protegido da anomalia temporal. Sua estética segue a fantasia medieval rústica clássica (estilo *Senhor dos Anéis* / Tolkien — vigas de carvalho escuro, lareira crepitante de pedra, fardos de feno, ferramentas de ferro forjado e ervas silvestres penduradas no teto).
+
+O espaço é estruturado de forma linear e contínua em setores greybox com progressão natural de preparação do guerreiro:
 
 ```
-[ Tatame / Quarto ] ─── [ Cozinha da Mãe ] ─── [ Forja do Irmão ] ─── [ Baú de Equip. ] ─── [ Névoa da Morte / Saída ]
-     (Despertar)             (Chás & Costura)          (Diagramas)            (3 Slots)           (Modificador & Run)
+[ Quarto do Guerreiro ] ─── [ Ervanária da Mãe ] ─── [ Forja do Irmão & Armas ] ─── [ Pátio dos Pets ] ─── [ Arco de Pedra / Morte ]
+ (Despertar & Baú Skins)     (Caldeirão & Infusões)      (Bigorna & 3 Slots Armas)       (Cão & Gata)             (Modificadores & Run)
 ```
 
-1. **O Despertar:**
-   * Fade suave abrindo no tatame. Vida a 100%, frascos recarregados, Nível 1.
+1. **O Quarto do Guerreiro (Despertar & Baú de Cosméticos):**
+   * Fade suave abrindo na cama de madeira rústica e peles ao lado da lareira crepitante.
+   * O guerreiro desperta do colapso temporal com vida a 100%, 1 frasco de infusão recarregado e Nível 1.
+   * **Baú de Carvalho do Quarto (Skins & Capas):** Baú de roupas onde o jogador pode inspecionar e equipar mantos de lã, capas de viagem com capuz e túnicas costuradas pela Mãe.
 
-2. **A Mãe (Cozinha & Mesa de Costura):**
-   * **Chás & Upgrades Permanentes:** Chás preparados com ervas misteriosas que aumentam atributos eternos do save (ex: +10 HP Máximo fixo).
-   * **Elixires da Run (Acumulativos):** A Mãe prepara infusões temporárias antes da partida. O jogador pode tomar **múltiplos chás diferentes** e empilhar seus efeitos para aquela run específica.
-   * **Mesa de Costura (Skins & Cosméticos):** Fabrica roupas e skins para o Protagonista, para a Mãe, para o Irmão e para os dois pets da casa com tecidos raros colhidos nas runs.
+2. **A Mãe (Ervanária Medieval & Caldeirão de Ferro):**
+   * **Infusões Silvestres & Upgrades Permanentes:** Ervas raras e raízes da floresta antiga (estilo *Athelas*) preparadas no caldeirão de ferro para aumentar atributos eternos da linhagem (ex: +10 HP Máximo fixo).
+   * **Elixires da Partida (Acumulativos):** A Mãe prepara caldos e tônicos revigorantes antes da jornada. O jogador pode beber múltiplos elixires e empilhar seus efeitos para aquela run específica.
+   * **Tear Medieval & Mesa de Couro (Confecção):** Onde a Mãe tece novas roupas para o guerreiro, mantas para os pets e vestes para a família conforme tecidos e pigmentos são resgatados nas runs.
 
-3. **O Irmão (A Forja do Aprendiz):**
-   * Recebe os diagramas de armamentos salvos no Baú Transtemporal.
-   * Como ferreiro aprendiz, adiciona novas armas e escudos básicos à sua coleção no Baú de Equipamentos.
+3. **O Irmão (A Forja do Aprendiz & Preparação de Armamentos):**
+   * Bigorna de ferro sobre cepo de carvalho, fole de couro e fornalha de carvão.
+   * **Diagramas & Aprendizado:** Recebe diagramas e fragmentos de aço resgatados das ruínas para forjar novas variantes de espadas, machados, arcos e escudos.
+   * **O Expositor / Suporte de Armas da Forja (3 Slots de Equipamento para a Run):**
+     * **Slot 1 (Arma Principal / Mão Hábil):** Escolha da arma principal empunhada.
+     * **Slot 2 (Secundária / Costas):** Arcos, adagas, cajados.
+     * **Slot 3 (Mão Inábil / Escudo):** Broquel de parry, escudo redondo nórdico.
+     * Permite que o guerreiro saia da forja 100% equipado para o combate.
 
-4. **O Baú de Equipamentos da Casa (3 Slots Grandes):**
-   * Ao abrir o baú, a interface exibe 3 seletores modulares:
-     * **Slot 1 (MainHand):** Escolha da arma principal empunhada.
-     * **Slot 2 (Secundária / Costas):** Escolha da arma secundária (arcos, adagas, etc.).
-     * **Slot 3 (OffHand):** Escolha do escudo (broquel de parry, escudo de absorção).
-   * Pressionar `Start` / `Confirmar` equipa o loadout e fecha o baú.
+4. **Os Pets da Cabana (Posições Dinâmicas a Cada Run):**
+   * **A Cachorrinha (Dachshund / Salsichinha):** Fêmea de pernas curtas e corpo alongado, orelhas caídas e olhar carinhoso.
+   * **A Gatinha (Siamês Cinza-Claro / Quase Branca):** Pelo curto e elegante (não felpuda), corpo claro/esbranquiçado com pontas (orelhas, focinho e cauda) em cinza suave.
+   * **Comportamento Dinâmico:** A cada nova run / despertar, a cachorrinha e a gatinha sorteiam lugares aconchegantes diferentes para repousar entre a Cozinha e a Forja (ex: enroladas perto do fogo da lareira, embaixo da mesa de ervas, sobre uma pele de ovelha ao lado do fole ou cochilando perto do cesto de lenha).
+   * **Interação:** O jogador pode se aproximar para fazer carinho (`[E] / [X]`) com coração diegético, abanar de cauda e ronronar.
 
-5. **Os Pets da Casa:**
-   * A **Cachorrinha** e a **Gatinha** repousam pela casa. O jogador pode interagir para fazer carinho (`E` / `X`) e equipar roupinhas costuradas pela Mãe.
+5. **A Atmosfera Visual da Casa (O Refúgio Feliz, Fofo e Colorido):**
+   * O interior da cabana contrasta fortemente com a desolação sombria das ruínas externas:
+   * **Paleta Quente & Viva:** Tons vibrantes de madeira acolhedora, luz âmbar da lareira, potes de cerâmica colorida, feixes de ervas verde-vivas, flores silvestres em jarras, mantas tecidas em tons de amarelo e terracota, e o brilho rubro da fornalha.
+   * A casa passa uma sensação genuína de paz, afeto familiar e acolhimento fofo — o motivo pelo qual o guerreiro luta para proteger o santuário.
 
-6. **A Névoa Esverdeada & "O Toque da Morte":**
-   * À direita da casa, a névoa anuncia a presença da Morte.
-   * Abre a janela **"O Toque da Morte"** com 3 modificadores aleatórios para a run.
-   * Selecionado o modificador, o guerreiro entra na porta, a anomalia temporal se manifesta e a run no Bioma 1 tem início.
+6. **O Arco de Pedra em Ruínas & A Manifestação Híbrida da Morte:**
+   * **Regra Cromática Estrita da Morte:** Qualquer elemento visual ligado à Morte (névoa do portal, cartas de bênção, auras e tela de game over) utiliza obrigatoriamente a mesma paleta verde-esmeralda acinzentada do vórtice (`#2E5246` / `#6BBC9E` / `#080D0A`).
+   * **Comportamento do Espectro Híbrido:**
+     * *Em Repouso (distante):* O arco de pedra ancestral emana apenas a névoa viva verde-esmeralda rodopiando pelo solo.
+     * *Ao Aproximar-se:* A névoa se adensa e dela **se condensa suavemente um espectro esbranquiçado sem pés**, de feições esqueléticas e manto etéreo que se dissolve na fumaça. A Morte projeta a janela **"O Toque da Morte"** (3 bênçãos/modificadores para a run).
+     * *Ao Confirmar & Partir:* O espectro se dissipa de volta na névoa pura, o herói cruza o limiar e a run no Bioma 1 tem início.
+
+7. **Diretriz de Greybox & Placeholders (Fase Atual):**
+   * Enquanto a arte final pixel art não for desenhada, todos os elementos da casa (cenário, Mãe, Irmão, Cachorrinha, Gatinha e Espectro da Morte) são implementados como **placeholders geométricos limpos**, preservando proporções, paletas e áreas físicas de colisão.
+   * Os NPCs nesta fase inicial atuam puramente como presenças físicas/cenográficas no ambiente, sem lógicas complexas de loja ou forja ativadas prematuramente.
 
 ---
 
