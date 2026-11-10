@@ -5,14 +5,14 @@
 [resource]
 script = ExtResource("1_script")
 profile_name = "staff"
-idle_0_pos = Vector2(6, -22)
-idle_0_rot = -40.0
-idle_1_pos = Vector2(6, -22)
-idle_1_rot = -40.0
-idle_2_pos = Vector2(6, -22)
-idle_2_rot = -40.0
-idle_3_pos = Vector2(6, -22)
-idle_3_rot = -40.0
+idle_0_pos = Vector2(-18.000002, -15.000002)
+idle_0_rot = 10.999999
+idle_1_pos = Vector2(-17.999998, -17)
+idle_1_rot = 10.999999
+idle_2_pos = Vector2(-19, -16.999998)
+idle_2_rot = 10.999998
+idle_3_pos = Vector2(-17.999998, -15)
+idle_3_rot = 10.999999
 run_0_pos = Vector2(6, -22)
 run_0_rot = -40.0
 run_1_pos = Vector2(6, -22)
@@ -87,5 +87,19 @@ back_frames = {
 "pos": Vector2(-2, -24),
 "rot": -130.0,
 "visible": true
+}
+}
+hand_frames = {
+"idle_0": {
+"z_index": 2
+},
+"idle_1": {
+"z_index": 2
+},
+"idle_2": {
+"z_index": 2
+},
+"idle_3": {
+"z_index": 2
 }
 }
