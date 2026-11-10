@@ -212,7 +212,7 @@ func set_shield_raised(raised: bool) -> void:
 	_shield_instance.position = Vector2.ZERO
 	_shield_instance.rotation_degrees = 0.0
 	_shield_instance.z_index = 0
-	_on_animation_frame_changed()
+	_on_player_sprite_frame_changed()
 
 func _refresh_equipped_visuals() -> void:
 	_update_main_weapon_visual()
@@ -396,6 +396,9 @@ func _on_player_sprite_frame_changed() -> void:
 		return
 	_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
 
+func _on_animation_frame_changed() -> void:
+	_on_player_sprite_frame_changed()
+
 func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> void:
 	if not player_sprite or not player_sprite.visible:
 		return
@@ -424,6 +427,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			if back_socket_weapon:
 				back_socket_weapon.position = back_data.get("pos", Vector2(-6, -24))
 				back_socket_weapon.rotation_degrees = back_data.get("rot", 0.0)
+				back_socket_weapon.z_index = back_data.get("z_index", -2)
 			if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
 				_secondary_weapon_instance.position = Vector2.ZERO
 				_secondary_weapon_instance.rotation_degrees = 0.0
@@ -432,6 +436,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 		var torso_pos: Vector2 = back_socket_profile.get_frame_pos(anim_name, frame_idx)
 		back_socket_weapon.position = torso_pos
 		back_socket_weapon.rotation_degrees = 0.0
+		back_socket_weapon.z_index = -2
 
 	# 3. Escudo (na Mão/Guarda ou nas Costas)
 	if shield:
@@ -453,6 +458,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 					if back_socket_shield:
 						back_socket_shield.position = back_data.get("pos", Vector2(-9, -24))
 						back_socket_shield.rotation_degrees = back_data.get("rot", 0.0)
+						back_socket_shield.z_index = back_data.get("z_index", -1)
 					if _shield_instance and is_instance_valid(_shield_instance):
 						_shield_instance.position = Vector2.ZERO
 						_shield_instance.rotation_degrees = 0.0
@@ -460,8 +466,10 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 	elif back_socket_shield:
 		if back_socket_weapon:
 			back_socket_shield.position = back_socket_weapon.position + Vector2(-3.0, 0.0)
+			back_socket_shield.z_index = -1
 		elif back_socket_profile:
 			back_socket_shield.position = back_socket_profile.get_frame_pos(anim_name, frame_idx) + Vector2(-3.0, 0.0)
+			back_socket_shield.z_index = -1
 
 func stop_animation() -> void:
 	if animation_player and animation_player.is_playing():
@@ -836,10 +844,14 @@ func _update_equipment_depth() -> void:
 		if off_hand_socket:
 			off_hand_socket.z_index = 1
 
-	if back_socket_shield:
-		back_socket_shield.z_index = -1
-	if back_socket_weapon:
-		back_socket_weapon.z_index = -2
+	# Sockets das costas e cintura mantêm o z_index calibrado no perfil do frame
+	if player_sprite:
+		_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
+	else:
+		if back_socket_shield:
+			back_socket_shield.z_index = -1
+		if back_socket_weapon:
+			back_socket_weapon.z_index = -2
 
 ## Intent-filtered check for crouching.
 ## Prevents accidental crouches when tilting the analog stick diagonally while running.

@@ -294,20 +294,41 @@ extends Resource
 @export var default_back_pos: Vector2 = Vector2(-6, -24)
 ## Rotação padrão da arma nas costas em graus (ex: -175° para arco, 225° para espada).
 @export_range(-360.0, 360.0, 0.5, "suffix:°") var default_back_rot: float = -175.0
-## Dados calibrados frame a frame nas costas: {"idle_0": {"pos": Vector2, "rot": float, "visible": bool}, ...}
+## Z-Index padrão nas costas (-2 para trás das costas, -1 atrás do corpo, ou 1 para ficar na frente na cintura).
+@export var default_back_z_index: int = -2
+## Dados calibrados frame a frame nas costas: {"idle_0": {"pos": Vector2, "rot": float, "visible": bool, "z_index": int}, ...}
 @export var back_frames: Dictionary = {}
+
+@export_group("Mão (Configuração Base & Frames)")
+## Z-Index padrão da arma na mão principal (1 na frente do corpo).
+@export var default_hand_z_index: int = 1
+## Dados adicionais customizados frame a frame na mão (ex: {"idle_0": {"z_index": 1}}):
+@export var hand_frames: Dictionary = {}
 
 func get_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 	var pos_prop := "%s_%d_pos" % [anim_name, frame_idx]
+	var key := "%s_%d" % [anim_name, frame_idx]
+	var custom_hand_data: Dictionary = hand_frames.get(key, {}) if hand_frames is Dictionary else {}
+	var z_val: int = custom_hand_data.get("z_index", default_hand_z_index)
+
 	if pos_prop in self:
 		var rot_prop := "%s_%d_rot" % [anim_name, frame_idx]
 		var vis_prop := "%s_%d_visible" % [anim_name, frame_idx]
 		return {
 			"pos": get(pos_prop),
 			"rot": get(rot_prop),
-			"visible": get(vis_prop)
+			"visible": get(vis_prop),
+			"z_index": z_val
 		}
-	return {"pos": Vector2(6, -20), "rot": -35.0, "visible": true}
+	return {"pos": Vector2(6, -20), "rot": -35.0, "visible": true, "z_index": z_val}
+
+func set_hand_z_index(anim_name: StringName, frame_idx: int, z_idx: int) -> void:
+	var key := "%s_%d" % [anim_name, frame_idx]
+	if not (hand_frames is Dictionary):
+		hand_frames = {}
+	if not hand_frames.has(key):
+		hand_frames[key] = {}
+	hand_frames[key]["z_index"] = z_idx
 
 func get_back_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 	var key := "%s_%d" % [anim_name, frame_idx]
@@ -317,19 +338,22 @@ func get_back_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 			return {
 				"pos": data.get("pos", default_back_pos),
 				"rot": data.get("rot", default_back_rot),
-				"visible": data.get("visible", true)
+				"visible": data.get("visible", true),
+				"z_index": data.get("z_index", default_back_z_index)
 			}
 	return {
 		"pos": default_back_pos,
 		"rot": default_back_rot,
-		"visible": true
+		"visible": true,
+		"z_index": default_back_z_index
 	}
 
-func set_back_frame_data(anim_name: StringName, frame_idx: int, pos: Vector2, rot: float, vis: bool = true) -> void:
+func set_back_frame_data(anim_name: StringName, frame_idx: int, pos: Vector2, rot: float, vis: bool = true, z_idx: int = -2) -> void:
 	var key := "%s_%d" % [anim_name, frame_idx]
 	back_frames[key] = {
 		"pos": pos,
 		"rot": rot,
-		"visible": vis
+		"visible": vis,
+		"z_index": z_idx
 	}
 

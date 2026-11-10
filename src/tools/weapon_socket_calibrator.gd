@@ -90,7 +90,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		_update_visual_instances()
 		_on_frame_changed()
 
-@export_group("4. Ajustes do Frame Atual (X, Y e Ângulo)")
+@export_group("4. Ajustes do Frame Atual (X, Y, Ângulo e Z-Index)")
 ## Posição do socket no frame atual. Você pode digitar aqui OU arrastar o nó na Viewport 2D com o mouse!
 @export var socket_position: Vector2 = Vector2.ZERO:
 	set(value):
@@ -106,6 +106,14 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		var node := _get_active_marker()
 		if node and not is_equal_approx(node.rotation_degrees, value):
 			node.rotation_degrees = value
+
+## Profundidade / Z-Index no frame atual (-2 costas fundas, -1 atrás do corpo, 0 neutro, 1 na frente do corpo/cintura).
+@export_range(-10, 10, 1) var socket_z_index: int = -2:
+	set(value):
+		socket_z_index = value
+		var node := _get_active_marker()
+		if node and node.z_index != value:
+			node.z_index = value
 
 ## Visibilidade do item neste frame (true = visível, false = oculto).
 @export var item_visible_in_frame: bool = true:
@@ -249,7 +257,7 @@ func _update_visual_instances() -> void:
 				back_w.add_child(_back_weapon_instance)
 				_back_weapon_instance.position = Vector2.ZERO
 				_back_weapon_instance.rotation_degrees = 0.0
-				_back_weapon_instance.z_index = -2
+				_back_weapon_instance.z_index = 0
 
 	# 4. Escudo nas costas (aparece se calibrando Escudo nas Costas OU se show_shield_reference=true quando não estiver na mão)
 	var should_show_back_shield := (socket_target == "Escudo nas Costas (BackSocketShield)") or (show_shield_reference and socket_target != "Escudo na Mão (OffHandSocket)")
@@ -262,7 +270,7 @@ func _update_visual_instances() -> void:
 				back_s.add_child(_back_shield_instance)
 				_back_shield_instance.position = Vector2.ZERO
 				_back_shield_instance.rotation_degrees = 0.0
-				_back_shield_instance.z_index = -1
+				_back_shield_instance.z_index = 0
 
 func _get_node_safe(path: String) -> Node:
 	return get_node_or_null(path)
@@ -297,6 +305,7 @@ func _on_frame_changed() -> void:
 		var w_data: Dictionary = _weapon_profile_resource.get_frame_data(selected_animation, current_frame)
 		hand_w.position = w_data.get("pos", Vector2(6, -20))
 		hand_w.rotation_degrees = w_data.get("rot", -35.0)
+		hand_w.z_index = w_data.get("z_index", 1)
 		if _main_hand_instance and is_instance_valid(_main_hand_instance):
 			_main_hand_instance.visible = w_data.get("visible", true)
 
@@ -305,6 +314,7 @@ func _on_frame_changed() -> void:
 		var s_hand_data: Dictionary = _shield_profile_resource.get_frame_data(selected_animation, current_frame)
 		hand_s.position = s_hand_data.get("pos", Vector2(7, -19))
 		hand_s.rotation_degrees = s_hand_data.get("rot", 0.0)
+		hand_s.z_index = s_hand_data.get("z_index", -1)
 		if _off_hand_instance and is_instance_valid(_off_hand_instance):
 			_off_hand_instance.visible = s_hand_data.get("visible", true)
 
@@ -314,6 +324,7 @@ func _on_frame_changed() -> void:
 		var bw_data: Dictionary = active_back_weapon_prof.get_back_frame_data(selected_animation, current_frame)
 		back_w.position = bw_data.get("pos", Vector2(-6, -24))
 		back_w.rotation_degrees = bw_data.get("rot", -175.0)
+		back_w.z_index = bw_data.get("z_index", -2)
 		if _back_weapon_instance and is_instance_valid(_back_weapon_instance):
 			_back_weapon_instance.visible = bw_data.get("visible", true)
 
@@ -322,6 +333,7 @@ func _on_frame_changed() -> void:
 		var bs_data: Dictionary = _shield_profile_resource.get_back_frame_data(selected_animation, current_frame)
 		back_s.position = bs_data.get("pos", Vector2(-9, -24))
 		back_s.rotation_degrees = bs_data.get("rot", 0.0)
+		back_s.z_index = bs_data.get("z_index", -1)
 		if _back_shield_instance and is_instance_valid(_back_shield_instance):
 			_back_shield_instance.visible = bs_data.get("visible", true)
 
@@ -330,12 +342,13 @@ func _on_frame_changed() -> void:
 	if active_marker:
 		socket_position = active_marker.position
 		socket_rotation = active_marker.rotation_degrees
+		socket_z_index = active_marker.z_index
 
 	var active_vis := _get_active_visual_instance()
 	if active_vis and is_instance_valid(active_vis):
 		item_visible_in_frame = active_vis.visible
 
-	status_message = "%s [%s] -> %s Frame %d" % [_get_active_item_name(), socket_target, selected_animation, current_frame]
+	status_message = "%s [%s] -> %s Frame %d (Z: %d)" % [_get_active_item_name(), socket_target, selected_animation, current_frame, socket_z_index]
 
 func _get_active_item_name() -> String:
 	if "Arma" in socket_target:
@@ -350,6 +363,8 @@ func _process(_delta: float) -> void:
 				socket_position = active_marker.position
 			if not is_equal_approx(active_marker.rotation_degrees, socket_rotation):
 				socket_rotation = active_marker.rotation_degrees
+			if active_marker.z_index != socket_z_index:
+				socket_z_index = active_marker.z_index
 
 func save_current_frame_data() -> void:
 	_load_resources()
@@ -361,6 +376,8 @@ func save_current_frame_data() -> void:
 		_weapon_profile_resource.set("%s_%d_pos" % [selected_animation, current_frame], socket_position)
 		_weapon_profile_resource.set("%s_%d_rot" % [selected_animation, current_frame], socket_rotation)
 		_weapon_profile_resource.set("%s_%d_visible" % [selected_animation, current_frame], item_visible_in_frame)
+		if _weapon_profile_resource.has_method("set_hand_z_index"):
+			_weapon_profile_resource.set_hand_z_index(selected_animation, current_frame, socket_z_index)
 		var err := ResourceSaver.save(_weapon_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_weapon)
 		_report_save_status(err, "%s.tres (Arma na Mão)" % selected_weapon)
 
@@ -368,7 +385,7 @@ func save_current_frame_data() -> void:
 		if not _weapon_profile_resource:
 			status_message = "ERRO: Perfil %s.tres não encontrado!" % selected_weapon
 			return
-		_weapon_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame)
+		_weapon_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame, socket_z_index)
 		var err := ResourceSaver.save(_weapon_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_weapon)
 		_report_save_status(err, "%s.tres (Arma nas Costas)" % selected_weapon)
 
@@ -379,6 +396,8 @@ func save_current_frame_data() -> void:
 		_shield_profile_resource.set("%s_%d_pos" % [selected_animation, current_frame], socket_position)
 		_shield_profile_resource.set("%s_%d_rot" % [selected_animation, current_frame], socket_rotation)
 		_shield_profile_resource.set("%s_%d_visible" % [selected_animation, current_frame], item_visible_in_frame)
+		if _shield_profile_resource.has_method("set_hand_z_index"):
+			_shield_profile_resource.set_hand_z_index(selected_animation, current_frame, socket_z_index)
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
 		_report_save_status(err, "%s.tres (Escudo na Mão)" % selected_shield)
 
@@ -386,14 +405,14 @@ func save_current_frame_data() -> void:
 		if not _shield_profile_resource:
 			status_message = "ERRO: Perfil %s.tres não encontrado!" % selected_shield
 			return
-		_shield_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame)
+		_shield_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame, socket_z_index)
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
 		_report_save_status(err, "%s.tres (Escudo nas Costas)" % selected_shield)
 
 func _report_save_status(err: Error, label: String) -> void:
 	if err == OK:
-		status_message = "SUCESSO! Salvo em %s -> [%s Frame %d] (Pos: %v, Rot: %.1f°)" % [
-			label, selected_animation, current_frame, socket_position, socket_rotation
+		status_message = "SUCESSO! Salvo em %s -> [%s Frame %d] (Pos: %v, Rot: %.1f°, Z: %d)" % [
+			label, selected_animation, current_frame, socket_position, socket_rotation, socket_z_index
 		]
 		print(status_message)
 	else:
