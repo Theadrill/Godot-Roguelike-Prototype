@@ -4,7 +4,7 @@ extends Node2D
 
 ## Ferramenta visual de calibração de sockets de armas e itens nas costas na Viewport 2D do Godot.
 ## Permite selecionar a arma, a animação e o frame, ver os sprites na tela 2D
-## e arrastar a arma ou o socket das costas diretamente com o mouse, gravando no arquivo correspondente (.tres).
+## e calibrar tanto a arma na mão, o movimento do tronco nas costas, quanto o ângulo/offset da arma guardada nas costas.
 
 const VISUAL_SCENES: Dictionary = {
 	"sword": "res://src/entities/equipment/swords/sword_visual.tscn",
@@ -21,19 +21,19 @@ const VISUAL_SCENES: Dictionary = {
 	"crossbow_2": "res://src/entities/equipment/crossbows/crossbow_visual.tscn",
 }
 
-const DEFAULT_BACK_ROTATIONS: Dictionary = {
-	"sword": 225.0,
-	"sword_2": 225.0,
-	"dagger": 225.0,
-	"dagger_2": 225.0,
-	"hammer": 25.0,
-	"hammer_2": 25.0,
-	"staff": 225.0,
-	"staff_2": 225.0,
-	"bow": -65.0,
-	"bow_2": -65.0,
-	"crossbow": 0.0,
-	"crossbow_2": 0.0,
+const WEAPON_DATA_PATHS: Dictionary = {
+	"sword": "res://src/entities/equipment/swords/weapon_sword_base.tres",
+	"sword_2": "res://src/entities/equipment/swords/weapon_sword_base.tres",
+	"dagger": "res://src/entities/equipment/daggers/weapon_dagger_base.tres",
+	"dagger_2": "res://src/entities/equipment/daggers/weapon_dagger_base.tres",
+	"hammer": "res://src/entities/equipment/hammers/weapon_hammer_base.tres",
+	"hammer_2": "res://src/entities/equipment/hammers/weapon_hammer_base.tres",
+	"staff": "res://src/entities/equipment/staffs/weapon_staff_base.tres",
+	"staff_2": "res://src/entities/equipment/staffs/weapon_staff_base.tres",
+	"bow": "res://src/entities/equipment/bows/weapon_bow_base.tres",
+	"bow_2": "res://src/entities/equipment/bows/weapon_bow_base.tres",
+	"crossbow": "res://src/entities/equipment/crossbows/weapon_crossbow_base.tres",
+	"crossbow_2": "res://src/entities/equipment/crossbows/weapon_crossbow_base.tres",
 }
 
 const ANIMATION_FRAME_COUNTS: Dictionary = {
@@ -49,11 +49,11 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 }
 
 @export_group("1. Alvo de Calibração")
-## Escolha qual socket deseja calibrar e arrastar:
-## - Mão Principal: Ajusta a posição e rotação da arma empunhada na mão (salva no .tres da arma).
-## - Arma nas Costas: Ajusta o socket do tronco que segura a arma de reserva (salva no back_socket.tres).
-## - Escudo nas Costas: Ajusta o socket do tronco que segura o escudo (salva no back_socket.tres).
-@export_enum("Mão Principal (MainHandSocket)", "Arma nas Costas (BackSocketWeapon)", "Escudo nas Costas (BackSocketShield)") var target_socket: String = "Mão Principal (MainHandSocket)":
+## Escolha o que você deseja calibrar:
+## - Mão Principal: Ancoragem frame a frame da arma na mão (salva no .tres da arma).
+## - Tronco nas Costas: Posição frame a frame do tronco do aventureiro (salva no back_socket.tres).
+## - Ajuste da Arma nas Costas: Ângulo e offset da arma de reserva guardada nas costas (salva no weapon_<arma>_base.tres).
+@export_enum("Mão Principal (MainHandSocket)", "Tronco nas Costas (BackSocket - Frame a Frame)", "Ajuste da Arma nas Costas (Ângulo & Offset)") var target_socket: String = "Mão Principal (MainHandSocket)":
 	set(value):
 		target_socket = value
 		_on_configuration_changed()
@@ -78,12 +78,13 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		current_frame = clampi(value, 0, max_f)
 		_on_frame_changed()
 
-@export_group("3. Modelos de Referência nas Costas")
-## Arma que deve aparecer guardada nas costas para referência visual.
+@export_group("3. Arma e Escudo nas Costas")
+## Arma exibida guardada nas costas (secundária).
 @export_enum("none", "bow", "sword", "dagger", "hammer", "staff", "crossbow") var back_weapon_preview: String = "bow":
 	set(value):
 		back_weapon_preview = value
 		_update_back_visuals()
+		_on_frame_changed()
 
 ## Exibir ou ocultar o escudo nas costas como modelo de referência.
 @export var show_shield_on_back: bool = true:
@@ -91,36 +92,28 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		show_shield_on_back = value
 		_update_back_visuals()
 
-@export_group("4. Ajustes do Frame Atual")
-## Posição do socket no frame atual. Você pode editar aqui OU arrastar o Marker2D correspondente na Viewport 2D com o mouse!
+@export_group("4. Ajustes do Alvo Selecionado")
+## Posição ou offset do alvo atual.
 @export var socket_position: Vector2 = Vector2.ZERO:
 	set(value):
 		socket_position = value
-		var target_node := _get_active_socket_node()
-		if target_node and target_node.position != value:
-			target_node.position = value
+		_apply_position_to_target(value)
 
-## Rotação do socket em graus no frame atual.
+## Rotação em graus do alvo atual.
 @export_range(-360.0, 360.0, 0.5, "suffix:°") var socket_rotation: float = 0.0:
 	set(value):
 		socket_rotation = value
-		var target_node := _get_active_socket_node()
-		if target_node and not is_equal_approx(target_node.rotation_degrees, value):
-			target_node.rotation_degrees = value
+		_apply_rotation_to_target(value)
 
-## Visibilidade do item neste frame (true = visível, false = oculto).
+## Visibilidade do item na mão neste frame.
 @export var item_visible_in_frame: bool = true:
 	set(value):
 		item_visible_in_frame = value
-		if target_socket == "Mão Principal (MainHandSocket)" and _weapon_instance and is_instance_valid(_weapon_instance):
+		if _weapon_instance and is_instance_valid(_weapon_instance):
 			_weapon_instance.visible = value
-		elif target_socket == "Arma nas Costas (BackSocketWeapon)" and _back_weapon_instance and is_instance_valid(_back_weapon_instance):
-			_back_weapon_instance.visible = value
-		elif target_socket == "Escudo nas Costas (BackSocketShield)" and _back_shield_instance and is_instance_valid(_back_shield_instance):
-			_back_shield_instance.visible = value
 
 @export_group("5. Gravação no Arquivo")
-## Clique nesta caixinha para SALVAR a posição e rotação atuais no arquivo .tres correspondente!
+## Clique nesta caixinha para SALVAR no arquivo correspondente!
 @export var SAVE_FRAME_TO_PROFILE: bool = false:
 	set(value):
 		if value:
@@ -137,6 +130,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 var _current_profile_resource: WeaponSocketProfile = null
 var _back_profile_resource: BackSocketProfile = null
+var _secondary_weapon_data: WeaponData = null
 var _weapon_instance: Node2D = null
 var _back_weapon_instance: Node2D = null
 var _back_shield_instance: Node2D = null
@@ -155,21 +149,36 @@ func _load_resources() -> void:
 	if ResourceLoader.exists(back_path):
 		_back_profile_resource = load(back_path) as BackSocketProfile
 
-func _get_active_socket_node() -> Marker2D:
-	if not main_hand_socket:
-		main_hand_socket = get_node_or_null("Visual/MainHandSocket") as Marker2D
-	if not back_socket_weapon:
-		back_socket_weapon = get_node_or_null("Visual/BackSocketWeapon") as Marker2D
-	if not back_socket_shield:
-		back_socket_shield = get_node_or_null("Visual/BackSocketShield") as Marker2D
+	var sec_path: String = WEAPON_DATA_PATHS.get(back_weapon_preview, "")
+	if ResourceLoader.exists(sec_path):
+		_secondary_weapon_data = load(sec_path) as WeaponData
+	else:
+		_secondary_weapon_data = null
 
+func _apply_position_to_target(val: Vector2) -> void:
 	if target_socket == "Mão Principal (MainHandSocket)":
-		return main_hand_socket
-	elif target_socket == "Arma nas Costas (BackSocketWeapon)":
-		return back_socket_weapon
-	elif target_socket == "Escudo nas Costas (BackSocketShield)":
-		return back_socket_shield
-	return main_hand_socket
+		if main_hand_socket and main_hand_socket.position != val:
+			main_hand_socket.position = val
+	elif target_socket == "Tronco nas Costas (BackSocket - Frame a Frame)":
+		if back_socket_weapon and back_socket_weapon.position != val:
+			back_socket_weapon.position = val
+		if back_socket_shield:
+			back_socket_shield.position = val + Vector2(-3.0, 0.0)
+	elif target_socket == "Ajuste da Arma nas Costas (Ângulo & Offset)":
+		if _back_weapon_instance and is_instance_valid(_back_weapon_instance) and _back_weapon_instance.position != val:
+			_back_weapon_instance.position = val
+
+func _apply_rotation_to_target(val: float) -> void:
+	if target_socket == "Mão Principal (MainHandSocket)":
+		if main_hand_socket and not is_equal_approx(main_hand_socket.rotation_degrees, val):
+			main_hand_socket.rotation_degrees = val
+	elif target_socket == "Tronco nas Costas (BackSocket - Frame a Frame)":
+		# O socket de tronco do corpo fica com rotação 0
+		if back_socket_weapon:
+			back_socket_weapon.rotation_degrees = 0.0
+	elif target_socket == "Ajuste da Arma nas Costas (Ângulo & Offset)":
+		if _back_weapon_instance and is_instance_valid(_back_weapon_instance) and not is_equal_approx(_back_weapon_instance.rotation_degrees, val):
+			_back_weapon_instance.rotation_degrees = val
 
 func _update_weapon_visual() -> void:
 	var hand := _get_node_safe("Visual/MainHandSocket") as Marker2D
@@ -192,18 +201,25 @@ func _update_back_visuals() -> void:
 	var back_s := _get_node_safe("Visual/BackSocketShield") as Marker2D
 
 	if back_w:
+		back_w.rotation_degrees = 0.0 # No jogo o socket do tronco não gira; quem gira é a arma
 		for c in back_w.get_children():
 			c.queue_free()
 		_back_weapon_instance = null
 
 		if back_weapon_preview != "none":
-			var w_path: String = VISUAL_SCENES.get(back_weapon_preview, "")
-			if ResourceLoader.exists(w_path):
-				var scene := load(w_path) as PackedScene
+			var sec_path: String = WEAPON_DATA_PATHS.get(back_weapon_preview, "")
+			if ResourceLoader.exists(sec_path):
+				_secondary_weapon_data = load(sec_path) as WeaponData
+
+			var scene_path: String = VISUAL_SCENES.get(back_weapon_preview, "")
+			if ResourceLoader.exists(scene_path):
+				var scene := load(scene_path) as PackedScene
 				if scene:
 					_back_weapon_instance = scene.instantiate() as Node2D
 					back_w.add_child(_back_weapon_instance)
-					_back_weapon_instance.rotation_degrees = DEFAULT_BACK_ROTATIONS.get(back_weapon_preview, 0.0)
+					if _secondary_weapon_data:
+						_back_weapon_instance.position = _secondary_weapon_data.back_offset
+						_back_weapon_instance.rotation_degrees = _secondary_weapon_data.back_rotation_degrees
 					_back_weapon_instance.z_index = -2
 
 	if back_s:
@@ -239,7 +255,7 @@ func _on_frame_changed() -> void:
 	if not sprite:
 		return
 
-	# Atualiza o sprite do aventureiro para a pose do frame escolhido
+	# 1. Pose do aventureiro no frame
 	if sprite.sprite_frames and sprite.sprite_frames.has_animation(selected_animation):
 		sprite.animation = selected_animation
 		sprite.frame = current_frame
@@ -248,7 +264,7 @@ func _on_frame_changed() -> void:
 	var back_w := _get_node_safe("Visual/BackSocketWeapon") as Marker2D
 	var back_s := _get_node_safe("Visual/BackSocketShield") as Marker2D
 
-	# 1. Atualiza a mão principal com o profile selecionado
+	# 2. Atualiza a mão principal com o profile selecionado
 	if _current_profile_resource and _current_profile_resource.has_method("get_frame_data"):
 		var data: Dictionary = _current_profile_resource.get_frame_data(selected_animation, current_frame)
 		if hand:
@@ -257,17 +273,18 @@ func _on_frame_changed() -> void:
 		if _weapon_instance and is_instance_valid(_weapon_instance):
 			_weapon_instance.visible = data.get("visible", true)
 
-	# 2. Atualiza os sockets das costas com o back_socket.tres
+	# 3. Atualiza os sockets do tronco com o back_socket.tres
 	var torso_pos := Vector2(-3, -20)
 	if _back_profile_resource and _back_profile_resource.has_method("get_frame_pos"):
 		torso_pos = _back_profile_resource.get_frame_pos(selected_animation, current_frame)
 
 	if back_w:
 		back_w.position = torso_pos
+		back_w.rotation_degrees = 0.0
 	if back_s:
 		back_s.position = torso_pos + Vector2(-3.0, 0.0)
 
-	# 3. Atualiza os inputs do Inspector de acordo com o Target Socket ativo
+	# 4. Atualiza os inputs do Inspector de acordo com o Target Socket ativo
 	if target_socket == "Mão Principal (MainHandSocket)":
 		if hand:
 			socket_position = hand.position
@@ -275,29 +292,40 @@ func _on_frame_changed() -> void:
 			if _weapon_instance and is_instance_valid(_weapon_instance):
 				item_visible_in_frame = _weapon_instance.visible
 		status_message = "Mão Principal: %s [%s - Frame %d]" % [selected_weapon_profile, selected_animation, current_frame]
-	elif target_socket == "Arma nas Costas (BackSocketWeapon)":
+
+	elif target_socket == "Tronco nas Costas (BackSocket - Frame a Frame)":
 		if back_w:
 			socket_position = back_w.position
-			socket_rotation = back_w.rotation_degrees
-			if _back_weapon_instance and is_instance_valid(_back_weapon_instance):
-				item_visible_in_frame = _back_weapon_instance.visible
-		status_message = "Costas (Arma): back_socket.tres [%s - Frame %d]" % [selected_animation, current_frame]
-	elif target_socket == "Escudo nas Costas (BackSocketShield)":
-		if back_s:
-			socket_position = back_s.position
-			socket_rotation = back_s.rotation_degrees
-			if _back_shield_instance and is_instance_valid(_back_shield_instance):
-				item_visible_in_frame = _back_shield_instance.visible
-		status_message = "Costas (Escudo): back_socket.tres [%s - Frame %d]" % [selected_animation, current_frame]
+			socket_rotation = 0.0
+		status_message = "Tronco nas Costas (Global): back_socket.tres [%s - Frame %d]" % [selected_animation, current_frame]
+
+	elif target_socket == "Ajuste da Arma nas Costas (Ângulo & Offset)":
+		if _secondary_weapon_data:
+			socket_position = _secondary_weapon_data.back_offset
+			socket_rotation = _secondary_weapon_data.back_rotation_degrees
+		elif _back_weapon_instance and is_instance_valid(_back_weapon_instance):
+			socket_position = _back_weapon_instance.position
+			socket_rotation = _back_weapon_instance.rotation_degrees
+		status_message = "Arma nas Costas: %s (Offset & Ângulo Base)" % back_weapon_preview
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
-		var active_node := _get_active_socket_node()
-		if active_node:
-			if active_node.position != socket_position:
-				socket_position = active_node.position
-			if not is_equal_approx(active_node.rotation_degrees, socket_rotation):
-				socket_rotation = active_node.rotation_degrees
+		if target_socket == "Mão Principal (MainHandSocket)":
+			if main_hand_socket:
+				if main_hand_socket.position != socket_position:
+					socket_position = main_hand_socket.position
+				if not is_equal_approx(main_hand_socket.rotation_degrees, socket_rotation):
+					socket_rotation = main_hand_socket.rotation_degrees
+		elif target_socket == "Tronco nas Costas (BackSocket - Frame a Frame)":
+			if back_socket_weapon:
+				if back_socket_weapon.position != socket_position:
+					socket_position = back_socket_weapon.position
+		elif target_socket == "Ajuste da Arma nas Costas (Ângulo & Offset)":
+			if _back_weapon_instance and is_instance_valid(_back_weapon_instance):
+				if _back_weapon_instance.position != socket_position:
+					socket_position = _back_weapon_instance.position
+				if not is_equal_approx(_back_weapon_instance.rotation_degrees, socket_rotation):
+					socket_rotation = _back_weapon_instance.rotation_degrees
 
 func save_current_frame_data() -> void:
 	_load_resources()
@@ -325,26 +353,38 @@ func save_current_frame_data() -> void:
 		else:
 			status_message = "ERRO ao salvar no arquivo: código %d" % err
 
-	else:
-		# Calibração do socket das costas (back_socket.tres)
+	elif target_socket == "Tronco nas Costas (BackSocket - Frame a Frame)":
 		if not _back_profile_resource:
 			status_message = "ERRO: Perfil back_socket.tres não encontrado!"
 			return
 
 		var pos_prop := "%s_%d_pos" % [selected_animation, current_frame]
-		var saved_pos := socket_position
-		if target_socket == "Escudo nas Costas (BackSocketShield)":
-			# O escudo usa offset relativo de (-3, 0) em relação ao tronco
-			saved_pos = socket_position - Vector2(-3.0, 0.0)
-
-		_back_profile_resource.set(pos_prop, saved_pos)
+		_back_profile_resource.set(pos_prop, socket_position)
 
 		var back_path := "res://src/entities/equipment/socket_profiles/back_socket.tres"
 		var err := ResourceSaver.save(_back_profile_resource, back_path)
 		if err == OK:
 			status_message = "SUCESSO! Tronco salvo em back_socket.tres -> [%s Frame %d] (Pos: %v)" % [
-				selected_animation, current_frame, saved_pos
+				selected_animation, current_frame, socket_position
 			]
 			print(status_message)
 		else:
 			status_message = "ERRO ao salvar back_socket.tres: código %d" % err
+
+	elif target_socket == "Ajuste da Arma nas Costas (Ângulo & Offset)":
+		if not _secondary_weapon_data:
+			status_message = "ERRO: WeaponData da arma %s não encontrado!" % back_weapon_preview
+			return
+
+		_secondary_weapon_data.back_offset = socket_position
+		_secondary_weapon_data.back_rotation_degrees = socket_rotation
+
+		var w_path: String = WEAPON_DATA_PATHS.get(back_weapon_preview, "")
+		var err := ResourceSaver.save(_secondary_weapon_data, w_path)
+		if err == OK:
+			status_message = "SUCESSO! %s salvo -> back_offset: %v, back_rotation: %.1f°" % [
+				back_weapon_preview, socket_position, socket_rotation
+			]
+			print(status_message)
+		else:
+			status_message = "ERRO ao salvar %s: código %d" % [back_weapon_preview, err]
