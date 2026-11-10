@@ -1,106 +1,99 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://bkctnwbycr3d0"]
 
-[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
 profile_name = "dagger"
-idle_0_pos = Vector2(5, -18)
-idle_0_rot = -20.0
-idle_0_visible = true
-idle_1_pos = Vector2(5, -18)
-idle_1_rot = -20.0
-idle_1_visible = true
-idle_2_pos = Vector2(5, -18)
-idle_2_rot = -20.0
-idle_2_visible = true
-idle_3_pos = Vector2(5, -18)
-idle_3_rot = -20.0
-idle_3_visible = true
+default_hand_z_index = 1
+idle_0_pos = Vector2(-15.999998, -15.000001)
+idle_0_rot = 204.99998
+idle_1_pos = Vector2(-16.000002, -17.000002)
+idle_1_rot = 204.99998
+idle_2_pos = Vector2(-16.999998, -17)
+idle_2_rot = 204.99997
+idle_3_pos = Vector2(-18.000002, -16)
+idle_3_rot = 204.99998
 run_0_pos = Vector2(5, -18)
 run_0_rot = -20.0
-run_0_visible = true
 run_1_pos = Vector2(5, -18)
 run_1_rot = -20.0
-run_1_visible = true
 run_2_pos = Vector2(5, -18)
 run_2_rot = -20.0
-run_2_visible = true
 run_3_pos = Vector2(5, -18)
 run_3_rot = -20.0
-run_3_visible = true
 run_4_pos = Vector2(5, -18)
 run_4_rot = -20.0
-run_4_visible = true
 run_5_pos = Vector2(5, -18)
 run_5_rot = -20.0
-run_5_visible = true
 jump_0_pos = Vector2(5, -18)
 jump_0_rot = -20.0
-jump_0_visible = true
 jump_1_pos = Vector2(5, -20)
 jump_1_rot = -30.0
-jump_1_visible = true
 jump_2_pos = Vector2(5, -22)
-jump_2_rot = -35.0
-jump_2_visible = true
 jump_3_pos = Vector2(5, -20)
 jump_3_rot = -25.0
-jump_3_visible = true
 crouch_0_pos = Vector2(5, -10)
 crouch_0_rot = -20.0
-crouch_0_visible = true
 crouch_1_pos = Vector2(5, -10)
 crouch_1_rot = -20.0
-crouch_1_visible = true
 crouch_2_pos = Vector2(5, -10)
 crouch_2_rot = -20.0
-crouch_2_visible = true
 crouch_3_pos = Vector2(5, -10)
 crouch_3_rot = -20.0
-crouch_3_visible = true
 fall_0_pos = Vector2(5, -20)
 fall_0_rot = -15.0
-fall_0_visible = true
 fall_1_pos = Vector2(5, -20)
 fall_1_rot = -15.0
-fall_1_visible = true
 fall_from_jump_0_pos = Vector2(5, -22)
 fall_from_jump_0_rot = -25.0
-fall_from_jump_0_visible = true
 fall_from_jump_1_pos = Vector2(5, -20)
 fall_from_jump_1_rot = -15.0
-fall_from_jump_1_visible = true
 fall_from_jump_2_pos = Vector2(5, -20)
 fall_from_jump_2_rot = -15.0
-fall_from_jump_2_visible = true
 slide_0_pos = Vector2(7, -7)
 slide_0_rot = -5.0
-slide_0_visible = true
 slide_1_pos = Vector2(7, -7)
 slide_1_rot = -5.0
-slide_1_visible = true
 roll_0_pos = Vector2(3, -12)
 roll_0_rot = -90.0
-roll_0_visible = true
 roll_1_pos = Vector2(0, -16)
 roll_1_rot = -180.0
-roll_1_visible = true
 roll_2_pos = Vector2(-3, -12)
 roll_2_rot = -270.0
-roll_2_visible = true
 roll_3_pos = Vector2(3, -16)
 roll_3_rot = 0.0
-roll_3_visible = true
 double_jump_0_pos = Vector2(3, -12)
 double_jump_0_rot = -90.0
-double_jump_0_visible = true
 double_jump_1_pos = Vector2(0, -16)
 double_jump_1_rot = -180.0
-double_jump_1_visible = true
 double_jump_2_pos = Vector2(-3, -12)
 double_jump_2_rot = -270.0
-double_jump_2_visible = true
 double_jump_3_pos = Vector2(3, -16)
 double_jump_3_rot = 0.0
-double_jump_3_visible = true
+back_frames = {
+"idle_0": {
+"pos": Vector2(-6.9999986, -14.000001),
+"rot": -224.99998,
+"visible": true,
+"z_index": 0
+},
+"idle_1": {
+"pos": Vector2(-6.999999, -14.999998),
+"rot": -224.99997,
+"visible": true,
+"z_index": 0
+},
+"idle_2": {
+"pos": Vector2(-6.999998, -15.000001),
+"rot": -224.99997,
+"visible": true,
+"z_index": 0
+},
+"idle_3": {
+"pos": Vector2(-6.999999, -14.999998),
+"rot": -224.99997,
+"visible": true,
+"z_index": 0
+}
+}

@@ -305,7 +305,7 @@ func _on_frame_changed() -> void:
 		var w_data: Dictionary = _weapon_profile_resource.get_frame_data(selected_animation, current_frame)
 		hand_w.position = w_data.get("pos", Vector2(6, -20))
 		hand_w.rotation_degrees = w_data.get("rot", -35.0)
-		hand_w.z_index = w_data.get("z_index", 1)
+		hand_w.z_index = w_data.get("z_index", 1 if "dagger" in selected_weapon else 2)
 		if _main_hand_instance and is_instance_valid(_main_hand_instance):
 			_main_hand_instance.visible = w_data.get("visible", true)
 
