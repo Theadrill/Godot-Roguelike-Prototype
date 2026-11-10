@@ -13,6 +13,7 @@ func enter() -> void:
 	player = character as Player
 	player.velocity = Vector2.ZERO
 	recovery_timer = 0.0
+	player.play_animation(&"idle")
 
 	# Squash on knee impact: squashed Y (crouch height) and wider X
 	var face: float = float(player.facing_direction)
@@ -21,6 +22,7 @@ func enter() -> void:
 func exit() -> void:
 	var face: float = float(player.facing_direction)
 	player.visual.scale = Vector2(face, 1.0)
+	player.stop_animation()
 
 func physics_update(delta: float) -> void:
 	player.velocity.x = 0.0

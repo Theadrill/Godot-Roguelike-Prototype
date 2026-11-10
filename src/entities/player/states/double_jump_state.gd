@@ -9,6 +9,10 @@ func enter() -> void:
 	player.velocity.y = player.double_jump_velocity
 	player.is_wall_recovery_active = false
 	player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
+	player.play_animation(&"jump")
+
+func exit() -> void:
+	player.stop_animation()
 
 func physics_update(delta: float) -> void:
 	# Wall jump OR Wall Regrab Recovery check if pressing jump while touching wall

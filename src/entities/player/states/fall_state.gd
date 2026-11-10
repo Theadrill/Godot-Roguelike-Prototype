@@ -10,6 +10,15 @@ func enter() -> void:
 	else:
 		player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
 
+	var prev_state_name: String = state_machine.previous_state.name if state_machine and state_machine.previous_state else ""
+	if prev_state_name in ["Jump", "DoubleJump", "WallJump"]:
+		player.play_animation(&"fall_from_jump")
+	else:
+		player.play_animation(&"fall")
+
+func exit() -> void:
+	player.stop_animation()
+
 func physics_update(delta: float) -> void:
 	if player.is_on_floor():
 		var total_fall: float = player.global_position.y - player.fall_peak_y

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=27 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -23,6 +23,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/ranged_attack_state.gd" id="21_ranged_attack"]
 [ext_resource type="Script" path="res://src/entities/player/states/heal_state.gd" id="22_heal"]
 [ext_resource type="PackedScene" path="res://src/ui/death_screen.tscn" id="23_death_screen"]
+[ext_resource type="SpriteFrames" uid="uid://player_frames_unified_01" path="res://assets/player/adventurer/player_frames.tres" id="24_player_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -108,6 +109,12 @@ rotation = -0.610865
 [node name="OffHandSocket" type="Marker2D" parent="Visual"]
 z_index = -1
 position = Vector2(7, -19)
+
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="Visual"]
+visible = false
+position = Vector2(-2, -29)
+sprite_frames = ExtResource("24_player_frames")
+animation = &"idle"
 
 [node name="BodyPlaceholder" type="Polygon2D" parent="Visual"]
 color = Color(0.18, 0.58, 0.58, 1)

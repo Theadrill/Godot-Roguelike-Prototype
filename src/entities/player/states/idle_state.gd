@@ -27,9 +27,11 @@ func enter() -> void:
 	break_anim_time = 0.0
 	player.fall_peak_y = player.global_position.y
 	_reset_break_visuals()
+	player.play_animation(&"idle")
 
 func exit() -> void:
 	_reset_break_visuals()
+	player.stop_animation()
 
 func _reset_break_visuals() -> void:
 	is_in_idle_break = false
@@ -107,6 +109,11 @@ func physics_update(delta: float) -> void:
 	player.move_and_slide()
 
 func _process_breathing_visuals(delta: float) -> void:
+	if player.idle_sprite and player.idle_sprite.visible:
+		# O sprite já possui sua própria animação de respiração desenhada nos frames
+		player.move_and_slide()
+		return
+
 	# Continuous Breathing (Occurs constantly while idle)
 	# Feet (y = 0) stay 100% planted on the ground; only upper body squashes and stretches gently.
 	breath_time += delta

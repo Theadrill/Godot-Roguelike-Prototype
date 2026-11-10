@@ -9,10 +9,12 @@ var player: Player
 func enter() -> void:
 	player = character as Player
 	player.velocity.x = 0.0
+	player.play_animation(&"crouch")
 	player.set_crouched(true)
 
 func exit() -> void:
 	player.set_crouched(false)
+	player.stop_animation()
 
 func physics_update(delta: float) -> void:
 	if player.is_input_locked:

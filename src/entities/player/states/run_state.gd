@@ -6,6 +6,10 @@ var player: Player
 func enter() -> void:
 	player = character as Player
 	player.fall_peak_y = player.global_position.y
+	player.play_animation(&"run")
+
+func exit() -> void:
+	player.stop_animation()
 
 func physics_update(delta: float) -> void:
 	if player.is_input_locked:

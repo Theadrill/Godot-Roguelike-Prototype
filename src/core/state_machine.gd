@@ -5,6 +5,7 @@ extends Node
 @export var initial_state: State
 
 var current_state: State
+var previous_state: State = null
 var states: Dictionary = {}
 
 func _ready() -> void:
@@ -45,6 +46,8 @@ func transition_to(target_state_name: String) -> void:
 	var new_state: State = states[key]
 	if current_state == new_state:
 		return
+
+	previous_state = current_state
 
 	if current_state:
 		current_state.exit()

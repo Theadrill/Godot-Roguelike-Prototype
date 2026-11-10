@@ -108,6 +108,8 @@ func is_roll_requested() -> bool:
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
 @onready var body_polygon: Polygon2D = $Visual/BodyPlaceholder
+@onready var player_sprite: AnimatedSprite2D = $Visual.get_node_or_null("PlayerSprite") as AnimatedSprite2D
+@onready var idle_sprite: AnimatedSprite2D = player_sprite
 @onready var ceiling_check: RayCast2D = $CeilingCheck
 @onready var enemy_overlap_detector: Area2D = $EnemyOverlapDetector
 @onready var hitbox: Hitbox = $Visual/Hitbox
@@ -153,6 +155,9 @@ func _ready() -> void:
 		var default_shield := load("res://src/entities/equipment/shields/shield_buckler_base.tres") as ShieldData
 		if default_shield:
 			shield = default_shield
+
+	if player_sprite:
+		player_sprite.animation_finished.connect(_on_player_sprite_animation_finished)
 
 	_refresh_equipped_visuals()
 	_update_equipment_depth()
@@ -321,6 +326,37 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 				main_hand_socket.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)
 		else:
 			main_hand_socket.rotation_degrees = -35.0
+
+func play_animation(anim_name: StringName) -> void:
+	if not player_sprite:
+		return
+	player_sprite.visible = true
+	if body_polygon:
+		body_polygon.visible = false
+	var headband := visual.get_node_or_null("HeadbandPlaceholder") as CanvasItem
+	if headband:
+		headband.visible = false
+
+	# All animations now follow the standardized 83x62 canvas with feet at row 60 (y = 0 in world)
+	player_sprite.position = Vector2(-2, -29)
+
+	if player_sprite.sprite_frames and player_sprite.sprite_frames.has_animation(anim_name):
+		player_sprite.play(anim_name)
+
+func _on_player_sprite_animation_finished() -> void:
+	# Transição suave: após a ponte de desenrolar do pulo, mantém o loop de queda fluida
+	if player_sprite and player_sprite.animation == &"fall_from_jump":
+		player_sprite.play(&"fall")
+
+func stop_animation() -> void:
+	if player_sprite:
+		player_sprite.visible = false
+		player_sprite.stop()
+	if body_polygon:
+		body_polygon.visible = true
+	var headband := visual.get_node_or_null("HeadbandPlaceholder") as CanvasItem
+	if headband:
+		headband.visible = true
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -617,7 +653,8 @@ func set_crouched(crouched: bool) -> void:
 	if crouched:
 		rect.size = Vector2(16.0, 20.0)
 		collision_shape.position = Vector2(0.0, -10.0)
-		visual.scale.y = 0.5
+		if not player_sprite or not player_sprite.visible:
+			visual.scale.y = 0.5
 		if hurtbox and hurtbox.has_node("CollisionShape2D"):
 			var h_rect := hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
 			if h_rect:
