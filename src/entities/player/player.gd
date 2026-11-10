@@ -372,24 +372,31 @@ func _on_player_sprite_animation_finished() -> void:
 	if player_sprite and player_sprite.animation == &"fall_from_jump":
 		player_sprite.play(&"fall")
 
-func get_equipped_weapon_category() -> String:
-	if not weapon:
+func _detect_weapon_type_string(w: WeaponData) -> String:
+	if not w:
 		return "sword"
-	var res_path: String = weapon.resource_path.to_lower()
-	var w_name: String = weapon.equipment_name.to_lower()
-	if "dagger" in res_path or "dagger" in w_name:
+	var res_path: String = w.resource_path.to_lower()
+	var w_name: String = w.equipment_name.to_lower() if ("equipment_name" in w and w.equipment_name) else ""
+	var s_prof: String = w.socket_profile.to_lower() if ("socket_profile" in w and w.socket_profile) else ""
+	if "dagger" in res_path or "dagger" in w_name or "dagger" in s_prof:
 		return "dagger"
-	elif "hammer" in res_path or "hammer" in w_name:
+	elif "hammer" in res_path or "hammer" in w_name or "hammer" in s_prof:
 		return "hammer"
-	elif "staff" in res_path or "staff" in w_name or "cajado" in w_name:
+	elif "staff" in res_path or "staff" in w_name or "cajado" in w_name or "staff" in s_prof:
 		return "staff"
-	elif "crossbow" in res_path or "crossbow" in w_name or "besta" in w_name:
+	elif "crossbow" in res_path or "crossbow" in w_name or "besta" in w_name or "crossbow" in s_prof:
 		return "crossbow"
-	elif "bow" in res_path or "bow" in w_name or "arco" in w_name:
+	elif "bow" in res_path or "bow" in w_name or "arco" in w_name or "bow" in s_prof:
 		return "bow"
-	elif "sword" in res_path or "sword" in w_name or "espada" in w_name:
+	elif "sword" in res_path or "sword" in w_name or "espada" in w_name or "sword" in s_prof:
 		return "sword"
 	return "sword"
+
+func _is_dagger(w: WeaponData) -> bool:
+	return _detect_weapon_type_string(w) == "dagger"
+
+func get_equipped_weapon_category() -> String:
+	return _detect_weapon_type_string(weapon)
 
 func _on_player_sprite_frame_changed() -> void:
 	if not player_sprite:
