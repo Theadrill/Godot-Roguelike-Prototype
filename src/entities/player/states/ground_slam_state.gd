@@ -22,14 +22,16 @@ func enter() -> void:
 	player.velocity.x = 0.0
 	player.velocity.y = slam_speed
 
-	# Visual vertical stretch while diving
+	player.play_animation(&"roll")
+
 	if player.visual:
-		player.visual.scale = Vector2(0.8 * float(player.facing_direction), 1.25)
+		player.visual.scale = Vector2(float(player.facing_direction), 1.0)
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = 90.0
 
 func exit() -> void:
 	has_impacted = false
+	player.stop_animation()
 	if player.visual:
 		player.visual.scale = Vector2(float(player.facing_direction), 1.0)
 	if player.main_hand_socket:
@@ -53,6 +55,9 @@ func physics_update(delta: float) -> void:
 		if impact_recovery_timer <= 0.0:
 			if player.visual:
 				player.visual.scale = Vector2(float(player.facing_direction), 1.0)
+			if player.is_crouch_requested():
+				state_machine.transition_to("crouch")
+				return
 			var dir := Input.get_axis("move_left", "move_right")
 			if abs(dir) > 0.1:
 				state_machine.transition_to("run")
@@ -64,9 +69,11 @@ func _on_slam_impact() -> void:
 	impact_recovery_timer = impact_recovery
 	player.fall_peak_y = player.global_position.y
 
+	player.play_animation(&"crouch")
+
 	# Impact Squash visual
 	if player.visual:
-		player.visual.scale = Vector2(1.5 * float(player.facing_direction), 0.5)
+		player.visual.scale = Vector2(1.15 * float(player.facing_direction), 0.85)
 
 	# Heavy tactile rumble & screen hitstop
 	CombatFeedback.apply_hit_feedback(0.08, 0.7, 1.0, 0.18)
