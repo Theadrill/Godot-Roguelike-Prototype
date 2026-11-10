@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 profile_name = "dagger_2"
-default_hand_z_index = 1
+default_back_z_index = 1
 idle_0_pos = Vector2(-13.000001, -14.000001)
 idle_0_rot = -329.99997
 idle_1_pos = Vector2(-13, -15)

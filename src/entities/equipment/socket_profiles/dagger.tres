@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 profile_name = "dagger"
-default_hand_z_index = 1
+default_back_z_index = 1
 idle_0_pos = Vector2(-15.999998, -15.000001)
 idle_0_rot = 204.99998
 idle_1_pos = Vector2(-16.000002, -17.000002)
@@ -76,24 +76,24 @@ back_frames = {
 "pos": Vector2(-6.9999986, -14.000001),
 "rot": -224.99998,
 "visible": true,
-"z_index": 0
+"z_index": 1
 },
 "idle_1": {
 "pos": Vector2(-6.999999, -14.999998),
 "rot": -224.99997,
 "visible": true,
-"z_index": 0
+"z_index": 1
 },
 "idle_2": {
 "pos": Vector2(-6.999998, -15.000001),
 "rot": -224.99997,
 "visible": true,
-"z_index": 0
+"z_index": 1
 },
 "idle_3": {
 "pos": Vector2(-6.999999, -14.999998),
 "rot": -224.99997,
 "visible": true,
-"z_index": 0
+"z_index": 1
 }
 }

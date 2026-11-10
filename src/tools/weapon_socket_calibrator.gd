@@ -300,12 +300,12 @@ func _on_frame_changed() -> void:
 	var back_w := _get_node_safe("Visual/BackSocketWeapon") as Marker2D
 	var back_s := _get_node_safe("Visual/BackSocketShield") as Marker2D
 
-	# 2. Posição da Arma na Mão Principal
+	# 2. Posição da Arma na Mão Principal (Tudo na mão = 2)
 	if hand_w and _weapon_profile_resource and _weapon_profile_resource.has_method("get_frame_data"):
 		var w_data: Dictionary = _weapon_profile_resource.get_frame_data(selected_animation, current_frame)
 		hand_w.position = w_data.get("pos", Vector2(6, -20))
 		hand_w.rotation_degrees = w_data.get("rot", -35.0)
-		hand_w.z_index = w_data.get("z_index", 1 if "dagger" in selected_weapon else 2)
+		hand_w.z_index = w_data.get("z_index", 2)
 		if _main_hand_instance and is_instance_valid(_main_hand_instance):
 			_main_hand_instance.visible = w_data.get("visible", true)
 
@@ -324,7 +324,9 @@ func _on_frame_changed() -> void:
 		var bw_data: Dictionary = active_back_weapon_prof.get_back_frame_data(selected_animation, current_frame)
 		back_w.position = bw_data.get("pos", Vector2(-6, -24))
 		back_w.rotation_degrees = bw_data.get("rot", -175.0)
-		back_w.z_index = bw_data.get("z_index", -2)
+		var back_weapon_name: String = selected_weapon if socket_target == "Arma nas Costas (BackSocketWeapon)" else reference_secondary_weapon
+		var fallback_back_z: int = 1 if "dagger" in back_weapon_name else -2
+		back_w.z_index = bw_data.get("z_index", fallback_back_z)
 		if _back_weapon_instance and is_instance_valid(_back_weapon_instance):
 			_back_weapon_instance.visible = bw_data.get("visible", true)
 

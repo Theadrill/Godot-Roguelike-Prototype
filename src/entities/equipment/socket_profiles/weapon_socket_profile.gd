@@ -300,7 +300,7 @@ extends Resource
 @export var back_frames: Dictionary = {}
 
 @export_group("Mão (Configuração Base & Frames)")
-## Z-Index padrão da arma na mão principal (2 na frente do corpo por padrão, 1 para adagas).
+## Z-Index padrão de qualquer arma na mão principal (2 na frente do corpo).
 @export var default_hand_z_index: int = 2
 ## Dados adicionais customizados frame a frame na mão (ex: {"idle_0": {"z_index": 1}}):
 @export var hand_frames: Dictionary = {}

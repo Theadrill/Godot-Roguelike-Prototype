@@ -416,7 +416,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			main_hand_socket.position = data.get("pos", Vector2(6, -20))
 			main_hand_socket.rotation_degrees = data.get("rot", -35.0)
 			if facing_direction == 1:
-				main_hand_socket.z_index = data.get("z_index", 1 if _detect_weapon_type_string(weapon) == "dagger" else 2)
+				main_hand_socket.z_index = data.get("z_index", 2)
 			if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
 				var should_be_visible: bool = data.get("visible", true)
 				_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
@@ -429,7 +429,8 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			if back_socket_weapon:
 				back_socket_weapon.position = back_data.get("pos", Vector2(-6, -24))
 				back_socket_weapon.rotation_degrees = back_data.get("rot", 0.0)
-				back_socket_weapon.z_index = back_data.get("z_index", -2)
+				var default_back_z: int = 1 if _detect_weapon_type_string(secondary_weapon) == "dagger" else -2
+				back_socket_weapon.z_index = back_data.get("z_index", default_back_z)
 			if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
 				_secondary_weapon_instance.position = Vector2.ZERO
 				_secondary_weapon_instance.rotation_degrees = 0.0
@@ -837,7 +838,7 @@ func _update_equipment_depth() -> void:
 	#   Right hand (MainHand / Weapon) is away from camera -> behind torso (z_index = -1)
 	if facing_direction == 1:
 		if main_hand_socket:
-			main_hand_socket.z_index = _get_main_hand_front_z_index()
+			main_hand_socket.z_index = 2
 		if off_hand_socket:
 			off_hand_socket.z_index = -1
 	else:
@@ -853,17 +854,8 @@ func _update_equipment_depth() -> void:
 		if back_socket_shield:
 			back_socket_shield.z_index = -1
 		if back_socket_weapon:
-			back_socket_weapon.z_index = -2
-
-func _get_main_hand_front_z_index() -> int:
-	if weapon:
-		var profile: WeaponSocketProfile = weapon.get_socket_profile()
-		if profile and player_sprite and profile.has_method("get_frame_data"):
-			var data: Dictionary = profile.get_frame_data(player_sprite.animation, player_sprite.frame)
-			return data.get("z_index", 1 if _detect_weapon_type_string(weapon) == "dagger" else 2)
-		if _detect_weapon_type_string(weapon) == "dagger":
-			return 1
-	return 2
+			var default_back_z: int = 1 if (secondary_weapon and _detect_weapon_type_string(secondary_weapon) == "dagger") else -2
+			back_socket_weapon.z_index = default_back_z
 
 ## Intent-filtered check for crouching.
 ## Prevents accidental crouches when tilting the analog stick diagonally while running.
