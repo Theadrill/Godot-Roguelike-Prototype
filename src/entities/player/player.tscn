@@ -23,7 +23,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/ranged_attack_state.gd" id="21_ranged_attack"]
 [ext_resource type="Script" path="res://src/entities/player/states/heal_state.gd" id="22_heal"]
 [ext_resource type="PackedScene" path="res://src/ui/death_screen.tscn" id="23_death_screen"]
-[ext_resource type="SpriteFrames" uid="uid://player_frames_unified_01" path="res://assets/player/adventurer/player_frames.tres" id="24_player_frames"]
+[ext_resource type="SpriteFrames" uid="uid://b3mi8waob4tc5" path="res://assets/player/adventurer/player_frames.tres" id="24_player_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
