@@ -25,7 +25,7 @@ enum WeaponCategory {
 
 ## Perfil predefinido de ancoragem da arma (ex: sword, sword_2, dagger, hammer).
 ## Se custom_socket_profile estiver vazio, este perfil é carregado automaticamente.
-@export_enum("sword", "sword_2", "dagger", "dagger_2", "hammer", "hammer_2", "staff", "staff_2", "bow", "bow_2", "crossbow", "crossbow_2") var socket_profile: String = "sword"
+@export_enum("sword", "sword_2", "dagger", "dagger_2", "hammer", "hammer_2", "axe", "axe_2", "staff", "staff_2", "bow", "bow_2", "crossbow", "crossbow_2") var socket_profile: String = "sword"
 
 func get_socket_profile() -> WeaponSocketProfile:
 	if custom_socket_profile:

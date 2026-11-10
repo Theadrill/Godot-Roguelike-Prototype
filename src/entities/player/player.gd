@@ -381,6 +381,8 @@ func _detect_weapon_type_string(w: WeaponData) -> String:
 	var s_prof: String = w.socket_profile.to_lower() if ("socket_profile" in w and w.socket_profile) else ""
 	if "dagger" in res_path or "dagger" in w_name or "dagger" in s_prof:
 		return "dagger"
+	elif "axe" in res_path or "axe" in w_name or "axe" in s_prof or "machado" in w_name:
+		return "axe"
 	elif "hammer" in res_path or "hammer" in w_name or "hammer" in s_prof:
 		return "hammer"
 	elif "staff" in res_path or "staff" in w_name or "cajado" in w_name or "staff" in s_prof:

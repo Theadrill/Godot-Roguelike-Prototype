@@ -1,0 +1,95 @@
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://axe_socket_profile_01"]
+
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+profile_name = "axe"
+idle_0_pos = Vector2(-13, -16)
+idle_0_rot = -230.0
+idle_1_pos = Vector2(-14, -17.000002)
+idle_1_rot = -230.0
+idle_2_pos = Vector2(-15, -18.000002)
+idle_2_rot = -230.0
+idle_3_pos = Vector2(-14, -17.000002)
+idle_3_rot = -230.0
+run_0_pos = Vector2(7, -22)
+run_0_rot = -50.0
+run_1_pos = Vector2(7, -22)
+run_1_rot = -50.0
+run_2_pos = Vector2(7, -22)
+run_2_rot = -50.0
+run_3_pos = Vector2(7, -22)
+run_3_rot = -50.0
+run_4_pos = Vector2(7, -22)
+run_4_rot = -50.0
+run_5_pos = Vector2(7, -22)
+run_5_rot = -50.0
+jump_0_pos = Vector2(7, -22)
+jump_0_rot = -50.0
+jump_1_pos = Vector2(7, -24)
+jump_1_rot = -60.0
+jump_2_pos = Vector2(7, -26)
+jump_2_rot = -65.0
+jump_3_pos = Vector2(7, -24)
+jump_3_rot = -55.0
+crouch_0_pos = Vector2(7, -14)
+crouch_0_rot = -50.0
+crouch_1_pos = Vector2(7, -14)
+crouch_1_rot = -50.0
+crouch_2_pos = Vector2(7, -14)
+crouch_2_rot = -50.0
+crouch_3_pos = Vector2(7, -14)
+crouch_3_rot = -50.0
+fall_0_pos = Vector2(7, -24)
+fall_0_rot = -45.0
+fall_1_pos = Vector2(7, -24)
+fall_1_rot = -45.0
+fall_from_jump_0_pos = Vector2(7, -26)
+fall_from_jump_0_rot = -55.0
+fall_from_jump_1_pos = Vector2(7, -24)
+fall_from_jump_1_rot = -45.0
+fall_from_jump_2_pos = Vector2(7, -24)
+fall_from_jump_2_rot = -45.0
+slide_0_pos = Vector2(9, -10)
+slide_0_rot = -20.0
+slide_1_pos = Vector2(9, -10)
+slide_1_rot = -20.0
+roll_0_pos = Vector2(5, -16)
+roll_0_rot = -100.0
+roll_1_pos = Vector2(0, -20)
+roll_1_rot = -190.0
+roll_2_pos = Vector2(-5, -16)
+roll_2_rot = -280.0
+roll_3_pos = Vector2(5, -20)
+roll_3_rot = -10.0
+double_jump_0_pos = Vector2(5, -16)
+double_jump_0_rot = -100.0
+double_jump_1_pos = Vector2(0, -20)
+double_jump_1_rot = -190.0
+double_jump_2_pos = Vector2(-5, -16)
+double_jump_2_rot = -280.0
+double_jump_3_pos = Vector2(5, -20)
+double_jump_3_rot = -10.0
+back_frames = {
+"idle_0": {
+"pos": Vector2(-6, -24),
+"rot": -130.0,
+"visible": true
+},
+"idle_1": {
+"pos": Vector2(-7, -25),
+"rot": -130.0,
+"visible": true
+},
+"idle_2": {
+"pos": Vector2(-7, -26.000002),
+"rot": -130.0,
+"visible": true
+},
+"idle_3": {
+"pos": Vector2(-6, -25.000002),
+"rot": -130.0,
+"visible": true
+}
+}

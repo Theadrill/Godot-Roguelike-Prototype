@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=3 format=3 uid="uid://weapon_axe_tres_01"]
+
+[ext_resource type="Script" path="res://src/combat/weapon_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://src/entities/equipment/axes/axe_visual.tscn" id="2_visual"]
+
+[resource]
+script = ExtResource("1_script")
+weapon_name = "Battle Axe"
+base_damage = 38.0
+knockback_force = 220.0
+hitstop_duration = 0.08
+is_charge_attack = false
+rumble_weak = 0.5
+rumble_strong = 0.85
+rumble_duration = 0.1
+combo_durations = Array[float]([0.22, 0.22, 0.35])
+forward_impulses = Array[float]([45.0, 65.0, 130.0])
+attack_cooldown = 0.18
+combo_finisher_cooldown = 0.28
+equipment_name = "Battle Axe"
+slot_type = 2
+visual_scene = ExtResource("2_visual")
+visual_offset = Vector2(0, 0)
+visual_rotation_degrees = 0.0
+socket_profile = "axe"

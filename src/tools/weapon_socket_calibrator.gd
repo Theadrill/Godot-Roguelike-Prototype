@@ -13,6 +13,8 @@ const WEAPON_SCENES: Dictionary = {
 	"dagger_2": "res://src/entities/equipment/daggers/dagger_visual.tscn",
 	"hammer": "res://src/entities/equipment/hammers/hammer_visual.tscn",
 	"hammer_2": "res://src/entities/equipment/hammers/hammer_visual.tscn",
+	"axe": "res://src/entities/equipment/axes/axe_visual.tscn",
+	"axe_2": "res://src/entities/equipment/axes/axe_visual.tscn",
 	"staff": "res://src/entities/equipment/staffs/staff_visual.tscn",
 	"staff_2": "res://src/entities/equipment/staffs/staff_visual.tscn",
 	"bow": "res://src/entities/equipment/bows/bow_visual.tscn",
@@ -50,7 +52,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		_on_configuration_changed()
 
 ## Escolha a arma (usado quando estiver calibrando Arma na Mão ou nas Costas).
-@export_enum("sword", "sword_2", "dagger", "dagger_2", "hammer", "hammer_2", "staff", "staff_2", "bow", "bow_2", "crossbow", "crossbow_2") var selected_weapon: String = "sword":
+@export_enum("sword", "sword_2", "dagger", "dagger_2", "hammer", "hammer_2", "axe", "axe_2", "staff", "staff_2", "bow", "bow_2", "crossbow", "crossbow_2") var selected_weapon: String = "sword":
 	set(value):
 		selected_weapon = value
 		_on_configuration_changed()
@@ -77,7 +79,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 @export_group("3. Elementos de Apoio / Referência")
 ## Arma secundária para ver nas costas como referência.
-@export_enum("none", "bow", "sword", "dagger", "hammer", "staff", "crossbow") var reference_secondary_weapon: String = "bow":
+@export_enum("none", "bow", "sword", "dagger", "hammer", "axe", "staff", "crossbow") var reference_secondary_weapon: String = "bow":
 	set(value):
 		reference_secondary_weapon = value
 		_update_visual_instances()
