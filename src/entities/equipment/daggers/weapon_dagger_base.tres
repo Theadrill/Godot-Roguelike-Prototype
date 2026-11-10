@@ -23,3 +23,4 @@ visual_offset = Vector2(0, 0)
 visual_rotation_degrees = 0.0
 back_offset = Vector2(4.8, -4.5)
 back_rotation_degrees = 225.0
+socket_profile = "dagger"

@@ -58,6 +58,10 @@ var rally_timer: float = 0.0
 @export var secondary_weapon: WeaponData
 @export var shield: ShieldData
 
+@export_group("Socket Profiles")
+## Perfil global de ancoragem do tronco/costas (BackSocketWeapon e BackSocketShield).
+@export var back_socket_profile: BackSocketProfile
+
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
 var can_double_jump: bool = false
@@ -155,6 +159,11 @@ func _ready() -> void:
 		var default_shield := load("res://src/entities/equipment/shields/shield_buckler_base.tres") as ShieldData
 		if default_shield:
 			shield = default_shield
+
+	if not back_socket_profile:
+		var default_back := load("res://src/entities/equipment/socket_profiles/back_socket.tres") as BackSocketProfile
+		if default_back:
+			back_socket_profile = default_back
 
 	if player_sprite:
 		player_sprite.animation_finished.connect(_on_player_sprite_animation_finished)
@@ -377,24 +386,32 @@ func _on_player_sprite_frame_changed() -> void:
 	_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
 
 func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> void:
-	if not main_hand_socket or not player_sprite or not player_sprite.visible:
+	if not player_sprite or not player_sprite.visible:
 		return
 
-	# Não altera ancoragem se estiver executando animação procedural de ataque ou defesa
+	# 1. Main Hand Weapon (atualiza apenas se não estiver executando ataque ou defesa procedural)
+	var is_in_manual_socket_state: bool = false
 	if state_machine and state_machine.current_state:
 		var current_state_name: String = state_machine.current_state.name.to_lower()
-		if current_state_name in ["attack", "rangedattack", "guard"]:
-			return
+		is_in_manual_socket_state = current_state_name in ["attack", "rangedattack", "guard"]
 
-	var category: String = get_equipped_weapon_category()
-	var data: Dictionary = WeaponSocketConfig.get_socket_data(category, anim_name, frame_idx)
+	if not is_in_manual_socket_state and main_hand_socket and weapon:
+		var profile: WeaponSocketProfile = weapon.get_socket_profile()
+		if profile:
+			var data: Dictionary = profile.get_frame_data(anim_name, frame_idx)
+			main_hand_socket.position = data.get("pos", Vector2(6, -20))
+			main_hand_socket.rotation_degrees = data.get("rot", -35.0)
+			if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+				var should_be_visible: bool = data.get("visible", true)
+				_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
 
-	main_hand_socket.position = data.get("pos", Vector2(6, -20))
-	main_hand_socket.rotation_degrees = data.get("rot", -35.0)
-
-	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-		var should_be_visible: bool = data.get("visible", true)
-		_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
+	# 2. Back Sockets (Arma e Escudo nas costas acompanham o tronco frame a frame)
+	if back_socket_profile:
+		var torso_pos: Vector2 = back_socket_profile.get_frame_pos(anim_name, frame_idx)
+		if back_socket_weapon:
+			back_socket_weapon.position = torso_pos
+		if back_socket_shield:
+			back_socket_shield.position = torso_pos + Vector2(-3.0, 0.0)
 
 func stop_animation() -> void:
 	if player_sprite:

@@ -29,3 +29,4 @@ visual_offset = Vector2(-4, 2)
 visual_rotation_degrees = 125.0
 back_offset = Vector2(4, -5)
 back_rotation_degrees = -65.0
+socket_profile = "bow"

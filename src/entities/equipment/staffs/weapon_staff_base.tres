@@ -30,3 +30,4 @@ equipment_name = "Mystic Staff"
 slot_type = 2
 visual_scene = ExtResource("2_visual")
 visual_rotation_degrees = -45.0
+socket_profile = "staff"

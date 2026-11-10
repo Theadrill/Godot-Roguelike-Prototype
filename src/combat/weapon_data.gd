@@ -17,6 +17,26 @@ enum WeaponCategory {
 		weapon_name = value
 		equipment_name = value
 
+@export_group("Socket & Anchoring Profile")
+## Perfil de ancoragem frame a frame da arma na mão do personagem.
+## Você pode arrastar um arquivo .tres customizado de 'res://src/entities/equipment/socket_profiles/'
+## ou deixar vazio para usar o perfil selecionado no dropdown abaixo.
+@export var custom_socket_profile: WeaponSocketProfile
+
+## Perfil predefinido de ancoragem da arma (ex: sword, sword_2, dagger, hammer).
+## Se custom_socket_profile estiver vazio, este perfil é carregado automaticamente.
+@export_enum("sword", "sword_2", "dagger", "dagger_2", "hammer", "hammer_2", "staff", "staff_2", "bow", "bow_2", "crossbow", "crossbow_2") var socket_profile: String = "sword"
+
+func get_socket_profile() -> WeaponSocketProfile:
+	if custom_socket_profile:
+		return custom_socket_profile
+	var profile_res_path := "res://src/entities/equipment/socket_profiles/%s.tres" % socket_profile
+	if ResourceLoader.exists(profile_res_path):
+		var prof := load(profile_res_path) as WeaponSocketProfile
+		if prof:
+			return prof
+	return load("res://src/entities/equipment/socket_profiles/sword.tres") as WeaponSocketProfile
+
 @export_group("Damage & Feedback")
 @export_range(1.0, 500.0, 1.0, "or_greater") var base_damage: float = 25.0
 @export_range(0.0, 800.0, 10.0, "suffix:px/s") var knockback_force: float = 160.0

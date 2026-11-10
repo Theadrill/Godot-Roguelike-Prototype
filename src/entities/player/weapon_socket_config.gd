@@ -14,10 +14,10 @@ extends RefCounted
 const OFFSETS: Dictionary = {
 	"sword": {
 		&"idle": [
-			{"pos": Vector2(0, -20), "rot": -35.0, "visible": true}, # Frame 0
-			{"pos": Vector2(0, -20), "rot": -35.0, "visible": true}, # Frame 1
-			{"pos": Vector2(0, -20), "rot": -35.0, "visible": true}, # Frame 2
-			{"pos": Vector2(0, -20), "rot": -35.0, "visible": true}, # Frame 3
+			{"pos": Vector2(-17, -16), "rot": 130, "visible": true}, # Frame 0
+			{"pos": Vector2(-17, -18), "rot": 130, "visible": true}, # Frame 1
+			{"pos": Vector2(-18, -18), "rot": 130, "visible": true}, # Frame 2
+			{"pos": Vector2(-17, -18), "rot": 130, "visible": true}, # Frame 3
 		],
 		&"run": [
 			{"pos": Vector2(6, -20), "rot": -35.0, "visible": true}, # Frame 0

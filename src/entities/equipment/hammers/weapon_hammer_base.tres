@@ -28,3 +28,4 @@ visual_offset = Vector2(0, 0)
 visual_rotation_degrees = 0.0
 back_offset = Vector2(-3.5, -7.5)
 back_rotation_degrees = 25.0
+socket_profile = "hammer"
