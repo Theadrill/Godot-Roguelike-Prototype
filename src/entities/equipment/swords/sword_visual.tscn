@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://sword_visual_01"]
 
 [node name="SwordVisual" type="Node2D"]
+scale = Vector2(0.8, 0.8)
 
 [node name="Pommel" type="Polygon2D" parent="."]
 color = Color(0.75, 0.6, 0.2, 1)

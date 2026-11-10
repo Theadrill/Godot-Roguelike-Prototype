@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://staff_visual_01"]
 
 [node name="StaffVisual" type="Node2D"]
+scale = Vector2(0.8, 0.8)
 
 [node name="Shaft" type="Polygon2D" parent="."]
 color = Color(0.42, 0.26, 0.14, 1)

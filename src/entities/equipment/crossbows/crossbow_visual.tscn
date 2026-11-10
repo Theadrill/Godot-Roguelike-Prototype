@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://crossbow_visual_01"]
 
 [node name="CrossbowVisual" type="Node2D"]
+scale = Vector2(0.8, 0.8)
 
 [node name="String" type="Line2D" parent="."]
 points = PackedVector2Array(7, -13, 0, 0, 7, 13)

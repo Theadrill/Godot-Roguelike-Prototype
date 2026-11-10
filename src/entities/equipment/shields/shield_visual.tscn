@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://shield_visual_01"]
 
 [node name="ShieldVisual" type="Node2D"]
+scale = Vector2(0.8, 0.8)
 
 [node name="Plate" type="Polygon2D" parent="."]
 color = Color(0.4, 0.28, 0.18, 1)

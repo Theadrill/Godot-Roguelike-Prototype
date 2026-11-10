@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ceb387f7bp2n6"]
 
 [node name="BowVisual" type="Node2D" unique_id=129178002]
+scale = Vector2(0.8, 0.8)
 
 [node name="String" type="Line2D" parent="." unique_id=1779923138]
 points = PackedVector2Array(0, -18, 1, 0, 0, 18)
