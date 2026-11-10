@@ -145,12 +145,12 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 			save_current_frame_data()
 		SAVE_FRAME_TO_PROFILE = false
 
-## Pega todo o posicionamento, rotação, Z-index, visibilidade e flips do frame atual e aplica/salva em TODOS os frames deste perfil!
-@export var APPLY_EVERYTHING_TO_ENTIRE_PROFILE: bool = false:
+## Pega todo o posicionamento, rotação, Z-index, visibilidade e flips do frame atual e aplica/salva em TODOS OS FRAMES DA ANIMAÇÃO ATUAL (ex: apenas nos frames de run, sem tocar em idle ou outras)!
+@export var APPLY_TO_CURRENT_ANIMATION: bool = false:
 	set(value):
 		if value:
-			apply_everything_to_entire_profile()
-		APPLY_EVERYTHING_TO_ENTIRE_PROFILE = false
+			apply_to_current_animation()
+		APPLY_TO_CURRENT_ANIMATION = false
 
 ## Mensagem de feedback do último salvamento.
 @export var status_message: String = "Pronto para calibrar."
@@ -465,7 +465,7 @@ func save_current_frame_data() -> void:
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
 		_report_save_status(err, "%s.tres (Escudo nas Costas)" % selected_shield)
 
-func apply_everything_to_entire_profile() -> void:
+func apply_to_current_animation() -> void:
 	_load_resources()
 	var prof: WeaponSocketProfile = _weapon_profile_resource if "Arma" in socket_target else _shield_profile_resource
 	var item_name: String = selected_weapon if "Arma" in socket_target else selected_shield
@@ -473,41 +473,31 @@ func apply_everything_to_entire_profile() -> void:
 		status_message = "ERRO: Perfil %s não encontrado!" % item_name
 		return
 
+	var count: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4)
+
 	if socket_target == "Arma na Mão (MainHandSocket)" or socket_target == "Escudo na Mão (OffHandSocket)":
-		prof.default_hand_z_index = socket_z_index
-		prof.default_flip_h = socket_flip_h
-		prof.default_flip_v = socket_flip_v
-		for anim_name in ANIMATION_FRAME_COUNTS.keys():
-			var count: int = ANIMATION_FRAME_COUNTS[anim_name]
-			for f in range(count):
-				prof.set("%s_%d_pos" % [anim_name, f], socket_position)
-				prof.set("%s_%d_rot" % [anim_name, f], socket_rotation)
-				prof.set("%s_%d_visible" % [anim_name, f], item_visible_in_frame)
-				if prof.has_method("set_hand_custom_data"):
-					prof.set_hand_custom_data(anim_name, f, socket_z_index, socket_flip_h, socket_flip_v)
-				elif prof.has_method("set_hand_z_index"):
-					prof.set_hand_z_index(anim_name, f, socket_z_index)
+		for f in range(count):
+			prof.set("%s_%d_pos" % [selected_animation, f], socket_position)
+			prof.set("%s_%d_rot" % [selected_animation, f], socket_rotation)
+			prof.set("%s_%d_visible" % [selected_animation, f], item_visible_in_frame)
+			if prof.has_method("set_hand_custom_data"):
+				prof.set_hand_custom_data(selected_animation, f, socket_z_index, socket_flip_h, socket_flip_v)
+			elif prof.has_method("set_hand_z_index"):
+				prof.set_hand_z_index(selected_animation, f, socket_z_index)
 	else:
-		prof.default_back_pos = socket_position
-		prof.default_back_rot = socket_rotation
-		prof.default_back_z_index = socket_z_index
-		prof.default_back_flip_h = socket_flip_h
-		prof.default_back_flip_v = socket_flip_v
-		for anim_name in ANIMATION_FRAME_COUNTS.keys():
-			var count: int = ANIMATION_FRAME_COUNTS[anim_name]
-			for f in range(count):
-				prof.set_back_frame_data(anim_name, f, socket_position, socket_rotation, item_visible_in_frame, socket_z_index, socket_flip_h, socket_flip_v)
+		for f in range(count):
+			prof.set_back_frame_data(selected_animation, f, socket_position, socket_rotation, item_visible_in_frame, socket_z_index, socket_flip_h, socket_flip_v)
 
 	var path := "res://src/entities/equipment/socket_profiles/%s.tres" % item_name
 	var err := ResourceSaver.save(prof, path)
 	if err == OK:
-		status_message = "SUCESSO: Posição %s, Rot %.1f°, Z %d e Flips aplicados a TODOS os frames de %s!" % [
-			str(socket_position), socket_rotation, socket_z_index, item_name
+		status_message = "SUCESSO: Posição %s, Rot %.1f°, Z %d aplicados aos %d frames de '%s' em %s!" % [
+			str(socket_position), socket_rotation, socket_z_index, count, selected_animation, item_name
 		]
 		print(status_message)
 		_on_frame_changed()
 	else:
-		status_message = "ERRO ao salvar no perfil: Código %d" % err
+		status_message = "ERRO ao salvar na animação: Código %d" % err
 
 func _report_save_status(err: Error, label: String) -> void:
 	if err == OK:
