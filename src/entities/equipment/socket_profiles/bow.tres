@@ -13,12 +13,18 @@ idle_2_pos = Vector2(9, -21)
 idle_2_rot = 0.0
 idle_3_pos = Vector2(9, -19)
 idle_3_rot = 0.0
-run_0_rot = 0.0
-run_1_rot = 0.0
-run_2_rot = 0.0
-run_3_rot = 0.0
-run_4_rot = 0.0
-run_5_rot = 0.0
+run_0_pos = Vector2(15, -23)
+run_0_rot = 3.6999996
+run_1_pos = Vector2(9, -22)
+run_1_rot = 3.6999998
+run_2_pos = Vector2(5.0000005, -21)
+run_2_rot = 14.599999
+run_3_pos = Vector2(-4, -26.000002)
+run_3_rot = 80.399994
+run_4_pos = Vector2(1.999999, -23)
+run_4_rot = 25.599998
+run_5_pos = Vector2(9, -20)
+run_5_rot = 7.2999997
 jump_0_rot = 0.0
 jump_1_pos = Vector2(6, -22)
 jump_1_rot = -10.0
@@ -97,6 +103,36 @@ hand_frames = {
 "z_index": 2
 },
 "idle_3": {
+"z_index": 2
+},
+"run_0": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_1": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_2": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_3": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_4": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_5": {
+"flip_h": false,
+"flip_v": true,
 "z_index": 2
 }
 }

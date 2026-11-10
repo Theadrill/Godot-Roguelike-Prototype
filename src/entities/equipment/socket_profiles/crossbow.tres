@@ -5,26 +5,26 @@
 [resource]
 script = ExtResource("1_script")
 profile_name = "crossbow"
-idle_0_pos = Vector2(6, -18)
-idle_0_rot = 0.0
-idle_1_pos = Vector2(6, -18)
-idle_1_rot = 0.0
-idle_2_pos = Vector2(6, -18)
-idle_2_rot = 0.0
-idle_3_pos = Vector2(6, -18)
-idle_3_rot = 0.0
-run_0_pos = Vector2(6, -18)
-run_0_rot = 0.0
-run_1_pos = Vector2(6, -18)
-run_1_rot = 0.0
-run_2_pos = Vector2(6, -18)
-run_2_rot = 0.0
-run_3_pos = Vector2(6, -18)
-run_3_rot = 0.0
-run_4_pos = Vector2(6, -18)
-run_4_rot = 0.0
-run_5_pos = Vector2(6, -18)
-run_5_rot = 0.0
+idle_0_pos = Vector2(-14, -15)
+idle_0_rot = 90.0
+idle_1_pos = Vector2(-14, -16)
+idle_1_rot = 93.69999
+idle_2_pos = Vector2(-16, -15)
+idle_2_rot = 100.99999
+idle_3_pos = Vector2(-16, -14)
+idle_3_rot = 97.299995
+run_0_pos = Vector2(15.999998, -24)
+run_0_rot = -7.2999997
+run_1_pos = Vector2(9.999997, -22)
+run_1_rot = -7.299999
+run_2_pos = Vector2(4.999997, -22)
+run_2_rot = 7.2999997
+run_3_pos = Vector2(-4.000004, -26)
+run_3_rot = 43.899998
+run_4_pos = Vector2(2.999996, -23.000004)
+run_4_rot = 7.2999997
+run_5_pos = Vector2(9.999997, -20)
+run_5_rot = -3.6
 jump_0_pos = Vector2(6, -18)
 jump_0_rot = 0.0
 jump_1_rot = -10.0
@@ -67,23 +67,87 @@ double_jump_3_pos = Vector2(4, -16)
 double_jump_3_rot = 0.0
 back_frames = {
 "idle_0": {
+"flip_h": false,
+"flip_v": true,
 "pos": Vector2(-1.999999, -13.999995),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -2
 },
 "idle_1": {
+"flip_h": false,
+"flip_v": true,
 "pos": Vector2(-1.999999, -13.999995),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -2
 },
 "idle_2": {
+"flip_h": false,
+"flip_v": true,
 "pos": Vector2(-1.999999, -14.999995),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -2
 },
 "idle_3": {
+"flip_h": false,
+"flip_v": true,
 "pos": Vector2(-2.0000002, -14),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -2
+}
+}
+hand_frames = {
+"idle_0": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"idle_1": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"idle_2": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"idle_3": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_0": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_1": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_2": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_3": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_4": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
+},
+"run_5": {
+"flip_h": false,
+"flip_v": true,
+"z_index": 2
 }
 }
