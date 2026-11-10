@@ -92,7 +92,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		_update_visual_instances()
 		_on_frame_changed()
 
-@export_group("4. Ajustes do Frame Atual (X, Y, Ângulo e Z-Index)")
+@export_group("4. Ajustes do Frame Atual (X, Y, Ângulo, Inversão e Z-Index)")
 ## Posição do socket no frame atual. Você pode digitar aqui OU arrastar o nó na Viewport 2D com o mouse!
 @export var socket_position: Vector2 = Vector2.ZERO:
 	set(value):
@@ -108,6 +108,18 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		var node := _get_active_marker()
 		if node and not is_equal_approx(node.rotation_degrees, value):
 			node.rotation_degrees = value
+
+## Inverter horizontalmente o sprite (Flip Horizontal / Eixo X).
+@export var socket_flip_h: bool = false:
+	set(value):
+		socket_flip_h = value
+		_apply_active_visual_flip()
+
+## Inverter verticalmente o sprite (Flip Vertical / Eixo Y).
+@export var socket_flip_v: bool = false:
+	set(value):
+		socket_flip_v = value
+		_apply_active_visual_flip()
 
 ## Profundidade / Z-Index no frame atual (-2 costas fundas, -1 atrás do corpo, 0 neutro, 1 na frente do corpo/cintura).
 @export_range(-10, 10, 1) var socket_z_index: int = -2:
@@ -126,12 +138,19 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 			vis.visible = value
 
 @export_group("5. Gravação no Arquivo")
-## Clique nesta caixinha para SALVAR a posição e rotação atuais diretamente no .tres correspondente!
+## Clique nesta caixinha para SALVAR a posição, rotação, inversão e Z-Index atuais diretamente no .tres correspondente!
 @export var SAVE_FRAME_TO_PROFILE: bool = false:
 	set(value):
 		if value:
 			save_current_frame_data()
 		SAVE_FRAME_TO_PROFILE = false
+
+## Clique aqui para gravar o Flip Horizontal e Vertical atuais como padrão de TODOS os frames deste perfil!
+@export var APPLY_FLIP_TO_ENTIRE_PROFILE: bool = false:
+	set(value):
+		if value:
+			save_flip_to_entire_profile()
+		APPLY_FLIP_TO_ENTIRE_PROFILE = false
 
 ## Mensagem de feedback do último salvamento.
 @export var status_message: String = "Pronto para calibrar."
@@ -310,6 +329,7 @@ func _on_frame_changed() -> void:
 		hand_w.z_index = w_data.get("z_index", 2)
 		if _main_hand_instance and is_instance_valid(_main_hand_instance):
 			_main_hand_instance.visible = w_data.get("visible", true)
+			_apply_visual_flip(_main_hand_instance, w_data.get("flip_h", false), w_data.get("flip_v", false))
 
 	# 3. Posição do Escudo na Mão (OffHandSocket)
 	if hand_s and _shield_profile_resource and _shield_profile_resource.has_method("get_frame_data"):
@@ -319,6 +339,7 @@ func _on_frame_changed() -> void:
 		hand_s.z_index = s_hand_data.get("z_index", -1)
 		if _off_hand_instance and is_instance_valid(_off_hand_instance):
 			_off_hand_instance.visible = s_hand_data.get("visible", true)
+			_apply_visual_flip(_off_hand_instance, s_hand_data.get("flip_h", false), s_hand_data.get("flip_v", false))
 
 	# 4. Posição da Arma nas Costas (BackSocketWeapon)
 	var active_back_weapon_prof := _weapon_profile_resource if socket_target == "Arma nas Costas (BackSocketWeapon)" else _ref_sec_weapon_profile
@@ -331,6 +352,7 @@ func _on_frame_changed() -> void:
 		back_w.z_index = bw_data.get("z_index", fallback_back_z)
 		if _back_weapon_instance and is_instance_valid(_back_weapon_instance):
 			_back_weapon_instance.visible = bw_data.get("visible", true)
+			_apply_visual_flip(_back_weapon_instance, bw_data.get("flip_h", false), bw_data.get("flip_v", false))
 
 	# 5. Posição do Escudo nas Costas (BackSocketShield)
 	if back_s and _shield_profile_resource and _shield_profile_resource.has_method("get_back_frame_data"):
@@ -340,6 +362,7 @@ func _on_frame_changed() -> void:
 		back_s.z_index = bs_data.get("z_index", -1)
 		if _back_shield_instance and is_instance_valid(_back_shield_instance):
 			_back_shield_instance.visible = bs_data.get("visible", true)
+			_apply_visual_flip(_back_shield_instance, bs_data.get("flip_h", false), bs_data.get("flip_v", false))
 
 	# 6. Atualiza os inputs do Inspector para o alvo ativo
 	var active_marker := _get_active_marker()
@@ -351,8 +374,33 @@ func _on_frame_changed() -> void:
 	var active_vis := _get_active_visual_instance()
 	if active_vis and is_instance_valid(active_vis):
 		item_visible_in_frame = active_vis.visible
+		socket_flip_h = active_vis.scale.x < 0.0
+		socket_flip_v = active_vis.scale.y < 0.0
 
-	status_message = "%s [%s] -> %s Frame %d (Z: %d)" % [_get_active_item_name(), socket_target, selected_animation, current_frame, socket_z_index]
+	status_message = "%s [%s] -> %s Frame %d (Z: %d, FlipH: %s, FlipV: %s)" % [
+		_get_active_item_name(),
+		socket_target,
+		selected_animation,
+		current_frame,
+		socket_z_index,
+		str(socket_flip_h),
+		str(socket_flip_v)
+	]
+
+func _apply_visual_flip(instance: Node2D, flip_h: bool, flip_v: bool) -> void:
+	if not instance or not is_instance_valid(instance):
+		return
+	var sx := absf(instance.scale.x)
+	if sx < 0.001: sx = 0.8
+	var sy := absf(instance.scale.y)
+	if sy < 0.001: sy = 0.8
+	instance.scale.x = -sx if flip_h else sx
+	instance.scale.y = -sy if flip_v else sy
+
+func _apply_active_visual_flip() -> void:
+	var vis := _get_active_visual_instance()
+	if vis and is_instance_valid(vis):
+		_apply_visual_flip(vis, socket_flip_h, socket_flip_v)
 
 func _get_active_item_name() -> String:
 	if "Arma" in socket_target:
@@ -380,7 +428,9 @@ func save_current_frame_data() -> void:
 		_weapon_profile_resource.set("%s_%d_pos" % [selected_animation, current_frame], socket_position)
 		_weapon_profile_resource.set("%s_%d_rot" % [selected_animation, current_frame], socket_rotation)
 		_weapon_profile_resource.set("%s_%d_visible" % [selected_animation, current_frame], item_visible_in_frame)
-		if _weapon_profile_resource.has_method("set_hand_z_index"):
+		if _weapon_profile_resource.has_method("set_hand_custom_data"):
+			_weapon_profile_resource.set_hand_custom_data(selected_animation, current_frame, socket_z_index, socket_flip_h, socket_flip_v)
+		elif _weapon_profile_resource.has_method("set_hand_z_index"):
 			_weapon_profile_resource.set_hand_z_index(selected_animation, current_frame, socket_z_index)
 		var err := ResourceSaver.save(_weapon_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_weapon)
 		_report_save_status(err, "%s.tres (Arma na Mão)" % selected_weapon)
@@ -389,7 +439,7 @@ func save_current_frame_data() -> void:
 		if not _weapon_profile_resource:
 			status_message = "ERRO: Perfil %s.tres não encontrado!" % selected_weapon
 			return
-		_weapon_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame, socket_z_index)
+		_weapon_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame, socket_z_index, socket_flip_h, socket_flip_v)
 		var err := ResourceSaver.save(_weapon_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_weapon)
 		_report_save_status(err, "%s.tres (Arma nas Costas)" % selected_weapon)
 
@@ -400,7 +450,9 @@ func save_current_frame_data() -> void:
 		_shield_profile_resource.set("%s_%d_pos" % [selected_animation, current_frame], socket_position)
 		_shield_profile_resource.set("%s_%d_rot" % [selected_animation, current_frame], socket_rotation)
 		_shield_profile_resource.set("%s_%d_visible" % [selected_animation, current_frame], item_visible_in_frame)
-		if _shield_profile_resource.has_method("set_hand_z_index"):
+		if _shield_profile_resource.has_method("set_hand_custom_data"):
+			_shield_profile_resource.set_hand_custom_data(selected_animation, current_frame, socket_z_index, socket_flip_h, socket_flip_v)
+		elif _shield_profile_resource.has_method("set_hand_z_index"):
 			_shield_profile_resource.set_hand_z_index(selected_animation, current_frame, socket_z_index)
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
 		_report_save_status(err, "%s.tres (Escudo na Mão)" % selected_shield)
@@ -409,14 +461,47 @@ func save_current_frame_data() -> void:
 		if not _shield_profile_resource:
 			status_message = "ERRO: Perfil %s.tres não encontrado!" % selected_shield
 			return
-		_shield_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame, socket_z_index)
+		_shield_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame, socket_z_index, socket_flip_h, socket_flip_v)
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
 		_report_save_status(err, "%s.tres (Escudo nas Costas)" % selected_shield)
 
+func save_flip_to_entire_profile() -> void:
+	_load_resources()
+	var prof: WeaponSocketProfile = _weapon_profile_resource if "Arma" in socket_target else _shield_profile_resource
+	var item_name: String = selected_weapon if "Arma" in socket_target else selected_shield
+	if not prof:
+		status_message = "ERRO: Perfil %s não encontrado!" % item_name
+		return
+
+	if socket_target == "Arma na Mão (MainHandSocket)" or socket_target == "Escudo na Mão (OffHandSocket)":
+		prof.default_flip_h = socket_flip_h
+		prof.default_flip_v = socket_flip_v
+		if prof.hand_frames is Dictionary:
+			for k in prof.hand_frames.keys():
+				if prof.hand_frames[k] is Dictionary:
+					prof.hand_frames[k]["flip_h"] = socket_flip_h
+					prof.hand_frames[k]["flip_v"] = socket_flip_v
+	else:
+		prof.default_back_flip_h = socket_flip_h
+		prof.default_back_flip_v = socket_flip_v
+		if prof.back_frames is Dictionary:
+			for k in prof.back_frames.keys():
+				if prof.back_frames[k] is Dictionary:
+					prof.back_frames[k]["flip_h"] = socket_flip_h
+					prof.back_frames[k]["flip_v"] = socket_flip_v
+
+	var path := "res://src/entities/equipment/socket_profiles/%s.tres" % item_name
+	var err := ResourceSaver.save(prof, path)
+	if err == OK:
+		status_message = "SUCESSO: Inversão padrão (FlipH: %s, FlipV: %s) aplicada a TODO o perfil %s!" % [str(socket_flip_h), str(socket_flip_v), item_name]
+		print(status_message)
+	else:
+		status_message = "ERRO ao salvar flip no perfil: Código %d" % err
+
 func _report_save_status(err: Error, label: String) -> void:
 	if err == OK:
-		status_message = "SUCESSO! Salvo em %s -> [%s Frame %d] (Pos: %v, Rot: %.1f°, Z: %d)" % [
-			label, selected_animation, current_frame, socket_position, socket_rotation, socket_z_index
+		status_message = "SUCESSO! Salvo em %s -> [%s Frame %d] (Pos: %v, Rot: %.1f°, Z: %d, FlipH: %s, FlipV: %s)" % [
+			label, selected_animation, current_frame, socket_position, socket_rotation, socket_z_index, str(socket_flip_h), str(socket_flip_v)
 		]
 		print(status_message)
 	else:

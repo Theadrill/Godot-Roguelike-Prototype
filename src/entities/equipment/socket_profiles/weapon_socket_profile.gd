@@ -296,13 +296,21 @@ extends Resource
 @export_range(-360.0, 360.0, 0.5, "suffix:°") var default_back_rot: float = -175.0
 ## Z-Index padrão nas costas (-2 para trás das costas, -1 atrás do corpo, ou 1 para ficar na frente na cintura).
 @export var default_back_z_index: int = -2
-## Dados calibrados frame a frame nas costas: {"idle_0": {"pos": Vector2, "rot": float, "visible": bool, "z_index": int}, ...}
+## Inverter horizontalmente o sprite nas costas por padrão (Flip Horizontal / Eixo X).
+@export var default_back_flip_h: bool = false
+## Inverter verticalmente o sprite nas costas por padrão (Flip Vertical / Eixo Y).
+@export var default_back_flip_v: bool = false
+## Dados calibrados frame a frame nas costas: {"idle_0": {"pos": Vector2, "rot": float, "visible": bool, "z_index": int, "flip_h": bool, "flip_v": bool}, ...}
 @export var back_frames: Dictionary = {}
 
 @export_group("Mão (Configuração Base & Frames)")
 ## Z-Index padrão de qualquer arma na mão principal (2 na frente do corpo).
 @export var default_hand_z_index: int = 2
-## Dados adicionais customizados frame a frame na mão (ex: {"idle_0": {"z_index": 1}}):
+## Inverter horizontalmente o sprite na mão por padrão (Flip Horizontal / Eixo X).
+@export var default_flip_h: bool = false
+## Inverter verticalmente o sprite na mão por padrão (Flip Vertical / Eixo Y).
+@export var default_flip_v: bool = false
+## Dados adicionais customizados frame a frame na mão (ex: {"idle_0": {"z_index": 1, "flip_h": true, "flip_v": false}}):
 @export var hand_frames: Dictionary = {}
 
 func get_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
@@ -310,6 +318,8 @@ func get_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 	var key := "%s_%d" % [anim_name, frame_idx]
 	var custom_hand_data: Dictionary = hand_frames.get(key, {}) if hand_frames is Dictionary else {}
 	var z_val: int = custom_hand_data.get("z_index", default_hand_z_index)
+	var f_h: bool = custom_hand_data.get("flip_h", default_flip_h)
+	var f_v: bool = custom_hand_data.get("flip_v", default_flip_v)
 
 	if pos_prop in self:
 		var rot_prop := "%s_%d_rot" % [anim_name, frame_idx]
@@ -318,9 +328,11 @@ func get_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 			"pos": get(pos_prop),
 			"rot": get(rot_prop),
 			"visible": get(vis_prop),
-			"z_index": z_val
+			"z_index": z_val,
+			"flip_h": f_h,
+			"flip_v": f_v
 		}
-	return {"pos": Vector2(6, -20), "rot": -35.0, "visible": true, "z_index": z_val}
+	return {"pos": Vector2(6, -20), "rot": -35.0, "visible": true, "z_index": z_val, "flip_h": f_h, "flip_v": f_v}
 
 func set_hand_z_index(anim_name: StringName, frame_idx: int, z_idx: int) -> void:
 	var key := "%s_%d" % [anim_name, frame_idx]
@@ -329,6 +341,16 @@ func set_hand_z_index(anim_name: StringName, frame_idx: int, z_idx: int) -> void
 	if not hand_frames.has(key):
 		hand_frames[key] = {}
 	hand_frames[key]["z_index"] = z_idx
+
+func set_hand_custom_data(anim_name: StringName, frame_idx: int, z_idx: int, flip_h: bool = false, flip_v: bool = false) -> void:
+	var key := "%s_%d" % [anim_name, frame_idx]
+	if not (hand_frames is Dictionary):
+		hand_frames = {}
+	if not hand_frames.has(key):
+		hand_frames[key] = {}
+	hand_frames[key]["z_index"] = z_idx
+	hand_frames[key]["flip_h"] = flip_h
+	hand_frames[key]["flip_v"] = flip_v
 
 func get_back_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 	var key := "%s_%d" % [anim_name, frame_idx]
@@ -339,21 +361,27 @@ func get_back_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 				"pos": data.get("pos", default_back_pos),
 				"rot": data.get("rot", default_back_rot),
 				"visible": data.get("visible", true),
-				"z_index": data.get("z_index", default_back_z_index)
+				"z_index": data.get("z_index", default_back_z_index),
+				"flip_h": data.get("flip_h", default_back_flip_h),
+				"flip_v": data.get("flip_v", default_back_flip_v)
 			}
 	return {
 		"pos": default_back_pos,
 		"rot": default_back_rot,
 		"visible": true,
-		"z_index": default_back_z_index
+		"z_index": default_back_z_index,
+		"flip_h": default_back_flip_h,
+		"flip_v": default_back_flip_v
 	}
 
-func set_back_frame_data(anim_name: StringName, frame_idx: int, pos: Vector2, rot: float, vis: bool = true, z_idx: int = -2) -> void:
+func set_back_frame_data(anim_name: StringName, frame_idx: int, pos: Vector2, rot: float, vis: bool = true, z_idx: int = -2, flip_h: bool = false, flip_v: bool = false) -> void:
 	var key := "%s_%d" % [anim_name, frame_idx]
 	back_frames[key] = {
 		"pos": pos,
 		"rot": rot,
 		"visible": vis,
-		"z_index": z_idx
+		"z_index": z_idx,
+		"flip_h": flip_h,
+		"flip_v": flip_v
 	}
 

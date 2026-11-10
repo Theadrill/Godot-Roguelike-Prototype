@@ -409,6 +409,16 @@ func _on_player_sprite_frame_changed() -> void:
 func _on_animation_frame_changed() -> void:
 	_on_player_sprite_frame_changed()
 
+func _apply_visual_instance_flip(instance: Node2D, flip_h: bool, flip_v: bool) -> void:
+	if not instance or not is_instance_valid(instance):
+		return
+	var sx := absf(instance.scale.x)
+	if sx < 0.001: sx = 0.8
+	var sy := absf(instance.scale.y)
+	if sy < 0.001: sy = 0.8
+	instance.scale.x = -sx if flip_h else sx
+	instance.scale.y = -sy if flip_v else sy
+
 func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> void:
 	if not player_sprite or not player_sprite.visible:
 		return
@@ -430,6 +440,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
 				var should_be_visible: bool = data.get("visible", true)
 				_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
+				_apply_visual_instance_flip(_main_weapon_instance, data.get("flip_h", false), data.get("flip_v", false))
 
 	# 2. Back Sockets (Arma e Escudo nas costas usam o perfil da arma ou fallback)
 	if secondary_weapon:
@@ -445,6 +456,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 				_secondary_weapon_instance.position = Vector2.ZERO
 				_secondary_weapon_instance.rotation_degrees = 0.0
 				_secondary_weapon_instance.visible = back_data.get("visible", true) and not are_weapons_hidden
+				_apply_visual_instance_flip(_secondary_weapon_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
 	elif back_socket_profile and back_socket_weapon:
 		var torso_pos: Vector2 = back_socket_profile.get_frame_pos(anim_name, frame_idx)
 		back_socket_weapon.position = torso_pos
@@ -465,6 +477,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 						_shield_instance.position = Vector2.ZERO
 						_shield_instance.rotation_degrees = 0.0
 						_shield_instance.visible = hand_data.get("visible", true) and not are_weapons_hidden
+						_apply_visual_instance_flip(_shield_instance, hand_data.get("flip_h", false), hand_data.get("flip_v", false))
 			else:
 				if sh_profile.has_method("get_back_frame_data"):
 					var back_data := sh_profile.get_back_frame_data(anim_name, frame_idx)
@@ -476,6 +489,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 						_shield_instance.position = Vector2.ZERO
 						_shield_instance.rotation_degrees = 0.0
 						_shield_instance.visible = back_data.get("visible", true) and not are_weapons_hidden
+						_apply_visual_instance_flip(_shield_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
 	elif back_socket_shield:
 		if back_socket_weapon:
 			back_socket_shield.position = back_socket_weapon.position + Vector2(-3.0, 0.0)
