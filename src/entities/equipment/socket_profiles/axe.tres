@@ -1,18 +1,18 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://axe_socket_profile_01"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://dl4gjmryfla6f"]
 
 [ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
 profile_name = "axe"
-idle_0_pos = Vector2(-13, -16)
-idle_0_rot = -230.0
+idle_0_pos = Vector2(-15, -15)
+idle_0_rot = -175.0
 idle_1_pos = Vector2(-14, -17.000002)
-idle_1_rot = -230.0
-idle_2_pos = Vector2(-15, -18.000002)
-idle_2_rot = -230.0
-idle_3_pos = Vector2(-14, -17.000002)
-idle_3_rot = -230.0
+idle_1_rot = -175.0
+idle_2_pos = Vector2(-17.000002, -17)
+idle_2_rot = -175.0
+idle_3_pos = Vector2(-16.999998, -15)
+idle_3_rot = -175.0
 run_0_pos = Vector2(7, -22)
 run_0_rot = -50.0
 run_1_pos = Vector2(7, -22)
@@ -91,5 +91,28 @@ back_frames = {
 "pos": Vector2(-6, -25.000002),
 "rot": -130.0,
 "visible": true
+}
+}
+default_flip_h = true
+hand_frames = {
+"idle_0": {
+"flip_h": true,
+"flip_v": false,
+"z_index": 2
+},
+"idle_1": {
+"flip_h": true,
+"flip_v": false,
+"z_index": 2
+},
+"idle_2": {
+"flip_h": true,
+"flip_v": false,
+"z_index": 2
+},
+"idle_3": {
+"flip_h": true,
+"flip_v": false,
+"z_index": 2
 }
 }
