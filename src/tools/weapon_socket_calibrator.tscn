@@ -11,13 +11,16 @@ script = ExtResource("1_calibrator")
 points = PackedVector2Array(-60, 0, 60, 0)
 width = 1.0
 default_color = Color(0.3, 0.7, 0.4, 0.6)
+metadata/_edit_lock_ = true
 
 [node name="Visual" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual"]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
 animation = &"idle"
+metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual"]
 position = Vector2(-3, -20)
