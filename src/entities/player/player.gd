@@ -435,8 +435,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			var data: Dictionary = profile.get_frame_data(anim_name, frame_idx)
 			main_hand_socket.position = data.get("pos", Vector2(6, -20))
 			main_hand_socket.rotation_degrees = data.get("rot", -35.0)
-			if facing_direction == 1:
-				main_hand_socket.z_index = data.get("z_index", 2)
+			main_hand_socket.z_index = data.get("z_index", 2)
 			if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
 				var should_be_visible: bool = data.get("visible", true)
 				_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
@@ -853,28 +852,14 @@ func update_facing(direction: float) -> void:
 			_update_equipment_depth()
 
 func _update_equipment_depth() -> void:
-	# Right-handed anatomy & 2D perspective:
-	# Facing RIGHT (facing_direction == 1):
-	#   Right hand (MainHand / Weapon) is towards camera -> in front of torso (z_index = 1)
-	#   Left hand (OffHand / Shield in guard) is away from camera -> behind torso (z_index = -1)
-	# Facing LEFT (facing_direction == -1):
-	#   Left hand (OffHand / Shield in guard) is towards camera -> in front of torso (z_index = 1)
-	#   Right hand (MainHand / Weapon) is away from camera -> behind torso (z_index = -1)
-	if facing_direction == 1:
+	# O z-index de cada socket é governado frame a frame pelo perfil calibrado da arma/escudo.
+	if player_sprite:
+		_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
+	else:
 		if main_hand_socket:
 			main_hand_socket.z_index = 2
 		if off_hand_socket:
 			off_hand_socket.z_index = -1
-	else:
-		if main_hand_socket:
-			main_hand_socket.z_index = -1
-		if off_hand_socket:
-			off_hand_socket.z_index = 1
-
-	# Sockets das costas e cintura mantêm o z_index calibrado no perfil do frame
-	if player_sprite:
-		_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
-	else:
 		if back_socket_shield:
 			back_socket_shield.z_index = -1
 		if back_socket_weapon:
