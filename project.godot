@@ -13,7 +13,7 @@ config_version=5
 config/name="Severed Dawn"
 config/description="2D Action Roguelike Prototype"
 config/version="0.1.0"
-run/main_scene="res://src/world/hub/family_house.tscn"
+run/main_scene="res://src/world/movement_gym.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
 [autoload]

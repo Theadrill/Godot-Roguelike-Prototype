@@ -3,26 +3,16 @@
 [ext_resource type="Script" uid="uid://xo33rwwhn3ri" path="res://src/world/hub/family_house.gd" id="1_house"]
 [ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="2_player"]
 [ext_resource type="Script" uid="uid://bu341gq4akkm8" path="res://src/core/game_camera.gd" id="3_camera"]
-[ext_resource type="PackedScene" path="res://src/ui/hub/npc_bark.tscn" id="4_bark"]
+[ext_resource type="PackedScene" uid="uid://df7283caa01x4" path="res://src/ui/hub/npc_bark.tscn" id="4_bark"]
 [ext_resource type="PackedScene" path="res://src/ui/hub/mother_dialog_ui.tscn" id="5_mother_ui"]
 [ext_resource type="PackedScene" path="res://src/ui/hub/brother_forge_ui.tscn" id="6_brother_ui"]
 [ext_resource type="PackedScene" path="res://src/ui/hub/touch_of_death_ui.tscn" id="7_death_ui"]
-[ext_resource type="Shader" path="res://src/shaders/death_spiral.gdshader" id="8_death_shader"]
+[ext_resource type="Shader" uid="uid://dxs1gspo6jsqh" path="res://src/shaders/death_spiral.gdshader" id="8_death_shader"]
 [ext_resource type="PackedScene" path="res://src/world/hub/weapon_pedestal.tscn" id="9_pedestal"]
 [ext_resource type="Resource" path="res://src/entities/equipment/swords/weapon_sword_base.tres" id="10_sword"]
 [ext_resource type="Resource" path="res://src/entities/equipment/shields/shield_buckler_base.tres" id="11_buckler"]
-[ext_resource type="Resource" path="res://src/entities/equipment/bows/weapon_bow_base.tres" id="12_bow"]
+[ext_resource type="Resource" uid="uid://d1dsk5evc6cyq" path="res://src/entities/equipment/bows/weapon_bow_base.tres" id="12_bow"]
 [ext_resource type="Resource" path="res://src/entities/equipment/daggers/weapon_dagger_base.tres" id="13_daggers"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_portal"]
-shader = ExtResource("8_death_shader")
-shader_parameter/progress = 0.0
-shader_parameter/vortex_time = 0.0
-shader_parameter/spiral_arms = 4.0
-shader_parameter/spiral_speed = 3.2
-shader_parameter/color_mist = Color(0.18, 0.32, 0.26, 1)
-shader_parameter/color_edge = Color(0.42, 0.74, 0.62, 1)
-shader_parameter/color_void = Color(0.03, 0.05, 0.04, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(1140, 72)
@@ -39,17 +29,24 @@ size = Vector2(30, 360)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_house_end"]
 size = Vector2(20, 200)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
-size = Vector2(40, 80)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc"]
+size = Vector2(50, 60)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_portal"]
+shader = ExtResource("8_death_shader")
+shader_parameter/progress = 0.0
+shader_parameter/vortex_time = 0.0
+shader_parameter/spiral_arms = 4.0
+shader_parameter/spiral_speed = 3.2
+shader_parameter/color_mist = Color(0.18, 0.32, 0.26, 1)
+shader_parameter/color_edge = Color(0.42, 0.74, 0.62, 1)
+shader_parameter/color_void = Color(0.03, 0.05, 0.04, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_chest"]
 size = Vector2(40, 32)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rack"]
-size = Vector2(48, 48)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc"]
-size = Vector2(50, 60)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(40, 80)
 
 [node name="FamilyHouse" type="Node2D" unique_id=1798535553]
 position = Vector2(0, -16)
@@ -192,7 +189,6 @@ polygon = PackedVector2Array(-6, -46, 6, -46, 6, -38, -6, -38)
 
 [node name="MotherArea" type="Area2D" parent="Props/Mother_Placeholder" unique_id=1771846737]
 position = Vector2(0, -20)
-collision_layer = 1
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Props/Mother_Placeholder/MotherArea" unique_id=1771846738]
@@ -234,7 +230,6 @@ polygon = PackedVector2Array(-6, -46, 6, -46, 6, -38, -6, -38)
 
 [node name="BrotherArea" type="Area2D" parent="Props/Brother_Placeholder" unique_id=889332581]
 position = Vector2(0, -20)
-collision_layer = 1
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Props/Brother_Placeholder/BrotherArea" unique_id=889332582]
@@ -243,49 +238,49 @@ shape = SubResource("RectangleShape2D_npc")
 [node name="Bark" parent="Props/Brother_Placeholder" unique_id=889332583 instance=ExtResource("4_bark")]
 position = Vector2(0, -48)
 
-[node name="Pedestals" type="Node2D" parent="Props"]
+[node name="Pedestals" type="Node2D" parent="Props" unique_id=1341941316]
 
-[node name="Pedestal_Weapon_1" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Weapon_1" parent="Props/Pedestals" unique_id=239418599 instance=ExtResource("9_pedestal")]
 position = Vector2(605, 288)
 equipment_data = ExtResource("10_sword")
 
-[node name="Pedestal_Weapon_2" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Weapon_2" parent="Props/Pedestals" unique_id=1245625100 instance=ExtResource("9_pedestal")]
 position = Vector2(635, 288)
 pedestal_index = 1
 equipment_data = ExtResource("12_bow")
 
-[node name="Pedestal_Weapon_3" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Weapon_3" parent="Props/Pedestals" unique_id=703085680 instance=ExtResource("9_pedestal")]
 position = Vector2(665, 288)
 pedestal_index = 2
 equipment_data = ExtResource("13_daggers")
 
-[node name="Pedestal_Weapon_4" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Weapon_4" parent="Props/Pedestals" unique_id=1913480857 instance=ExtResource("9_pedestal")]
 position = Vector2(695, 288)
 pedestal_index = 3
 
-[node name="Pedestal_Weapon_5" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Weapon_5" parent="Props/Pedestals" unique_id=1347363399 instance=ExtResource("9_pedestal")]
 position = Vector2(725, 288)
 pedestal_index = 4
 
-[node name="Pedestal_Weapon_6" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Weapon_6" parent="Props/Pedestals" unique_id=1358837370 instance=ExtResource("9_pedestal")]
 position = Vector2(755, 288)
 pedestal_index = 5
 
-[node name="Gallery_Divider" type="Polygon2D" parent="Props/Pedestals"]
+[node name="Gallery_Divider" type="Polygon2D" parent="Props/Pedestals" unique_id=1290256425]
 color = Color(0.24, 0.22, 0.2, 1)
 polygon = PackedVector2Array(776, 220, 782, 220, 784, 288, 774, 288)
 
-[node name="Pedestal_Shield_1" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Shield_1" parent="Props/Pedestals" unique_id=111014464 instance=ExtResource("9_pedestal")]
 position = Vector2(805, 288)
 is_shield_pedestal = true
 equipment_data = ExtResource("11_buckler")
 
-[node name="Pedestal_Shield_2" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Shield_2" parent="Props/Pedestals" unique_id=786929358 instance=ExtResource("9_pedestal")]
 position = Vector2(835, 288)
 is_shield_pedestal = true
 pedestal_index = 1
 
-[node name="Pedestal_Shield_3" parent="Props/Pedestals" instance=ExtResource("9_pedestal")]
+[node name="Pedestal_Shield_3" parent="Props/Pedestals" unique_id=1644435565 instance=ExtResource("9_pedestal")]
 position = Vector2(865, 288)
 is_shield_pedestal = true
 pedestal_index = 2
@@ -399,7 +394,6 @@ polygon = PackedVector2Array(-6, -8, -11, -12, -9, -7, -6, -6)
 
 [node name="ChestArea" type="Area2D" parent="." unique_id=739182910]
 position = Vector2(223, 278)
-collision_layer = 1
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ChestArea" unique_id=1849182041]
@@ -407,7 +401,6 @@ shape = SubResource("RectangleShape2D_chest")
 
 [node name="ExitPortalArea" type="Area2D" parent="." unique_id=438728389]
 position = Vector2(1040, 248)
-collision_layer = 1
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitPortalArea" unique_id=1193208525]
