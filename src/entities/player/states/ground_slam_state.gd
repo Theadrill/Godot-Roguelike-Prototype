@@ -52,6 +52,14 @@ func physics_update(delta: float) -> void:
 		player.velocity = Vector2.ZERO
 		player.move_and_slide()
 
+		if player.visual:
+			var face: float = float(player.facing_direction)
+			var t: float = 1.0 - clampf(impact_recovery_timer / maxf(impact_recovery, 0.001), 0.0, 1.0)
+			# Springs smoothly from squashed knee-impact (1.45, 0.52) back to normal (1.0, 1.0)
+			var cur_x: float = lerpf(1.45, 1.0, t * t)
+			var cur_y: float = lerpf(0.52, 1.0, t * t)
+			player.visual.scale = Vector2(face * cur_x, cur_y)
+
 		if impact_recovery_timer <= 0.0:
 			if player.visual:
 				player.visual.scale = Vector2(float(player.facing_direction), 1.0)
@@ -71,9 +79,9 @@ func _on_slam_impact() -> void:
 
 	player.play_animation(&"crouch")
 
-	# Impact Squash visual
+	# Heavy impact squash: flattens down against the floor on contact
 	if player.visual:
-		player.visual.scale = Vector2(1.15 * float(player.facing_direction), 0.85)
+		player.visual.scale = Vector2(1.45 * float(player.facing_direction), 0.52)
 
 	# Heavy tactile rumble & screen hitstop
 	CombatFeedback.apply_hit_feedback(0.08, 0.7, 1.0, 0.18)
