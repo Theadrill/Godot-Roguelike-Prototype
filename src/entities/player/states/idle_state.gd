@@ -125,16 +125,18 @@ func _process_breathing_visuals(delta: float) -> void:
 		player.body_polygon.scale.y = 1.0 - (compression_px / 40.0)
 		player.body_polygon.scale.x = 1.0 + (compression_px / 40.0) * 0.25
 
-	# Headband & all equipment sockets follow the breathing movement in perfect sync
-	var torso_offset_y: float = compression_px * 0.5
-	if player.main_hand_socket:
-		player.main_hand_socket.position.y = BASE_MAIN_HAND_POS.y + torso_offset_y
-	if player.off_hand_socket:
-		player.off_hand_socket.position.y = BASE_OFF_HAND_POS.y + torso_offset_y
-	if player.back_socket_weapon:
-		player.back_socket_weapon.position.y = BASE_BACK_WEAPON_POS.y + torso_offset_y
-	if player.back_socket_shield:
-		player.back_socket_shield.position.y = BASE_BACK_SHIELD_POS.y + torso_offset_y
+	# Headband & all equipment sockets follow the breathing movement in perfect sync (only for placeholder)
+	var is_using_sprite: bool = player.player_sprite and player.player_sprite.visible
+	if not is_using_sprite:
+		var torso_offset_y: float = compression_px * 0.5
+		if player.main_hand_socket:
+			player.main_hand_socket.position.y = BASE_MAIN_HAND_POS.y + torso_offset_y
+		if player.off_hand_socket:
+			player.off_hand_socket.position.y = BASE_OFF_HAND_POS.y + torso_offset_y
+		if player.back_socket_weapon:
+			player.back_socket_weapon.position.y = BASE_BACK_WEAPON_POS.y + torso_offset_y
+		if player.back_socket_shield:
+			player.back_socket_shield.position.y = BASE_BACK_SHIELD_POS.y + torso_offset_y
 
 	var headband := player.visual.get_node_or_null("HeadbandPlaceholder") as Polygon2D if player.visual else null
 

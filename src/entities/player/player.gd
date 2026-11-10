@@ -158,6 +158,7 @@ func _ready() -> void:
 
 	if player_sprite:
 		player_sprite.animation_finished.connect(_on_player_sprite_animation_finished)
+		player_sprite.frame_changed.connect(_on_player_sprite_frame_changed)
 
 	_refresh_equipped_visuals()
 	_update_equipment_depth()
@@ -264,6 +265,8 @@ func _update_main_weapon_visual() -> void:
 			_main_weapon_instance.rotation_degrees = weapon.visual_rotation_degrees
 			_main_weapon_instance.z_index = 0
 			_main_weapon_instance.visible = not are_weapons_hidden
+			if player_sprite and player_sprite.visible:
+				_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
 
 func _update_secondary_weapon_visual() -> void:
 	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
@@ -342,11 +345,56 @@ func play_animation(anim_name: StringName) -> void:
 
 	if player_sprite.sprite_frames and player_sprite.sprite_frames.has_animation(anim_name):
 		player_sprite.play(anim_name)
+		_update_weapon_socket_for_frame(anim_name, player_sprite.frame)
 
 func _on_player_sprite_animation_finished() -> void:
 	# Transição suave: após a ponte de desenrolar do pulo, mantém o loop de queda fluida
 	if player_sprite and player_sprite.animation == &"fall_from_jump":
 		player_sprite.play(&"fall")
+
+func get_equipped_weapon_category() -> String:
+	if not weapon:
+		return "sword"
+	var res_path: String = weapon.resource_path.to_lower()
+	var w_name: String = weapon.equipment_name.to_lower()
+	if "dagger" in res_path or "dagger" in w_name:
+		return "dagger"
+	elif "hammer" in res_path or "hammer" in w_name:
+		return "hammer"
+	elif "staff" in res_path or "staff" in w_name or "cajado" in w_name:
+		return "staff"
+	elif "crossbow" in res_path or "crossbow" in w_name or "besta" in w_name:
+		return "crossbow"
+	elif "bow" in res_path or "bow" in w_name or "arco" in w_name:
+		return "bow"
+	elif "sword" in res_path or "sword" in w_name or "espada" in w_name:
+		return "sword"
+	return "sword"
+
+func _on_player_sprite_frame_changed() -> void:
+	if not player_sprite:
+		return
+	_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
+
+func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> void:
+	if not main_hand_socket or not player_sprite or not player_sprite.visible:
+		return
+
+	# Não altera ancoragem se estiver executando animação procedural de ataque ou defesa
+	if state_machine and state_machine.current_state:
+		var current_state_name: String = state_machine.current_state.name.to_lower()
+		if current_state_name in ["attack", "rangedattack", "guard"]:
+			return
+
+	var category: String = get_equipped_weapon_category()
+	var data: Dictionary = WeaponSocketConfig.get_socket_data(category, anim_name, frame_idx)
+
+	main_hand_socket.position = data.get("pos", Vector2(6, -20))
+	main_hand_socket.rotation_degrees = data.get("rot", -35.0)
+
+	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+		var should_be_visible: bool = data.get("visible", true)
+		_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
 
 func stop_animation() -> void:
 	if player_sprite:
