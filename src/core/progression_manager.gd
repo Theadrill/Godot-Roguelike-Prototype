@@ -1,7 +1,5 @@
 extends Node
 
-const EnemyCategories = preload("res://src/core/enemy_category.gd")
-
 ## ProgressionManager: Autoload central para gerenciar modificadores temporários da run atual,
 ## níveis permanentes da linhagem (Chás, Forja, Roupas), estatísticas e desbloqueio de pedestais.
 ## Inclui persistência criptografada em AES-256 no disco (user://saves/slot_1/meta_progression.dat).
@@ -369,7 +367,7 @@ func reset_profile() -> void:
 	metrics_updated.emit()
 
 ## Aplica os bônus, modificadores e skin ativa na entidade Player
-func apply_to_player(player: Player) -> void:
+func apply_to_player(player: CharacterBody2D) -> void:
 	if not player:
 		return
 
@@ -403,7 +401,7 @@ func apply_to_player(player: Player) -> void:
 	# 5. Aplicação cosmética da Skin/Túnica
 	apply_skin_to_player(player)
 
-func apply_skin_to_player(player: Player) -> void:
+func apply_skin_to_player(player: CharacterBody2D) -> void:
 	if not player or not player.body_polygon:
 		return
 	if active_skin_id == "crimson":
