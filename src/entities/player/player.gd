@@ -114,6 +114,7 @@ func is_roll_requested() -> bool:
 @onready var body_polygon: Polygon2D = $Visual/BodyPlaceholder
 @onready var player_sprite: AnimatedSprite2D = $Visual.get_node_or_null("PlayerSprite") as AnimatedSprite2D
 @onready var idle_sprite: AnimatedSprite2D = player_sprite
+@onready var animation_player: AnimationPlayer = get_node_or_null("AnimationPlayer") as AnimationPlayer
 @onready var ceiling_check: RayCast2D = $CeilingCheck
 @onready var enemy_overlap_detector: Area2D = $EnemyOverlapDetector
 @onready var hitbox: Hitbox = $Visual/Hitbox
@@ -266,6 +267,11 @@ func _update_main_weapon_visual() -> void:
 		_main_weapon_instance.queue_free()
 		_main_weapon_instance = null
 
+	# Remove any editor preview instances in MainHandSocket
+	if main_hand_socket:
+		for child in main_hand_socket.get_children():
+			child.queue_free()
+
 	if weapon and weapon.visual_scene and main_hand_socket:
 		_main_weapon_instance = weapon.visual_scene.instantiate() as Node2D
 		if _main_weapon_instance:
@@ -352,9 +358,13 @@ func play_animation(anim_name: StringName) -> void:
 	# All animations now follow the standardized 83x62 canvas with feet at row 60 (y = 0 in world)
 	player_sprite.position = Vector2(-2, -29)
 
-	if player_sprite.sprite_frames and player_sprite.sprite_frames.has_animation(anim_name):
-		player_sprite.play(anim_name)
-		_update_weapon_socket_for_frame(anim_name, player_sprite.frame)
+	if animation_player and animation_player.has_animation(anim_name):
+		if animation_player.current_animation != anim_name or not animation_player.is_playing():
+			animation_player.play(anim_name)
+	else:
+		if player_sprite.sprite_frames and player_sprite.sprite_frames.has_animation(anim_name):
+			player_sprite.play(anim_name)
+			_update_weapon_socket_for_frame(anim_name, player_sprite.frame)
 
 func _on_player_sprite_animation_finished() -> void:
 	# Transição suave: após a ponte de desenrolar do pulo, mantém o loop de queda fluida
@@ -414,6 +424,8 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			back_socket_shield.position = torso_pos + Vector2(-3.0, 0.0)
 
 func stop_animation() -> void:
+	if animation_player and animation_player.is_playing():
+		animation_player.stop()
 	if player_sprite:
 		player_sprite.visible = false
 		player_sprite.stop()
