@@ -43,8 +43,9 @@ func exit() -> void:
 	has_fired = false
 	# Restore resting grip stance (visual_offset and visual_rotation_degrees)
 	if player.weapon and player._main_weapon_instance:
-		player._main_weapon_instance.position = player.weapon.visual_offset
-		player._main_weapon_instance.rotation_degrees = player.weapon.visual_rotation_degrees
+		var has_socket_profile: bool = player.weapon.get_socket_profile() != null
+		player._main_weapon_instance.position = Vector2.ZERO if has_socket_profile else player.weapon.visual_offset
+		player._main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else player.weapon.visual_rotation_degrees
 		player._main_weapon_instance.modulate = Color.WHITE
 		player._main_weapon_instance.scale = Vector2.ONE
 	if player.main_hand_socket:

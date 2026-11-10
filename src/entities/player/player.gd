@@ -277,8 +277,9 @@ func _update_main_weapon_visual() -> void:
 		_main_weapon_instance = weapon.visual_scene.instantiate() as Node2D
 		if _main_weapon_instance:
 			main_hand_socket.add_child(_main_weapon_instance)
-			_main_weapon_instance.position = weapon.visual_offset
-			_main_weapon_instance.rotation_degrees = weapon.visual_rotation_degrees
+			var has_socket_profile: bool = weapon.get_socket_profile() != null
+			_main_weapon_instance.position = Vector2.ZERO if has_socket_profile else weapon.visual_offset
+			_main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else weapon.visual_rotation_degrees
 			_main_weapon_instance.z_index = 0
 			_main_weapon_instance.visible = not are_weapons_hidden
 			if player_sprite and player_sprite.visible:
