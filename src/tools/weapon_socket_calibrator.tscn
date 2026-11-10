@@ -1,35 +1,37 @@
-[gd_scene load_steps=4 format=3 uid="uid://weapon_calibrator_tool_01"]
+[gd_scene format=3 uid="uid://rit3suodmtm"]
 
-[ext_resource type="Script" path="res://src/tools/weapon_socket_calibrator.gd" id="1_calibrator"]
-[ext_resource type="SpriteFrames" uid="uid://player_frames_unified_01" path="res://assets/player/adventurer/player_frames.tres" id="2_player_frames"]
-[ext_resource type="PackedScene" uid="uid://sword_visual_01" path="res://src/entities/equipment/swords/sword_visual.tscn" id="3_sword_visual"]
+[ext_resource type="Script" uid="uid://cbvjvtolls7v" path="res://src/tools/weapon_socket_calibrator.gd" id="1_calibrator"]
+[ext_resource type="SpriteFrames" uid="uid://b3mi8waob4tc5" path="res://assets/player/adventurer/player_frames.tres" id="2_player_frames"]
 
-[node name="WeaponSocketCalibrator" type="Node2D"]
+[node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
+target_socket = "Arma nas Costas (BackSocketWeapon)"
+socket_position = Vector2(-5.999995, -23.999998)
+socket_rotation = -109.99999
+status_message = "SUCESSO! Tronco salvo em back_socket.tres -> [idle Frame 0] (Pos: (-5.999995, -23.999998))"
 
-[node name="GroundFloorRef" type="Line2D" parent="."]
+[node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
 width = 1.0
 default_color = Color(0.3, 0.7, 0.4, 0.6)
 metadata/_edit_lock_ = true
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="Node2D" parent="." unique_id=820156170]
 metadata/_edit_lock_ = true
 
-[node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual"]
+[node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
 animation = &"idle"
 metadata/_edit_lock_ = true
 
-[node name="BackSocketWeapon" type="Marker2D" parent="Visual"]
-position = Vector2(-3, -20)
+[node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
+position = Vector2(-6, -24)
+rotation = -3.054326
 
-[node name="BackSocketShield" type="Marker2D" parent="Visual"]
-position = Vector2(-6, -20)
+[node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
+position = Vector2(-8.999995, -23.999998)
 
-[node name="MainHandSocket" type="Marker2D" parent="Visual"]
-position = Vector2(-17, -16)
-rotation = 2.26893
-
-[node name="SwordVisual" parent="Visual/MainHandSocket" instance=ExtResource("3_sword_visual")]
+[node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
+position = Vector2(-14.000001, -14)
+rotation = 2.268928

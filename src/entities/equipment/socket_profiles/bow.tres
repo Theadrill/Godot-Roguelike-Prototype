@@ -5,6 +5,30 @@
 [resource]
 script = ExtResource("1_script")
 profile_name = "bow"
+default_back_pos = Vector2(-6, -24)
+default_back_rot = -175.0
+back_frames = {
+"idle_0": {
+"pos": Vector2(-6, -24),
+"rot": -175.0,
+"visible": true
+},
+"idle_1": {
+"pos": Vector2(-7, -25),
+"rot": -175.0,
+"visible": true
+},
+"idle_2": {
+"pos": Vector2(-7, -26),
+"rot": -175.0,
+"visible": true
+},
+"idle_3": {
+"pos": Vector2(-7, -24),
+"rot": -175.0,
+"visible": true
+}
+}
 idle_0_pos = Vector2(6, -20)
 idle_0_rot = 0.0
 idle_0_visible = true

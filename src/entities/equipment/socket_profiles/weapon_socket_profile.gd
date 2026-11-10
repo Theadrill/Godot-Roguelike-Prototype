@@ -289,6 +289,14 @@ extends Resource
 ## [DoubleJump - Frame 3] Visibilidade da arma (true = visível na mão, false = oculta).
 @export var double_jump_3_visible: bool = true
 
+@export_group("Costas (Configuração Base & Frames)")
+## Posição padrão da arma nas costas quando o frame específico não foi calibrado.
+@export var default_back_pos: Vector2 = Vector2(-6, -24)
+## Rotação padrão da arma nas costas em graus (ex: -175° para arco, 225° para espada).
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var default_back_rot: float = -175.0
+## Dados calibrados frame a frame nas costas: {"idle_0": {"pos": Vector2, "rot": float, "visible": bool}, ...}
+@export var back_frames: Dictionary = {}
+
 func get_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 	var pos_prop := "%s_%d_pos" % [anim_name, frame_idx]
 	if pos_prop in self:
@@ -300,3 +308,28 @@ func get_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 			"visible": get(vis_prop)
 		}
 	return {"pos": Vector2(6, -20), "rot": -35.0, "visible": true}
+
+func get_back_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
+	var key := "%s_%d" % [anim_name, frame_idx]
+	if back_frames.has(key):
+		var data = back_frames[key]
+		if data is Dictionary:
+			return {
+				"pos": data.get("pos", default_back_pos),
+				"rot": data.get("rot", default_back_rot),
+				"visible": data.get("visible", true)
+			}
+	return {
+		"pos": default_back_pos,
+		"rot": default_back_rot,
+		"visible": true
+	}
+
+func set_back_frame_data(anim_name: StringName, frame_idx: int, pos: Vector2, rot: float, vis: bool = true) -> void:
+	var key := "%s_%d" % [anim_name, frame_idx]
+	back_frames[key] = {
+		"pos": pos,
+		"rot": rot,
+		"visible": vis
+	}
+

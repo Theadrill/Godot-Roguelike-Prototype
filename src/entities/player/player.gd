@@ -292,8 +292,8 @@ func _update_secondary_weapon_visual() -> void:
 		_secondary_weapon_instance = secondary_weapon.visual_scene.instantiate() as Node2D
 		if _secondary_weapon_instance:
 			back_socket_weapon.add_child(_secondary_weapon_instance)
-			_secondary_weapon_instance.position = secondary_weapon.back_offset
-			_secondary_weapon_instance.rotation_degrees = secondary_weapon.back_rotation_degrees
+			_secondary_weapon_instance.position = Vector2.ZERO
+			_secondary_weapon_instance.rotation_degrees = 0.0
 			_secondary_weapon_instance.z_index = 0
 			_secondary_weapon_instance.visible = not are_weapons_hidden
 
@@ -415,13 +415,28 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 				var should_be_visible: bool = data.get("visible", true)
 				_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
 
-	# 2. Back Sockets (Arma e Escudo nas costas acompanham o tronco frame a frame)
-	if back_socket_profile:
+	# 2. Back Sockets (Arma e Escudo nas costas usam o perfil da arma ou fallback)
+	if secondary_weapon:
+		var sec_profile: WeaponSocketProfile = secondary_weapon.get_socket_profile()
+		if sec_profile and sec_profile.has_method("get_back_frame_data"):
+			var back_data: Dictionary = sec_profile.get_back_frame_data(anim_name, frame_idx)
+			if back_socket_weapon:
+				back_socket_weapon.position = back_data.get("pos", Vector2(-6, -24))
+				back_socket_weapon.rotation_degrees = back_data.get("rot", 0.0)
+			if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
+				_secondary_weapon_instance.position = Vector2.ZERO
+				_secondary_weapon_instance.rotation_degrees = 0.0
+				_secondary_weapon_instance.visible = back_data.get("visible", true) and not are_weapons_hidden
+	elif back_socket_profile and back_socket_weapon:
 		var torso_pos: Vector2 = back_socket_profile.get_frame_pos(anim_name, frame_idx)
+		back_socket_weapon.position = torso_pos
+		back_socket_weapon.rotation_degrees = 0.0
+
+	if back_socket_shield:
 		if back_socket_weapon:
-			back_socket_weapon.position = torso_pos
-		if back_socket_shield:
-			back_socket_shield.position = torso_pos + Vector2(-3.0, 0.0)
+			back_socket_shield.position = back_socket_weapon.position + Vector2(-3.0, 0.0)
+		elif back_socket_profile:
+			back_socket_shield.position = back_socket_profile.get_frame_pos(anim_name, frame_idx) + Vector2(-3.0, 0.0)
 
 func stop_animation() -> void:
 	if animation_player and animation_player.is_playing():
