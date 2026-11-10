@@ -5,7 +5,6 @@
 [resource]
 script = ExtResource("1_script")
 profile_name = "dagger"
-default_back_z_index = 1
 idle_0_pos = Vector2(-15.999998, -15.000001)
 idle_0_rot = 204.99998
 idle_1_pos = Vector2(-16.000002, -17.000002)
@@ -71,6 +70,7 @@ double_jump_2_pos = Vector2(-3, -12)
 double_jump_2_rot = -270.0
 double_jump_3_pos = Vector2(3, -16)
 double_jump_3_rot = 0.0
+default_back_z_index = 1
 back_frames = {
 "idle_0": {
 "pos": Vector2(-6.9999986, -14.000001),

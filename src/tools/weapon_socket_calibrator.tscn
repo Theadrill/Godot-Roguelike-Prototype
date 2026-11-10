@@ -6,11 +6,13 @@
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
 socket_target = "Arma nas Costas (BackSocketWeapon)"
-selected_weapon = "crossbow"
+selected_weapon = "dagger"
 current_frame = 3
 reference_secondary_weapon = "none"
-socket_position = Vector2(-2.0000002, -14)
-status_message = "SUCESSO! Salvo em crossbow.tres (Arma nas Costas) -> [idle Frame 3] (Pos: (-2.000000, -14.000000), Rot: 0.0°)"
+socket_position = Vector2(-6.999999, -14.999998)
+socket_rotation = -224.99995
+socket_z_index = 0
+status_message = "dagger [Arma nas Costas (BackSocketWeapon)] -> idle Frame 3 (Z: 0)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -29,13 +31,18 @@ frame = 3
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
-position = Vector2(-2.0000002, -14)
+position = Vector2(-6.999999, -14.999998)
+rotation = -3.9269903
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
+z_index = -2
 position = Vector2(-9, -29)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
-position = Vector2(6, -18)
+z_index = 1
+position = Vector2(-18.000002, -16)
+rotation = 3.5779247
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
+z_index = 1
 position = Vector2(7, -19)

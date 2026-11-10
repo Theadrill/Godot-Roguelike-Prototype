@@ -1,21 +1,13 @@
-[gd_resource type="Resource" script_class="BackSocketProfile" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BackSocketProfile" format=3 uid="uid://bkyormwdc3tk4"]
 
-[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/back_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b4mrbt3afnm6w" path="res://src/entities/equipment/socket_profiles/back_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
-profile_name = "back_global"
-idle_0_pos = Vector2(-3, -20)
-idle_1_pos = Vector2(-3, -20)
-idle_2_pos = Vector2(-3, -20)
-idle_3_pos = Vector2(-3, -20)
-run_0_pos = Vector2(-3, -20)
-run_1_pos = Vector2(-3, -20)
-run_2_pos = Vector2(-3, -20)
-run_3_pos = Vector2(-3, -20)
-run_4_pos = Vector2(-3, -20)
-run_5_pos = Vector2(-3, -20)
-jump_0_pos = Vector2(-3, -20)
+idle_0_pos = Vector2(-5.999995, -23.999998)
+idle_1_pos = Vector2(-7, -25)
+idle_2_pos = Vector2(-7, -26)
+idle_3_pos = Vector2(-7, -24)
 jump_1_pos = Vector2(-3, -22)
 jump_2_pos = Vector2(-3, -24)
 jump_3_pos = Vector2(-3, -22)

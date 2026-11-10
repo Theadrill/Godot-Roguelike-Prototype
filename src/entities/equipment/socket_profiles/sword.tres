@@ -54,3 +54,25 @@ double_jump_3_pos = Vector2(4, -18)
 double_jump_3_rot = 0.0
 default_back_pos = Vector2(-2, -24)
 default_back_rot = 225.0
+back_frames = {
+"idle_0": {
+"pos": Vector2(-10, -34),
+"rot": 74.999985,
+"visible": true
+},
+"idle_1": {
+"pos": Vector2(-10, -35),
+"rot": 74.999985,
+"visible": true
+},
+"idle_2": {
+"pos": Vector2(-11.000001, -36),
+"rot": 74.999985,
+"visible": true
+},
+"idle_3": {
+"pos": Vector2(-10.000001, -35.000004),
+"rot": 74.99999,
+"visible": true
+}
+}
