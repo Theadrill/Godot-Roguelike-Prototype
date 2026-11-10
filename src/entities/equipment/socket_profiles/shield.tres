@@ -1,0 +1,130 @@
+[gd_resource type="Resource" script_class="WeaponSocketProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+profile_name = "shield"
+default_back_pos = Vector2(-9, -24)
+default_back_rot = 0.0
+idle_0_pos = Vector2(7, -19)
+idle_0_rot = 0.0
+idle_0_visible = true
+idle_1_pos = Vector2(7, -21)
+idle_1_rot = 0.0
+idle_1_visible = true
+idle_2_pos = Vector2(7, -21)
+idle_2_rot = 0.0
+idle_2_visible = true
+idle_3_pos = Vector2(7, -19)
+idle_3_rot = 0.0
+idle_3_visible = true
+run_0_pos = Vector2(7, -19)
+run_0_rot = 0.0
+run_0_visible = true
+run_1_pos = Vector2(7, -19)
+run_1_rot = 0.0
+run_1_visible = true
+run_2_pos = Vector2(7, -19)
+run_2_rot = 0.0
+run_2_visible = true
+run_3_pos = Vector2(7, -19)
+run_3_rot = 0.0
+run_3_visible = true
+run_4_pos = Vector2(7, -19)
+run_4_rot = 0.0
+run_4_visible = true
+run_5_pos = Vector2(7, -19)
+run_5_rot = 0.0
+run_5_visible = true
+jump_0_pos = Vector2(7, -19)
+jump_0_rot = 0.0
+jump_0_visible = true
+jump_1_pos = Vector2(7, -21)
+jump_1_rot = 0.0
+jump_1_visible = true
+jump_2_pos = Vector2(7, -23)
+jump_2_rot = 0.0
+jump_2_visible = true
+jump_3_pos = Vector2(7, -21)
+jump_3_rot = 0.0
+jump_3_visible = true
+crouch_0_pos = Vector2(7, -12)
+crouch_0_rot = 0.0
+crouch_0_visible = true
+crouch_1_pos = Vector2(7, -12)
+crouch_1_rot = 0.0
+crouch_1_visible = true
+crouch_2_pos = Vector2(7, -12)
+crouch_2_rot = 0.0
+crouch_2_visible = true
+crouch_3_pos = Vector2(7, -12)
+crouch_3_rot = 0.0
+crouch_3_visible = true
+fall_0_pos = Vector2(7, -21)
+fall_0_rot = 0.0
+fall_0_visible = true
+fall_1_pos = Vector2(7, -21)
+fall_1_rot = 0.0
+fall_1_visible = true
+fall_from_jump_0_pos = Vector2(7, -23)
+fall_from_jump_0_rot = 0.0
+fall_from_jump_0_visible = true
+fall_from_jump_1_pos = Vector2(7, -21)
+fall_from_jump_1_rot = 0.0
+fall_from_jump_1_visible = true
+fall_from_jump_2_pos = Vector2(7, -21)
+fall_from_jump_2_rot = 0.0
+fall_from_jump_2_visible = true
+slide_0_pos = Vector2(5, -10)
+slide_0_rot = 0.0
+slide_0_visible = true
+slide_1_pos = Vector2(5, -10)
+slide_1_rot = 0.0
+slide_1_visible = true
+roll_0_pos = Vector2(4, -14)
+roll_0_rot = -90.0
+roll_0_visible = true
+roll_1_pos = Vector2(0, -18)
+roll_1_rot = -180.0
+roll_1_visible = true
+roll_2_pos = Vector2(-4, -14)
+roll_2_rot = -270.0
+roll_2_visible = true
+roll_3_pos = Vector2(4, -18)
+roll_3_rot = 0.0
+roll_3_visible = true
+double_jump_0_pos = Vector2(4, -14)
+double_jump_0_rot = -90.0
+double_jump_0_visible = true
+double_jump_1_pos = Vector2(0, -18)
+double_jump_1_rot = -180.0
+double_jump_1_visible = true
+double_jump_2_pos = Vector2(-4, -14)
+double_jump_2_rot = -270.0
+double_jump_2_visible = true
+double_jump_3_pos = Vector2(4, -18)
+double_jump_3_rot = 0.0
+double_jump_3_visible = true
+back_frames = {
+"idle_0": {
+"pos": Vector2(-9, -24),
+"rot": 0.0,
+"visible": true
+},
+"idle_1": {
+"pos": Vector2(-10, -25),
+"rot": 0.0,
+"visible": true
+},
+"idle_2": {
+"pos": Vector2(-10, -26),
+"rot": 0.0,
+"visible": true
+},
+"idle_3": {
+"pos": Vector2(-10, -24),
+"rot": 0.0,
+"visible": true
+}
+}

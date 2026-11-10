@@ -209,9 +209,10 @@ func set_shield_raised(raised: bool) -> void:
 	var target_socket: Marker2D = off_hand_socket if is_shield_raised else back_socket_shield
 	if _shield_instance.get_parent() != target_socket:
 		_shield_instance.reparent(target_socket, false)
-	_shield_instance.position = shield.visual_offset if shield else Vector2.ZERO
-	_shield_instance.rotation_degrees = shield.visual_rotation_degrees if shield else 0.0
+	_shield_instance.position = Vector2.ZERO
+	_shield_instance.rotation_degrees = 0.0
 	_shield_instance.z_index = 0
+	_on_animation_frame_changed()
 
 func _refresh_equipped_visuals() -> void:
 	_update_main_weapon_visual()
@@ -307,8 +308,8 @@ func _update_shield_visual() -> void:
 		if _shield_instance:
 			var target_socket: Marker2D = off_hand_socket if is_shield_raised else back_socket_shield
 			target_socket.add_child(_shield_instance)
-			_shield_instance.position = shield.visual_offset
-			_shield_instance.rotation_degrees = shield.visual_rotation_degrees
+			_shield_instance.position = Vector2.ZERO
+			_shield_instance.rotation_degrees = 0.0
 			_shield_instance.z_index = 0
 			_shield_instance.visible = not are_weapons_hidden
 
@@ -432,7 +433,31 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 		back_socket_weapon.position = torso_pos
 		back_socket_weapon.rotation_degrees = 0.0
 
-	if back_socket_shield:
+	# 3. Escudo (na Mão/Guarda ou nas Costas)
+	if shield:
+		var sh_profile: WeaponSocketProfile = shield.get_socket_profile()
+		if sh_profile:
+			if is_shield_raised:
+				if sh_profile.has_method("get_frame_data"):
+					var hand_data := sh_profile.get_frame_data(anim_name, frame_idx)
+					if off_hand_socket:
+						off_hand_socket.position = hand_data.get("pos", Vector2(7, -19))
+						off_hand_socket.rotation_degrees = hand_data.get("rot", 0.0)
+					if _shield_instance and is_instance_valid(_shield_instance):
+						_shield_instance.position = Vector2.ZERO
+						_shield_instance.rotation_degrees = 0.0
+						_shield_instance.visible = hand_data.get("visible", true) and not are_weapons_hidden
+			else:
+				if sh_profile.has_method("get_back_frame_data"):
+					var back_data := sh_profile.get_back_frame_data(anim_name, frame_idx)
+					if back_socket_shield:
+						back_socket_shield.position = back_data.get("pos", Vector2(-9, -24))
+						back_socket_shield.rotation_degrees = back_data.get("rot", 0.0)
+					if _shield_instance and is_instance_valid(_shield_instance):
+						_shield_instance.position = Vector2.ZERO
+						_shield_instance.rotation_degrees = 0.0
+						_shield_instance.visible = back_data.get("visible", true) and not are_weapons_hidden
+	elif back_socket_shield:
 		if back_socket_weapon:
 			back_socket_shield.position = back_socket_weapon.position + Vector2(-3.0, 0.0)
 		elif back_socket_profile:

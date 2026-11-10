@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="WeaponSocketProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+profile_name = "shield_2"
+default_back_pos = Vector2(-9, -24)
+default_back_rot = 0.0
+idle_0_pos = Vector2(7, -19)
+idle_0_rot = 0.0
+idle_0_visible = true
+idle_1_pos = Vector2(7, -21)
+idle_1_rot = 0.0
+idle_1_visible = true
+idle_2_pos = Vector2(7, -21)
+idle_2_rot = 0.0
+idle_2_visible = true
+idle_3_pos = Vector2(7, -19)
+idle_3_rot = 0.0
+idle_3_visible = true
+back_frames = {
+"idle_0": {
+"pos": Vector2(-9, -24),
+"rot": 0.0,
+"visible": true
+},
+"idle_1": {
+"pos": Vector2(-10, -25),
+"rot": 0.0,
+"visible": true
+},
+"idle_2": {
+"pos": Vector2(-10, -26),
+"rot": 0.0,
+"visible": true
+},
+"idle_3": {
+"pos": Vector2(-10, -24),
+"rot": 0.0,
+"visible": true
+}
+}

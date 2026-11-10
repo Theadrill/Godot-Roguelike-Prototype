@@ -5,10 +5,12 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-target_socket = "Arma nas Costas (BackSocketWeapon)"
-socket_position = Vector2(-5.999995, -23.999998)
-socket_rotation = -109.99999
-status_message = "SUCESSO! Tronco salvo em back_socket.tres -> [idle Frame 0] (Pos: (-5.999995, -23.999998))"
+socket_target = "Costas (BackSocketWeapon)"
+reference_weapon = "none"
+show_shield_on_back = false
+socket_position = Vector2(-10, -34)
+socket_rotation = 74.999985
+status_message = "sword [Costas] -> idle Frame 0"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -26,12 +28,14 @@ animation = &"idle"
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
-position = Vector2(-6, -24)
-rotation = -3.054326
+position = Vector2(-10, -34)
+rotation = 1.3089968
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
-position = Vector2(-8.999995, -23.999998)
+position = Vector2(-13, -34)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
-position = Vector2(-14.000001, -14)
-rotation = 2.268928
+position = Vector2(6, -20)
+
+[node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
+position = Vector2(7, -19)

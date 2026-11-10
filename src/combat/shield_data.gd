@@ -3,6 +3,22 @@ extends EquipmentData
 
 ## Data container for shields, parry timings, guard absorption, and forge upgrades.
 
+@export_group("Socket & Anchoring Profile")
+## Perfil customizado de ancoragem frame a frame do escudo.
+@export var custom_socket_profile: WeaponSocketProfile
+## Perfil predefinido de ancoragem do escudo (shield, shield_2).
+@export_enum("shield", "shield_2") var socket_profile: String = "shield"
+
+func get_socket_profile() -> WeaponSocketProfile:
+	if custom_socket_profile:
+		return custom_socket_profile
+	var profile_res_path := "res://src/entities/equipment/socket_profiles/%s.tres" % socket_profile
+	if ResourceLoader.exists(profile_res_path):
+		var prof := load(profile_res_path) as WeaponSocketProfile
+		if prof:
+			return prof
+	return null
+
 @export_group("Shield Defense Attributes")
 ## Damage reduction percentage when holding simple guard (0.0 to 1.0, where 0.85 = 85% absorbed, 15% chip damage)
 @export_range(0.0, 1.0, 0.05) var guard_absorption: float = 0.85
