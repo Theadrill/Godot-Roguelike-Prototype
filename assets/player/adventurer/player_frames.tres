@@ -1,10 +1,12 @@
-[gd_resource type="SpriteFrames" load_steps=29 format=3 uid="uid://player_frames_unified_01"]
+[gd_resource type="SpriteFrames" load_steps=37 format=3 uid="uid://player_frames_unified_01"]
 
 [ext_resource type="Texture2D" path="res://assets/player/adventurer/idle/player_idle_sheet.png" id="1_idle_sheet"]
 [ext_resource type="Texture2D" path="res://assets/player/adventurer/run/player_run_sheet.png" id="2_run_sheet"]
 [ext_resource type="Texture2D" path="res://assets/player/adventurer/jump/player_jump_sheet.png" id="3_jump_sheet"]
 [ext_resource type="Texture2D" path="res://assets/player/adventurer/crouch/player_crouch_sheet.png" id="4_crouch_sheet"]
 [ext_resource type="Texture2D" path="res://assets/player/adventurer/fall/player_fall_sheet.png" id="5_fall_sheet"]
+[ext_resource type="Texture2D" path="res://assets/player/adventurer/slide/player_slide_sheet.png" id="6_slide_sheet"]
+[ext_resource type="Texture2D" path="res://assets/player/adventurer/roll/player_roll_sheet.png" id="7_roll_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
 atlas = ExtResource("1_idle_sheet")
@@ -86,6 +88,30 @@ region = Rect2(0, 0, 83, 62)
 atlas = ExtResource("5_fall_sheet")
 region = Rect2(0, 62, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_slide_0"]
+atlas = ExtResource("6_slide_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slide_1"]
+atlas = ExtResource("6_slide_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_roll_0"]
+atlas = ExtResource("7_roll_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_roll_1"]
+atlas = ExtResource("7_roll_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_roll_2"]
+atlas = ExtResource("7_roll_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_roll_3"]
+atlas = ExtResource("7_roll_sheet")
+region = Rect2(83, 62, 83, 62)
+
 [resource]
 animations = [{
 "frames": [{
@@ -104,6 +130,23 @@ animations = [{
 "loop": true,
 "name": &"crouch",
 "speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_3")
+}],
+"loop": false,
+"name": &"double_jump",
+"speed": 13.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -166,6 +209,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roll_3")
+}],
+"loop": false,
+"name": &"roll",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_run_0")
 }, {
 "duration": 1.0,
@@ -185,5 +245,16 @@ animations = [{
 }],
 "loop": true,
 "name": &"run",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slide_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slide_1")
+}],
+"loop": true,
+"name": &"slide",
 "speed": 10.0
 }]

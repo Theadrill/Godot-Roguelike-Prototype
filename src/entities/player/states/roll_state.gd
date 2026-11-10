@@ -10,6 +10,11 @@ func enter() -> void:
 	roll_timer = player.roll_duration
 	roll_direction = float(player.facing_direction)
 
+	if player.is_crouch_requested() or (state_machine.previous_state and state_machine.previous_state.name.to_lower() == "crouch"):
+		player.play_animation(&"slide")
+	else:
+		player.play_animation(&"roll")
+
 	# Shrink collision height to 20px so player passes under low ceilings (32px)
 	_set_crouched(true)
 
@@ -23,6 +28,7 @@ func enter() -> void:
 
 func exit() -> void:
 	_set_crouched(false)
+	player.stop_animation()
 	if player.hurtbox:
 		player.hurtbox.is_invulnerable = false
 	if player.has_meta("mod_folha_de_fogo") and player.get_meta("mod_folha_de_fogo"):
@@ -70,7 +76,8 @@ func _set_crouched(crouched: bool) -> void:
 	if crouched:
 		rect.size = Vector2(16.0, 20.0)
 		player.collision_shape.position = Vector2(0.0, -10.0)
-		player.visual.scale.y = 0.5
+		if not player.player_sprite or not player.player_sprite.visible:
+			player.visual.scale.y = 0.5
 		if player.hurtbox and player.hurtbox.has_node("CollisionShape2D"):
 			var h_rect := player.hurtbox.get_node("CollisionShape2D").shape as RectangleShape2D
 			if h_rect:

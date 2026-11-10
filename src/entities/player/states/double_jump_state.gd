@@ -9,7 +9,7 @@ func enter() -> void:
 	player.velocity.y = player.double_jump_velocity
 	player.is_wall_recovery_active = false
 	player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
-	player.play_animation(&"jump")
+	player.play_animation(&"double_jump")
 
 func exit() -> void:
 	player.stop_animation()

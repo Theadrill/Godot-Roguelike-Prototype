@@ -11,7 +11,7 @@ func enter() -> void:
 		player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
 
 	var prev_state_name: String = state_machine.previous_state.name if state_machine and state_machine.previous_state else ""
-	if prev_state_name in ["Jump", "DoubleJump", "WallJump"]:
+	if prev_state_name in ["Jump", "WallJump"]:
 		player.play_animation(&"fall_from_jump")
 	else:
 		player.play_animation(&"fall")
