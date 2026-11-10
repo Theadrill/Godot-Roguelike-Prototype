@@ -147,7 +147,7 @@ func _on_frame_changed() -> void:
 		character_sprite.frame = current_frame
 
 	# Carrega os dados previamente salvos daquele frame
-	if _current_profile_resource:
+	if _current_profile_resource and _current_profile_resource.has_method("get_frame_data"):
 		var data: Dictionary = _current_profile_resource.get_frame_data(selected_animation, current_frame)
 		socket_position = data.get("pos", Vector2(6, -20))
 		socket_rotation = data.get("rot", -35.0)
@@ -161,7 +161,7 @@ func _on_frame_changed() -> void:
 	# Atualiza a posição das costas caso o usuário queira visualizar
 	if not back_socket_weapon:
 		back_socket_weapon = get_node_or_null("Visual/BackSocketWeapon") as Marker2D
-	if _back_profile_resource and back_socket_weapon:
+	if _back_profile_resource and _back_profile_resource.has_method("get_frame_pos") and back_socket_weapon:
 		var torso_pos: Vector2 = _back_profile_resource.get_frame_pos(selected_animation, current_frame)
 		back_socket_weapon.position = torso_pos
 		if back_socket_shield:
