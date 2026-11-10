@@ -5,12 +5,12 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-selected_weapon = "staff"
+socket_target = "Escudo na Mão (OffHandSocket)"
+current_frame = 3
 reference_secondary_weapon = "none"
-socket_position = Vector2(-18.000002, -15.000002)
-socket_rotation = 10.999998
+socket_position = Vector2(11, -20)
 socket_z_index = 2
-status_message = "staff [Arma na Mão (MainHandSocket)] -> idle Frame 0 (Z: 2)"
+status_message = "shield [Escudo na Mão (OffHandSocket)] -> idle Frame 3 (Z: 2)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -25,21 +25,23 @@ metadata/_edit_lock_ = true
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
 animation = &"idle"
+frame = 3
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
 z_index = -2
-position = Vector2(-2.0000002, -14)
+position = Vector2(-10.000001, -35.000004)
+rotation = 1.3089968
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -2
-position = Vector2(-9, -28)
+position = Vector2(-9, -29)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(-18.000002, -15.000002)
-rotation = 0.1919862
+position = Vector2(-16, -15)
+rotation = 2.268928
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
-position = Vector2(7, -19)
+position = Vector2(11, -20)

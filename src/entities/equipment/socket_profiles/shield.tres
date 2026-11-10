@@ -5,13 +5,13 @@
 [resource]
 script = ExtResource("1_script")
 profile_name = "shield"
-idle_0_pos = Vector2(7, -19)
+idle_0_pos = Vector2(10, -20)
 idle_0_rot = 0.0
-idle_1_pos = Vector2(7, -21)
+idle_1_pos = Vector2(10, -22)
 idle_1_rot = 0.0
-idle_2_pos = Vector2(7, -21)
+idle_2_pos = Vector2(11, -22)
 idle_2_rot = 0.0
-idle_3_pos = Vector2(7, -19)
+idle_3_pos = Vector2(11, -20)
 idle_3_rot = 0.0
 run_0_pos = Vector2(7, -19)
 run_0_rot = 0.0
@@ -93,5 +93,19 @@ back_frames = {
 "pos": Vector2(-9, -29),
 "rot": 0.0,
 "visible": true
+}
+}
+hand_frames = {
+"idle_0": {
+"z_index": 2
+},
+"idle_1": {
+"z_index": 2
+},
+"idle_2": {
+"z_index": 2
+},
+"idle_3": {
+"z_index": 2
 }
 }
