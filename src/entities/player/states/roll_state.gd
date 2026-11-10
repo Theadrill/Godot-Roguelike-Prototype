@@ -10,10 +10,7 @@ func enter() -> void:
 	roll_timer = player.roll_duration
 	roll_direction = float(player.facing_direction)
 
-	if player.is_crouch_requested() or (state_machine.previous_state and state_machine.previous_state.name.to_lower() == "crouch"):
-		player.play_animation(&"slide")
-	else:
-		player.play_animation(&"roll")
+	player.play_animation(&"slide")
 
 	# Shrink collision height to 20px so player passes under low ceilings (32px)
 	_set_crouched(true)
