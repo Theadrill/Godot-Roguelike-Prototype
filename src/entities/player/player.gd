@@ -606,6 +606,7 @@ func cycle_reserve_weapon() -> void:
 		"res://src/entities/equipment/bows/weapon_bow_base.tres",
 		"res://src/entities/equipment/crossbows/weapon_crossbow_base.tres",
 		"res://src/entities/equipment/swords/weapon_sword_base.tres",
+		"res://src/entities/equipment/axes/weapon_axe_base.tres",
 		"res://src/entities/equipment/hammers/weapon_hammer_base.tres",
 		"res://src/entities/equipment/staffs/weapon_staff_base.tres",
 		"res://src/entities/equipment/daggers/weapon_dagger_base.tres"
