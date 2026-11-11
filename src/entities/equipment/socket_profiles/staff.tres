@@ -25,14 +25,14 @@ run_4_pos = Vector2(1.999999, -21)
 run_4_rot = -39.999996
 run_5_pos = Vector2(9, -18.000002)
 run_5_rot = -76.49999
-jump_0_pos = Vector2(6, -22)
-jump_0_rot = -40.0
-jump_1_pos = Vector2(6, -24)
-jump_1_rot = -50.0
-jump_2_pos = Vector2(6, -26)
-jump_2_rot = -55.0
-jump_3_pos = Vector2(6, -24)
-jump_3_rot = -45.0
+jump_0_pos = Vector2(-11, -14)
+jump_0_rot = -7.9999995
+jump_1_pos = Vector2(-13, -13)
+jump_1_rot = 18.499998
+jump_2_pos = Vector2(6, -45)
+jump_2_rot = -111.49999
+jump_3_pos = Vector2(4, -50.8)
+jump_3_rot = -190.0
 crouch_0_pos = Vector2(6, -14)
 crouch_0_rot = -40.0
 crouch_1_pos = Vector2(6, -14)
@@ -41,12 +41,16 @@ crouch_2_pos = Vector2(6, -14)
 crouch_2_rot = -40.0
 crouch_3_pos = Vector2(6, -14)
 crouch_3_rot = -40.0
-fall_0_pos = Vector2(6, -24)
-fall_1_pos = Vector2(6, -24)
-fall_from_jump_0_pos = Vector2(6, -26)
-fall_from_jump_0_rot = -45.0
-fall_from_jump_1_pos = Vector2(6, -24)
-fall_from_jump_2_pos = Vector2(6, -24)
+fall_0_pos = Vector2(-2, -46)
+fall_0_rot = -123.5
+fall_1_pos = Vector2(-2, -46)
+fall_1_rot = -111.5
+fall_from_jump_0_pos = Vector2(8, -46)
+fall_from_jump_0_rot = -170.5
+fall_from_jump_1_pos = Vector2(-1.999999, -46)
+fall_from_jump_1_rot = -104.5
+fall_from_jump_2_pos = Vector2(-1.999999, -46)
+fall_from_jump_2_rot = -112.399994
 slide_0_pos = Vector2(8, -10)
 slide_0_rot = -15.0
 slide_1_pos = Vector2(8, -10)
@@ -68,6 +72,46 @@ double_jump_2_rot = -270.0
 double_jump_3_pos = Vector2(4, -19)
 double_jump_3_rot = 0.0
 back_frames = {
+"fall_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(0, -19),
+"rot": -114.5,
+"visible": true,
+"z_index": -2
+},
+"fall_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5, -19),
+"rot": -74.5,
+"visible": true,
+"z_index": -2
+},
+"fall_from_jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5, -21),
+"rot": -74.5,
+"visible": true,
+"z_index": -2
+},
+"fall_from_jump_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -21),
+"rot": -126.5,
+"visible": true,
+"z_index": -2
+},
+"fall_from_jump_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(0, -21),
+"rot": -118.5,
+"visible": true,
+"z_index": -2
+},
 "idle_0": {
 "pos": Vector2(-3, -23),
 "rot": -130.0,
@@ -87,6 +131,38 @@ back_frames = {
 "pos": Vector2(-2, -24),
 "rot": -130.0,
 "visible": true
+},
+"jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3, -21),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"jump_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -17),
+"rot": -118.0,
+"visible": true,
+"z_index": -2
+},
+"jump_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3, -24),
+"rot": -126.0,
+"visible": true,
+"z_index": -2
+},
+"jump_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3, -31),
+"rot": -134.0,
+"visible": true,
+"z_index": -2
 },
 "run_0": {
 "flip_h": false,
@@ -138,6 +214,46 @@ back_frames = {
 }
 }
 hand_frames = {
+"fall_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -46),
+"rot": -123.5,
+"visible": true,
+"z_index": 2
+},
+"fall_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -46),
+"rot": -111.5,
+"visible": true,
+"z_index": 2
+},
+"fall_from_jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -46),
+"rot": -170.5,
+"visible": true,
+"z_index": 2
+},
+"fall_from_jump_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1.999999, -46),
+"rot": -104.5,
+"visible": true,
+"z_index": 2
+},
+"fall_from_jump_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1.999999, -46),
+"rot": -112.399994,
+"visible": true,
+"z_index": 2
+},
 "idle_0": {
 "z_index": 2
 },
@@ -148,6 +264,38 @@ hand_frames = {
 "z_index": 2
 },
 "idle_3": {
+"z_index": 2
+},
+"jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-11, -14),
+"rot": -7.9999995,
+"visible": true,
+"z_index": 2
+},
+"jump_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-13, -13),
+"rot": 18.499998,
+"visible": true,
+"z_index": 2
+},
+"jump_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(6, -45),
+"rot": -111.49999,
+"visible": true,
+"z_index": 2
+},
+"jump_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(4, -50.8),
+"rot": -190.0,
+"visible": true,
 "z_index": 2
 },
 "run_0": {
