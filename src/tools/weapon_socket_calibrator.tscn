@@ -7,6 +7,7 @@
 script = ExtResource("1_calibrator")
 selected_weapon = "crossbow"
 selected_animation = "roll"
+roll_preview_angle = null
 reference_secondary_weapon = "none"
 show_shield_reference = false
 socket_pos_x = 4.0

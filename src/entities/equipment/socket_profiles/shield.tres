@@ -177,24 +177,24 @@ back_frames = {
 "roll_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-4, -34),
-"rot": 0.0,
+"pos": Vector2(7, -30.000002),
+"rot": 154.9,
 "visible": true,
 "z_index": -2
 },
 "roll_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-4, -34),
-"rot": 0.0,
+"pos": Vector2(1.999999, -15),
+"rot": 228.39998,
 "visible": true,
 "z_index": -2
 },
 "roll_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-4, -34),
-"rot": 0.0,
+"pos": Vector2(-13, -21),
+"rot": -61.9,
 "visible": true,
 "z_index": -2
 },
