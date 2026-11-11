@@ -31,7 +31,8 @@ func enter() -> void:
 
 	is_charging = false
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
-	if elapsed_sec <= COMBO_WINDOW and last_completed_step >= 0 and (last_completed_step + 1 < player.weapon.combo_durations.size()):
+	var combo_window: float = player.weapon.attack_cooldown + 0.45 if player.weapon else COMBO_WINDOW
+	if elapsed_sec <= combo_window and last_completed_step >= 0 and (last_completed_step + 1 < player.weapon.combo_durations.size()):
 		current_step = last_completed_step + 1
 	else:
 		current_step = 0
