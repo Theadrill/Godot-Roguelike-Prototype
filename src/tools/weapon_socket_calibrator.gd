@@ -394,7 +394,10 @@ func _on_frame_changed() -> void:
 		var w_data: Dictionary = _weapon_profile_resource.get_frame_data(selected_animation, current_frame)
 		hand_w.position = w_data.get("pos", Vector2(6, -20))
 		hand_w.rotation_degrees = w_data.get("rot", -35.0)
-		hand_w.z_index = w_data.get("z_index", 2)
+		var hand_z: int = w_data.get("z_index", 2)
+		if selected_animation == "corner_climb" and hand_z < 1:
+			hand_z = 2
+		hand_w.z_index = hand_z
 		if _main_hand_instance and is_instance_valid(_main_hand_instance):
 			_main_hand_instance.visible = w_data.get("visible", true)
 			_apply_visual_flip(_main_hand_instance, w_data.get("flip_h", false), w_data.get("flip_v", false))

@@ -77,7 +77,57 @@ wall_slide_0_pos = Vector2(-14, -23)
 wall_slide_0_rot = -112.399994
 wall_slide_1_pos = Vector2(-14, -23)
 wall_slide_1_rot = -112.399994
+corner_climb_0_pos = Vector2(-14.999998, 15)
+corner_climb_0_rot = -104.69999
+corner_climb_1_pos = Vector2(-11.999998, 1)
+corner_climb_1_rot = -104.69999
+corner_climb_2_pos = Vector2(-8.999998, -4)
+corner_climb_2_rot = -104.69999
+corner_climb_3_pos = Vector2(-7.999998, -7)
+corner_climb_3_rot = -104.69999
+corner_climb_4_pos = Vector2(-6.999998, -7)
+corner_climb_4_rot = -104.69999
 back_frames = {
+"corner_climb_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-15.000001, 9),
+"rot": -101.49999,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-12.000001, -5),
+"rot": -101.49999,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-9.000001, -10),
+"rot": -101.49999,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-8.000001, -13),
+"rot": -101.49999,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-7.000001, -13),
+"rot": -101.49999,
+"visible": true,
+"z_index": -1
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
@@ -268,6 +318,46 @@ back_frames = {
 }
 }
 hand_frames = {
+"corner_climb_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-14.999998, 15),
+"rot": -104.69999,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-11.999998, 1),
+"rot": -104.69999,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-8.999998, -4),
+"rot": -104.69999,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-7.999998, -7),
+"rot": -104.69999,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-6.999998, -7),
+"rot": -104.69999,
+"visible": true,
+"z_index": 2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,

@@ -77,8 +77,58 @@ wall_slide_0_pos = Vector2(-14.000002, -22.000004)
 wall_slide_0_rot = -290.49997
 wall_slide_1_pos = Vector2(-14.000002, -22.000004)
 wall_slide_1_rot = -290.49997
+corner_climb_0_pos = Vector2(-8, 18.000002)
+corner_climb_0_rot = -259.5
+corner_climb_1_pos = Vector2(-5, 4.000002)
+corner_climb_1_rot = -259.5
+corner_climb_2_pos = Vector2(-2, -0.9999981)
+corner_climb_2_rot = -259.5
+corner_climb_3_pos = Vector2(-1, -3.999998)
+corner_climb_3_rot = -259.5
+corner_climb_4_pos = Vector2(0, -3.999998)
+corner_climb_4_rot = -259.5
 default_back_z_index = 1
 back_frames = {
+"corner_climb_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-11, 18.000008),
+"rot": -248.5,
+"visible": true,
+"z_index": 1
+},
+"corner_climb_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-8, 4.0000076),
+"rot": -248.5,
+"visible": true,
+"z_index": 1
+},
+"corner_climb_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-5, -0.9999924),
+"rot": -248.5,
+"visible": true,
+"z_index": 1
+},
+"corner_climb_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-4, -3.9999924),
+"rot": -248.5,
+"visible": true,
+"z_index": 1
+},
+"corner_climb_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-3, -3.9999924),
+"rot": -248.5,
+"visible": true,
+"z_index": 1
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
@@ -273,6 +323,46 @@ back_frames = {
 }
 }
 hand_frames = {
+"corner_climb_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-8, 18.000002),
+"rot": -259.5,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-5, 4.000002),
+"rot": -259.5,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -0.9999981),
+"rot": -259.5,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-1, -3.999998),
+"rot": -259.5,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(0, -3.999998),
+"rot": -259.5,
+"visible": true,
+"z_index": 2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,

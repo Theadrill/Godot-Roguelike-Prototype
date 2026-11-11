@@ -26,6 +26,7 @@ func enter() -> void:
 	if player.player_sprite:
 		player.player_sprite.play(&"corner_climb")
 		player.player_sprite.frame = 0
+	player._update_weapon_socket_for_frame(&"corner_climb", 0)
 	
 	# Reset jump allowances
 	player.can_double_jump = true
@@ -58,7 +59,9 @@ func physics_update(delta: float) -> void:
 	var progress := clampf(climb_timer / CLIMB_DURATION, 0.0, 1.0)
 	var frame_idx := mini(int(progress * 5.0), 4)
 	if player.player_sprite and player.player_sprite.animation == &"corner_climb":
-		player.player_sprite.frame = frame_idx
+		if player.player_sprite.frame != frame_idx:
+			player.player_sprite.frame = frame_idx
+			player._update_weapon_socket_for_frame(&"corner_climb", frame_idx)
 
 	if climb_timer >= CLIMB_DURATION:
 		player.global_position = target_pos

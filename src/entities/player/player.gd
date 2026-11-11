@@ -451,7 +451,10 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			var data: Dictionary = profile.get_frame_data(anim_name, frame_idx)
 			main_hand_socket.position = data.get("pos", Vector2(6, -20))
 			main_hand_socket.rotation_degrees = data.get("rot", -35.0)
-			main_hand_socket.z_index = data.get("z_index", 2)
+			var hand_z: int = data.get("z_index", 2)
+			if anim_name == &"corner_climb" and hand_z < 1:
+				hand_z = 2
+			main_hand_socket.z_index = hand_z
 			if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
 				var should_be_visible: bool = data.get("visible", true)
 				_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
@@ -940,8 +943,6 @@ func set_ledge_climb_visual(active: bool) -> void:
 		body_polygon.visible = not active
 	if visual.has_node("HeadbandPlaceholder"):
 		(visual.get_node("HeadbandPlaceholder") as CanvasItem).visible = not active
-	if main_hand_socket:
-		main_hand_socket.visible = not active
 
 ## Ledge detection (Dead Cells mantle check):
 ## Detects when any part of the player (feet, knees, waist, or chest) hits a wall edge

@@ -77,7 +77,57 @@ wall_slide_0_pos = Vector2(-14.000001, -24)
 wall_slide_0_rot = 69.5
 wall_slide_1_pos = Vector2(-14.000001, -24)
 wall_slide_1_rot = 69.5
+corner_climb_0_pos = Vector2(-12, 17)
+corner_climb_0_rot = -286.6
+corner_climb_1_pos = Vector2(-9, 3)
+corner_climb_1_rot = -286.6
+corner_climb_2_pos = Vector2(-6, -2)
+corner_climb_2_rot = -286.6
+corner_climb_3_pos = Vector2(-5, -5)
+corner_climb_3_rot = -286.6
+corner_climb_4_pos = Vector2(-4, -5)
+corner_climb_4_rot = -286.6
 back_frames = {
+"corner_climb_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-12.999998, 11.999998),
+"rot": -105.29998,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-9.999998, -2.000002),
+"rot": -105.29998,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6.999998, -7.000002),
+"rot": -105.29998,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5.999998, -10.000002),
+"rot": -105.29998,
+"visible": true,
+"z_index": -1
+},
+"corner_climb_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4.999998, -10.000002),
+"rot": -105.29998,
+"visible": true,
+"z_index": -1
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
@@ -272,6 +322,46 @@ back_frames = {
 }
 default_flip_h = true
 hand_frames = {
+"corner_climb_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-12, 17),
+"rot": -286.6,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_1": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-9, 3),
+"rot": -286.6,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_2": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-6, -2),
+"rot": -286.6,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_3": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-5, -5),
+"rot": -286.6,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_4": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-4, -5),
+"rot": -286.6,
+"visible": true,
+"z_index": 2
+},
 "fall_0": {
 "flip_h": true,
 "flip_v": false,

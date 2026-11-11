@@ -157,6 +157,13 @@ extends Resource
 ## Pos: X- costas, X+ peito, Y- ombro/sobe, Y+ lombar/desce.
 @export var double_jump_3_pos: Vector2 = Vector2(-3, -20)
 
+@export_group("Corner Climb (5 frames)")
+@export var corner_climb_0_pos: Vector2 = Vector2(-12, 12)
+@export var corner_climb_1_pos: Vector2 = Vector2(-12, 12)
+@export var corner_climb_2_pos: Vector2 = Vector2(-12, 12)
+@export var corner_climb_3_pos: Vector2 = Vector2(-12, 12)
+@export var corner_climb_4_pos: Vector2 = Vector2(-12, 12)
+
 func get_frame_pos(anim_name: StringName, frame_idx: int) -> Vector2:
 	var pos_prop := "%s_%d_pos" % [anim_name, frame_idx]
 	if pos_prop in self:

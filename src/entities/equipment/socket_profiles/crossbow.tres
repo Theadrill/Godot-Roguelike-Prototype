@@ -77,7 +77,57 @@ wall_slide_0_pos = Vector2(-16.000002, -22.999998)
 wall_slide_0_rot = 174.09999
 wall_slide_1_pos = Vector2(-16.000002, -22.999998)
 wall_slide_1_rot = 174.09999
+corner_climb_0_pos = Vector2(-10.999999, 20)
+corner_climb_0_rot = -7.8999996
+corner_climb_1_pos = Vector2(-7.999999, 6)
+corner_climb_1_rot = -7.8999996
+corner_climb_2_pos = Vector2(-4.999999, 1)
+corner_climb_2_rot = -7.8999996
+corner_climb_3_pos = Vector2(-3.999999, -2)
+corner_climb_3_rot = -7.8999996
+corner_climb_4_pos = Vector2(-2.999999, -2)
+corner_climb_4_rot = -7.8999996
 back_frames = {
+"corner_climb_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-9, 21.999998),
+"rot": -24.0,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, 7.999998),
+"rot": -24.0,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-3, 2.999998),
+"rot": -24.0,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -1.9073486e-06),
+"rot": -24.0,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1, -1.9073486e-06),
+"rot": -24.0,
+"visible": true,
+"z_index": 2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
@@ -280,6 +330,46 @@ back_frames = {
 }
 }
 hand_frames = {
+"corner_climb_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10.999999, 20),
+"rot": -7.8999996,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-7.999999, 6),
+"rot": -7.8999996,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4.999999, 1),
+"rot": -7.8999996,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-3.999999, -2),
+"rot": -7.8999996,
+"visible": true,
+"z_index": 2
+},
+"corner_climb_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2.999999, -2),
+"rot": -7.8999996,
+"visible": true,
+"z_index": 2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
