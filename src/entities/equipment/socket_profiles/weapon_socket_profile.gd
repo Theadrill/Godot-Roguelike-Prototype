@@ -289,6 +289,36 @@ extends Resource
 ## [DoubleJump - Frame 3] Visibilidade da arma (true = visível na mão, false = oculta).
 @export var double_jump_3_visible: bool = true
 
+@export_group("WallCling (1 frame)")
+@export var wall_cling_0_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var wall_cling_0_rot: float = -35.0
+@export var wall_cling_0_visible: bool = true
+
+@export_group("WallSlide (2 frames)")
+@export var wall_slide_0_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var wall_slide_0_rot: float = -35.0
+@export var wall_slide_0_visible: bool = true
+@export var wall_slide_1_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var wall_slide_1_rot: float = -35.0
+@export var wall_slide_1_visible: bool = true
+
+@export_group("CornerClimb (5 frames)")
+@export var corner_climb_0_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var corner_climb_0_rot: float = -35.0
+@export var corner_climb_0_visible: bool = true
+@export var corner_climb_1_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var corner_climb_1_rot: float = -35.0
+@export var corner_climb_1_visible: bool = true
+@export var corner_climb_2_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var corner_climb_2_rot: float = -35.0
+@export var corner_climb_2_visible: bool = true
+@export var corner_climb_3_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var corner_climb_3_rot: float = -35.0
+@export var corner_climb_3_visible: bool = true
+@export var corner_climb_4_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var corner_climb_4_rot: float = -35.0
+@export var corner_climb_4_visible: bool = true
+
 @export_group("Costas (Configuração Base & Frames)")
 ## Posição padrão da arma nas costas quando o frame específico não foi calibrado.
 @export var default_back_pos: Vector2 = Vector2(-6, -24)
@@ -332,6 +362,15 @@ func get_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 			"flip_h": f_h,
 			"flip_v": f_v
 		}
+	if custom_hand_data.has("pos"):
+		return {
+			"pos": custom_hand_data.get("pos", Vector2(6, -20)),
+			"rot": custom_hand_data.get("rot", -35.0),
+			"visible": custom_hand_data.get("visible", true),
+			"z_index": z_val,
+			"flip_h": f_h,
+			"flip_v": f_v
+		}
 	return {"pos": Vector2(6, -20), "rot": -35.0, "visible": true, "z_index": z_val, "flip_h": f_h, "flip_v": f_v}
 
 func set_hand_z_index(anim_name: StringName, frame_idx: int, z_idx: int) -> void:
@@ -342,7 +381,21 @@ func set_hand_z_index(anim_name: StringName, frame_idx: int, z_idx: int) -> void
 		hand_frames[key] = {}
 	hand_frames[key]["z_index"] = z_idx
 
-func set_hand_custom_data(anim_name: StringName, frame_idx: int, z_idx: int, flip_h: bool = false, flip_v: bool = false) -> void:
+func set_hand_custom_data(anim_name: StringName, frame_idx: int, z_idx: int, flip_h: bool = false, flip_v: bool = false, pos: Variant = null, rot: Variant = null, vis: Variant = null) -> void:
+	var key := "%s_%d" % [anim_name, frame_idx]
+	if not (hand_frames is Dictionary):
+		hand_frames = {}
+	if not hand_frames.has(key):
+		hand_frames[key] = {}
+	hand_frames[key]["z_index"] = z_idx
+	hand_frames[key]["flip_h"] = flip_h
+	hand_frames[key]["flip_v"] = flip_v
+	if pos != null:
+		hand_frames[key]["pos"] = pos
+	if rot != null:
+		hand_frames[key]["rot"] = rot
+	if vis != null:
+		hand_frames[key]["visible"] = vis
 	var key := "%s_%d" % [anim_name, frame_idx]
 	if not (hand_frames is Dictionary):
 		hand_frames = {}

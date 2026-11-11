@@ -40,6 +40,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"double_jump": 4,
 	"wall_cling": 1,
 	"wall_slide": 2,
+	"corner_climb": 5,
 }
 
 @export_group("1. O que você quer calibrar?")
@@ -67,7 +68,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 @export_group("2. Animação & Frame")
 ## Escolha a animação do aventureiro para visualizar e calibrar.
-@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide") var selected_animation: String = "idle":
+@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb") var selected_animation: String = "idle":
 	set(value):
 		selected_animation = value
 		_on_configuration_changed()
@@ -317,6 +318,10 @@ func _on_frame_changed() -> void:
 	if sprite.sprite_frames and sprite.sprite_frames.has_animation(selected_animation):
 		sprite.animation = selected_animation
 		sprite.frame = current_frame
+		if selected_animation == "corner_climb":
+			sprite.position = Vector2(-6.5, 4.0)
+		else:
+			sprite.position = Vector2(-2, -29)
 
 	var hand_w := _get_node_safe("Visual/MainHandSocket") as Marker2D
 	var hand_s := _get_node_safe("Visual/OffHandSocket") as Marker2D
@@ -431,7 +436,7 @@ func save_current_frame_data() -> void:
 		_weapon_profile_resource.set("%s_%d_rot" % [selected_animation, current_frame], socket_rotation)
 		_weapon_profile_resource.set("%s_%d_visible" % [selected_animation, current_frame], item_visible_in_frame)
 		if _weapon_profile_resource.has_method("set_hand_custom_data"):
-			_weapon_profile_resource.set_hand_custom_data(selected_animation, current_frame, socket_z_index, socket_flip_h, socket_flip_v)
+			_weapon_profile_resource.set_hand_custom_data(selected_animation, current_frame, socket_z_index, socket_flip_h, socket_flip_v, socket_position, socket_rotation, item_visible_in_frame)
 		elif _weapon_profile_resource.has_method("set_hand_z_index"):
 			_weapon_profile_resource.set_hand_z_index(selected_animation, current_frame, socket_z_index)
 		var err := ResourceSaver.save(_weapon_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_weapon)
@@ -453,7 +458,7 @@ func save_current_frame_data() -> void:
 		_shield_profile_resource.set("%s_%d_rot" % [selected_animation, current_frame], socket_rotation)
 		_shield_profile_resource.set("%s_%d_visible" % [selected_animation, current_frame], item_visible_in_frame)
 		if _shield_profile_resource.has_method("set_hand_custom_data"):
-			_shield_profile_resource.set_hand_custom_data(selected_animation, current_frame, socket_z_index, socket_flip_h, socket_flip_v)
+			_shield_profile_resource.set_hand_custom_data(selected_animation, current_frame, socket_z_index, socket_flip_h, socket_flip_v, socket_position, socket_rotation, item_visible_in_frame)
 		elif _shield_profile_resource.has_method("set_hand_z_index"):
 			_shield_profile_resource.set_hand_z_index(selected_animation, current_frame, socket_z_index)
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
@@ -483,7 +488,7 @@ func apply_to_current_animation() -> void:
 			prof.set("%s_%d_rot" % [selected_animation, f], socket_rotation)
 			prof.set("%s_%d_visible" % [selected_animation, f], item_visible_in_frame)
 			if prof.has_method("set_hand_custom_data"):
-				prof.set_hand_custom_data(selected_animation, f, socket_z_index, socket_flip_h, socket_flip_v)
+				prof.set_hand_custom_data(selected_animation, f, socket_z_index, socket_flip_h, socket_flip_v, socket_position, socket_rotation, item_visible_in_frame)
 			elif prof.has_method("set_hand_z_index"):
 				prof.set_hand_z_index(selected_animation, f, socket_z_index)
 	else:
