@@ -129,16 +129,14 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 			# 5 frames at base 10.0 FPS takes 0.5s. Scale to match exact attack_timer.
 			player.player_sprite.speed_scale = 0.5 / target_duration
 			player._update_weapon_socket_for_frame(anim_name, 0)
-		player.set_slash_visual(false)
-		player.start_weapon_trail(anim_name, current_step, attack_timer)
 	else:
 		if player.player_sprite:
 			player.player_sprite.speed_scale = 1.0
-		player.set_slash_visual(true, current_step, is_upward, is_downward)
+
+	player.set_slash_visual(true, current_step, is_upward, is_downward)
 
 func exit() -> void:
 	is_charging = false
-	player.stop_weapon_trail()
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
 	if player._main_weapon_instance:

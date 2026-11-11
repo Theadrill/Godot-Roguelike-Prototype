@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://player_scene_01"]
+[gd_scene load_steps=28 format=3 uid="uid://player_scene_01"]
 
 [ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
@@ -24,6 +24,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/heal_state.gd" id="22_heal"]
 [ext_resource type="PackedScene" path="res://src/ui/death_screen.tscn" id="23_death_screen"]
 [ext_resource type="SpriteFrames" uid="uid://b3mi8waob4tc5" path="res://assets/player/adventurer/player_frames.tres" id="24_player_frames"]
+[ext_resource type="SpriteFrames" uid="uid://c6slash_frames_01" path="res://assets/effects/slashes/slash_frames.tres" id="25_slash_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -139,13 +140,12 @@ polygon = PackedVector2Array(-8, -14, 10, -14, 10, -18, -8, -18)
 color = Color(0.95, 0.75, 0.5, 1)
 polygon = PackedVector2Array(6, -20, 12, -20, 12, -16, 6, -16)
 
-[node name="SlashEffect" type="Node2D" parent="Visual"]
+[node name="SlashEffect" type="AnimatedSprite2D" parent="Visual"]
 visible = false
-position = Vector2(0, -20)
-
-[node name="SlashArc" type="Polygon2D" parent="Visual/SlashEffect"]
-color = Color(0.9, 0.96, 1, 0.9)
-polygon = PackedVector2Array(8, -16, 32, -4, 30, 4, 8, 14, 18, 0)
+z_index = 4
+position = Vector2(-2, -29)
+sprite_frames = ExtResource("25_slash_frames")
+animation = &"slash_sword"
 
 [node name="Hitbox" type="Area2D" parent="Visual"]
 collision_layer = 8

@@ -1,7 +1,28 @@
 class_name WeaponData
 extends EquipmentData
 
-## Data container for weapon combat metrics and cadence.
+## ============================================================================
+## TUTORIAL RÁPIDO: COMO CRIAR UMA NOVA ARMA (EX: "ESPADA DO CAOS")
+## ============================================================================
+## 1. DUPLICAR O ARQUIVO .TRES:
+##    - No painel 'FileSystem' do Godot, clique com o botão direito em um .tres existente
+##      (ex: 'src/entities/equipment/swords/weapon_sword_base.tres') e escolha 'Duplicate...'.
+##    - Renomeie para o nome da nova arma (ex: 'weapon_espada_do_caos.tres').
+##
+## 2. AJUSTAR IDENTIDADE E DANO NO INSPECTOR:
+##    - 'Weapon Name': Nome exibido da arma (ex: "Espada do Caos").
+##    - 'Base Damage': Dano de cada golpe.
+##    - 'Socket Profile': Perfil de posições na mão/costas (ex: "sword", "axe", "dagger").
+##    - 'Visual Scene': Cena visual da arma na mão (duplique 'sword_visual.tscn' se tiver arte própria).
+##
+## 3. CONFIGURAR O EFEITO DE CORTE (GRUPO "Attack Slash Effect"):
+##    - 'Slash Animation': Nome da animação (ex: "slash_sword" ou sua animação customizada).
+##    - 'Slash Modulate': Cor do efeito (ex: Roxo para Caos, Vermelho para Fogo, Ciano para Gelo).
+##    - 'Slash Scale': Tamanho do corte (ex: (1.25, 1.25) para corte 25% maior).
+##    - 'Slash Offset': Ajuste fino de posição em pixels (X = frente/trás, Y = cima/baixo).
+##
+## 4. PRONTO! O Godot aplica tudo automaticamente no combate sem precisar de código novo!
+## ============================================================================
 
 enum WeaponCategory {
 	MELEE,
@@ -79,3 +100,32 @@ func get_socket_profile() -> WeaponSocketProfile:
 @export_range(0.0, 1.0, 0.02, "suffix:s") var attack_cooldown: float = 0.14
 ## Cooldown specifically after completing the full combo finisher (seconds)
 @export_range(0.0, 1.0, 0.02, "suffix:s") var combo_finisher_cooldown: float = 0.22
+
+@export_group("Attack Slash Effect", "slash_")
+## Ativa ou desativa a exibição do rastro/efeito de corte (slash) para esta arma.
+@export var slash_enabled: bool = true
+
+## Nome da animação de corte a ser tocada (ex: 'slash_sword', 'slash_axe', 'slash_dagger').
+## Se você criar uma animação nova em 'slash_frames.tres', basta digitar o nome dela aqui.
+@export var slash_animation: StringName = &"slash_sword"
+
+## [Opcional] Recurso SpriteFrames customizado exclusivo desta arma.
+## Deixe vazio para usar a biblioteca global padrão ('res://assets/effects/slashes/slash_frames.tres').
+@export var slash_custom_frames: SpriteFrames = null
+
+## Tonalidade / Cor de modulação do corte.
+## Permite colorir o efeito sem precisar redesenhar o PNG!
+## Exemplos: Branco (cor original), Roxo (Caos/Arcano), Vermelho (Fogo), Ciano (Gelo), Amarelo (Sagrado).
+@export var slash_modulate: Color = Color.WHITE
+
+## Fator de escala do efeito (multiplicador de tamanho).
+## Ex: Vector2(1.0, 1.0) = tamanho original; Vector2(1.3, 1.3) = 30% maior para espadões colossais.
+@export var slash_scale: Vector2 = Vector2.ONE
+
+## Deslocamento fino de posição em pixels relativo ao pé do personagem (origem 0,0).
+## X positivo = move para a frente; Y negativo = move para cima.
+@export var slash_offset: Vector2 = Vector2.ZERO
+
+## Ordem de desenho (Z-Index) do corte relativo ao personagem.
+## Padrão 4 = desenha na frente do corpo do aventureiro e da arma.
+@export var slash_z_index: int = 4

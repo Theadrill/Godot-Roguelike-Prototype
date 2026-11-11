@@ -122,7 +122,7 @@ func is_roll_requested() -> bool:
 	return is_slide_requested()
 
 @onready var state_machine: StateMachine = $StateMachine
-const WeaponTrailScript = preload("res://src/combat/weapon_trail.gd")
+const default_slash_frames = preload("res://assets/effects/slashes/slash_frames.tres")
 
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
@@ -134,8 +134,7 @@ const WeaponTrailScript = preload("res://src/combat/weapon_trail.gd")
 @onready var enemy_overlap_detector: Area2D = $EnemyOverlapDetector
 @onready var hitbox: Hitbox = $Visual/Hitbox
 @onready var hurtbox: Hurtbox = $Hurtbox
-@onready var slash_effect: Node2D = $Visual/SlashEffect
-var weapon_trail: Node2D = null
+@onready var slash_effect: AnimatedSprite2D = $Visual.get_node_or_null("SlashEffect") as AnimatedSprite2D
 @onready var ledge_climb_visual: Node2D = $Visual/LedgeClimbPlaceholder
 @onready var main_hand_socket: Marker2D = $Visual/MainHandSocket
 @onready var off_hand_socket: Marker2D = $Visual/OffHandSocket
@@ -203,11 +202,8 @@ func _ready() -> void:
 		flash_material.shader = shader
 		body_polygon.material = flash_material
 
-	weapon_trail = visual.get_node_or_null("WeaponTrail")
-	if not weapon_trail and visual:
-		weapon_trail = WeaponTrailScript.new()
-		weapon_trail.name = "WeaponTrail"
-		visual.add_child(weapon_trail)
+	if slash_effect and slash_effect is AnimatedSprite2D:
+		slash_effect.animation_finished.connect(func(): slash_effect.visible = false)
 
 func equip_weapon(new_weapon: WeaponData) -> void:
 	weapon = new_weapon
@@ -337,26 +333,53 @@ func _update_shield_visual() -> void:
 			_shield_instance.visible = not are_weapons_hidden
 
 func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false, is_downward: bool = false) -> void:
-	if slash_effect:
-		slash_effect.visible = is_active
-		if is_active:
-			if is_upward:
-				slash_effect.position = Vector2(0.0, -32.0)
-				slash_effect.rotation_degrees = -90.0
-				slash_effect.scale = Vector2(1.2, 1.2)
-			elif is_downward:
-				if not is_on_floor():
-					slash_effect.position = Vector2(0.0, 4.0)
-					slash_effect.rotation_degrees = 90.0
-					slash_effect.scale = Vector2(1.2, 1.2)
-				else:
-					slash_effect.position = Vector2(16.0, -8.0)
-					slash_effect.rotation_degrees = 35.0
-					slash_effect.scale = Vector2(1.1, 1.1)
-			else:
-				slash_effect.position = Vector2(0.0, -20.0)
-				slash_effect.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)
-				slash_effect.scale = Vector2(1.0 + combo_step * 0.2, 1.0 + combo_step * 0.2)
+	if not slash_effect:
+		return
+
+	if not is_active or not weapon or not weapon.slash_enabled:
+		slash_effect.visible = false
+		if slash_effect is AnimatedSprite2D and slash_effect.is_playing():
+			slash_effect.stop()
+		return
+
+	# Configurar animação no AnimatedSprite2D
+	if slash_effect is AnimatedSprite2D:
+		var target_frames := weapon.slash_custom_frames if weapon.slash_custom_frames else default_slash_frames
+		if target_frames and slash_effect.sprite_frames != target_frames:
+			slash_effect.sprite_frames = target_frames
+
+		var anim_name: StringName = weapon.slash_animation if weapon.slash_animation else &"slash_sword"
+		if slash_effect.sprite_frames and slash_effect.sprite_frames.has_animation(anim_name):
+			slash_effect.animation = anim_name
+			slash_effect.frame = 0
+			var step_dur: float = weapon.combo_durations[clampi(combo_step, 0, weapon.combo_durations.size() - 1)] if (weapon and weapon.combo_durations.size() > 0) else 0.36
+			# 3 frames a 10 FPS dura 0.3s. Escala para durar exatamente o tempo do golpe
+			slash_effect.speed_scale = 0.3 / maxf(0.05, step_dur)
+			slash_effect.play(anim_name)
+
+	# Posição ancorada perfeitamente na mesma origem do PlayerSprite (pé do aventureiro)
+	var base_pos: Vector2 = player_sprite.position if player_sprite else Vector2(-2, -29)
+	var custom_offset: Vector2 = weapon.slash_offset if weapon else Vector2.ZERO
+	var custom_scale: Vector2 = weapon.slash_scale if weapon else Vector2.ONE
+	var custom_mod: Color = weapon.slash_modulate if weapon else Color.WHITE
+	var custom_z: int = weapon.slash_z_index if weapon else 4
+
+	if is_upward:
+		slash_effect.position = base_pos + Vector2(0.0, -8.0) + custom_offset
+		slash_effect.rotation_degrees = -90.0
+		slash_effect.scale = custom_scale * 1.1
+	elif is_downward:
+		slash_effect.position = base_pos + Vector2(4.0, 10.0) + custom_offset
+		slash_effect.rotation_degrees = 90.0
+		slash_effect.scale = custom_scale * 1.1
+	else:
+		slash_effect.position = base_pos + custom_offset
+		slash_effect.rotation_degrees = 0.0
+		slash_effect.scale = custom_scale
+
+	slash_effect.modulate = custom_mod
+	slash_effect.z_index = custom_z
+	slash_effect.visible = true
 
 	if main_hand_socket:
 		if is_active:
@@ -364,18 +387,8 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 				main_hand_socket.rotation_degrees = -90.0
 			elif is_downward:
 				main_hand_socket.rotation_degrees = 90.0
-			else:
-				main_hand_socket.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)
 		else:
 			main_hand_socket.rotation_degrees = -35.0
-
-func start_weapon_trail(anim_name: StringName, current_step: int, duration: float) -> void:
-	if weapon_trail:
-		weapon_trail.start_trail(self, anim_name, current_step, duration)
-
-func stop_weapon_trail() -> void:
-	if weapon_trail:
-		weapon_trail.stop_trail()
 
 func play_animation(anim_name: StringName) -> void:
 	if not player_sprite:
