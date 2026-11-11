@@ -88,6 +88,46 @@ corner_climb_3_rot = -7.8999996
 corner_climb_4_pos = Vector2(-2.999999, -2)
 corner_climb_4_rot = -7.8999996
 back_frames = {
+"attack1_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-5.6, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"attack1_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-6.1, -14),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"attack1_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-1.1, -17),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"attack1_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-1.1, -17),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"attack1_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-1.1, -17),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
 "corner_climb_0": {
 "flip_h": false,
 "flip_v": false,

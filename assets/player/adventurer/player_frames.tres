@@ -15,6 +15,22 @@
 atlas = ExtResource("10_attack1_sheet")
 region = Rect2(0, 0, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack1_1"]
+atlas = ExtResource("10_attack1_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack1_2"]
+atlas = ExtResource("10_attack1_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack1_3"]
+atlas = ExtResource("10_attack1_sheet")
+region = Rect2(83, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack1_4"]
+atlas = ExtResource("10_attack1_sheet")
+region = Rect2(0, 124, 83, 62)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_0"]
 atlas = ExtResource("9_corner_climb_sheet")
 region = Rect2(0, 0, 83, 76)
@@ -156,6 +172,18 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_attack1_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack1_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack1_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack1_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack1_4")
 }],
 "loop": 0,
 "name": &"attack1",
