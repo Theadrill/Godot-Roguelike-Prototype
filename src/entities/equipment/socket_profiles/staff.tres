@@ -51,10 +51,10 @@ fall_from_jump_1_pos = Vector2(-1.999999, -46)
 fall_from_jump_1_rot = -104.5
 fall_from_jump_2_pos = Vector2(-1.999999, -46)
 fall_from_jump_2_rot = -112.399994
-slide_0_pos = Vector2(8, -10)
+slide_0_pos = Vector2(-10.000002, -0.99999905)
 slide_0_rot = -15.0
-slide_1_pos = Vector2(8, -10)
-slide_1_rot = -15.0
+slide_1_pos = Vector2(-10.000002, -0.99999905)
+slide_1_rot = -11.0
 roll_0_pos = Vector2(4, -15)
 roll_0_rot = -90.0
 roll_1_pos = Vector2(0, -19)
@@ -211,6 +211,22 @@ back_frames = {
 "rot": -120.0,
 "visible": true,
 "z_index": -2
+},
+"slide_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4.9999995, -3.9999943),
+"rot": -174.99998,
+"visible": true,
+"z_index": -2
+},
+"slide_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4.9999995, -2),
+"rot": -171.0,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {
@@ -326,6 +342,22 @@ hand_frames = {
 "run_5": {
 "flip_h": false,
 "flip_v": true,
+"z_index": 2
+},
+"slide_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10.000002, -0.99999905),
+"rot": -15.0,
+"visible": true,
+"z_index": 2
+},
+"slide_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10.000002, -0.99999905),
+"rot": -11.0,
+"visible": true,
 "z_index": 2
 }
 }

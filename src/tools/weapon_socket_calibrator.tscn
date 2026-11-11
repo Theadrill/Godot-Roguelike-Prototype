@@ -5,15 +5,16 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-selected_weapon = "hammer"
-selected_animation = "fall"
+socket_target = "Arma nas Costas (BackSocketWeapon)"
+selected_weapon = "crossbow"
+selected_animation = "double_jump"
+current_frame = 1
 reference_secondary_weapon = "none"
 show_shield_reference = false
-socket_pos_x = -3.0
-socket_pos_y = -49.0
-socket_rotation = -109.49999
-socket_z_index = 2
-status_message = "hammer [Arma na Mão (MainHandSocket)] -> fall Frame 0 (Z: 2, FlipH: false, FlipV: false)"
+socket_pos_x = -6.0
+socket_pos_y = -24.0
+socket_rotation = -174.99998
+status_message = "crossbow [Arma nas Costas (BackSocketWeapon)] -> double_jump Frame 1 (Z: -2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -27,24 +28,25 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"fall"
+animation = &"double_jump"
+frame = 1
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
 z_index = -2
-position = Vector2(-3, -34)
-rotation = 2.172935
+position = Vector2(-6, -24)
+rotation = -3.054326
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -2
-position = Vector2(-4, -33)
-rotation = -0.20943952
+position = Vector2(-9, -24)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(-3, -49)
-rotation = -1.9111356
+position = Vector2(0, -16)
+rotation = -3.1415927
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
-position = Vector2(7, -21)
+position = Vector2(0, -18)
+rotation = -3.1415927
