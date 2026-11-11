@@ -396,14 +396,6 @@ func set_hand_custom_data(anim_name: StringName, frame_idx: int, z_idx: int, fli
 		hand_frames[key]["rot"] = rot
 	if vis != null:
 		hand_frames[key]["visible"] = vis
-	var key := "%s_%d" % [anim_name, frame_idx]
-	if not (hand_frames is Dictionary):
-		hand_frames = {}
-	if not hand_frames.has(key):
-		hand_frames[key] = {}
-	hand_frames[key]["z_index"] = z_idx
-	hand_frames[key]["flip_h"] = flip_h
-	hand_frames[key]["flip_v"] = flip_v
 
 func get_back_frame_data(anim_name: StringName, frame_idx: int) -> Dictionary:
 	var key := "%s_%d" % [anim_name, frame_idx]
