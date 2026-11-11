@@ -41,6 +41,13 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"wall_cling": 1,
 	"wall_slide": 2,
 	"corner_climb": 5,
+	"attack1": 5,
+	"attack2": 4,
+	"attack3": 6,
+	"air_attack": 4,
+	"cast": 4,
+	"guard": 1,
+	"stagger": 3,
 }
 
 @export_group("1. O que você quer calibrar?")
@@ -68,13 +75,13 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 @export_group("2. Animação & Frame")
 ## Escolha a animação do aventureiro para visualizar e calibrar.
-@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb") var selected_animation: String = "idle":
+@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack", "cast", "guard", "stagger") var selected_animation: String = "idle":
 	set(value):
 		selected_animation = value
 		_on_configuration_changed()
 
 ## Escolha o frame específico da animação.
-@export_range(0, 5, 1) var current_frame: int = 0:
+@export_range(0, 7, 1) var current_frame: int = 0:
 	set(value):
 		var max_f: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4) - 1
 		current_frame = clampi(value, 0, max_f)
