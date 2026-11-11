@@ -5,15 +5,12 @@ var player: Player
 var roll_timer: float = 0.0
 var roll_direction: float = 1.0
 
-const ROLL_PIVOT_Y: float = -10.0
-
 func enter() -> void:
 	player = character as Player
 	roll_timer = player.roll_duration
 	roll_direction = float(player.facing_direction)
 
-	player.play_animation(&"roll")
-	_apply_roll_rotation(0.0)
+	player.play_animation(&"slide")
 
 	# Shrink collision height to 20px so player passes under low ceilings (32px)
 	_set_crouched(true)
@@ -27,7 +24,6 @@ func enter() -> void:
 		player.velocity.y = 0.0
 
 func exit() -> void:
-	_apply_roll_rotation(0.0)
 	_set_crouched(false)
 	player.stop_animation()
 	if player.hurtbox:
@@ -38,19 +34,6 @@ func exit() -> void:
 func physics_update(delta: float) -> void:
 	roll_timer -= delta
 	player.velocity.x = roll_direction * player.roll_speed
-
-	# 4 etapas de rotação (0°, 90°, 180°, 270°)
-	var progress: float = clampf(1.0 - (roll_timer / maxf(player.roll_duration, 0.001)), 0.0, 1.0)
-	var stage_deg: float = 0.0
-	if progress < 0.25:
-		stage_deg = 0.0
-	elif progress < 0.50:
-		stage_deg = 90.0
-	elif progress < 0.75:
-		stage_deg = 180.0
-	else:
-		stage_deg = 270.0
-	_apply_roll_rotation(stage_deg)
 
 	if not player.is_on_floor():
 		player.velocity.y += player.gravity * delta
@@ -113,15 +96,3 @@ func _set_crouched(crouched: bool) -> void:
 			var normal := test_col.get_normal()
 			if abs(normal.x) > 0.5:
 				player.global_position.x += normal.x * (test_col.get_depth() + 1.0)
-
-func _apply_roll_rotation(deg: float) -> void:
-	if not player or not player.visual:
-		return
-	if is_zero_approx(deg):
-		player.visual.rotation = 0.0
-		player.visual.position = Vector2.ZERO
-		return
-	var rad := deg_to_rad(deg)
-	var pivot := Vector2(0.0, ROLL_PIVOT_Y)
-	player.visual.rotation = rad
-	player.visual.position = pivot - pivot.rotated(rad)

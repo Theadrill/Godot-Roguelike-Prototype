@@ -55,8 +55,8 @@ slide_0_pos = Vector2(-10.000002, -0.99999905)
 slide_0_rot = -15.0
 slide_1_pos = Vector2(-10.000002, -0.99999905)
 slide_1_rot = -11.0
-roll_0_pos = Vector2(4, -15)
-roll_0_rot = -90.0
+roll_0_pos = Vector2(9.000001, -27)
+roll_0_rot = -105.49999
 roll_1_pos = Vector2(0, -19)
 roll_1_rot = -180.0
 roll_2_pos = Vector2(-4, -15)
@@ -161,6 +161,14 @@ back_frames = {
 "flip_v": false,
 "pos": Vector2(3, -31),
 "rot": -134.0,
+"visible": true,
+"z_index": -2
+},
+"roll_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(2, -27),
+"rot": -116.899994,
 "visible": true,
 "z_index": -2
 },
@@ -311,6 +319,14 @@ hand_frames = {
 "flip_v": false,
 "pos": Vector2(4, -50.8),
 "rot": -190.0,
+"visible": true,
+"z_index": 2
+},
+"roll_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(9.000001, -27),
+"rot": -105.49999,
 "visible": true,
 "z_index": 2
 },
