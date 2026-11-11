@@ -15,6 +15,10 @@ func _ready() -> void:
 			states[child.name.to_lower()] = child
 			child.state_machine = self
 
+	# Aliases de compatibilidade
+	if states.has("slide") and not states.has("roll"):
+		states["roll"] = states["slide"]
+
 	# Ensure owner character is fully ready before entering initial state
 	if owner and not owner.is_node_ready():
 		await owner.ready

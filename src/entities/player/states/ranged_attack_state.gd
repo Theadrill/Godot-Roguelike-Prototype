@@ -121,8 +121,8 @@ func physics_update(delta: float) -> void:
 			player.move_and_slide()
 
 			# Roll cancel during reload
-			if player.is_roll_requested():
-				state_machine.transition_to("roll")
+			if player.is_slide_requested():
+				state_machine.transition_to("slide")
 				return
 
 			# Guard cancel during reload

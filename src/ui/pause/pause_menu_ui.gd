@@ -71,6 +71,7 @@ func open_pause_menu() -> void:
 	btn_resume.grab_focus()
 
 func close_pause_menu() -> void:
+	Input.action_release("slide")
 	Input.action_release("roll")
 	Input.action_release("ui_cancel")
 	visible = false

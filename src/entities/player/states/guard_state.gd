@@ -85,9 +85,9 @@ func physics_update(delta: float) -> void:
 			state_machine.transition_to("attack")
 		return
 
-	# Roll cancel
-	if player.is_roll_requested():
-		state_machine.transition_to("roll")
+	# Slide / Dodge cancel
+	if player.is_slide_requested():
+		state_machine.transition_to("slide")
 		return
 
 func _exit_to_movement() -> void:

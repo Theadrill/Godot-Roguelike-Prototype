@@ -45,10 +45,10 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("jump")
 		return
 
-	# Roll-cancel: can roll directly onto the platform
-	if player.is_roll_requested():
+	# Slide-cancel: can slide directly onto the platform
+	if player.is_slide_requested():
 		player.global_position = target_pos
-		state_machine.transition_to("roll")
+		state_machine.transition_to("slide")
 		return
 
 	climb_timer += delta

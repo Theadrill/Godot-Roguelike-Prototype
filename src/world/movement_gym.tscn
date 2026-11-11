@@ -230,8 +230,8 @@ position = Vector2(472, 176)
 position = Vector2(1023, 289)
 run_speed = 150.0
 wall_recovery_gravity_multiplier = 0.5
-roll_speed = 170.0
-roll_duration = 0.24
+slide_speed = 170.0
+slide_duration = 0.24
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1090956029]
 position = Vector2(0, -20)

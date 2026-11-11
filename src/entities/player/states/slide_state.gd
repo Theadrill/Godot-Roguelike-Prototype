@@ -1,25 +1,25 @@
-class_name RollState
+class_name SlideState
 extends State
 
 var player: Player
-var roll_timer: float = 0.0
-var roll_direction: float = 1.0
+var slide_timer: float = 0.0
+var slide_direction: float = 1.0
 
 func enter() -> void:
 	player = character as Player
-	roll_timer = player.roll_duration
-	roll_direction = float(player.facing_direction)
+	slide_timer = player.slide_duration
+	slide_direction = float(player.facing_direction)
 
 	player.play_animation(&"slide")
 
 	# Shrink collision height to 20px so player passes under low ceilings (32px)
 	_set_crouched(true)
 
-	# Full invulnerability (i-frames) during roll
+	# Full invulnerability (i-frames) during slide
 	if player.hurtbox:
 		player.hurtbox.is_invulnerable = true
 
-	player.velocity.x = roll_direction * player.roll_speed
+	player.velocity.x = slide_direction * player.slide_speed
 	if player.is_on_floor():
 		player.velocity.y = 0.0
 
@@ -32,24 +32,24 @@ func exit() -> void:
 		player.set_meta("has_post_roll_buff", true)
 
 func physics_update(delta: float) -> void:
-	roll_timer -= delta
-	player.velocity.x = roll_direction * player.roll_speed
+	slide_timer -= delta
+	player.velocity.x = slide_direction * player.slide_speed
 
 	if not player.is_on_floor():
 		player.velocity.y += player.gravity * delta
 
 	player.move_and_slide()
 
-	# Stop rolling against walls immediately so we don't get embedded
+	# Stop sliding against walls immediately so we don't get embedded
 	if player.is_on_wall():
 		player.velocity.x = 0.0
 
-	# When roll duration ends, check if we have headroom to stand up
-	if roll_timer <= 0.0:
+	# When slide duration ends, check if we have headroom to stand up
+	if slide_timer <= 0.0:
 		# Force raycast update
 		player.ceiling_check.force_raycast_update()
 		if player.ceiling_check.is_colliding():
-			# Ceiling is still above our head! Continue rolling/crawling forward until clear
+			# Ceiling is still above our head! Continue sliding/crawling forward until clear
 			return
 
 		# Safe to stand up

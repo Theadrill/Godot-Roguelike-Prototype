@@ -9,7 +9,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/fall_state.gd" id="7_fall"]
 [ext_resource type="Script" path="res://src/entities/player/states/wall_slide_state.gd" id="8_wslide"]
 [ext_resource type="Script" path="res://src/entities/player/states/wall_jump_state.gd" id="9_wjump"]
-[ext_resource type="Script" path="res://src/entities/player/states/roll_state.gd" id="10_roll"]
+[ext_resource type="Script" path="res://src/entities/player/states/slide_state.gd" id="10_slide"]
 [ext_resource type="Script" path="res://src/entities/player/states/attack_state.gd" id="11_attack"]
 [ext_resource type="Script" path="res://src/entities/player/states/crouch_state.gd" id="12_crouch"]
 [ext_resource type="Script" path="res://src/combat/hitbox.gd" id="13_hitbox"]
@@ -183,8 +183,8 @@ script = ExtResource("8_wslide")
 [node name="WallJump" type="Node" parent="StateMachine"]
 script = ExtResource("9_wjump")
 
-[node name="Roll" type="Node" parent="StateMachine"]
-script = ExtResource("10_roll")
+[node name="Slide" type="Node" parent="StateMachine"]
+script = ExtResource("10_slide")
 
 [node name="Attack" type="Node" parent="StateMachine"]
 script = ExtResource("11_attack")

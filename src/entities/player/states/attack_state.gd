@@ -169,10 +169,10 @@ func physics_update(delta: float) -> void:
 
 		player.move_and_slide()
 
-		# Roll cancel during charge
-		if player.is_roll_requested():
+		# Slide / Dodge cancel during charge
+		if player.is_slide_requested():
 			is_charging = false
-			state_machine.transition_to("roll")
+			state_machine.transition_to("slide")
 			return
 
 		# Release button: UNLEASH CHARGED SMASH!
@@ -183,9 +183,9 @@ func physics_update(delta: float) -> void:
 
 	attack_timer -= delta
 	
-	# Dodge-cancel: can always roll out of an attack immediately!
-	if player.is_roll_requested():
-		state_machine.transition_to("roll")
+	# Dodge-cancel: can always slide out of an attack immediately!
+	if player.is_slide_requested():
+		state_machine.transition_to("slide")
 		return
 		
 	# Input buffer for next combo hit (supports holding down attack)

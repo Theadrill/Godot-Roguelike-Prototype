@@ -124,7 +124,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		is_b_pressed = true
 	elif event is InputEventKey and event.pressed and (event.keycode == KEY_ESCAPE or event.keycode == KEY_BACKSPACE):
 		is_b_pressed = true
-	elif event.is_action_pressed("roll") or event.is_action_pressed("ui_cancel"):
+	elif event.is_action_pressed("slide") or event.is_action_pressed("roll") or event.is_action_pressed("ui_cancel"):
 		is_b_pressed = true
 
 	if is_b_pressed:

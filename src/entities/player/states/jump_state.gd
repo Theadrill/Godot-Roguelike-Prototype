@@ -37,9 +37,9 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("doublejump")
 		return
 
-	# Roll in air
-	if player.is_roll_requested():
-		state_machine.transition_to("roll")
+	# Slide / Dodge in air
+	if player.is_slide_requested():
+		state_machine.transition_to("slide")
 		return
 
 	# Attack in air (supports holding button)

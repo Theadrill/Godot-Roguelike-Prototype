@@ -25,9 +25,9 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("fall")
 		return
 
-	# Roll from crouch
-	if player.is_roll_requested():
-		state_machine.transition_to("roll")
+	# Slide from crouch
+	if player.is_slide_requested():
+		state_machine.transition_to("slide")
 		return
 
 	# Heal check (Garrafa de Chá da Mãe)

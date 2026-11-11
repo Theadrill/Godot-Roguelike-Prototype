@@ -102,6 +102,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_panel()
 	elif visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
+		Input.action_release("slide")
 		Input.action_release("roll")
 		Input.action_release("ui_cancel")
 		toggle_panel()
@@ -118,6 +119,7 @@ func toggle_panel() -> void:
 		await get_tree().process_frame
 		btn_add_souls.grab_focus()
 	else:
+		Input.action_release("slide")
 		Input.action_release("roll")
 		Input.action_release("ui_cancel")
 		var pause_menu = get_tree().root.find_child("PauseMenuUI", true, false) as PauseMenuUI

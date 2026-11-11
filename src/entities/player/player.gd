@@ -49,9 +49,17 @@ var rally_timer: float = 0.0
 @export_range(0.1, 0.8, 0.05) var wall_jump_inward_ratio: float = 0.38
 @export_range(-600.0, -100.0, 10.0, "suffix:px/s") var wall_jump_vertical: float = -330.0
 
-@export_group("Roll & Dodge")
-@export_range(100.0, 800.0, 10.0, "suffix:px/s") var roll_speed: float = 240.0
-@export_range(0.1, 1.0, 0.01, "suffix:s") var roll_duration: float = 0.28
+@export_group("Slide & Dodge")
+@export_range(100.0, 800.0, 10.0, "suffix:px/s") var slide_speed: float = 240.0
+@export_range(0.1, 1.0, 0.01, "suffix:s") var slide_duration: float = 0.28
+
+## Compatibilidade retroativa com roll
+var roll_speed: float:
+	get: return slide_speed
+	set(val): slide_speed = val
+var roll_duration: float:
+	get: return slide_duration
+	set(val): slide_duration = val
 
 @export_group("Combat & Equipment")
 @export var weapon: WeaponData
@@ -105,8 +113,13 @@ var is_input_locked: bool = false:
 			_ignore_roll_timer = 0.35
 			jump_buffer_timer = 0.0
 
+func is_slide_requested() -> bool:
+	return _ignore_roll_timer <= 0.0 and not is_input_locked and (
+		Input.is_action_just_pressed("slide") or Input.is_action_just_pressed("roll")
+	)
+
 func is_roll_requested() -> bool:
-	return _ignore_roll_timer <= 0.0 and not is_input_locked and Input.is_action_just_pressed("roll")
+	return is_slide_requested()
 
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D

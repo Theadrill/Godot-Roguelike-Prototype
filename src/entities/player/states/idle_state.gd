@@ -94,9 +94,9 @@ func physics_update(delta: float) -> void:
 			state_machine.transition_to("attack")
 		return
 
-	# Roll check
-	if player.is_roll_requested():
-		state_machine.transition_to("roll")
+	# Slide / Dodge check
+	if player.is_slide_requested():
+		state_machine.transition_to("slide")
 		return
 
 	# Run check

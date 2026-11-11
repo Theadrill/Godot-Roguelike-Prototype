@@ -48,8 +48,8 @@ func physics_update(delta: float) -> void:
 			state_machine.transition_to("attack")
 		return
 
-	if player.is_roll_requested():
-		state_machine.transition_to("roll")
+	if player.is_slide_requested():
+		state_machine.transition_to("slide")
 		return
 
 	var direction := Input.get_axis("move_left", "move_right")

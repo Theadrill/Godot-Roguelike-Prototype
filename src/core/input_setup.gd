@@ -31,7 +31,11 @@ func _ready() -> void:
 		_create_key_event(KEY_SPACE),
 		_create_joy_button_event(JOY_BUTTON_A)
 	])
-	# Botão B (Xbox) / Círculo (PlayStation) / Shift: ROLAR
+	# Botão B (Xbox) / Círculo (PlayStation) / Shift: RASTEIRA / SLIDE
+	_register_action("slide", [
+		_create_key_event(KEY_SHIFT),
+		_create_joy_button_event(JOY_BUTTON_B)
+	])
 	_register_action("roll", [
 		_create_key_event(KEY_SHIFT),
 		_create_joy_button_event(JOY_BUTTON_B)
