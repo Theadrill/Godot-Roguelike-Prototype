@@ -9,6 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://dw48dqxejk7o8" path="res://assets/player/adventurer/roll/player_roll_sheet.png" id="7_roll_sheet"]
 [ext_resource type="Texture2D" uid="uid://nied1mlny8nv" path="res://assets/player/adventurer/wall_slide/player_wall_slide_sheet.png" id="8_wall_slide_sheet"]
 [ext_resource type="Texture2D" uid="uid://crjm4bhsashex" path="res://assets/player/adventurer/corner_climb/player_corner_climb_sheet.png" id="9_corner_climb_sheet"]
+[ext_resource type="Texture2D" uid="uid://erbsrtq4c7e8" path="res://assets/player/adventurer/attack/player_attack1_sheet.png" id="10_attack1_sheet"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack1_0"]
+atlas = ExtResource("10_attack1_sheet")
+region = Rect2(0, 0, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_0"]
 atlas = ExtResource("9_corner_climb_sheet")
@@ -148,6 +153,14 @@ region = Rect2(0, 124, 83, 62)
 
 [resource]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack1_0")
+}],
+"loop": 0,
+"name": &"attack1",
+"speed": 10.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_corner_climb_0")
