@@ -5,19 +5,27 @@ extends State
 ## Snappy mantling onto the top surface of a platform when grabbing a ledge.
 
 var player: Player
-var start_pos: Vector2 = Vector2.ZERO
+var corner_pos: Vector2 = Vector2.ZERO
 var target_pos: Vector2 = Vector2.ZERO
 var climb_timer: float = 0.0
-const CLIMB_DURATION: float = 0.18
+const CLIMB_DURATION: float = 0.24
 
 func enter() -> void:
 	player = character as Player
-	start_pos = player.global_position
 	target_pos = player.ledge_target_position
-	climb_timer = 0.0
+	var face: float = float(player.facing_direction)
+	# Corner contact point is (wall_x, floor_y)
+	corner_pos = Vector2(target_pos.x - (face * 10.0), target_pos.y)
 	
+	climb_timer = 0.0
 	player.velocity = Vector2.ZERO
+	# Pinned to the corner during mantle animation
+	player.global_position = corner_pos
+	
 	player.set_ledge_climb_visual(true)
+	if player.player_sprite:
+		player.player_sprite.play(&"corner_climb")
+		player.player_sprite.frame = 0
 	
 	# Reset jump allowances
 	player.can_double_jump = true
@@ -26,6 +34,8 @@ func enter() -> void:
 
 func exit() -> void:
 	player.set_ledge_climb_visual(false)
+	if player.player_sprite:
+		player.player_sprite.position = Vector2(-2, -29)
 
 func physics_update(delta: float) -> void:
 	# Vault jump-cancel: pressing jump during climb vaults up and over
@@ -43,15 +53,12 @@ func physics_update(delta: float) -> void:
 
 	climb_timer += delta
 
-	# Two-phase mantle: lift vertically first (0% - 60%), then step forward onto ledge (25% - 100%)
-	var y_t := clampf(climb_timer / (CLIMB_DURATION * 0.6), 0.0, 1.0)
-	var ease_y := y_t * y_t * (3.0 - 2.0 * y_t)
-
-	var x_t := clampf((climb_timer - CLIMB_DURATION * 0.25) / (CLIMB_DURATION * 0.75), 0.0, 1.0)
-	var ease_x := x_t * x_t * (3.0 - 2.0 * x_t)
-
-	player.global_position.x = lerpf(start_pos.x, target_pos.x, ease_x)
-	player.global_position.y = lerpf(start_pos.y, target_pos.y, ease_y)
+	# Pinned to the corner with frame synchronized to mantle duration
+	player.global_position = corner_pos
+	var progress := clampf(climb_timer / CLIMB_DURATION, 0.0, 1.0)
+	var frame_idx := mini(int(progress * 5.0), 4)
+	if player.player_sprite and player.player_sprite.animation == &"corner_climb":
+		player.player_sprite.frame = frame_idx
 
 	if climb_timer >= CLIMB_DURATION:
 		player.global_position = target_pos

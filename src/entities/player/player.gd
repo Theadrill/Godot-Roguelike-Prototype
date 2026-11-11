@@ -357,8 +357,11 @@ func play_animation(anim_name: StringName) -> void:
 	if headband:
 		headband.visible = false
 
-	# All animations now follow the standardized 83x62 canvas with feet at row 60 (y = 0 in world)
-	player_sprite.position = Vector2(-2, -29)
+	# Position handling: corner_climb has custom anchor; other animations use standard (-2, -29)
+	if anim_name == &"corner_climb":
+		player_sprite.position = Vector2(-6.5, 4.0)
+	else:
+		player_sprite.position = Vector2(-2, -29)
 
 	if animation_player and animation_player.has_animation(anim_name):
 		if animation_player.current_animation != anim_name or not animation_player.is_playing():
@@ -917,7 +920,9 @@ func is_upward_attack_requested() -> bool:
 
 func set_ledge_climb_visual(active: bool) -> void:
 	if ledge_climb_visual:
-		ledge_climb_visual.visible = active
+		ledge_climb_visual.visible = false
+	if active:
+		play_animation(&"corner_climb")
 	if body_polygon:
 		body_polygon.visible = not active
 	if visual.has_node("HeadbandPlaceholder"):

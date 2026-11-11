@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bg0rr1o84ulm7" path="res://assets/player/adventurer/slide/player_slide_sheet.png" id="6_slide_sheet"]
 [ext_resource type="Texture2D" uid="uid://dw48dqxejk7o8" path="res://assets/player/adventurer/roll/player_roll_sheet.png" id="7_roll_sheet"]
 [ext_resource type="Texture2D" uid="uid://nied1mlny8nv" path="res://assets/player/adventurer/wall_slide/player_wall_slide_sheet.png" id="8_wall_slide_sheet"]
+[ext_resource type="Texture2D" path="res://assets/player/adventurer/corner_climb/player_corner_climb_sheet.png" id="9_corner_climb_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crouch_0"]
 atlas = ExtResource("4_crouch_sheet")
@@ -124,6 +125,26 @@ region = Rect2(0, 62, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_wall_slide_1"]
 atlas = ExtResource("8_wall_slide_sheet")
 region = Rect2(0, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_0"]
+atlas = ExtResource("9_corner_climb_sheet")
+region = Rect2(0, 0, 83, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_1"]
+atlas = ExtResource("9_corner_climb_sheet")
+region = Rect2(83, 0, 83, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_2"]
+atlas = ExtResource("9_corner_climb_sheet")
+region = Rect2(0, 76, 83, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_3"]
+atlas = ExtResource("9_corner_climb_sheet")
+region = Rect2(83, 76, 83, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_4"]
+atlas = ExtResource("9_corner_climb_sheet")
+region = Rect2(0, 152, 83, 76)
 
 [resource]
 animations = [{
@@ -289,4 +310,24 @@ animations = [{
 "loop": 1,
 "name": &"wall_slide",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_corner_climb_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_corner_climb_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_corner_climb_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_corner_climb_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_corner_climb_4")
+}],
+"loop": 0,
+"name": &"corner_climb",
+"speed": 16.0
 }]
