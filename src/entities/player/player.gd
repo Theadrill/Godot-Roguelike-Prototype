@@ -122,6 +122,8 @@ func is_roll_requested() -> bool:
 	return is_slide_requested()
 
 @onready var state_machine: StateMachine = $StateMachine
+const WeaponTrailScript = preload("res://src/combat/weapon_trail.gd")
+
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var visual: Node2D = $Visual
 @onready var body_polygon: Polygon2D = $Visual/BodyPlaceholder
@@ -133,6 +135,7 @@ func is_roll_requested() -> bool:
 @onready var hitbox: Hitbox = $Visual/Hitbox
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var slash_effect: Node2D = $Visual/SlashEffect
+var weapon_trail: Node2D = null
 @onready var ledge_climb_visual: Node2D = $Visual/LedgeClimbPlaceholder
 @onready var main_hand_socket: Marker2D = $Visual/MainHandSocket
 @onready var off_hand_socket: Marker2D = $Visual/OffHandSocket
@@ -199,6 +202,12 @@ func _ready() -> void:
 		flash_material = ShaderMaterial.new()
 		flash_material.shader = shader
 		body_polygon.material = flash_material
+
+	weapon_trail = visual.get_node_or_null("WeaponTrail")
+	if not weapon_trail and visual:
+		weapon_trail = WeaponTrailScript.new()
+		weapon_trail.name = "WeaponTrail"
+		visual.add_child(weapon_trail)
 
 func equip_weapon(new_weapon: WeaponData) -> void:
 	weapon = new_weapon
@@ -359,6 +368,14 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 				main_hand_socket.rotation_degrees = -20.0 if combo_step == 0 else (20.0 if combo_step == 1 else 0.0)
 		else:
 			main_hand_socket.rotation_degrees = -35.0
+
+func start_weapon_trail(anim_name: StringName, current_step: int, duration: float) -> void:
+	if weapon_trail:
+		weapon_trail.start_trail(self, anim_name, current_step, duration)
+
+func stop_weapon_trail() -> void:
+	if weapon_trail:
+		weapon_trail.stop_trail()
 
 func play_animation(anim_name: StringName) -> void:
 	if not player_sprite:
