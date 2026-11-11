@@ -78,9 +78,12 @@ back_frames = {
 "visible": true
 },
 "idle_1": {
+"flip_h": false,
+"flip_v": false,
 "pos": Vector2(-7, -25),
 "rot": -130.0,
-"visible": true
+"visible": true,
+"z_index": -2
 },
 "idle_2": {
 "pos": Vector2(-7, -26.000002),
@@ -91,6 +94,54 @@ back_frames = {
 "pos": Vector2(-6, -25.000002),
 "rot": -130.0,
 "visible": true
+},
+"run_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(4, -26),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"run_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(4, -28),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"run_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(4, -26),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"run_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3, -29),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"run_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(4, -27),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"run_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(5, -25),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
 }
 }
 default_flip_h = true

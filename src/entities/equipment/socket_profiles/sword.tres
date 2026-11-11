@@ -106,8 +106,8 @@ back_frames = {
 "run_2": {
 "flip_h": false,
 "flip_v": true,
-"pos": Vector2(-2.3841858e-07, -38),
-"rot": 71.499985,
+"pos": Vector2(0, -35),
+"rot": 71.49998,
 "visible": true,
 "z_index": -2
 },
@@ -122,16 +122,16 @@ back_frames = {
 "run_4": {
 "flip_h": false,
 "flip_v": true,
-"pos": Vector2(-2.3841858e-07, -38),
-"rot": 71.499985,
+"pos": Vector2(-2.3841858e-07, -37),
+"rot": 71.49998,
 "visible": true,
 "z_index": -2
 },
 "run_5": {
 "flip_h": false,
 "flip_v": true,
-"pos": Vector2(-2.3841858e-07, -38),
-"rot": 71.499985,
+"pos": Vector2(1, -35),
+"rot": 71.49998,
 "visible": true,
 "z_index": -2
 }

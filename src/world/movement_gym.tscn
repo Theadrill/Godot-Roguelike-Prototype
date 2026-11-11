@@ -28,7 +28,7 @@ size = Vector2(250, 72)
 size = Vector2(140, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground3"]
-size = Vector2(400, 72)
+size = Vector2(1201, 72)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mid_platform"]
 size = Vector2(120, 20)
@@ -37,7 +37,7 @@ size = Vector2(120, 20)
 size = Vector2(32, 208)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_right"]
-size = Vector2(32, 220)
+size = Vector2(32, 159)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_balcony"]
 size = Vector2(120, 20)
@@ -105,12 +105,14 @@ color = Color(0.2, 0.23, 0.3, 1)
 polygon = PackedVector2Array(655, 192, 795, 192, 795, 256, 655, 256)
 
 [node name="Ground3_Col" type="CollisionShape2D" parent="Environment" unique_id=705596450]
-position = Vector2(1100, 324)
+position = Vector2(1500.5, 324)
 shape = SubResource("RectangleShape2D_ground3")
 
 [node name="Ground3_Vis" type="Polygon2D" parent="Environment" unique_id=1147777208]
+position = Vector2(-1802.2504, 0)
+scale = Vector2(3.0025003, 1)
 color = Color(0.15, 0.17, 0.22, 1)
-polygon = PackedVector2Array(900, 288, 1300, 288, 1300, 360, 900, 360)
+polygon = PackedVector2Array(900, 288, 1300, 288, 1300, 309.23602, 1299.9999, 323.0991, 1300, 360, 900, 360)
 
 [node name="MidPlatform_Col" type="CollisionShape2D" parent="Environment" unique_id=135090848]
 position = Vector2(908, 158)
@@ -130,12 +132,14 @@ color = Color(0.2, 0.23, 0.3, 1)
 polygon = PackedVector2Array(1000, 20, 1032, 20, 1032, 228, 1000, 228)
 
 [node name="WallRight_Col" type="CollisionShape2D" parent="Environment" unique_id=113246179]
-position = Vector2(1096, 178)
+position = Vector2(1096, 147.5)
 shape = SubResource("RectangleShape2D_wall_right")
 
 [node name="WallRight_Vis" type="Polygon2D" parent="Environment" unique_id=77798678]
+position = Vector2(0, 18.854546)
+scale = Vector2(1, 0.7227273)
 color = Color(0.2, 0.23, 0.3, 1)
-polygon = PackedVector2Array(1080, 68, 1112, 68, 1112, 288, 1080, 288)
+polygon = PackedVector2Array(1080, 68, 1112, 68, 1112, 288, 1095.2529, 288, 1080, 288)
 
 [node name="Balcony_Col" type="CollisionShape2D" parent="Environment" unique_id=873059603]
 position = Vector2(1172, 78)
@@ -223,7 +227,7 @@ tier_2_behavior = 1
 position = Vector2(472, 176)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
-position = Vector2(952, 288)
+position = Vector2(1023, 289)
 run_speed = 150.0
 wall_recovery_gravity_multiplier = 0.5
 roll_speed = 170.0

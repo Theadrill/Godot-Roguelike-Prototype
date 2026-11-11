@@ -90,6 +90,54 @@ back_frames = {
 "pos": Vector2(-7, -24),
 "rot": -190.0,
 "visible": true
+},
+"run_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(0, -27),
+"rot": -169.99998,
+"visible": true,
+"z_index": -2
+},
+"run_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -26),
+"rot": -169.99998,
+"visible": true,
+"z_index": -2
+},
+"run_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -25),
+"rot": -169.99998,
+"visible": true,
+"z_index": -2
+},
+"run_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1, -25),
+"rot": -169.99998,
+"visible": true,
+"z_index": -2
+},
+"run_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1, -24),
+"rot": -169.99998,
+"visible": true,
+"z_index": -2
+},
+"run_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(2, -25),
+"rot": -169.99998,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {

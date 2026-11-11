@@ -95,6 +95,54 @@ back_frames = {
 "rot": -224.99997,
 "visible": true,
 "z_index": 1
+},
+"run_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(0, -22),
+"rot": -236.9,
+"visible": true,
+"z_index": 1
+},
+"run_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(0, -18),
+"rot": -236.9,
+"visible": true,
+"z_index": 1
+},
+"run_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(2.9999995, -16),
+"rot": -236.9,
+"visible": true,
+"z_index": 1
+},
+"run_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-1, -20),
+"rot": -236.9,
+"visible": true,
+"z_index": 1
+},
+"run_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(0, -18),
+"rot": -236.9,
+"visible": true,
+"z_index": 1
+},
+"run_5": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(2.9999995, -16),
+"rot": -236.9,
+"visible": true,
+"z_index": 1
 }
 }
 hand_frames = {
