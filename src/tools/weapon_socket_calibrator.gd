@@ -36,7 +36,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"fall": 2,
 	"fall_from_jump": 3,
 	"slide": 2,
-	"roll": 4,
+	"roll": 1,
 	"double_jump": 4,
 	"wall_cling": 1,
 	"wall_slide": 2,
@@ -79,6 +79,12 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		var max_f: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4) - 1
 		current_frame = clampi(value, 0, max_f)
 		_on_frame_changed()
+
+## Simulação da rotação da cambalhota (0°, 90°, 180°, 270°). Só tem efeito visual ao inspecionar "roll".
+@export_enum("0°", "90°", "180°", "270°") var roll_preview_angle: String = "0°":
+	set(value):
+		roll_preview_angle = value
+		_apply_roll_preview()
 
 @export_group("3. Elementos de Apoio / Referência")
 ## Arma secundária para ver nas costas como referência.
@@ -338,7 +344,31 @@ func _on_configuration_changed() -> void:
 	if current_frame > max_f:
 		current_frame = 0
 
+	_apply_roll_preview()
 	_on_frame_changed()
+
+func _apply_roll_preview() -> void:
+	var visual_node := get_node_or_null("Visual") as Node2D
+	if not visual_node:
+		return
+	if selected_animation == "roll":
+		var deg := 0.0
+		match roll_preview_angle:
+			"90°": deg = 90.0
+			"180°": deg = 180.0
+			"270°": deg = 270.0
+			_: deg = 0.0
+		if is_zero_approx(deg):
+			visual_node.rotation = 0.0
+			visual_node.position = Vector2.ZERO
+		else:
+			var rad := deg_to_rad(deg)
+			var pivot := Vector2(0.0, -10.0)
+			visual_node.rotation = rad
+			visual_node.position = pivot - pivot.rotated(rad)
+	else:
+		visual_node.rotation = 0.0
+		visual_node.position = Vector2.ZERO
 
 func _on_frame_changed() -> void:
 	var sprite := _get_node_safe("Visual/CharacterSprite") as AnimatedSprite2D

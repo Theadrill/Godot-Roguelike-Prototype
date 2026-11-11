@@ -264,19 +264,10 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_roll_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_roll_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_roll_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_roll_3")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"roll",
-"speed": 16.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,

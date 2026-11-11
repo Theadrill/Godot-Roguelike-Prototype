@@ -5,16 +5,15 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-socket_target = "Arma nas Costas (BackSocketWeapon)"
 selected_weapon = "crossbow"
-selected_animation = "double_jump"
-current_frame = 1
+selected_animation = "roll"
 reference_secondary_weapon = "none"
 show_shield_reference = false
-socket_pos_x = -6.0
-socket_pos_y = -24.0
-socket_rotation = -174.99998
-status_message = "crossbow [Arma nas Costas (BackSocketWeapon)] -> double_jump Frame 1 (Z: -2, FlipH: false, FlipV: false)"
+socket_pos_x = 4.0
+socket_pos_y = -12.0
+socket_rotation = -90.0
+socket_z_index = 2
+status_message = "crossbow [Arma na Mão (MainHandSocket)] -> roll Frame 0 (Z: 2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,8 +27,7 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"double_jump"
-frame = 1
+animation = &"roll"
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
@@ -39,14 +37,14 @@ rotation = -3.054326
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -2
-position = Vector2(-9, -24)
+position = Vector2(-4, -34)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(0, -16)
-rotation = -3.1415927
+position = Vector2(4, -12)
+rotation = -1.5707964
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
-position = Vector2(0, -18)
-rotation = -3.1415927
+position = Vector2(4, -14)
+rotation = -1.5707964
