@@ -166,6 +166,38 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"roll_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4, -34),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"roll_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4, -34),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"roll_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4, -34),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"roll_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4, -34),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
 "run_0": {
 "flip_h": false,
 "flip_v": true,
