@@ -380,7 +380,7 @@ hand_frames = {
 },
 "attack1_2": {
 "flip_h": false,
-"flip_v": false,
+"flip_v": true,
 "pos": Vector2(7.5, -44),
 "rot": -135.0,
 "visible": true,

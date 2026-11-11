@@ -113,17 +113,19 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 @export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "hide_slider", "suffix:px") var socket_pos_x: float = 0.0:
 	set(value):
 		socket_pos_x = value
-		var node := _get_active_marker()
-		if node and not is_equal_approx(node.position.x, value):
-			node.position.x = value
+		if not _is_syncing_from_frame:
+			var node := _get_active_marker()
+			if node and not is_equal_approx(node.position.x, value):
+				node.position.x = value
 
 ## Posição Y do socket (step de 0.1 px, sem barra de slider).
 @export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "hide_slider", "suffix:px") var socket_pos_y: float = 0.0:
 	set(value):
 		socket_pos_y = value
-		var node := _get_active_marker()
-		if node and not is_equal_approx(node.position.y, value):
-			node.position.y = value
+		if not _is_syncing_from_frame:
+			var node := _get_active_marker()
+			if node and not is_equal_approx(node.position.y, value):
+				node.position.y = value
 
 @export_subgroup("Ajuste Fino de Posição (Botões X e Y)")
 @export_tool_button("◄ -1.0 px (X)") var btn_nudge_x_minus_1: Callable = _on_nudge_x_m1
@@ -144,45 +146,51 @@ var socket_position: Vector2:
 	set(value):
 		socket_pos_x = value.x
 		socket_pos_y = value.y
-		var node := _get_active_marker()
-		if node and node.position != value:
-			node.position = value
+		if not _is_syncing_from_frame:
+			var node := _get_active_marker()
+			if node and node.position != value:
+				node.position = value
 
 ## Rotação em graus no frame atual.
 @export_range(-360.0, 360.0, 0.5, "suffix:°") var socket_rotation: float = 0.0:
 	set(value):
 		socket_rotation = value
-		var node := _get_active_marker()
-		if node and not is_equal_approx(node.rotation_degrees, value):
-			node.rotation_degrees = value
+		if not _is_syncing_from_frame:
+			var node := _get_active_marker()
+			if node and not is_equal_approx(node.rotation_degrees, value):
+				node.rotation_degrees = value
 
 ## Inverter horizontalmente o sprite (Flip Horizontal / Eixo X).
 @export var socket_flip_h: bool = false:
 	set(value):
 		socket_flip_h = value
-		_apply_active_visual_flip()
+		if not _is_syncing_from_frame:
+			_apply_active_visual_flip()
 
 ## Inverter verticalmente o sprite (Flip Vertical / Eixo Y).
 @export var socket_flip_v: bool = false:
 	set(value):
 		socket_flip_v = value
-		_apply_active_visual_flip()
+		if not _is_syncing_from_frame:
+			_apply_active_visual_flip()
 
 ## Profundidade / Z-Index no frame atual (-2 costas fundas, -1 atrás do corpo, 0 neutro, 1 na frente do corpo/cintura).
 @export_range(-10, 10, 1) var socket_z_index: int = -2:
 	set(value):
 		socket_z_index = value
-		var node := _get_active_marker()
-		if node and node.z_index != value:
-			node.z_index = value
+		if not _is_syncing_from_frame:
+			var node := _get_active_marker()
+			if node and node.z_index != value:
+				node.z_index = value
 
 ## Visibilidade do item neste frame (true = visível, false = oculto).
 @export var item_visible_in_frame: bool = true:
 	set(value):
 		item_visible_in_frame = value
-		var vis := _get_active_visual_instance()
-		if vis and is_instance_valid(vis):
-			vis.visible = value
+		if not _is_syncing_from_frame:
+			var vis := _get_active_visual_instance()
+			if vis and is_instance_valid(vis):
+				vis.visible = value
 
 @export_group("5. Gravação no Arquivo")
 ## Clique nesta caixinha para SALVAR a posição, rotação, inversão e Z-Index atuais diretamente no .tres correspondente!
@@ -216,6 +224,7 @@ var _main_hand_instance: Node2D = null
 var _off_hand_instance: Node2D = null
 var _back_weapon_instance: Node2D = null
 var _back_shield_instance: Node2D = null
+var _is_syncing_from_frame: bool = false
 
 func _ready() -> void:
 	_load_resources()
@@ -443,6 +452,7 @@ func _on_frame_changed() -> void:
 			_apply_visual_flip(_back_shield_instance, bs_data.get("flip_h", false), bs_data.get("flip_v", false))
 
 	# 6. Atualiza os inputs do Inspector para o alvo ativo
+	_is_syncing_from_frame = true
 	var active_marker := _get_active_marker()
 	if active_marker:
 		socket_position = active_marker.position
@@ -456,6 +466,7 @@ func _on_frame_changed() -> void:
 		item_visible_in_frame = active_vis.visible
 		socket_flip_h = active_vis.scale.x < 0.0
 		socket_flip_v = active_vis.scale.y < 0.0
+	_is_syncing_from_frame = false
 
 	status_message = "%s [%s] -> %s Frame %d (Z: %d, FlipH: %s, FlipV: %s)" % [
 		_get_active_item_name(),
