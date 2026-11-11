@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://c6slash_frames_01"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://chow11bdony5b"]
 
 [ext_resource type="Texture2D" uid="uid://dm2wrqlqyhtmk" path="res://assets/effects/slashes/sword/sword_slash_sheet.png" id="1_slash_sheet"]
 
@@ -26,7 +26,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_slash_2")
 }],
-"loop": false,
+"loop": 0,
 "name": &"slash_sword",
 "speed": 10.0
 }]

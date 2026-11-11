@@ -24,7 +24,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/heal_state.gd" id="22_heal"]
 [ext_resource type="PackedScene" path="res://src/ui/death_screen.tscn" id="23_death_screen"]
 [ext_resource type="SpriteFrames" uid="uid://b3mi8waob4tc5" path="res://assets/player/adventurer/player_frames.tres" id="24_player_frames"]
-[ext_resource type="SpriteFrames" uid="uid://c6slash_frames_01" path="res://assets/effects/slashes/slash_frames.tres" id="25_slash_frames"]
+[ext_resource type="SpriteFrames" uid="uid://chow11bdony5b" path="res://assets/effects/slashes/slash_frames.tres" id="25_slash_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
