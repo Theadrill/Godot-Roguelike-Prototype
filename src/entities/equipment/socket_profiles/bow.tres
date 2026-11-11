@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://vopjd37vphrv"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
 
-[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -71,6 +71,12 @@ double_jump_2_pos = Vector2(-4, -14)
 double_jump_2_rot = -270.0
 double_jump_3_pos = Vector2(4, -18)
 double_jump_3_rot = 0.0
+wall_cling_0_pos = Vector2(-14, -24)
+wall_cling_0_rot = -19.0
+wall_slide_0_pos = Vector2(-14, -24)
+wall_slide_0_rot = -19.0
+wall_slide_1_pos = Vector2(-14, -24)
+wall_slide_1_rot = -19.0
 back_frames = {
 "fall_0": {
 "flip_h": false,
@@ -235,6 +241,30 @@ back_frames = {
 "rot": 88.5,
 "visible": true,
 "z_index": -2
+},
+"wall_cling_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(0.9999943, -31.999996),
+"rot": -174.99998,
+"visible": true,
+"z_index": -2
+},
+"wall_slide_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(0.9999943, -31.999996),
+"rot": -174.99998,
+"visible": true,
+"z_index": -2
+},
+"wall_slide_1": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(0.9999943, -31.999996),
+"rot": -174.99998,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {
@@ -375,5 +405,29 @@ hand_frames = {
 "rot": -24.999998,
 "visible": true,
 "z_index": -2
+},
+"wall_cling_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-14, -24),
+"rot": -19.0,
+"visible": true,
+"z_index": 2
+},
+"wall_slide_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-14, -24),
+"rot": -19.0,
+"visible": true,
+"z_index": 2
+},
+"wall_slide_1": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-14, -24),
+"rot": -19.0,
+"visible": true,
+"z_index": 2
 }
 }

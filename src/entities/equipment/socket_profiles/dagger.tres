@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://bkctnwbycr3d0"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
 
-[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -71,6 +71,12 @@ double_jump_2_pos = Vector2(-3, -12)
 double_jump_2_rot = -270.0
 double_jump_3_pos = Vector2(3, -16)
 double_jump_3_rot = 0.0
+wall_cling_0_pos = Vector2(-14.000002, -22.000004)
+wall_cling_0_rot = -290.49997
+wall_slide_0_pos = Vector2(-14.000002, -22.000004)
+wall_slide_0_rot = -290.49997
+wall_slide_1_pos = Vector2(-14.000002, -22.000004)
+wall_slide_1_rot = -290.49997
 default_back_z_index = 1
 back_frames = {
 "fall_0": {
@@ -240,6 +246,30 @@ back_frames = {
 "rot": 18.0,
 "visible": true,
 "z_index": 1
+},
+"wall_cling_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(3, -20),
+"rot": 49.499996,
+"visible": true,
+"z_index": 1
+},
+"wall_slide_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(3, -20),
+"rot": 49.499996,
+"visible": true,
+"z_index": 1
+},
+"wall_slide_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(3, -20),
+"rot": 49.499996,
+"visible": true,
+"z_index": 1
 }
 }
 hand_frames = {
@@ -366,6 +396,30 @@ hand_frames = {
 "flip_v": false,
 "pos": Vector2(-7, -2),
 "rot": -4.9999995,
+"visible": true,
+"z_index": 2
+},
+"wall_cling_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14.000002, -22.000004),
+"rot": -290.49997,
+"visible": true,
+"z_index": 2
+},
+"wall_slide_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14.000002, -22.000004),
+"rot": -290.49997,
+"visible": true,
+"z_index": 2
+},
+"wall_slide_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14.000002, -22.000004),
+"rot": -290.49997,
 "visible": true,
 "z_index": 2
 }

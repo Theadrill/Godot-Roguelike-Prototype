@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://dr2x2gbp674gg"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
 
-[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -259,6 +259,30 @@ back_frames = {
 "flip_v": false,
 "pos": Vector2(-14.8, -5),
 "rot": -85.2,
+"visible": true,
+"z_index": -2
+},
+"wall_cling_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(3, -37),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"wall_slide_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(3, -37),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"wall_slide_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(3, -37),
+"rot": 0.0,
 "visible": true,
 "z_index": -2
 }

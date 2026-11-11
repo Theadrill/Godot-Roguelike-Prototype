@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://c5l53pye1hi41"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
 
-[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -71,6 +71,12 @@ double_jump_2_pos = Vector2(-5, -16)
 double_jump_2_rot = -280.0
 double_jump_3_pos = Vector2(5, -20)
 double_jump_3_rot = -10.0
+wall_cling_0_pos = Vector2(-14, -23)
+wall_cling_0_rot = -112.399994
+wall_slide_0_pos = Vector2(-14, -23)
+wall_slide_0_rot = -112.399994
+wall_slide_1_pos = Vector2(-14, -23)
+wall_slide_1_rot = -112.399994
 back_frames = {
 "fall_0": {
 "flip_h": false,
@@ -235,6 +241,30 @@ back_frames = {
 "rot": -171.0,
 "visible": true,
 "z_index": -2
+},
+"wall_cling_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(4.000002, -30.999998),
+"rot": -85.99999,
+"visible": true,
+"z_index": -2
+},
+"wall_slide_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(4.000002, -30.999998),
+"rot": -85.99999,
+"visible": true,
+"z_index": -2
+},
+"wall_slide_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(4.000002, -30.999998),
+"rot": -85.99999,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {
@@ -361,6 +391,30 @@ hand_frames = {
 "flip_v": false,
 "pos": Vector2(-11.000002, -1.999999),
 "rot": -16.0,
+"visible": true,
+"z_index": 2
+},
+"wall_cling_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14, -23),
+"rot": -112.399994,
+"visible": true,
+"z_index": 2
+},
+"wall_slide_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14, -23),
+"rot": -112.399994,
+"visible": true,
+"z_index": 2
+},
+"wall_slide_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14, -23),
+"rot": -112.399994,
 "visible": true,
 "z_index": 2
 }
