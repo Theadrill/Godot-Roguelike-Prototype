@@ -96,16 +96,16 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		_on_frame_changed()
 
 @export_group("4. Ajustes do Frame Atual (X, Y, Ângulo, Inversão e Z-Index)")
-## Posição X do socket (com botões de incremento/decremento com step de 0.1 px).
-@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "suffix:px") var socket_pos_x: float = 0.0:
+## Posição X do socket (step de 0.1 px, sem barra de slider).
+@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "hide_slider", "suffix:px") var socket_pos_x: float = 0.0:
 	set(value):
 		socket_pos_x = value
 		var node := _get_active_marker()
 		if node and not is_equal_approx(node.position.x, value):
 			node.position.x = value
 
-## Posição Y do socket (com botões de incremento/decremento com step de 0.1 px).
-@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "suffix:px") var socket_pos_y: float = 0.0:
+## Posição Y do socket (step de 0.1 px, sem barra de slider).
+@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "hide_slider", "suffix:px") var socket_pos_y: float = 0.0:
 	set(value):
 		socket_pos_y = value
 		var node := _get_active_marker()
