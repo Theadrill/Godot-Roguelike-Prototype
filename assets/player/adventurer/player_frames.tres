@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://yl8ludkd4biw" path="res://assets/player/adventurer/fall/player_fall_sheet.png" id="5_fall_sheet"]
 [ext_resource type="Texture2D" uid="uid://bg0rr1o84ulm7" path="res://assets/player/adventurer/slide/player_slide_sheet.png" id="6_slide_sheet"]
 [ext_resource type="Texture2D" uid="uid://dw48dqxejk7o8" path="res://assets/player/adventurer/roll/player_roll_sheet.png" id="7_roll_sheet"]
-[ext_resource type="Texture2D" path="res://assets/player/adventurer/wall_slide/player_wall_slide_sheet.png" id="8_wall_slide_sheet"]
+[ext_resource type="Texture2D" uid="uid://nied1mlny8nv" path="res://assets/player/adventurer/wall_slide/player_wall_slide_sheet.png" id="8_wall_slide_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crouch_0"]
 atlas = ExtResource("4_crouch_sheet")
