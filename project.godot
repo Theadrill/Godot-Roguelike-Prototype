@@ -36,6 +36,10 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/weapon_socket_calibrator_plugin/plugin.cfg")
+
 [internationalization]
 
 locale/translations=PackedStringArray("res://src/core/localization/translations.en_US.translation", "res://src/core/localization/translations.pt_BR.translation")
@@ -55,7 +59,3 @@ locale/fallback="pt_BR"
 
 textures/canvas_textures/default_texture_filter=0
 environment/defaults/default_clear_color=Color(0.08, 0.09, 0.12, 1)
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/weapon_socket_calibrator_plugin/plugin.cfg")

@@ -9,37 +9,73 @@ func _parse_property(object: Object, _type: Variant.Type, name: String, _hint_ty
 		var calibrator = object
 		var container := VBoxContainer.new()
 		container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		container.add_theme_constant_override("separation", 8)
 
-		var grid := GridContainer.new()
-		grid.columns = 2
-		grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		# Cruz 1: Ajuste Fino (0.1 px)
+		var dpad_fine := _create_cross_dpad("Ajuste Fino (±0.1 px)", 0.1, calibrator)
+		container.add_child(dpad_fine)
 
-		# Linha 1: X (1.0 px)
-		_add_button(grid, "◄ -1.0 px (X)", func(): calibrator._nudge_x(-1.0))
-		_add_button(grid, "► +1.0 px (X)", func(): calibrator._nudge_x(1.0))
+		var sep := HSeparator.new()
+		container.add_child(sep)
 
-		# Linha 2: X (0.1 px)
-		_add_button(grid, "◄ -0.1 px (X)", func(): calibrator._nudge_x(-0.1))
-		_add_button(grid, "► +0.1 px (X)", func(): calibrator._nudge_x(0.1))
+		# Cruz 2: Ajuste Rápido (1.0 px)
+		var dpad_coarse := _create_cross_dpad("Ajuste Rápido (±1.0 px)", 1.0, calibrator)
+		container.add_child(dpad_coarse)
 
-		# Linha 3: Y (1.0 px)
-		_add_button(grid, "▲ -1.0 px (Y)", func(): calibrator._nudge_y(-1.0))
-		_add_button(grid, "▼ +1.0 px (Y)", func(): calibrator._nudge_y(1.0))
-
-		# Linha 4: Y (0.1 px)
-		_add_button(grid, "▲ -0.1 px (Y)", func(): calibrator._nudge_y(-0.1))
-		_add_button(grid, "▼ +0.1 px (Y)", func(): calibrator._nudge_y(0.1))
-
-		container.add_child(grid)
 		add_custom_control(container)
 		return true
 	elif name.begins_with("btn_nudge_"):
 		return true
 	return false
 
-func _add_button(parent: Control, text: String, on_click: Callable) -> void:
+func _create_cross_dpad(title: String, step_val: float, calibrator: Object) -> VBoxContainer:
+	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 3)
+
+	var label := Label.new()
+	label.text = title
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color(0.75, 0.8, 0.9))
+	box.add_child(label)
+
+	var step_str := ("%.1f" if step_val < 1.0 else "%.0f") % step_val
+
+	# Linha 1: 1 botão centralizado (▲ Y)
+	var row1 := HBoxContainer.new()
+	row1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_add_spacer(row1, 1)
+	_add_nudge_btn(row1, "▲  -%s px" % step_str, func(): calibrator._nudge_y(-step_val), 2)
+	_add_spacer(row1, 1)
+	box.add_child(row1)
+
+	# Linha 2: 2 botões (◄ X e ► X)
+	var row2 := HBoxContainer.new()
+	row2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_add_nudge_btn(row2, "◄  -%s px" % step_str, func(): calibrator._nudge_x(-step_val), 1)
+	_add_nudge_btn(row2, "►  +%s px" % step_str, func(): calibrator._nudge_x(step_val), 1)
+	box.add_child(row2)
+
+	# Linha 3: 1 botão centralizado (▼ Y)
+	var row3 := HBoxContainer.new()
+	row3.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_add_spacer(row3, 1)
+	_add_nudge_btn(row3, "▼  +%s px" % step_str, func(): calibrator._nudge_y(step_val), 2)
+	_add_spacer(row3, 1)
+	box.add_child(row3)
+
+	return box
+
+func _add_spacer(parent: Control, stretch: int) -> void:
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spacer.size_flags_stretch_ratio = stretch
+	parent.add_child(spacer)
+
+func _add_nudge_btn(parent: Control, text: String, on_click: Callable, stretch: int) -> void:
 	var btn := Button.new()
 	btn.text = text
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn.size_flags_stretch_ratio = stretch
 	btn.pressed.connect(on_click)
 	parent.add_child(btn)
