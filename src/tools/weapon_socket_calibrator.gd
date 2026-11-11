@@ -112,6 +112,18 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		if node and not is_equal_approx(node.position.y, value):
 			node.position.y = value
 
+@export_subgroup("Ajuste Fino de Posição (Botões X e Y)")
+@export_tool_button("◄ -1.0 px (X)") var btn_nudge_x_minus_1: Callable = _on_nudge_x_m1
+@export_tool_button("◄ -0.1 px (X)") var btn_nudge_x_minus_01: Callable = _on_nudge_x_m01
+@export_tool_button("► +0.1 px (X)") var btn_nudge_x_plus_01: Callable = _on_nudge_x_p01
+@export_tool_button("► +1.0 px (X)") var btn_nudge_x_plus_1: Callable = _on_nudge_x_p1
+
+@export_tool_button("▲ -1.0 px (Y)") var btn_nudge_y_minus_1: Callable = _on_nudge_y_m1
+@export_tool_button("▲ -0.1 px (Y)") var btn_nudge_y_minus_01: Callable = _on_nudge_y_m01
+@export_tool_button("▼ +0.1 px (Y)") var btn_nudge_y_plus_01: Callable = _on_nudge_y_p01
+@export_tool_button("▼ +1.0 px (Y)") var btn_nudge_y_plus_1: Callable = _on_nudge_y_p1
+@export_subgroup("")
+
 ## Propriedade calculada Vector2 para compatibilidade de código e desserialização
 var socket_position: Vector2:
 	get:
@@ -434,6 +446,38 @@ func _get_active_item_name() -> String:
 	if "Arma" in socket_target:
 		return selected_weapon
 	return selected_shield
+
+func _on_nudge_x_m1() -> void:
+	_nudge_x(-1.0)
+
+func _on_nudge_x_m01() -> void:
+	_nudge_x(-0.1)
+
+func _on_nudge_x_p01() -> void:
+	_nudge_x(0.1)
+
+func _on_nudge_x_p1() -> void:
+	_nudge_x(1.0)
+
+func _on_nudge_y_m1() -> void:
+	_nudge_y(-1.0)
+
+func _on_nudge_y_m01() -> void:
+	_nudge_y(-0.1)
+
+func _on_nudge_y_p01() -> void:
+	_nudge_y(0.1)
+
+func _on_nudge_y_p1() -> void:
+	_nudge_y(1.0)
+
+func _nudge_x(delta: float) -> void:
+	socket_pos_x = snappedf(socket_pos_x + delta, 0.1)
+	notify_property_list_changed()
+
+func _nudge_y(delta: float) -> void:
+	socket_pos_y = snappedf(socket_pos_y + delta, 0.1)
+	notify_property_list_changed()
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
