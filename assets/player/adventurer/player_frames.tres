@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://nied1mlny8nv" path="res://assets/player/adventurer/wall_slide/player_wall_slide_sheet.png" id="8_wall_slide_sheet"]
 [ext_resource type="Texture2D" uid="uid://crjm4bhsashex" path="res://assets/player/adventurer/corner_climb/player_corner_climb_sheet.png" id="9_corner_climb_sheet"]
 [ext_resource type="Texture2D" uid="uid://erbsrtq4c7e8" path="res://assets/player/adventurer/attack/player_attack1_sheet.png" id="10_attack1_sheet"]
+[ext_resource type="Texture2D" uid="uid://b0n2i58gqlu7u" path="res://assets/player/adventurer/attack/player_attack2_sheet.png" id="11_attack2_sheet"]
+[ext_resource type="Texture2D" uid="uid://jm60xt00edle" path="res://assets/player/adventurer/attack/player_attack3_sheet.png" id="12_attack3_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_attack1_0"]
 atlas = ExtResource("10_attack1_sheet")
@@ -29,6 +31,46 @@ region = Rect2(83, 62, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_attack1_4"]
 atlas = ExtResource("10_attack1_sheet")
+region = Rect2(0, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack2_0"]
+atlas = ExtResource("11_attack2_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack2_1"]
+atlas = ExtResource("11_attack2_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack2_2"]
+atlas = ExtResource("11_attack2_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack2_3"]
+atlas = ExtResource("11_attack2_sheet")
+region = Rect2(83, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack2_4"]
+atlas = ExtResource("11_attack2_sheet")
+region = Rect2(0, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack3_0"]
+atlas = ExtResource("12_attack3_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack3_1"]
+atlas = ExtResource("12_attack3_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack3_2"]
+atlas = ExtResource("12_attack3_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack3_3"]
+atlas = ExtResource("12_attack3_sheet")
+region = Rect2(83, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_attack3_4"]
+atlas = ExtResource("12_attack3_sheet")
 region = Rect2(0, 124, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_0"]
@@ -187,6 +229,46 @@ animations = [{
 }],
 "loop": 0,
 "name": &"attack1",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack2_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack2_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack2_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack2_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack2_4")
+}],
+"loop": 0,
+"name": &"attack2",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack3_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack3_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack3_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack3_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_attack3_4")
+}],
+"loop": 0,
+"name": &"attack3",
 "speed": 10.0
 }, {
 "frames": [{

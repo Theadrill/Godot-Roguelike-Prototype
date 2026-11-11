@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://bjjt8vyah1xox"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
 
-[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -118,6 +118,86 @@ back_frames = {
 "z_index": -2
 },
 "attack1_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -30.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack2_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -26.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack2_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-3, -23.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack2_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1, -30.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack2_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -31.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack2_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -30.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack3_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -26.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack3_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-3, -23.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack3_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1, -30.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack3_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -31.6),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"attack3_4": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(-2, -30.6),
@@ -388,6 +468,86 @@ hand_frames = {
 "z_index": 2
 },
 "attack1_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(0.5, -41),
+"rot": 162.0,
+"visible": true,
+"z_index": 2
+},
+"attack2_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-18.5, -14),
+"rot": 135.0,
+"visible": true,
+"z_index": 2
+},
+"attack2_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16.5, -18),
+"rot": 135.0,
+"visible": true,
+"z_index": 2
+},
+"attack2_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(7.5, -44),
+"rot": -135.0,
+"visible": true,
+"z_index": 2
+},
+"attack2_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(6.5, -44),
+"rot": -155.0,
+"visible": true,
+"z_index": 2
+},
+"attack2_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(0.5, -41),
+"rot": 162.0,
+"visible": true,
+"z_index": 2
+},
+"attack3_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-18.5, -14),
+"rot": 135.0,
+"visible": true,
+"z_index": 2
+},
+"attack3_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16.5, -18),
+"rot": 135.0,
+"visible": true,
+"z_index": 2
+},
+"attack3_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(7.5, -44),
+"rot": -135.0,
+"visible": true,
+"z_index": 2
+},
+"attack3_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(6.5, -44),
+"rot": -155.0,
+"visible": true,
+"z_index": 2
+},
+"attack3_4": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(0.5, -41),

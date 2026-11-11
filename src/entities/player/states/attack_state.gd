@@ -8,6 +8,7 @@ var current_step: int = 0
 var attack_timer: float = 0.0
 var combo_buffered: bool = false
 var last_attack_end_msec: int = -10000
+var last_completed_step: int = -1
 
 var is_charging: bool = false
 var charge_progress: float = 0.0
@@ -22,6 +23,7 @@ func enter() -> void:
 		is_charging = true
 		charge_progress = 0.0
 		current_step = 0
+		last_completed_step = -1
 		# Windup pose: pull weapon back
 		if player.main_hand_socket:
 			player.main_hand_socket.rotation_degrees = -65.0
@@ -29,10 +31,11 @@ func enter() -> void:
 
 	is_charging = false
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
-	if elapsed_sec <= COMBO_WINDOW:
-		current_step = (current_step + 1) % player.weapon.combo_durations.size()
+	if elapsed_sec <= COMBO_WINDOW and last_completed_step >= 0 and (last_completed_step + 1 < player.weapon.combo_durations.size()):
+		current_step = last_completed_step + 1
 	else:
 		current_step = 0
+		last_completed_step = -1
 		
 	_start_combo_step(0.0)
 
@@ -47,6 +50,9 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 
 	var is_upward: bool = player.is_upward_attack_requested()
 	var is_downward: bool = player.is_crouch_requested()
+	
+	var weapon_type: String = player._detect_weapon_type_string(player.weapon)
+	var is_melee_combo: bool = weapon_type in ["sword", "hammer", "dagger", "axe"]
 	
 	if is_upward:
 		player.velocity.x = 0.0
@@ -107,10 +113,31 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	
 	player.hitbox.set_active(false)
 	player.hitbox.set_active(true)
-	player.set_slash_visual(true, current_step, is_upward, is_downward)
+
+	# Dedicated combo animation on normal ground attack for melee weapons (sword, hammer, dagger, axe)
+	if player.is_on_floor() and not is_upward and not is_downward and is_melee_combo:
+		var anim_name: StringName = &"attack1"
+		if current_step == 1:
+			anim_name = &"attack2"
+		elif current_step >= 2:
+			anim_name = &"attack3"
+		player.play_animation(anim_name)
+		if player.player_sprite:
+			player.player_sprite.frame = 0
+			var target_duration: float = maxf(0.01, attack_timer)
+			# 5 frames at base 10.0 FPS takes 0.5s. Scale to match exact attack_timer.
+			player.player_sprite.speed_scale = 0.5 / target_duration
+			player._update_weapon_socket_for_frame(anim_name, 0)
+		player.set_slash_visual(false)
+	else:
+		if player.player_sprite:
+			player.player_sprite.speed_scale = 1.0
+		player.set_slash_visual(true, current_step, is_upward, is_downward)
 
 func exit() -> void:
 	is_charging = false
+	if player.player_sprite:
+		player.player_sprite.speed_scale = 1.0
 	if player._main_weapon_instance:
 		player._main_weapon_instance.modulate = Color.WHITE
 		player._main_weapon_instance.scale = Vector2.ONE
@@ -172,6 +199,7 @@ func physics_update(delta: float) -> void:
 		# Slide / Dodge cancel during charge
 		if player.is_slide_requested():
 			is_charging = false
+			last_completed_step = -1
 			state_machine.transition_to("slide")
 			return
 
@@ -185,11 +213,12 @@ func physics_update(delta: float) -> void:
 	
 	# Dodge-cancel: can always slide out of an attack immediately!
 	if player.is_slide_requested():
+		last_completed_step = -1
 		state_machine.transition_to("slide")
 		return
 		
-	# Input buffer for next combo hit (supports holding down attack)
-	if Input.is_action_pressed("attack_primary"):
+	# Input buffer: buffer next hit if player taps attack again during this swing
+	if Input.is_action_just_pressed("attack_primary"):
 		combo_buffered = true
 		
 	# Decelerate horizontal impulse on ground; maintain full natural gravity in air
@@ -205,20 +234,29 @@ func physics_update(delta: float) -> void:
 		player.hitbox.set_active(false)
 		player.set_slash_visual(false, 0)
 		last_attack_end_msec = Time.get_ticks_msec()
+		last_completed_step = current_step
 		
-		# If another hit was buffered and we haven't reached the combo finisher
-		if combo_buffered and (current_step + 1 < player.weapon.combo_durations.size()):
+		# Combo continuation condition:
+		# 1. Player is holding the attack button (continuous auto-chain combo)
+		# 2. Player tapped attack again during the swing (buffered next hit)
+		var wants_combo: bool = combo_buffered or Input.is_action_pressed("attack_primary")
+		var has_next_step: bool = current_step + 1 < player.weapon.combo_durations.size()
+		
+		if wants_combo and has_next_step:
 			current_step += 1
 			_start_combo_step(0.0)
 			return
 			
-		# Combo chain ended or standalone swing: apply cadence recovery cooldown
+		# Combo chain ended or reached finisher or single tap with no continuation:
 		if current_step + 1 >= player.weapon.combo_durations.size():
 			player.attack_cooldown_timer = player.weapon.combo_finisher_cooldown
+			last_completed_step = -1 # Finisher done, next chain starts from step 0
 		else:
 			player.attack_cooldown_timer = player.weapon.attack_cooldown
 		
-		current_step = 0
+		if player.player_sprite:
+			player.player_sprite.speed_scale = 1.0
+			
 		if player.is_on_floor():
 			if abs(Input.get_axis("move_left", "move_right")) > 0.1:
 				state_machine.transition_to("run")

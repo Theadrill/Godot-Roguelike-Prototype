@@ -443,7 +443,10 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 	var is_in_manual_socket_state: bool = false
 	if state_machine and state_machine.current_state:
 		var current_state_name: String = state_machine.current_state.name.to_lower()
-		is_in_manual_socket_state = current_state_name in ["attack", "rangedattack", "guard"]
+		if current_state_name == "attack":
+			is_in_manual_socket_state = not (anim_name in [&"attack1", &"attack2", &"attack3"])
+		else:
+			is_in_manual_socket_state = current_state_name in ["rangedattack", "guard"]
 
 	if not is_in_manual_socket_state and main_hand_socket and weapon:
 		var profile: WeaponSocketProfile = weapon.get_socket_profile()
