@@ -100,7 +100,6 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 @export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "suffix:px") var socket_pos_x: float = 0.0:
 	set(value):
 		socket_pos_x = value
-		socket_position.x = value
 		var node := _get_active_marker()
 		if node and not is_equal_approx(node.position.x, value):
 			node.position.x = value
@@ -109,15 +108,15 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 @export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "suffix:px") var socket_pos_y: float = 0.0:
 	set(value):
 		socket_pos_y = value
-		socket_position.y = value
 		var node := _get_active_marker()
 		if node and not is_equal_approx(node.position.y, value):
 			node.position.y = value
 
-## Posição combinada do socket no frame atual (Vector2 sincronizado). Você também pode arrastar o nó na Viewport 2D com o mouse!
-@export var socket_position: Vector2 = Vector2.ZERO:
+## Propriedade calculada Vector2 para compatibilidade de código e desserialização
+var socket_position: Vector2:
+	get:
+		return Vector2(socket_pos_x, socket_pos_y)
 	set(value):
-		socket_position = value
 		socket_pos_x = value.x
 		socket_pos_y = value.y
 		var node := _get_active_marker()
@@ -440,9 +439,9 @@ func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		var active_marker := _get_active_marker()
 		if active_marker:
-			if active_marker.position != socket_position:
-				socket_position = active_marker.position
+			if not is_equal_approx(active_marker.position.x, socket_pos_x):
 				socket_pos_x = active_marker.position.x
+			if not is_equal_approx(active_marker.position.y, socket_pos_y):
 				socket_pos_y = active_marker.position.y
 			if not is_equal_approx(active_marker.rotation_degrees, socket_rotation):
 				socket_rotation = active_marker.rotation_degrees
