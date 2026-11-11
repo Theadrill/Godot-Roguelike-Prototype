@@ -4,7 +4,6 @@
 
 [resource]
 script = ExtResource("1_script")
-profile_name = "sword"
 idle_0_pos = Vector2(-14.000001, -14)
 idle_0_rot = 130.0
 idle_1_pos = Vector2(-14, -16)
@@ -87,10 +86,56 @@ back_frames = {
 "pos": Vector2(-10.000001, -35.000004),
 "rot": 74.99999,
 "visible": true
+},
+"run_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2.3841858e-07, -38),
+"rot": 71.499985,
+"visible": true,
+"z_index": -2
+},
+"run_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2.3841858e-07, -37),
+"rot": 71.49998,
+"visible": true,
+"z_index": -2
+},
+"run_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2.3841858e-07, -38),
+"rot": 71.499985,
+"visible": true,
+"z_index": -2
+},
+"run_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2.3841858e-07, -38),
+"rot": 71.499985,
+"visible": true,
+"z_index": -2
+},
+"run_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2.3841858e-07, -38),
+"rot": 71.499985,
+"visible": true,
+"z_index": -2
+},
+"run_5": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2.3841858e-07, -38),
+"rot": 71.499985,
+"visible": true,
+"z_index": -2
 }
 }
-default_hand_z_index = 2
-default_flip_v = false
 hand_frames = {
 "run_0": {
 "flip_h": false,

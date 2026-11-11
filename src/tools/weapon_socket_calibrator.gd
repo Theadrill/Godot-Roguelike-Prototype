@@ -96,10 +96,30 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		_on_frame_changed()
 
 @export_group("4. Ajustes do Frame Atual (X, Y, Ângulo, Inversão e Z-Index)")
-## Posição do socket no frame atual. Você pode digitar aqui OU arrastar o nó na Viewport 2D com o mouse!
+## Posição X do socket (com botões de incremento/decremento com step de 0.1 px).
+@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "suffix:px") var socket_pos_x: float = 0.0:
+	set(value):
+		socket_pos_x = value
+		socket_position.x = value
+		var node := _get_active_marker()
+		if node and not is_equal_approx(node.position.x, value):
+			node.position.x = value
+
+## Posição Y do socket (com botões de incremento/decremento com step de 0.1 px).
+@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "suffix:px") var socket_pos_y: float = 0.0:
+	set(value):
+		socket_pos_y = value
+		socket_position.y = value
+		var node := _get_active_marker()
+		if node and not is_equal_approx(node.position.y, value):
+			node.position.y = value
+
+## Posição combinada do socket no frame atual (Vector2 sincronizado). Você também pode arrastar o nó na Viewport 2D com o mouse!
 @export var socket_position: Vector2 = Vector2.ZERO:
 	set(value):
 		socket_position = value
+		socket_pos_x = value.x
+		socket_pos_y = value.y
 		var node := _get_active_marker()
 		if node and node.position != value:
 			node.position = value
@@ -375,6 +395,8 @@ func _on_frame_changed() -> void:
 	var active_marker := _get_active_marker()
 	if active_marker:
 		socket_position = active_marker.position
+		socket_pos_x = active_marker.position.x
+		socket_pos_y = active_marker.position.y
 		socket_rotation = active_marker.rotation_degrees
 		socket_z_index = active_marker.z_index
 
@@ -420,6 +442,8 @@ func _process(_delta: float) -> void:
 		if active_marker:
 			if active_marker.position != socket_position:
 				socket_position = active_marker.position
+				socket_pos_x = active_marker.position.x
+				socket_pos_y = active_marker.position.y
 			if not is_equal_approx(active_marker.rotation_degrees, socket_rotation):
 				socket_rotation = active_marker.rotation_degrees
 			if active_marker.z_index != socket_z_index:
