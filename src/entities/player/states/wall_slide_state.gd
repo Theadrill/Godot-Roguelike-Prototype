@@ -18,6 +18,7 @@ func enter() -> void:
 	slide_timer = 0.0
 	player.last_wall_jump_normal_x = 0.0
 	player.is_wall_recovery_active = false
+	player.play_animation(&"wall_cling")
 
 func physics_update(delta: float) -> void:
 	if player.is_on_floor():
@@ -81,6 +82,8 @@ func physics_update(delta: float) -> void:
 	if slide_timer < player.wall_cling_hold_time:
 		# Phase 1: Firm grip hold (completely stationary)
 		player.velocity.y = 0.0
+		if not player.player_sprite or player.player_sprite.animation != &"wall_cling":
+			player.play_animation(&"wall_cling")
 	else:
 		# Phase 2: Slipping struggle (smooth non-linear acceleration from min to max speed)
 		var slip_time := slide_timer - player.wall_cling_hold_time
@@ -89,5 +92,7 @@ func physics_update(delta: float) -> void:
 		var curve := t * t
 		var target_speed := lerpf(player.wall_slide_min_speed, player.wall_slide_max_speed, curve)
 		player.velocity.y = move_toward(player.velocity.y, target_speed, (player.gravity * 0.8) * delta)
+		if not player.player_sprite or player.player_sprite.animation != &"wall_slide":
+			player.play_animation(&"wall_slide")
 
 	player.move_and_slide()
