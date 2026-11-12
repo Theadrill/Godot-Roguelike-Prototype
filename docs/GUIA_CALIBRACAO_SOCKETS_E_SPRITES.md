@@ -48,9 +48,8 @@ Quando o usuário enviar uma imagem de animação (ex: `attack1`, `attack2`, `at
   - **`hammer` (Martelo):** Segue a mesma posição e ângulo $\theta$ da espada (cabeça do martelo aponta para `+X`, `0°`).
   - **`axe` (Machado):** Segue a mesma posição e ângulo $\theta$ da espada.
     - **Atenção ao Flip do Machado (`flip_v`):** Em `axe_visual.tscn`, a lâmina cortante é desenhada para o lado `-Y` (para cima quando em `0°`). Se durante o arco do ataque a lâmina ficar virada para o lado contrário do movimento do corte, ative `"flip_v": true` naquele frame específico dentro de `hand_frames[key]`!
-  - **`staff` (Cajado):** Segue a mesma posição e ângulo $\theta$ da linha verde.
   - **`dagger` (Adaga):** O usuário costuma calibrar a adaga manualmente no calibrador visual (verifique se ele pediu para pular ou incluir a adaga).
-  - **`bow` e `crossbow`:** **NÃO** são posicionados na mão principal em animações de ataque melee (eles terão animações próprias de disparo).
+  - **`bow`, `crossbow` e `staff`:** **NÃO** são posicionados na mão principal em animações de ataque melee (`attack1`, `attack2`, `attack3`), pois possuem padrões de disparo/ataque mágicos próprios. Entram **exclusivamente nas costas (`back_frames`)** como arma secundária guardada!
 
 ---
 
@@ -65,7 +64,9 @@ Quando o usuário enviar uma imagem de animação (ex: `attack1`, `attack2`, `at
   - **`sword` (Espada nas costas):** O pomo (cabo) fica para cima começando no primeiro ponto rosa (mais alto) e a lâmina desce ao longo das costas na direção $\theta_{\text{back}}$. Como o cabo da espada fica em `-X` (`-6px`) da origem do `SwordVisual`, desloque a origem alguns pixels na direção de $\theta_{\text{back}}$ para que o pomo coincida exatamente com o ponto rosa mais alto.
   - **`hammer` (Martelo nas costas):** A cabeça do martelo começa no ponto rosa mais alto e o cabo desce ao longo das costas. Como a cabeça do martelo fica em `+X` (`+16px`) da origem do `HammerVisual`, aponte a rotação para $\theta_{\text{back}} - 180^\circ$ e posicione a origem mais abaixo nas costas para que a cabeça fique no topo rosa.
   - **`axe` (Machado nas costas):** A ponta de cima do machado começa no ponto rosa mais alto e o cabo desce, com a **lâmina (parte do corte) virada na direção contrária para onde o personagem está olhando** (para trás/esquerda). Ajuste `rot` para $\theta_{\text{back}} - 180^\circ$ e use `flip_v` conforme necessário para garantir que a lâmina aponte para a esquerda (`-X`).
-  - **`bow` e `staff` (Arco e Cajado nas costas):** Seguem a inclinação $\theta_{\text{back}}$ das costas.
+  - **`bow` (Arco nas costas):** O grip (empunhadura central) do arco fica posicionado ao longo da linha rosa das costas (`z_index = -2`). Como a corda é desenhada em $X=0$ e os membros do arco curvam para $+X$, a rotação deve acompanhar a inclinação das costas (geralmente entre $-170^\circ$ e $-190^\circ$, ou $\theta_{\text{back}} - 270^\circ$) para que o arco repouse rente ao dorso do personagem.
+  - **`staff` (Cajado nas costas):** A ponta/cristal superior do cajado começa no primeiro ponto rosa (`P_top`) e a haste desce ao longo da linha magenta das costas (`z_index = -2`), acompanhando o ângulo $\theta_{\text{back}}$.
+  - **`crossbow` (Besta nas costas / cintura):** A besta fica guardada no coldre lateral/cintura nas costas (`back_frames`, `z_index = -2`). Posicione a coronha na esquerda sobre a linha amarela da cintura, apontando a ponta da flecha para a frente na horizontal (`rot` entre $0^\circ$ e $10^\circ$), conforme detalhado na Seção C abaixo.
 
 ---
 
