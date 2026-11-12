@@ -302,6 +302,8 @@ func get_step_slash_animation(step_index: int) -> StringName:
 			return step_data.slash_animation
 	if step_index == 1 and (slash_animation == &"" or slash_animation == &"slash_sword"):
 		return &"slash_sword_2"
+	elif step_index >= 2 and (slash_animation == &"" or slash_animation == &"slash_sword"):
+		return &"slash_sword_3"
 	return slash_animation if slash_animation != &"" else &"slash_sword"
 
 ## Retorna o deslocamento total (Offset Aditivo) do slash para o passo informado:

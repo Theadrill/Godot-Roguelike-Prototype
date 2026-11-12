@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dm2wrqlqyhtmk" path="res://assets/effects/slashes/sword/sword_slash_sheet.png" id="1_slash_sheet"]
 [ext_resource type="Texture2D" uid="uid://cgw8fsah7o6oi" path="res://assets/effects/slashes/sword/sword_slash2_sheet.png" id="2_slash2_sheet"]
+[ext_resource type="Texture2D" uid="uid://okkqyd5ynbf0" path="res://assets/effects/slashes/sword/sword_slash3_sheet.png" id="3_slash3_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_slash1_0"]
 atlas = ExtResource("1_slash_sheet")
@@ -47,6 +48,30 @@ region = Rect2(332, 0, 83, 62)
 atlas = ExtResource("2_slash2_sheet")
 region = Rect2(415, 0, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash3_0"]
+atlas = ExtResource("3_slash3_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash3_1"]
+atlas = ExtResource("3_slash3_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash3_2"]
+atlas = ExtResource("3_slash3_sheet")
+region = Rect2(166, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash3_3"]
+atlas = ExtResource("3_slash3_sheet")
+region = Rect2(249, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash3_4"]
+atlas = ExtResource("3_slash3_sheet")
+region = Rect2(332, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash3_5"]
+atlas = ExtResource("3_slash3_sheet")
+region = Rect2(415, 0, 83, 62)
+
 [resource]
 animations = [{
 "frames": [{
@@ -90,5 +115,28 @@ animations = [{
 }],
 "loop": 0,
 "name": &"slash_sword_2",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash3_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash3_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash3_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash3_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash3_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash3_5")
+}],
+"loop": 0,
+"name": &"slash_sword_3",
 "speed": 10.0
 }]
