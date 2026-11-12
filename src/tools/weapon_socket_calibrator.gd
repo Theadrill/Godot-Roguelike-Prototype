@@ -73,7 +73,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		selected_shield = value
 		_on_configuration_changed()
 
-@export_group("2. Animação & Frame")
+@export_group("2. Animação, Frame & File")
 ## Escolha a animação do aventureiro para visualizar e calibrar.
 @export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack", "cast", "guard", "stagger") var selected_animation: String = "idle":
 	set(value):
@@ -93,7 +93,21 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		roll_preview_angle = value
 		_apply_roll_preview()
 
-@export_group("3. Elementos de Apoio / Referência")
+## Clique nesta caixinha para SALVAR a posição, rotação, inversão e Z-Index atuais diretamente no .tres correspondente!
+@export var SAVE_FRAME_TO_PROFILE: bool = false:
+	set(value):
+		if value:
+			save_current_frame_data()
+		SAVE_FRAME_TO_PROFILE = false
+
+## Pega todo o posicionamento, rotação, Z-index, visibilidade e flips do frame atual e aplica/salva em TODOS OS FRAMES DA ANIMAÇÃO ATUAL (ex: apenas nos frames de run, sem tocar em idle ou outras)!
+@export var APPLY_TO_CURRENT_ANIMATION: bool = false:
+	set(value):
+		if value:
+			_prompt_apply_to_current_animation()
+		APPLY_TO_CURRENT_ANIMATION = false
+
+@export_group("3. Elementos de Apoio & Referência")
 ## Arma secundária para ver nas costas como referência.
 @export_enum("none", "bow", "sword", "dagger", "hammer", "axe", "staff", "crossbow") var reference_secondary_weapon: String = "bow":
 	set(value):
@@ -192,21 +206,7 @@ var socket_position: Vector2:
 			if vis and is_instance_valid(vis):
 				vis.visible = value
 
-@export_group("5. Gravação no Arquivo")
-## Clique nesta caixinha para SALVAR a posição, rotação, inversão e Z-Index atuais diretamente no .tres correspondente!
-@export var SAVE_FRAME_TO_PROFILE: bool = false:
-	set(value):
-		if value:
-			save_current_frame_data()
-		SAVE_FRAME_TO_PROFILE = false
-
-## Pega todo o posicionamento, rotação, Z-index, visibilidade e flips do frame atual e aplica/salva em TODOS OS FRAMES DA ANIMAÇÃO ATUAL (ex: apenas nos frames de run, sem tocar em idle ou outras)!
-@export var APPLY_TO_CURRENT_ANIMATION: bool = false:
-	set(value):
-		if value:
-			apply_to_current_animation()
-		APPLY_TO_CURRENT_ANIMATION = false
-
+@export_group("5. Status")
 ## Mensagem de feedback do último salvamento.
 @export var status_message: String = "Pronto para calibrar."
 
@@ -589,6 +589,35 @@ func save_current_frame_data() -> void:
 		_shield_profile_resource.set_back_frame_data(selected_animation, current_frame, socket_position, socket_rotation, item_visible_in_frame, socket_z_index, socket_flip_h, socket_flip_v)
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
 		_report_save_status(err, "%s.tres (Escudo nas Costas)" % selected_shield)
+
+func _prompt_apply_to_current_animation() -> void:
+	var item_name: String = selected_weapon if "Arma" in socket_target else selected_shield
+	var count: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4)
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Confirmar: Apply to Current Animation"
+	dlg.dialog_text = "Tem certeza que deseja sobrescrever TODOS os %d frames da animação '%s'\nno perfil '%s.tres' (%s) com os dados do Frame %d atual?" % [
+		count, selected_animation, item_name, socket_target, current_frame
+	]
+	dlg.ok_button_text = "Sim, Aplicar em Todos"
+	dlg.cancel_button_text = "Cancelar"
+	dlg.confirmed.connect(func() -> void:
+		apply_to_current_animation()
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func() -> void:
+		status_message = "Cancelado: Nenhuma alteração aplicada à animação '%s'." % selected_animation
+		dlg.queue_free()
+	)
+	dlg.close_requested.connect(func() -> void:
+		dlg.queue_free()
+	)
+	var parent_node: Node = get_tree().root if get_tree() else self
+	if Engine.is_editor_hint() and ClassDB.class_exists("EditorInterface"):
+		var ed_base: Control = Engine.get_singleton("EditorInterface").get_base_control() if Engine.has_singleton("EditorInterface") else null
+		if ed_base:
+			parent_node = ed_base
+	parent_node.add_child(dlg)
+	dlg.popup_centered()
 
 func apply_to_current_animation() -> void:
 	_load_resources()

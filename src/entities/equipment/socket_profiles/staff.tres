@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://bxqcjshth11ow"]
 
-[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -127,6 +127,54 @@ back_frames = {
 "rot": -113.99999,
 "visible": true,
 "z_index": -2
+},
+"attack2_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -20),
+"rot": -106.0,
+"visible": true,
+"z_index": -1
+},
+"attack2_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-3, -20),
+"rot": -113.999985,
+"visible": true,
+"z_index": -1
+},
+"attack2_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5, -19),
+"rot": -113.999954,
+"visible": true,
+"z_index": -1
+},
+"attack2_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -13),
+"rot": -85.5,
+"visible": true,
+"z_index": -1
+},
+"attack2_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-22, -14),
+"rot": -82.0,
+"visible": true,
+"z_index": -1
+},
+"attack2_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -16),
+"rot": -74.0,
+"visible": true,
+"z_index": -1
 },
 "attack3_0": {
 "flip_h": false,
@@ -393,54 +441,6 @@ back_frames = {
 "flip_v": true,
 "pos": Vector2(2.0000002, -26.999994),
 "rot": -85.899994,
-"visible": true,
-"z_index": -2
-},
-"attack2_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-9, -26),
-"rot": -114.0,
-"visible": true,
-"z_index": -2
-},
-"attack2_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-11, -25),
-"rot": -114.0,
-"visible": true,
-"z_index": -2
-},
-"attack2_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-13, -24),
-"rot": -114.0,
-"visible": true,
-"z_index": -2
-},
-"attack2_3": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-7, -19),
-"rot": -114.0,
-"visible": true,
-"z_index": -2
-},
-"attack2_4": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-24, -18),
-"rot": -114.0,
-"visible": true,
-"z_index": -2
-},
-"attack2_5": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-9, -20),
-"rot": -114.0,
 "visible": true,
 "z_index": -2
 }
