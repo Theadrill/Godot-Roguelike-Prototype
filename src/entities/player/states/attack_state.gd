@@ -126,8 +126,11 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 		if player.player_sprite:
 			player.player_sprite.frame = 0
 			var target_duration: float = maxf(0.01, attack_timer)
-			# 5 frames at base 10.0 FPS takes 0.5s. Scale to match exact attack_timer.
-			player.player_sprite.speed_scale = 0.5 / target_duration
+			var frame_count: int = 5
+			if player.player_sprite.sprite_frames:
+				frame_count = player.player_sprite.sprite_frames.get_frame_count(anim_name)
+			var base_duration: float = float(frame_count) / 10.0
+			player.player_sprite.speed_scale = base_duration / target_duration
 			player._update_weapon_socket_for_frame(anim_name, 0)
 	else:
 		if player.player_sprite:

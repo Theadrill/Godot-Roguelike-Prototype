@@ -35,5 +35,53 @@ back_frames = {
 "pos": Vector2(-10, -24),
 "rot": 0.0,
 "visible": true
+},
+"attack2_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-9, -33),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
+"attack2_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-11, -32),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
+"attack2_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-13, -31),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
+"attack2_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-7, -26),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
+"attack2_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-24, -25),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
+"attack2_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-9, -27),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
 }
 }
