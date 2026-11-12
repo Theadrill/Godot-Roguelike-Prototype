@@ -43,7 +43,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"corner_climb": 5,
 	"attack1": 5,
 	"attack2": 6,
-	"attack3": 5,
+	"attack3": 6,
 	"air_attack": 4,
 	"cast": 4,
 	"guard": 1,

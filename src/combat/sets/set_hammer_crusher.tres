@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="AttackSetData" load_steps=5 format=3 uid="uid://set_hammer_crusher_01"]
+[gd_resource type="Resource" script_class="AttackSetData" load_steps=6 format=3 uid="uid://set_hammer_crusher_01"]
 
 [ext_resource type="Script" path="res://src/combat/attack_set_data.gd" id="1_set_script"]
 [ext_resource type="Script" path="res://src/combat/combo_step_data.gd" id="2_step_script"]
@@ -37,10 +37,27 @@ active_end_frame = 4
 hitbox_size = Vector2(34, 30)
 hitbox_position = Vector2(21, -20)
 
+[sub_resource type="Resource" id="Resource_step_2"]
+script = ExtResource("2_step_script")
+step_label = "Golpe 3 - Ruína Sísmica"
+body_animation = &"attack3"
+duration = 0.56
+forward_impulse = 90.0
+damage_multiplier = 1.6
+slash_animation = &"slash_sword"
+step_slash_offset = Vector2(2, 0)
+step_slash_scale = Vector2(1.2, 1.2)
+step_slash_flip_h = false
+step_slash_flip_v = false
+active_start_frame = 2
+active_end_frame = 3
+hitbox_size = Vector2(36, 32)
+hitbox_position = Vector2(22, -20)
+
 [resource]
 script = ExtResource("1_set_script")
-set_name = "Crusher Hammer Set (1-2)"
-steps = Array[ExtResource("2_step_script")]([SubResource("Resource_step_0"), SubResource("Resource_step_1")])
+set_name = "Crusher Hammer Set (1-2-3)"
+steps = Array[ExtResource("2_step_script")]([SubResource("Resource_step_0"), SubResource("Resource_step_1"), SubResource("Resource_step_2")])
 combo_window = 1.35
 loop_combo = true
 finisher_cooldown = 0.0

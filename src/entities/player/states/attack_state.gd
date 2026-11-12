@@ -63,7 +63,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	attack_timer = _step_duration
 	_step_active_start_frame = player.weapon.get_step_active_start_frame(current_step) if player.weapon else (3 if current_step == 1 else 2)
 	_step_active_end_frame = player.weapon.get_step_active_end_frame(current_step) if player.weapon else (4 if current_step == 1 else 3)
-	_step_total_frames = 6 if current_step == 1 else 5
+	_step_total_frames = 6 if current_step >= 1 else 5
 	_hitbox_opened_for_step = false
 	_pending_forward_impulse = 0.0
 	_step_body_anim_active = false

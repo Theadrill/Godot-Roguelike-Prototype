@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://ctmjq7tw2boxn"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
 
-[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -178,40 +178,48 @@ back_frames = {
 },
 "attack3_0": {
 "flip_h": false,
-"flip_v": true,
-"pos": Vector2(-5.6, -16),
-"rot": 0.0,
+"flip_v": false,
+"pos": Vector2(-0.5, -20),
+"rot": 38.0,
 "visible": true,
 "z_index": -2
 },
 "attack3_1": {
 "flip_h": false,
-"flip_v": true,
-"pos": Vector2(-6.1, -14),
-"rot": 0.0,
+"flip_v": false,
+"pos": Vector2(0, -20),
+"rot": 38.0,
 "visible": true,
 "z_index": -2
 },
 "attack3_2": {
 "flip_h": false,
-"flip_v": true,
-"pos": Vector2(-1.1, -17),
+"flip_v": false,
+"pos": Vector2(-6.5, -15.5),
 "rot": 0.0,
 "visible": true,
 "z_index": -2
 },
 "attack3_3": {
 "flip_h": false,
-"flip_v": true,
-"pos": Vector2(-1.1, -17),
+"flip_v": false,
+"pos": Vector2(1.5, -13),
 "rot": 0.0,
 "visible": true,
 "z_index": -2
 },
 "attack3_4": {
 "flip_h": false,
-"flip_v": true,
-"pos": Vector2(-1.1, -17),
+"flip_v": false,
+"pos": Vector2(1.5, -15),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"attack3_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1.5, -15),
 "rot": 0.0,
 "visible": true,
 "z_index": -2
