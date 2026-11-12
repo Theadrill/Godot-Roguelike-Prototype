@@ -14,7 +14,7 @@ var last_completed_step: int = -1
 var is_charging: bool = false
 var charge_progress: float = 0.0
 
-const COMBO_WINDOW: float = 0.55
+const COMBO_WINDOW: float = 1.35
 
 func enter() -> void:
 	player = character as Player
@@ -32,20 +32,23 @@ func enter() -> void:
 		return
 
 	is_charging = false
+	var combo_size: int = player.weapon.combo_durations.size() if (player.weapon and player.weapon.combo_durations.size() > 0) else 2
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
-	var combo_window: float = COMBO_WINDOW
-	if elapsed_sec <= combo_window and last_completed_step >= 0 and (last_completed_step + 1 < player.weapon.combo_durations.size()):
-		current_step = last_completed_step + 1
+	if elapsed_sec <= COMBO_WINDOW and last_completed_step >= 0:
+		current_step = (last_completed_step + 1) % combo_size
 	else:
 		current_step = 0
 		last_completed_step = -1
 
+	combo_buffered = false
 	queued_combo_presses = 0
 	_start_combo_step(0.0)
 
 func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	combo_buffered = false
-	attack_timer = player.weapon.combo_durations[current_step]
+	var combo_size: int = player.weapon.combo_durations.size() if (player.weapon and player.weapon.combo_durations.size() > 0) else 2
+	var dur_idx: int = clampi(current_step, 0, combo_size - 1)
+	attack_timer = player.weapon.combo_durations[dur_idx]
 	
 	# Allow reversing direction between combo steps if steering
 	var input_dir: float = Input.get_axis("move_left", "move_right")
@@ -82,7 +85,9 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	else:
 		# Forward physical step (bonus impulse on charged smash!)
 		var impulse_mult: float = 1.0 + charge_ratio * 0.4
-		var forward_impulse: float = player.weapon.forward_impulses[current_step] * impulse_mult
+		var imp_list: Array[float] = player.weapon.forward_impulses if (player.weapon and player.weapon.forward_impulses.size() > 0) else [80.0, 100.0]
+		var imp_idx: int = clampi(current_step, 0, imp_list.size() - 1)
+		var forward_impulse: float = imp_list[imp_idx] * impulse_mult
 		player.velocity.x = player.facing_direction * forward_impulse
 		if player.hitbox.has_node("CollisionShape2D"):
 			player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -20.0)
@@ -130,7 +135,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 			player.player_sprite.frame = 0
 			var target_duration: float = maxf(0.01, attack_timer)
 			var frame_count: int = 5
-			if player.player_sprite.sprite_frames:
+			if player.player_sprite.sprite_frames and player.player_sprite.sprite_frames.has_animation(anim_name):
 				frame_count = player.player_sprite.sprite_frames.get_frame_count(anim_name)
 			var base_duration: float = float(frame_count) / 10.0
 			player.player_sprite.speed_scale = base_duration / target_duration
@@ -242,28 +247,24 @@ func physics_update(delta: float) -> void:
 		last_attack_end_msec = Time.get_ticks_msec()
 		last_completed_step = current_step
 		
+		var combo_size: int = player.weapon.combo_durations.size() if (player.weapon and player.weapon.combo_durations.size() > 0) else 2
+		
 		# Combo continuation condition (Dead Cells design):
 		# 1. Player is holding the attack button (continuous auto-chain combo)
-		# 2. Player tapped attack again during the swing (queued next hit)
+		# 2. Player tapped attack again during the swing (queued/buffered next hit)
 		var wants_combo: bool = combo_buffered or queued_combo_presses > 0 or Input.is_action_pressed("attack_primary")
-		var has_next_step: bool = current_step + 1 < player.weapon.combo_durations.size()
 		
-		if wants_combo and has_next_step:
+		if wants_combo:
 			if queued_combo_presses > 0:
 				queued_combo_presses -= 1
-			current_step += 1
+			current_step = (current_step + 1) % combo_size
 			_start_combo_step(0.0)
 			return
 			
-		# Combo chain ended or reached finisher:
-		if current_step + 1 >= player.weapon.combo_durations.size():
-			player.attack_cooldown_timer = player.weapon.combo_finisher_cooldown
-			last_completed_step = -1 # Finisher done, next chain starts from step 0
-			queued_combo_presses = 0
-		else:
-			# Intermediate step completed without immediate continuation:
-			# Zero cooldown during combo window (Dead Cells principle)!
-			player.attack_cooldown_timer = 0.0
+		# Step completed without immediate continuation:
+		# Zero cooldown during combo window (Dead Cells principle)!
+		player.attack_cooldown_timer = 0.0
+		queued_combo_presses = 0
 		
 		if player.player_sprite:
 			player.player_sprite.speed_scale = 1.0

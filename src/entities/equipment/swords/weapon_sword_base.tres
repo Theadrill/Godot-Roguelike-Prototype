@@ -6,9 +6,9 @@
 [resource]
 script = ExtResource("1_script")
 weapon_name = "Steel Broadsword"
-combo_durations = Array[float]([0.36, 0.36, 0.56])
-attack_cooldown = 0.42
-combo_finisher_cooldown = 0.66
+combo_durations = Array[float]([0.36, 0.36])
+attack_cooldown = 0.0
+combo_finisher_cooldown = 0.0
 equipment_name = "Steel Broadsword"
 visual_scene = ExtResource("2_visual")
 back_offset = Vector2(3.8, -4)
