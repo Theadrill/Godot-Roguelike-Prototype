@@ -6,14 +6,14 @@
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
 socket_target = "Arma nas Costas (BackSocketWeapon)"
-selected_weapon = "axe"
 selected_animation = "attack2"
+current_frame = 5
 reference_secondary_weapon = "none"
-socket_pos_x = -3.0
-socket_pos_y = -26.6
-socket_rotation = -130.0
+socket_pos_x = -5.0
+socket_pos_y = -30.0
+socket_rotation = 96.99999
 socket_z_index = -1
-status_message = "axe [Arma nas Costas (BackSocketWeapon)] -> attack2 Frame 0 (Z: -1, FlipH: false, FlipV: false)"
+status_message = "sword [Arma nas Costas (BackSocketWeapon)] -> attack2 Frame 5 (Z: -1, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,22 +28,24 @@ metadata/_edit_lock_ = true
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
 animation = &"attack2"
+frame = 5
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
 z_index = -1
 z_as_relative = false
-position = Vector2(-3, -26.6)
-rotation = -2.268928
+position = Vector2(-5, -30)
+rotation = 1.6929693
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -2
-position = Vector2(-7, -31)
+position = Vector2(-5, -26)
+rotation = 0.06981317
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(5, -43)
-rotation = 2.4260077
+position = Vector2(-18, -19)
+rotation = 2.7750735
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
