@@ -148,8 +148,11 @@ Quando o usuário enviar um novo sprite (ex: o novo `attack2` ou `attack3` com m
    - Apague todos os pixels marcadores (verdes, rosas e amarelos) substituindo por transparente `(0, 0, 0, 0)` (ou pela cor adjacente do corpo se estiver sobreposto).
    - Se houver rastro de slash desenhado no sprite e o usuário quiser separado, separe o slash para `assets/effects/slashes/` e deixe o corpo do personagem limpo em `assets/player/adventurer/attack/`.
    - Salve a spritesheet limpa (ex: `player_attack2_sheet.png`) e os frames individuais (`individual/adventurer_attack2_00..04.png`).
-3. **Atualize os Sockets (`.tres`):**
+3. **Atualize os Sockets (`.tres`) e a Janela Ativa de Hitbox do Slash (`ComboStepData`):**
    - Calcule `pos`, `rot`, `z_index`, `flip_h` e `flip_v` para `hand_frames` (`sword`, `hammer`, `axe`, `staff`) e `back_frames` (`shield`, `sword`, `hammer`, `axe`, `bow`, `crossbow`, `staff`) e grave nos arquivos `.tres` via script GDScript headless ou edição direta.
+   - **PASSO ESSENCIAL PARA SLASHES E HITBOX (Consulte [`docs/ARQUITETURA_ATTACK_SETS_E_SLASHES.md`](ARQUITETURA_ATTACK_SETS_E_SLASHES.md)):**
+     - Se o usuário enviar uma spritesheet de Slash (com o pixel amarelo no pé `(25, 59)`), extraia **TODOS os frames da grade (`0..N-1`)**, incluindo os frames iniciais vazios de *Windup* e o frame final vazio de *Recovery*, removendo o pixel amarelo.
+     - No `ComboStepData` correspondente dentro de `src/combat/sets/*.tres`, configure obrigatoriamente **`active_start_frame`** (o frame exato onde a meia-lua do slash surge na tela, ex: `2` no `attack1`, `3` no `attack2`) e **`active_end_frame`** (último frame ativo do corte antes do *Recovery*, ex: `3` no `attack1`, `4` no `attack2`). Isso garante que a colisão (`Hitbox`) e o avanço físico saiam exatamente na hora em que a lâmina/slash atinge o inimigo!
 4. **Valide no Godot Headless:**
    - Execute a importação e validação de sintaxe:
      ```powershell

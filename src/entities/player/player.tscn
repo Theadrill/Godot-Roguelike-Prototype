@@ -1,27 +1,27 @@
-[gd_scene load_steps=28 format=3 uid="uid://player_scene_01"]
+[gd_scene format=3 uid="uid://dmbfvuchogv7a"]
 
-[ext_resource type="Script" path="res://src/entities/player/player.gd" id="1_player"]
-[ext_resource type="Script" path="res://src/core/state_machine.gd" id="2_fsm"]
-[ext_resource type="Script" path="res://src/entities/player/states/idle_state.gd" id="3_idle"]
-[ext_resource type="Script" path="res://src/entities/player/states/run_state.gd" id="4_run"]
-[ext_resource type="Script" path="res://src/entities/player/states/jump_state.gd" id="5_jump"]
-[ext_resource type="Script" path="res://src/entities/player/states/double_jump_state.gd" id="6_dbljump"]
-[ext_resource type="Script" path="res://src/entities/player/states/fall_state.gd" id="7_fall"]
-[ext_resource type="Script" path="res://src/entities/player/states/wall_slide_state.gd" id="8_wslide"]
-[ext_resource type="Script" path="res://src/entities/player/states/wall_jump_state.gd" id="9_wjump"]
-[ext_resource type="Script" path="res://src/entities/player/states/slide_state.gd" id="10_slide"]
-[ext_resource type="Script" path="res://src/entities/player/states/attack_state.gd" id="11_attack"]
-[ext_resource type="Script" path="res://src/entities/player/states/crouch_state.gd" id="12_crouch"]
-[ext_resource type="Script" path="res://src/combat/hitbox.gd" id="13_hitbox"]
-[ext_resource type="Script" path="res://src/combat/hurtbox.gd" id="14_hurtbox"]
-[ext_resource type="Script" path="res://src/entities/player/states/ledge_climb_state.gd" id="15_ledge_climb"]
-[ext_resource type="Script" path="res://src/entities/player/states/hard_landing_state.gd" id="16_hard_landing"]
-[ext_resource type="Script" path="res://src/entities/player/states/guard_state.gd" id="17_guard"]
-[ext_resource type="Script" path="res://src/entities/player/states/ground_slam_state.gd" id="18_ground_slam"]
+[ext_resource type="Script" uid="uid://c37l3ach0wxo6" path="res://src/entities/player/player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://dktjcru48rca4" path="res://src/core/state_machine.gd" id="2_fsm"]
+[ext_resource type="Script" uid="uid://rvgoh66j3x8a" path="res://src/entities/player/states/idle_state.gd" id="3_idle"]
+[ext_resource type="Script" uid="uid://bltn6kgaq7tgg" path="res://src/entities/player/states/run_state.gd" id="4_run"]
+[ext_resource type="Script" uid="uid://d303op0rjlk4i" path="res://src/entities/player/states/jump_state.gd" id="5_jump"]
+[ext_resource type="Script" uid="uid://e8vpsgwx3gsg" path="res://src/entities/player/states/double_jump_state.gd" id="6_dbljump"]
+[ext_resource type="Script" uid="uid://bwny53ansb2g2" path="res://src/entities/player/states/fall_state.gd" id="7_fall"]
+[ext_resource type="Script" uid="uid://qwv381dfx5s3" path="res://src/entities/player/states/wall_slide_state.gd" id="8_wslide"]
+[ext_resource type="Script" uid="uid://dqggcffitp4tc" path="res://src/entities/player/states/wall_jump_state.gd" id="9_wjump"]
+[ext_resource type="Script" uid="uid://b621x8grnllvr" path="res://src/entities/player/states/slide_state.gd" id="10_slide"]
+[ext_resource type="Script" uid="uid://fonk7rskfrh7" path="res://src/entities/player/states/attack_state.gd" id="11_attack"]
+[ext_resource type="Script" uid="uid://dg2ei838eqhbb" path="res://src/entities/player/states/crouch_state.gd" id="12_crouch"]
+[ext_resource type="Script" uid="uid://n8vhvey8hvr4" path="res://src/combat/hitbox.gd" id="13_hitbox"]
+[ext_resource type="Script" uid="uid://dejxgvm25wxjo" path="res://src/combat/hurtbox.gd" id="14_hurtbox"]
+[ext_resource type="Script" uid="uid://b5dijw1nv6u6d" path="res://src/entities/player/states/ledge_climb_state.gd" id="15_ledge_climb"]
+[ext_resource type="Script" uid="uid://bnrqmghcqdscx" path="res://src/entities/player/states/hard_landing_state.gd" id="16_hard_landing"]
+[ext_resource type="Script" uid="uid://bo5pkhhvyxhv6" path="res://src/entities/player/states/guard_state.gd" id="17_guard"]
+[ext_resource type="Script" uid="uid://wbvs004kc2jw" path="res://src/entities/player/states/ground_slam_state.gd" id="18_ground_slam"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="19_hud"]
-[ext_resource type="Script" path="res://src/entities/player/states/stagger_state.gd" id="20_stagger"]
-[ext_resource type="Script" path="res://src/entities/player/states/ranged_attack_state.gd" id="21_ranged_attack"]
-[ext_resource type="Script" path="res://src/entities/player/states/heal_state.gd" id="22_heal"]
+[ext_resource type="Script" uid="uid://dt3vba0qucawk" path="res://src/entities/player/states/stagger_state.gd" id="20_stagger"]
+[ext_resource type="Script" uid="uid://b54sb5o0gnf42" path="res://src/entities/player/states/ranged_attack_state.gd" id="21_ranged_attack"]
+[ext_resource type="Script" uid="uid://pgp5vywu4adr" path="res://src/entities/player/states/heal_state.gd" id="22_heal"]
 [ext_resource type="PackedScene" path="res://src/ui/death_screen.tscn" id="23_death_screen"]
 [ext_resource type="SpriteFrames" uid="uid://b3mi8waob4tc5" path="res://assets/player/adventurer/player_frames.tres" id="24_player_frames"]
 [ext_resource type="SpriteFrames" uid="uid://chow11bdony5b" path="res://assets/effects/slashes/slash_frames.tres" id="25_slash_frames"]
@@ -30,27 +30,26 @@
 resource_local_to_scene = true
 size = Vector2(16, 40)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
-size = Vector2(32, 28)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_overlap"]
+size = Vector2(14, 38)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player_hurtbox"]
 size = Vector2(16, 40)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_overlap"]
-size = Vector2(14, 38)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(32, 28)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" unique_id=379037864]
 collision_layer = 2
-collision_mask = 1
 floor_constant_speed = true
 floor_snap_length = 8.0
 script = ExtResource("1_player")
 
-[node name="HUD" parent="." instance=ExtResource("19_hud")]
+[node name="HUD" parent="." unique_id=2057504370 instance=ExtResource("19_hud")]
 
-[node name="DeathScreen" parent="." instance=ExtResource("23_death_screen")]
+[node name="DeathScreen" parent="." unique_id=917659196 instance=ExtResource("23_death_screen")]
 
-[node name="BarkLabel" type="Label" parent="."]
+[node name="BarkLabel" type="Label" parent="." unique_id=1400605504]
 z_index = 25
 offset_left = -100.0
 offset_top = -56.0
@@ -62,153 +61,153 @@ theme_override_font_sizes/font_size = 9
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1942216511]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_1")
 
-[node name="CeilingCheck" type="RayCast2D" parent="."]
+[node name="CeilingCheck" type="RayCast2D" parent="." unique_id=52612373]
 position = Vector2(0, -16)
 target_position = Vector2(0, -26)
-collision_mask = 1
 
-[node name="EnemyOverlapDetector" type="Area2D" parent="."]
+[node name="EnemyOverlapDetector" type="Area2D" parent="." unique_id=1778599908]
 collision_layer = 0
 collision_mask = 4
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyOverlapDetector"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyOverlapDetector" unique_id=972112320]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_overlap")
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1249599692]
 collision_layer = 32
 collision_mask = 0
 script = ExtResource("14_hurtbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=2089770290]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_player_hurtbox")
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="Node2D" parent="." unique_id=415785758]
 z_index = 5
 
-[node name="BackSocketWeapon" type="Marker2D" parent="Visual"]
+[node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1380253199]
 z_index = -2
 position = Vector2(-3, -20)
 rotation = -2.00713
 
-[node name="BackSocketShield" type="Marker2D" parent="Visual"]
+[node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=1368973559]
 z_index = -1
 position = Vector2(-6, -20)
 rotation = -0.14
 
-[node name="MainHandSocket" type="Marker2D" parent="Visual"]
+[node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=429246033]
 z_index = 1
 position = Vector2(6, -20)
 rotation = -0.610865
 
-[node name="OffHandSocket" type="Marker2D" parent="Visual"]
+[node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=1585837078]
 z_index = -1
 position = Vector2(7, -19)
 
-[node name="PlayerSprite" type="AnimatedSprite2D" parent="Visual"]
-visible = false
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1468099375]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("24_player_frames")
 animation = &"idle"
 
-[node name="BodyPlaceholder" type="Polygon2D" parent="Visual"]
+[node name="BodyPlaceholder" type="Polygon2D" parent="Visual" unique_id=1942895081]
+visible = false
 color = Color(0.18, 0.58, 0.58, 1)
 polygon = PackedVector2Array(-8, 0, 8, 0, 8, -40, -8, -40)
 
-[node name="HeadbandPlaceholder" type="Polygon2D" parent="Visual"]
+[node name="HeadbandPlaceholder" type="Polygon2D" parent="Visual" unique_id=339285318]
+visible = false
 color = Color(0.9, 0.25, 0.25, 1)
 polygon = PackedVector2Array(-8, -32, 10, -32, 10, -36, -8, -36)
 
-[node name="LedgeClimbPlaceholder" type="Node2D" parent="Visual"]
+[node name="LedgeClimbPlaceholder" type="Node2D" parent="Visual" unique_id=2019868419]
 visible = false
 
-[node name="Body" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder"]
+[node name="Body" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder" unique_id=1652407276]
 color = Color(0.18, 0.58, 0.58, 1)
 polygon = PackedVector2Array(-8, 0, 8, 0, 8, -20, -8, -20)
 
-[node name="Headband" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder"]
+[node name="Headband" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder" unique_id=1445381919]
 color = Color(0.9, 0.25, 0.25, 1)
 polygon = PackedVector2Array(-8, -14, 10, -14, 10, -18, -8, -18)
 
-[node name="Hands" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder"]
+[node name="Hands" type="Polygon2D" parent="Visual/LedgeClimbPlaceholder" unique_id=1523929885]
 color = Color(0.95, 0.75, 0.5, 1)
 polygon = PackedVector2Array(6, -20, 12, -20, 12, -16, 6, -16)
 
-[node name="SlashEffect" type="AnimatedSprite2D" parent="Visual"]
+[node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1837367656]
 visible = false
 z_index = 4
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("25_slash_frames")
 animation = &"slash_sword"
 
-[node name="Hitbox" type="Area2D" parent="Visual"]
+[node name="Hitbox" type="Area2D" parent="Visual" unique_id=1078179530]
 collision_layer = 8
 collision_mask = 64
 monitoring = false
 script = ExtResource("13_hitbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox" unique_id=127517192]
 position = Vector2(20, -20)
 shape = SubResource("RectangleShape2D_hitbox")
 disabled = true
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node" parent="." unique_id=1923118342 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_fsm")
 initial_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="StateMachine" unique_id=863032421]
 script = ExtResource("3_idle")
 
-[node name="Run" type="Node" parent="StateMachine"]
+[node name="Run" type="Node" parent="StateMachine" unique_id=2145856733]
 script = ExtResource("4_run")
 
-[node name="Jump" type="Node" parent="StateMachine"]
+[node name="Jump" type="Node" parent="StateMachine" unique_id=1964199739]
 script = ExtResource("5_jump")
 
-[node name="DoubleJump" type="Node" parent="StateMachine"]
+[node name="DoubleJump" type="Node" parent="StateMachine" unique_id=580952111]
 script = ExtResource("6_dbljump")
 
-[node name="Fall" type="Node" parent="StateMachine"]
+[node name="Fall" type="Node" parent="StateMachine" unique_id=1919446972]
 script = ExtResource("7_fall")
 
-[node name="WallSlide" type="Node" parent="StateMachine"]
+[node name="WallSlide" type="Node" parent="StateMachine" unique_id=1073142085]
 script = ExtResource("8_wslide")
 
-[node name="WallJump" type="Node" parent="StateMachine"]
+[node name="WallJump" type="Node" parent="StateMachine" unique_id=1243995217]
 script = ExtResource("9_wjump")
 
-[node name="Slide" type="Node" parent="StateMachine"]
+[node name="Slide" type="Node" parent="StateMachine" unique_id=1132929020]
 script = ExtResource("10_slide")
 
-[node name="Attack" type="Node" parent="StateMachine"]
+[node name="Attack" type="Node" parent="StateMachine" unique_id=1755015494]
 script = ExtResource("11_attack")
 
-[node name="Crouch" type="Node" parent="StateMachine"]
+[node name="Crouch" type="Node" parent="StateMachine" unique_id=851968888]
 script = ExtResource("12_crouch")
 
-[node name="LedgeClimb" type="Node" parent="StateMachine"]
+[node name="LedgeClimb" type="Node" parent="StateMachine" unique_id=1647235145]
 script = ExtResource("15_ledge_climb")
 
-[node name="HardLanding" type="Node" parent="StateMachine"]
+[node name="HardLanding" type="Node" parent="StateMachine" unique_id=1854822413]
 script = ExtResource("16_hard_landing")
 
-[node name="Guard" type="Node" parent="StateMachine"]
+[node name="Guard" type="Node" parent="StateMachine" unique_id=951135237]
 script = ExtResource("17_guard")
 
-[node name="GroundSlam" type="Node" parent="StateMachine"]
+[node name="GroundSlam" type="Node" parent="StateMachine" unique_id=2033031334]
 script = ExtResource("18_ground_slam")
 
-[node name="Stagger" type="Node" parent="StateMachine"]
+[node name="Stagger" type="Node" parent="StateMachine" unique_id=1973619132]
 script = ExtResource("20_stagger")
 
-[node name="RangedAttack" type="Node" parent="StateMachine"]
+[node name="RangedAttack" type="Node" parent="StateMachine" unique_id=1233013260]
 script = ExtResource("21_ranged_attack")
 
-[node name="Heal" type="Node" parent="StateMachine"]
+[node name="Heal" type="Node" parent="StateMachine" unique_id=895882460]
 script = ExtResource("22_heal")

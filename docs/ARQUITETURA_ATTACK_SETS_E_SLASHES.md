@@ -90,6 +90,15 @@ Quando o jogador executa o golpe de índice `i` no combo, o motor calcula a anim
      * A largura e altura da `Hitbox` escalam proporcionalmente com a escala do slash e somam `weapon.hitbox_extra_reach`.
      * A posição `X` da `Hitbox` avança automaticamente somando o `slash_offset.x` da arma (ex: se você colocou `+3` no X porque a arma é mais longa, a caixa de dano também avança `+3px` para frente!).
 
+6. **⚠️ REGRA DE OURO (PASSO ESSENCIAL PARA AGENTES): Sincronia de Frames do Slash e Janela Ativa da Hitbox (`active_start_frame` / `active_end_frame`):**
+   * Seguindo o padrão da indústria (*Dead Cells*, *Blasphemous*, *Nine Sols*), a `Hitbox` **JAMAIS** deve ligar no Frame 0 durante o *Windup* (preparação com a arma indo para trás).
+   * Sempre que um agente criar ou atualizar um ataque/slash, **É OBRIGATÓRIO**:
+     1. **Manter a grade completa de frames no `slash_frames.tres`:** Se a animação do corpo tem `N` frames (ex: 5 frames no `attack1` ou 6 frames no `attack2`), a animação de slash correspondente **DEVE ter exatamente os mesmos `N` frames** (incluindo os frames iniciais vazios de *Windup* e o frame final vazio de *Recovery*), além de remover o pixel amarelo marcador do pé `(25, 59)` de todas as células.
+     2. **Configurar `active_start_frame` e `active_end_frame` no `ComboStepData` (`src/combat/sets/*.tres`):**
+        * **`active_start_frame`**: Deve ser o **exato índice do frame (base 0) em que o desenho da meia-lua do slash surge na tela** (ex: Frame `2` no `attack1`, Frame `3` no `attack2`). É neste milissegundo exato que o `AttackState` liga a `Hitbox` e libera `100%` do impulso frontal (`forward_impulse`).
+        * **`active_end_frame`**: Deve ser o último frame em que o rastro do slash ainda causa dano antes de entrar em *Recovery* (ex: Frame `3` no `attack1`, Frame `4` no `attack2`). Após este frame, a `Hitbox` é desligada imediatamente.
+     3. **Ajustar `hitbox_size` e `hitbox_position` conforme a anatomia do golpe/categoria:** Armas curtas (Adaga: `28x24`), médias (Espada: `32x28`), pesadas (Martelo: `34x30`) ou estocadas longas (Lança: ex. `52x12` em `X=30`) devem ter sua caixa base calibrada no `ComboStepData` do seu respectivo Set.
+
 ---
 
 ## 4. Especificação de Todas as Opções Customizáveis (`@export`) no Editor da Godot
@@ -188,20 +197,20 @@ Na arma (`.tres`), além dos atributos de identidade e dano, ficam o vínculo co
 Para implementar esta arquitetura sem quebrar nenhuma funcionalidade existente e mantendo 100% de compatibilidade reversa:
 
 - [x] **Passo 1 — Documentação Arquitetural:** Criar este documento `docs/ARQUITETURA_ATTACK_SETS_E_SLASHES.md` e realizar push isolado conforme solicitado pelo PO.
-- [ ] **Passo 2 — Criar `ComboStepData` (`src/combat/combo_step_data.gd`):**
-  - Implementar a classe `ComboStepData extends Resource` com tipagem forte estrita e comentários `##` detalhados em cada `@export`.
-- [ ] **Passo 3 — Criar `AttackSetData` (`src/combat/attack_set_data.gd`):**
+- [x] **Passo 2 — Criar `ComboStepData` (`src/combat/combo_step_data.gd`):**
+  - Implementar a classe `ComboStepData extends Resource` com tipagem forte estrita e comentários `##` detalhados em cada `@export`, incluindo `active_start_frame` e `active_end_frame`.
+- [x] **Passo 3 — Criar `AttackSetData` (`src/combat/attack_set_data.gd`):**
   - Implementar a classe `AttackSetData extends Resource` com o cabeçalho tutorial global, `guia_de_uso` no Inspector, array `steps: Array[ComboStepData]`, `combo_window`, `loop_combo` e `finisher_cooldown`.
-- [ ] **Passo 4 — Atualizar `WeaponData` (`src/combat/weapon_data.gd`):**
+- [x] **Passo 4 — Atualizar `WeaponData` (`src/combat/weapon_data.gd`):**
   - Adicionar `attack_set: AttackSetData`, `guia_de_uso_da_arma`, `slash_step_animations`, `slash_step_offsets`, `slash_step_scales`, `sync_hitbox_with_slash` e `hitbox_extra_reach`.
-  - Criar métodos auxiliares limpos em `WeaponData` (`get_combo_step_count()`, `get_step_body_animation(step)`, `get_step_duration(step)`, `get_step_impulse(step)`, `get_step_damage_mult(step)`, `get_step_slash_data(step)`, `get_step_hitbox_data(step)`) que leem do `attack_set` com fallback automático para os arrays legados caso uma arma antiga não tenha `attack_set` atribuído.
-- [ ] **Passo 5 — Criar os Sets Predefinidos (`src/combat/sets/*.tres`):**
-  - Criar `set_sword_standard.tres`, `set_dagger_fast.tres`, `set_axe_heavy.tres` e `set_hammer_crusher.tres` já configurados e prontos para uso no editor.
+  - Criar métodos auxiliares limpos em `WeaponData` (`get_combo_step_count()`, `get_step_body_animation(step)`, `get_step_duration(step)`, `get_step_impulse(step)`, `get_step_damage_multiplier(step)`, `get_step_slash_animation(step)`, `get_step_active_start_frame(step)`, `get_step_active_end_frame(step)`, `get_step_hitbox_metrics(step)`).
+- [x] **Passo 5 — Criar os Sets Predefinidos (`src/combat/sets/*.tres`):**
+  - Criar `set_sword_standard.tres`, `set_dagger_fast.tres`, `set_axe_heavy.tres` e `set_hammer_crusher.tres` já configurados com `active_start_frame` / `active_end_frame` sincronizados com o frame do slash e prontos para uso no editor.
   - Vincular esses Sets às armas base do projeto (`weapon_sword_base.tres`, `weapon_dagger_base.tres`, `weapon_axe_base.tres`, `weapon_hammer_base.tres`).
-- [ ] **Passo 6 — Refatorar `AttackState` e `Player.set_slash_visual()`:**
+- [x] **Passo 6 — Refatorar `AttackState` e `Player.set_slash_visual()`:**
   - Substituir o `if current_step == 1` hardcoded em [`src/entities/player/states/attack_state.gd`](../src/entities/player/states/attack_state.gd) pela leitura dinâmica de `player.weapon.get_step_body_animation(current_step)`.
-  - Aplicar a duração, impulso, multiplicador de dano e sincronização automática da `Hitbox` com `slash_offset` + `slash_scale` + `hitbox_extra_reach`.
-  - Atualizar `set_slash_visual()` em [`src/entities/player/player.gd`](../src/entities/player/player.gd) para aplicar a animação de slash do passo atual, somar os offsets (`step_slash_offset + weapon.slash_offset + step_override_offset`), multiplicar as escalas e aplicar `flip_h`/`flip_v` do passo.
-- [ ] **Passo 7 — Validação Headless e Simulação de Combate:**
+  - **PASSO ESSENCIAL DE COLISÃO:** Manter a `Hitbox` desligada durante os frames de *Windup*, ativá-la junto com o impulso frontal (`forward_impulse`) exclusivamente no intervalo `[active_start_frame, active_end_frame]` em que o slash aparece na tela, e desligá-la no *Recovery*.
+  - Atualizar `set_slash_visual()` em [`src/entities/player/player.gd`](../src/entities/player/player.gd) para calcular `speed_scale` dinamicamente pelo número real de frames do slash (`get_frame_count(anim_name)`), somar os offsets e multiplicar as escalas.
+- [x] **Passo 7 — Validação Headless e Simulação de Combate:**
   - Executar `godot --headless --check-only --path .` garantindo zero erros de compilação ou referências quebradas.
   - Validar em simulação os Sets, os overrides de offset (`+3` no X) e o acompanhamento da Hitbox.
