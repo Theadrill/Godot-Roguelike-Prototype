@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="AttackSetData" load_steps=5 format=3 uid="uid://set_hammer_crusher_01"]
+
+[ext_resource type="Script" path="res://src/combat/attack_set_data.gd" id="1_set_script"]
+[ext_resource type="Script" path="res://src/combat/combo_step_data.gd" id="2_step_script"]
+
+[sub_resource type="Resource" id="Resource_step_0"]
+script = ExtResource("2_step_script")
+step_label = "Golpe 1 - Esmagamento Vertical"
+body_animation = &"attack1"
+duration = 0.52
+forward_impulse = 50.0
+damage_multiplier = 1.0
+slash_animation = &"slash_sword"
+step_slash_offset = Vector2(2, 0)
+step_slash_scale = Vector2(1.15, 1.15)
+step_slash_flip_h = false
+step_slash_flip_v = false
+hitbox_size = Vector2(34, 30)
+hitbox_position = Vector2(21, -20)
+
+[sub_resource type="Resource" id="Resource_step_1"]
+script = ExtResource("2_step_script")
+step_label = "Golpe 2 - Impacto Pesado"
+body_animation = &"attack2"
+duration = 0.52
+forward_impulse = 70.0
+damage_multiplier = 1.25
+slash_animation = &"slash_sword"
+step_slash_offset = Vector2(2, 0)
+step_slash_scale = Vector2(1.15, 1.15)
+step_slash_flip_h = false
+step_slash_flip_v = false
+hitbox_size = Vector2(34, 30)
+hitbox_position = Vector2(21, -20)
+
+[resource]
+script = ExtResource("1_set_script")
+set_name = "Crusher Hammer Set (1-2)"
+steps = Array[ExtResource("2_step_script")]([SubResource("Resource_step_0"), SubResource("Resource_step_1")])
+combo_window = 1.35
+loop_combo = true
+finisher_cooldown = 0.0

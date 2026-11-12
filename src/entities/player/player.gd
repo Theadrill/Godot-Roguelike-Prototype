@@ -350,19 +350,24 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 		if target_frames and slash_effect.sprite_frames != target_frames:
 			slash_effect.sprite_frames = target_frames
 
-		var anim_name: StringName = weapon.slash_animation if weapon.slash_animation else &"slash_sword"
+		var anim_name: StringName = weapon.get_step_slash_animation(combo_step) if weapon else &"slash_sword"
+		if slash_effect.sprite_frames and not slash_effect.sprite_frames.has_animation(anim_name):
+			anim_name = weapon.slash_animation if (weapon and weapon.slash_animation) else &"slash_sword"
 		if slash_effect.sprite_frames and slash_effect.sprite_frames.has_animation(anim_name):
 			slash_effect.animation = anim_name
 			slash_effect.frame = 0
-			var step_dur: float = weapon.combo_durations[clampi(combo_step, 0, weapon.combo_durations.size() - 1)] if (weapon and weapon.combo_durations.size() > 0) else 0.36
+			var step_dur: float = weapon.get_step_duration(combo_step) if weapon else 0.36
 			# 3 frames a 10 FPS dura 0.3s. Escala para durar exatamente o tempo do golpe
 			slash_effect.speed_scale = 0.3 / maxf(0.05, step_dur)
 			slash_effect.play(anim_name)
 
+		slash_effect.flip_h = weapon.get_step_slash_flip_h(combo_step) if weapon else false
+		slash_effect.flip_v = weapon.get_step_slash_flip_v(combo_step) if weapon else false
+
 	# Posição ancorada perfeitamente na mesma origem do PlayerSprite (pé do aventureiro)
 	var base_pos: Vector2 = player_sprite.position if player_sprite else Vector2(-2, -29)
-	var custom_offset: Vector2 = weapon.slash_offset if weapon else Vector2.ZERO
-	var custom_scale: Vector2 = weapon.slash_scale if weapon else Vector2.ONE
+	var custom_offset: Vector2 = weapon.get_step_total_slash_offset(combo_step) if weapon else Vector2.ZERO
+	var custom_scale: Vector2 = weapon.get_step_total_slash_scale(combo_step) if weapon else Vector2.ONE
 	var custom_mod: Color = weapon.slash_modulate if weapon else Color.WHITE
 	var custom_z: int = weapon.slash_z_index if weapon else 4
 

@@ -32,10 +32,15 @@ func enter() -> void:
 		return
 
 	is_charging = false
-	var combo_size: int = player.weapon.combo_durations.size() if (player.weapon and player.weapon.combo_durations.size() > 0) else 2
+	var combo_size: int = player.weapon.get_combo_step_count() if player.weapon else 2
+	var combo_window: float = player.weapon.get_combo_window() if player.weapon else COMBO_WINDOW
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
-	if elapsed_sec <= COMBO_WINDOW and last_completed_step >= 0:
-		current_step = (last_completed_step + 1) % combo_size
+	if elapsed_sec <= combo_window and last_completed_step >= 0:
+		if player.weapon and not player.weapon.is_combo_looping() and (last_completed_step + 1 >= combo_size):
+			current_step = 0
+			last_completed_step = -1
+		else:
+			current_step = (last_completed_step + 1) % combo_size
 	else:
 		current_step = 0
 		last_completed_step = -1
@@ -46,9 +51,7 @@ func enter() -> void:
 
 func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	combo_buffered = false
-	var combo_size: int = player.weapon.combo_durations.size() if (player.weapon and player.weapon.combo_durations.size() > 0) else 2
-	var dur_idx: int = clampi(current_step, 0, combo_size - 1)
-	attack_timer = player.weapon.combo_durations[dur_idx]
+	attack_timer = player.weapon.get_step_duration(current_step) if player.weapon else 0.36
 	
 	# Allow reversing direction between combo steps if steering
 	var input_dir: float = Input.get_axis("move_left", "move_right")
@@ -85,13 +88,13 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	else:
 		# Forward physical step (bonus impulse on charged smash!)
 		var impulse_mult: float = 1.0 + charge_ratio * 0.4
-		var imp_list: Array[float] = player.weapon.forward_impulses if (player.weapon and player.weapon.forward_impulses.size() > 0) else [80.0, 100.0]
-		var imp_idx: int = clampi(current_step, 0, imp_list.size() - 1)
-		var forward_impulse: float = imp_list[imp_idx] * impulse_mult
+		var base_impulse: float = player.weapon.get_step_impulse(current_step) if player.weapon else 80.0
+		var forward_impulse: float = base_impulse * impulse_mult
 		player.velocity.x = player.facing_direction * forward_impulse
 		if player.hitbox.has_node("CollisionShape2D"):
-			player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -20.0)
-			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
+			var hb_metrics: Dictionary = player.weapon.get_step_hitbox_metrics(current_step) if player.weapon else {"position": Vector2(20.0, -20.0), "size": Vector2(32.0, 28.0)}
+			player.hitbox.get_node("CollisionShape2D").position = hb_metrics["position"]
+			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = hb_metrics["size"]
 		player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
 
 	# When on ground, clamp vertical speed to 0; when in air, leave gravity/fall speed completely untouched!
@@ -99,7 +102,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 		player.velocity.y = 0.0
 
 	# Setup active hitbox with scaling per combo step and charge ratio
-	var step_mult: float = 1.0 + (current_step * 0.25)
+	var step_mult: float = player.weapon.get_step_damage_multiplier(current_step) if player.weapon else (1.0 + (current_step * 0.25))
 	var charge_mult: float = 1.0 + charge_ratio * (player.weapon.charge_damage_multiplier - 1.0)
 	var total_mult: float = step_mult * charge_mult
 
@@ -125,11 +128,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 
 	# Dedicated combo animation on normal ground attack for melee weapons (sword, hammer, dagger, axe)
 	if player.is_on_floor() and not is_upward and not is_downward and is_melee_combo:
-		var anim_name: StringName = &"attack1"
-		if current_step == 1:
-			anim_name = &"attack2"
-		elif current_step >= 2:
-			anim_name = &"attack3"
+		var anim_name: StringName = player.weapon.get_step_body_animation(current_step) if player.weapon else &"attack1"
 		player.play_animation(anim_name)
 		if player.player_sprite:
 			player.player_sprite.frame = 0
@@ -247,23 +246,28 @@ func physics_update(delta: float) -> void:
 		last_attack_end_msec = Time.get_ticks_msec()
 		last_completed_step = current_step
 		
-		var combo_size: int = player.weapon.combo_durations.size() if (player.weapon and player.weapon.combo_durations.size() > 0) else 2
+		var combo_size: int = player.weapon.get_combo_step_count() if player.weapon else 2
+		var is_looping: bool = player.weapon.is_combo_looping() if player.weapon else true
+		var can_advance: bool = is_looping or (current_step + 1 < combo_size)
 		
 		# Combo continuation condition (Dead Cells design):
 		# 1. Player is holding the attack button (continuous auto-chain combo)
 		# 2. Player tapped attack again during the swing (queued/buffered next hit)
 		var wants_combo: bool = combo_buffered or queued_combo_presses > 0 or Input.is_action_pressed("attack_primary")
 		
-		if wants_combo:
+		if wants_combo and can_advance:
 			if queued_combo_presses > 0:
 				queued_combo_presses -= 1
 			current_step = (current_step + 1) % combo_size
 			_start_combo_step(0.0)
 			return
 			
-		# Step completed without immediate continuation:
-		# Zero cooldown during combo window (Dead Cells principle)!
-		player.attack_cooldown_timer = 0.0
+		# Step completed without immediate continuation (or end of non-looping set):
+		if not can_advance:
+			player.attack_cooldown_timer = player.weapon.get_finisher_cooldown() if player.weapon else 0.0
+			last_completed_step = -1
+		else:
+			player.attack_cooldown_timer = 0.0
 		queued_combo_presses = 0
 		
 		if player.player_sprite:

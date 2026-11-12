@@ -2,13 +2,18 @@
 
 [ext_resource type="Script" uid="uid://bns3a3ee5ml1" path="res://src/combat/weapon_data.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://src/entities/equipment/swords/sword_visual.tscn" id="2_visual"]
+[ext_resource type="Resource" path="res://src/combat/sets/set_sword_standard.tres" id="3_attack_set"]
 
 [resource]
 script = ExtResource("1_script")
 weapon_name = "Steel Broadsword"
+attack_set = ExtResource("3_attack_set")
 combo_durations = Array[float]([0.36, 0.36])
 attack_cooldown = 0.0
 combo_finisher_cooldown = 0.0
+slash_offset = Vector2(0, 0)
+slash_scale = Vector2(1, 1)
+hitbox_sync_with_slash = true
 equipment_name = "Steel Broadsword"
 visual_scene = ExtResource("2_visual")
 back_offset = Vector2(3.8, -4)

@@ -1,11 +1,13 @@
-[gd_resource type="Resource" script_class="WeaponData" load_steps=3 format=3 uid="uid://weapon_hammer_tres_01"]
+[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://weapon_hammer_tres_01"]
 
 [ext_resource type="Script" path="res://src/combat/weapon_data.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://src/entities/equipment/hammers/hammer_visual.tscn" id="2_visual"]
+[ext_resource type="Resource" path="res://src/combat/sets/set_hammer_crusher.tres" id="3_attack_set"]
 
 [resource]
 script = ExtResource("1_script")
 weapon_name = "War Hammer"
+attack_set = ExtResource("3_attack_set")
 base_damage = 45.0
 knockback_force = 280.0
 hitstop_duration = 0.09
@@ -17,10 +19,13 @@ charge_has_energize = false
 rumble_weak = 0.6
 rumble_strong = 0.95
 rumble_duration = 0.12
-combo_durations = Array[float]([0.52, 0.52, 0.84])
-forward_impulses = Array[float]([50.0, 70.0, 160.0])
-attack_cooldown = 0.66
-combo_finisher_cooldown = 1.05
+combo_durations = Array[float]([0.52, 0.52])
+forward_impulses = Array[float]([50.0, 70.0])
+attack_cooldown = 0.0
+combo_finisher_cooldown = 0.0
+slash_offset = Vector2(0, 0)
+slash_scale = Vector2(1, 1)
+hitbox_sync_with_slash = true
 equipment_name = "War Hammer"
 slot_type = 2
 visual_scene = ExtResource("2_visual")
