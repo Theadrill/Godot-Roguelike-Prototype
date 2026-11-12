@@ -34,6 +34,7 @@ var rally_timer: float = 0.0
 @export_range(0.5, 3.0, 0.05) var fall_gravity_multiplier: float = 1.35                     # Snappy fall (Dead Cells)
 @export_range(0.0, 0.3, 0.01, "suffix:s") var coyote_duration: float = 0.12
 @export_range(0.0, 0.3, 0.01, "suffix:s") var jump_buffer_duration: float = 0.12
+@export_range(0.0, 0.3, 0.01, "suffix:s") var attack_buffer_duration: float = 0.15
 @export_range(100.0, 600.0, 10.0, "suffix:px") var hard_landing_min_distance: float = 180.0
 @export_range(0.05, 0.5, 0.01, "suffix:s") var hard_landing_duration: float = 0.18
 
@@ -72,6 +73,7 @@ var roll_duration: float:
 
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
+var attack_buffer_timer: float = 0.0
 var can_double_jump: bool = false
 var facing_direction: int = 1
 
@@ -585,12 +587,19 @@ func _physics_process(delta: float) -> void:
 
 	if is_input_locked:
 		jump_buffer_timer = 0.0
+		attack_buffer_timer = 0.0
 	else:
 		if jump_buffer_timer > 0.0:
 			jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
 
 		if Input.is_action_just_pressed("jump"):
 			jump_buffer_timer = jump_buffer_duration
+
+		if attack_buffer_timer > 0.0:
+			attack_buffer_timer = max(0.0, attack_buffer_timer - delta)
+
+		if Input.is_action_just_pressed("attack_primary"):
+			attack_buffer_timer = attack_buffer_duration
 
 	# Hit flash timer
 	if flash_timer > 0.0:

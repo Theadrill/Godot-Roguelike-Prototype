@@ -7,13 +7,14 @@ var player: Player
 var current_step: int = 0
 var attack_timer: float = 0.0
 var combo_buffered: bool = false
+var queued_combo_presses: int = 0
 var last_attack_end_msec: int = -10000
 var last_completed_step: int = -1
 
 var is_charging: bool = false
 var charge_progress: float = 0.0
 
-const COMBO_WINDOW: float = 0.32
+const COMBO_WINDOW: float = 0.55
 
 func enter() -> void:
 	player = character as Player
@@ -24,6 +25,7 @@ func enter() -> void:
 		charge_progress = 0.0
 		current_step = 0
 		last_completed_step = -1
+		queued_combo_presses = 0
 		# Windup pose: pull weapon back
 		if player.main_hand_socket:
 			player.main_hand_socket.rotation_degrees = -65.0
@@ -31,13 +33,14 @@ func enter() -> void:
 
 	is_charging = false
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
-	var combo_window: float = player.weapon.attack_cooldown + 0.45 if player.weapon else COMBO_WINDOW
+	var combo_window: float = COMBO_WINDOW
 	if elapsed_sec <= combo_window and last_completed_step >= 0 and (last_completed_step + 1 < player.weapon.combo_durations.size()):
 		current_step = last_completed_step + 1
 	else:
 		current_step = 0
 		last_completed_step = -1
-		
+
+	queued_combo_presses = 0
 	_start_combo_step(0.0)
 
 func _start_combo_step(charge_ratio: float = 0.0) -> void:
@@ -153,8 +156,6 @@ func exit() -> void:
 	player.hitbox.set_active(false)
 	player.set_slash_visual(false, 0, false, false)
 	combo_buffered = false
-	if player.attack_cooldown_timer <= 0.0:
-		player.attack_cooldown_timer = player.weapon.attack_cooldown
 	last_attack_end_msec = Time.get_ticks_msec()
 
 func physics_update(delta: float) -> void:
@@ -221,9 +222,10 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("slide")
 		return
 		
-	# Input buffer: buffer next hit if player taps attack again during this swing
+	# Input queue / buffer: any tap during the swing queues the next combo hit!
 	if Input.is_action_just_pressed("attack_primary"):
 		combo_buffered = true
+		queued_combo_presses = mini(3, queued_combo_presses + 1)
 		
 	# Decelerate horizontal impulse on ground; maintain full natural gravity in air
 	if player.is_on_floor():
@@ -240,23 +242,28 @@ func physics_update(delta: float) -> void:
 		last_attack_end_msec = Time.get_ticks_msec()
 		last_completed_step = current_step
 		
-		# Combo continuation condition:
+		# Combo continuation condition (Dead Cells design):
 		# 1. Player is holding the attack button (continuous auto-chain combo)
-		# 2. Player tapped attack again during the swing (buffered next hit)
-		var wants_combo: bool = combo_buffered or Input.is_action_pressed("attack_primary")
+		# 2. Player tapped attack again during the swing (queued next hit)
+		var wants_combo: bool = combo_buffered or queued_combo_presses > 0 or Input.is_action_pressed("attack_primary")
 		var has_next_step: bool = current_step + 1 < player.weapon.combo_durations.size()
 		
 		if wants_combo and has_next_step:
+			if queued_combo_presses > 0:
+				queued_combo_presses -= 1
 			current_step += 1
 			_start_combo_step(0.0)
 			return
 			
-		# Combo chain ended or reached finisher or single tap with no continuation:
+		# Combo chain ended or reached finisher:
 		if current_step + 1 >= player.weapon.combo_durations.size():
 			player.attack_cooldown_timer = player.weapon.combo_finisher_cooldown
 			last_completed_step = -1 # Finisher done, next chain starts from step 0
+			queued_combo_presses = 0
 		else:
-			player.attack_cooldown_timer = player.weapon.attack_cooldown
+			# Intermediate step completed without immediate continuation:
+			# Zero cooldown during combo window (Dead Cells principle)!
+			player.attack_cooldown_timer = 0.0
 		
 		if player.player_sprite:
 			player.player_sprite.speed_scale = 1.0
