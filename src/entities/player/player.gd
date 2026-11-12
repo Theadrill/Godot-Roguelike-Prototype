@@ -357,8 +357,10 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 			slash_effect.animation = anim_name
 			slash_effect.frame = 0
 			var step_dur: float = weapon.get_step_duration(combo_step) if weapon else 0.36
-			# 3 frames a 10 FPS dura 0.3s. Escala para durar exatamente o tempo do golpe
-			slash_effect.speed_scale = 0.3 / maxf(0.05, step_dur)
+			var slash_frame_count: int = maxi(1, slash_effect.sprite_frames.get_frame_count(anim_name))
+			var slash_fps: float = maxf(1.0, slash_effect.sprite_frames.get_animation_speed(anim_name))
+			var base_slash_dur: float = float(slash_frame_count) / slash_fps
+			slash_effect.speed_scale = base_slash_dur / maxf(0.05, step_dur)
 			slash_effect.play(anim_name)
 
 		slash_effect.flip_h = weapon.get_step_slash_flip_h(combo_step) if weapon else false

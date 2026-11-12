@@ -1,32 +1,94 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://chow11bdony5b"]
 
 [ext_resource type="Texture2D" uid="uid://dm2wrqlqyhtmk" path="res://assets/effects/slashes/sword/sword_slash_sheet.png" id="1_slash_sheet"]
+[ext_resource type="Texture2D" uid="uid://cgw8fsah7o6oi" path="res://assets/effects/slashes/sword/sword_slash2_sheet.png" id="2_slash2_sheet"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash_0"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_0"]
 atlas = ExtResource("1_slash_sheet")
 region = Rect2(0, 0, 83, 62)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash_1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_1"]
 atlas = ExtResource("1_slash_sheet")
 region = Rect2(83, 0, 83, 62)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash_2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_2"]
 atlas = ExtResource("1_slash_sheet")
 region = Rect2(166, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_3"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(249, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_4"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(332, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash2_0"]
+atlas = ExtResource("2_slash2_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash2_1"]
+atlas = ExtResource("2_slash2_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash2_2"]
+atlas = ExtResource("2_slash2_sheet")
+region = Rect2(166, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash2_3"]
+atlas = ExtResource("2_slash2_sheet")
+region = Rect2(249, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash2_4"]
+atlas = ExtResource("2_slash2_sheet")
+region = Rect2(332, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash2_5"]
+atlas = ExtResource("2_slash2_sheet")
+region = Rect2(415, 0, 83, 62)
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_slash_0")
+"texture": SubResource("AtlasTexture_slash1_0")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_slash_1")
+"texture": SubResource("AtlasTexture_slash1_1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_slash_2")
+"texture": SubResource("AtlasTexture_slash1_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash1_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash1_4")
 }],
 "loop": 0,
 "name": &"slash_sword",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash2_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash2_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash2_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash2_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash2_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash2_5")
+}],
+"loop": 0,
+"name": &"slash_sword_2",
 "speed": 10.0
 }]

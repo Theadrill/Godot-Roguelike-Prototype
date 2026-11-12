@@ -300,6 +300,8 @@ func get_step_slash_animation(step_index: int) -> StringName:
 		var step_data: ComboStepData = attack_set.get_step(step_index)
 		if step_data and step_data.slash_animation != &"":
 			return step_data.slash_animation
+	if step_index == 1 and (slash_animation == &"" or slash_animation == &"slash_sword"):
+		return &"slash_sword_2"
 	return slash_animation if slash_animation != &"" else &"slash_sword"
 
 ## Retorna o deslocamento total (Offset Aditivo) do slash para o passo informado:
