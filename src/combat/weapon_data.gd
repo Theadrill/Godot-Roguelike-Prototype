@@ -348,6 +348,22 @@ func get_step_slash_flip_v(step_index: int) -> bool:
 			return step_data.step_slash_flip_v
 	return false
 
+## Retorna o frame inicial em que a Hitbox de dano liga neste passo (fim do Windup / início do Slash).
+func get_step_active_start_frame(step_index: int) -> int:
+	if attack_set and not attack_set.steps.is_empty():
+		var step_data: ComboStepData = attack_set.get_step(step_index)
+		if step_data:
+			return maxi(0, step_data.active_start_frame)
+	return 3 if step_index == 1 else 2
+
+## Retorna o último frame em que a Hitbox de dano fica ligada neste passo (antes do Recovery).
+func get_step_active_end_frame(step_index: int) -> int:
+	if attack_set and not attack_set.steps.is_empty():
+		var step_data: ComboStepData = attack_set.get_step(step_index)
+		if step_data:
+			return maxi(get_step_active_start_frame(step_index), step_data.active_end_frame)
+	return 4 if step_index == 1 else 3
+
 ## Calcula a posição e tamanho finais da Hitbox física do golpe no chão,
 ## sincronizando automaticamente com o offset/escala do slash se 'hitbox_sync_with_slash' estiver ativo.
 func get_step_hitbox_metrics(step_index: int) -> Dictionary:

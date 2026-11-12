@@ -64,7 +64,16 @@ extends Resource
 ## Dica: Muito útil para inverter um corte de cima para baixo transformando-o em um corte de baixo para cima!
 @export var step_slash_flip_v: bool = false
 
-@export_group("Hitbox Base do Golpe")
+@export_group("Hitbox Base do Golpe (Active Frames)")
+
+## Frame inicial em que a Hitbox de dano LIGA (padrão Dead Cells / Blasphemous / Nine Sols).
+## Nos frames anteriores a este (Windup), a espada está puxando para trás e NÃO causa dano.
+## Ex: No 'attack1' a meia-lua do slash surge no Frame 2; no 'attack2' surge no Frame 3.
+@export_range(0, 20, 1) var active_start_frame: int = 2
+
+## Último frame em que a Hitbox de dano permanece LIGADA antes de desligar na recuperação (Recovery).
+## Ex: No 'attack1' permanece ativa nos frames 2 e 3; no 'attack2' nos frames 3 e 4.
+@export_range(0, 20, 1) var active_end_frame: int = 3
 
 ## Tamanho base (Largura x Altura em pixels) da caixa de colisão de dano deste golpe.
 ## Se a arma estiver com 'sync_hitbox_with_slash' ativo, esta caixa crescerá automaticamente junto com a escala do slash!

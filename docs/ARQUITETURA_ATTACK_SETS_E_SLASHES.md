@@ -111,6 +111,8 @@ Representa **1 golpe individual** dentro de um Set de Ataque.
 | **`step_slash_scale`** | `Vector2` | `Vector2(1, 1)` | Escala base do efeito de corte para este passo (ex: `(1.2, 1.2)` se este golpe específico tiver um arco mais amplo). |
 | **`step_slash_flip_h`** | `bool` | `false` | Se `true`, espelha o desenho do slash horizontalmente neste golpe. |
 | **`step_slash_flip_v`** | `bool` | `false` | Se `true`, espelha o desenho do slash verticalmente neste golpe (muito útil para reaproveitar um slash descendente transformando-o em corte ascendente!). |
+| **`active_start_frame`** | `int` | `2` | **Frame Inicial Ativo da Hitbox** (padrão *Dead Cells* / *Blasphemous*): Antes deste frame o personagem está no *Windup* (puxando a arma para trás) com a Hitbox **desligada**. Neste frame exato, o slash surge na tela, o impulso para frente é liberado e a Hitbox **liga**! (`2` no `attack1`, `3` no `attack2`). |
+| **`active_end_frame`** | `int` | `3` | **Último Frame Ativo da Hitbox**: Após este frame, o golpe entra em *Recovery* (recuperação da pose) e a Hitbox **desliga** (`3` no `attack1`, `4` no `attack2`). |
 | **`hitbox_size`** | `Vector2` | `Vector2(32, 28)` | Tamanho base (largura x altura em pixels) da caixa de colisão de dano deste golpe. |
 | **`hitbox_position`** | `Vector2` | `Vector2(20, -20)` | Posição base do centro da caixa de colisão de dano relativa ao personagem neste golpe. |
 

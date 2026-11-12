@@ -14,6 +14,14 @@ var last_completed_step: int = -1
 var is_charging: bool = false
 var charge_progress: float = 0.0
 
+var _step_duration: float = 0.36
+var _step_total_frames: int = 5
+var _step_active_start_frame: int = 2
+var _step_active_end_frame: int = 3
+var _hitbox_opened_for_step: bool = false
+var _pending_forward_impulse: float = 0.0
+var _step_body_anim_active: bool = false
+
 const COMBO_WINDOW: float = 1.35
 
 func enter() -> void:
@@ -51,7 +59,14 @@ func enter() -> void:
 
 func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	combo_buffered = false
-	attack_timer = player.weapon.get_step_duration(current_step) if player.weapon else 0.36
+	_step_duration = player.weapon.get_step_duration(current_step) if player.weapon else 0.36
+	attack_timer = _step_duration
+	_step_active_start_frame = player.weapon.get_step_active_start_frame(current_step) if player.weapon else (3 if current_step == 1 else 2)
+	_step_active_end_frame = player.weapon.get_step_active_end_frame(current_step) if player.weapon else (4 if current_step == 1 else 3)
+	_step_total_frames = 6 if current_step == 1 else 5
+	_hitbox_opened_for_step = false
+	_pending_forward_impulse = 0.0
+	_step_body_anim_active = false
 	
 	# Allow reversing direction between combo steps if steering
 	var input_dir: float = Input.get_axis("move_left", "move_right")
@@ -80,17 +95,20 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 			player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.15, 1.0).normalized()
 		else:
 			# Ground low crouch sweep
-			player.velocity.x = player.facing_direction * 25.0
+			_pending_forward_impulse = 25.0
+			player.velocity.x = player.facing_direction * 8.0
 			if player.hitbox.has_node("CollisionShape2D"):
 				player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -10.0)
 				(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 20.0)
 			player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.1).normalized()
 	else:
-		# Forward physical step (bonus impulse on charged smash!)
+		# Forward physical step synchronized with windup -> active slash release (Dead Cells / Blasphemous pattern)
 		var impulse_mult: float = 1.0 + charge_ratio * 0.4
 		var base_impulse: float = player.weapon.get_step_impulse(current_step) if player.weapon else 80.0
 		var forward_impulse: float = base_impulse * impulse_mult
-		player.velocity.x = player.facing_direction * forward_impulse
+		_pending_forward_impulse = forward_impulse
+		# Slight foot shift during windup; full lunge unleashes on the active slash frame!
+		player.velocity.x = player.facing_direction * (forward_impulse * 0.25)
 		if player.hitbox.has_node("CollisionShape2D"):
 			var hb_metrics: Dictionary = player.weapon.get_step_hitbox_metrics(current_step) if player.weapon else {"position": Vector2(20.0, -20.0), "size": Vector2(32.0, 28.0)}
 			player.hitbox.get_node("CollisionShape2D").position = hb_metrics["position"]
@@ -101,7 +119,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	if player.is_on_floor():
 		player.velocity.y = 0.0
 
-	# Setup active hitbox with scaling per combo step and charge ratio
+	# Setup active hitbox metrics with scaling per combo step and charge ratio
 	var step_mult: float = player.weapon.get_step_damage_multiplier(current_step) if player.weapon else (1.0 + (current_step * 0.25))
 	var charge_mult: float = 1.0 + charge_ratio * (player.weapon.charge_damage_multiplier - 1.0)
 	var total_mult: float = step_mult * charge_mult
@@ -123,19 +141,21 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 		# Extra impact juice for charged strike
 		CombatFeedback.apply_hit_feedback(0.08, 0.7, 1.0, 0.15)
 	
+	# Keep Hitbox OFF during Windup frames! It will activate on _step_active_start_frame.
 	player.hitbox.set_active(false)
-	player.hitbox.set_active(true)
 
 	# Dedicated combo animation on normal ground attack for melee weapons (sword, hammer, dagger, axe)
 	if player.is_on_floor() and not is_upward and not is_downward and is_melee_combo:
 		var anim_name: StringName = player.weapon.get_step_body_animation(current_step) if player.weapon else &"attack1"
 		player.play_animation(anim_name)
+		_step_body_anim_active = true
 		if player.player_sprite:
 			player.player_sprite.frame = 0
 			var target_duration: float = maxf(0.01, attack_timer)
 			var frame_count: int = 5
 			if player.player_sprite.sprite_frames and player.player_sprite.sprite_frames.has_animation(anim_name):
 				frame_count = player.player_sprite.sprite_frames.get_frame_count(anim_name)
+			_step_total_frames = maxi(1, frame_count)
 			var base_duration: float = float(frame_count) / 10.0
 			player.player_sprite.speed_scale = base_duration / target_duration
 			player._update_weapon_socket_for_frame(anim_name, 0)
@@ -144,6 +164,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 			player.player_sprite.speed_scale = 1.0
 
 	player.set_slash_visual(true, current_step, is_upward, is_downward)
+	_update_active_hitbox_window()
 
 func exit() -> void:
 	is_charging = false
@@ -219,6 +240,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	attack_timer -= delta
+	_update_active_hitbox_window()
 	
 	# Dodge-cancel: can always slide out of an attack immediately!
 	if player.is_slide_requested():
@@ -280,3 +302,25 @@ func physics_update(delta: float) -> void:
 				state_machine.transition_to("idle")
 		else:
 			state_machine.transition_to("fall")
+
+func _get_current_attack_frame() -> int:
+	if _step_body_anim_active and player.player_sprite and player.player_sprite.visible:
+		return player.player_sprite.frame
+	if player.slash_effect and player.slash_effect.visible and player.slash_effect is AnimatedSprite2D:
+		return (player.slash_effect as AnimatedSprite2D).frame
+	var elapsed: float = clampf(_step_duration - attack_timer, 0.0, _step_duration)
+	var ratio: float = elapsed / maxf(0.01, _step_duration)
+	return mini(_step_total_frames - 1, int(floor(ratio * float(_step_total_frames))))
+
+func _update_active_hitbox_window() -> void:
+	if not player or not player.hitbox:
+		return
+	var cur_frame: int = _get_current_attack_frame()
+	if cur_frame >= _step_active_start_frame and not _hitbox_opened_for_step:
+		_hitbox_opened_for_step = true
+		player.hitbox.set_active(true)
+		# Apply full forward lunge at the exact moment the blade/slash unleashes!
+		if _pending_forward_impulse > 0.0:
+			player.velocity.x = player.facing_direction * _pending_forward_impulse
+	elif _hitbox_opened_for_step and cur_frame > _step_active_end_frame and player.hitbox.monitoring:
+		player.hitbox.set_active(false)
