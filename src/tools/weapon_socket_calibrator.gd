@@ -47,7 +47,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"air_attack": 4,
 	"cast": 4,
 	"channeling": 2,
-	"guard": 1,
+	"block": 3,
 	"stagger": 3,
 }
 
@@ -76,7 +76,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 @export_group("2. Animação, Frame & File")
 ## Escolha a animação do aventureiro para visualizar e calibrar.
-@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack", "cast", "channeling", "guard", "stagger") var selected_animation: String = "idle":
+@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack", "cast", "channeling", "block", "stagger") var selected_animation: String = "idle":
 	set(value):
 		selected_animation = value
 		_on_configuration_changed()
@@ -321,8 +321,10 @@ func _update_visual_instances() -> void:
 				_main_hand_instance.position = Vector2.ZERO
 				_main_hand_instance.rotation_degrees = 0.0
 
-	# 2. Escudo na mão (aparece se estiver calibrando Escudo na Mão)
-	if hand_s and socket_target == "Escudo na Mão (OffHandSocket)":
+	# 2. Escudo na mão (aparece se estiver calibrando Escudo na Mão OU durante "block" com referência ativa)
+	var is_block_anim: bool = (selected_animation == "block")
+	var should_show_hand_shield: bool = (socket_target == "Escudo na Mão (OffHandSocket)") or (is_block_anim and show_shield_reference and socket_target != "Escudo nas Costas (BackSocketShield)")
+	if hand_s and should_show_hand_shield:
 		var s_scene_path: String = SHIELD_SCENES.get(selected_shield, "")
 		if ResourceLoader.exists(s_scene_path):
 			var s_scene := load(s_scene_path) as PackedScene
@@ -346,7 +348,7 @@ func _update_visual_instances() -> void:
 				_back_weapon_instance.z_index = 0
 
 	# 4. Escudo nas costas (aparece se calibrando Escudo nas Costas OU se show_shield_reference=true quando não estiver na mão)
-	var should_show_back_shield := (socket_target == "Escudo nas Costas (BackSocketShield)") or (show_shield_reference and socket_target != "Escudo na Mão (OffHandSocket)")
+	var should_show_back_shield := (socket_target == "Escudo nas Costas (BackSocketShield)") or (show_shield_reference and not should_show_hand_shield)
 	if back_s and should_show_back_shield:
 		var bs_scene_path: String = SHIELD_SCENES.get(selected_shield, "")
 		if ResourceLoader.exists(bs_scene_path):
@@ -432,7 +434,7 @@ func _on_frame_changed() -> void:
 		var s_hand_data: Dictionary = _shield_profile_resource.get_frame_data(selected_animation, current_frame)
 		hand_s.position = s_hand_data.get("pos", Vector2(7, -19))
 		hand_s.rotation_degrees = s_hand_data.get("rot", 0.0)
-		hand_s.z_index = s_hand_data.get("z_index", -1)
+		hand_s.z_index = s_hand_data.get("z_index", 2)
 		if _off_hand_instance and is_instance_valid(_off_hand_instance):
 			_off_hand_instance.visible = s_hand_data.get("visible", true)
 			_apply_visual_flip(_off_hand_instance, s_hand_data.get("flip_h", false), s_hand_data.get("flip_v", false))

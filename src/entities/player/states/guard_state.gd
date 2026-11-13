@@ -16,6 +16,7 @@ var block_recoil_timer: float = 0.0
 func enter() -> void:
 	player = character as Player
 	player.set_shield_raised(true)
+	player.play_animation(&"block")
 	has_parried = false
 	guard_held_time = 0.0
 	block_recoil_timer = 0.0
@@ -24,15 +25,9 @@ func enter() -> void:
 	parry_timer = parry_window
 	is_parry_active = true
 
-	# Stance visual adjustment: slight forward angle during active parry frame
-	if player.off_hand_socket:
-		player.off_hand_socket.rotation_degrees = -15.0
-
 func exit() -> void:
 	is_parry_active = false
 	player.set_shield_raised(false)
-	if player.off_hand_socket:
-		player.off_hand_socket.rotation_degrees = 0.0
 
 	# Strict 1.0s whiff penalty: applied if player tapped/released guard without absorbing an attack
 	if not has_parried:
@@ -47,8 +42,6 @@ func physics_update(delta: float) -> void:
 		parry_timer -= delta
 		if parry_timer <= 0.0:
 			is_parry_active = false
-			if player.off_hand_socket:
-				player.off_hand_socket.rotation_degrees = 0.0
 
 	# Gravity
 	if not player.is_on_floor():

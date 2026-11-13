@@ -489,8 +489,8 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			is_in_manual_socket_state = not (anim_name in [&"attack1", &"attack2", &"attack3"])
 		elif current_state_name == "rangedattack":
 			is_in_manual_socket_state = not (anim_name in [&"cast", &"channeling"])
-		else:
-			is_in_manual_socket_state = current_state_name == "guard"
+		elif current_state_name == "guard":
+			is_in_manual_socket_state = not (anim_name == &"block")
 
 	if not is_in_manual_socket_state and main_hand_socket and weapon:
 		var profile: WeaponSocketProfile = weapon.get_socket_profile()
@@ -538,6 +538,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 					if off_hand_socket:
 						off_hand_socket.position = hand_data.get("pos", Vector2(7, -19))
 						off_hand_socket.rotation_degrees = hand_data.get("rot", 0.0)
+						off_hand_socket.z_index = hand_data.get("z_index", 2)
 					if _shield_instance and is_instance_valid(_shield_instance):
 						_shield_instance.position = Vector2.ZERO
 						_shield_instance.rotation_degrees = 0.0
