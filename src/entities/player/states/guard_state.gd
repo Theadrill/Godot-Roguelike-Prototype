@@ -56,7 +56,7 @@ func physics_update(delta: float) -> void:
 	else:
 		if player.is_on_floor():
 			var direction := Input.get_axis("move_left", "move_right")
-			player.velocity.x = move_toward(player.velocity.x, direction * (player.run_speed * 0.35), 800.0 * delta)
+			player.velocity.x = move_toward(player.velocity.x, 0.0, 900.0 * delta)
 			if direction != 0.0:
 				player.update_facing(direction)
 		else:

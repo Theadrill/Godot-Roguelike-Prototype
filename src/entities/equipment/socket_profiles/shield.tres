@@ -234,6 +234,22 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"block_loop_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3, -26.5),
+"rot": 4.0,
+"visible": true,
+"z_index": -2
+},
+"block_loop_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3, -26.5),
+"rot": 4.0,
+"visible": true,
+"z_index": -2
+},
 "cast_0": {
 "flip_h": false,
 "flip_v": false,
@@ -556,6 +572,22 @@ hand_frames = {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(21, -26),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"block_loop_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(22, -26),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"block_loop_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(22, -26),
 "rot": 0.0,
 "visible": true,
 "z_index": 2

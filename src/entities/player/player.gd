@@ -430,6 +430,8 @@ func _on_player_sprite_animation_finished() -> void:
 	# Transição suave: após a ponte de desenrolar do pulo, mantém o loop de queda fluida
 	if player_sprite and player_sprite.animation == &"fall_from_jump":
 		player_sprite.play(&"fall")
+	elif player_sprite and player_sprite.animation == &"block":
+		play_animation(&"block_loop")
 
 func _detect_weapon_type_string(w: WeaponData) -> String:
 	if not w:
@@ -490,7 +492,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 		elif current_state_name == "rangedattack":
 			is_in_manual_socket_state = not (anim_name in [&"cast", &"channeling"])
 		elif current_state_name == "guard":
-			is_in_manual_socket_state = not (anim_name == &"block")
+			is_in_manual_socket_state = not (anim_name in [&"block", &"block_loop"])
 
 	if not is_in_manual_socket_state and main_hand_socket and weapon:
 		var profile: WeaponSocketProfile = weapon.get_socket_profile()
