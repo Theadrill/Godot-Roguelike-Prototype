@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://roy8k4a853lo"]
 
-[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -641,15 +641,15 @@ hand_frames = {
 "cast_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(15, -29),
-"rot": 0.0,
+"pos": Vector2(-18, -20),
+"rot": 20.0,
 "visible": true,
 "z_index": 2
 },
 "cast_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(7.5, -25),
+"pos": Vector2(-9, -18),
 "rot": 0.0,
 "visible": true,
 "z_index": 2
@@ -657,15 +657,15 @@ hand_frames = {
 "cast_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(3, -24),
-"rot": 0.0,
+"pos": Vector2(-7, -18),
+"rot": -20.0,
 "visible": true,
 "z_index": 2
 },
 "cast_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(24.5, -25),
+"pos": Vector2(-11, -18),
 "rot": 0.0,
 "visible": true,
 "z_index": 2

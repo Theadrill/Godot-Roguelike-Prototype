@@ -1,34 +1,34 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://6dihlsaxrxji"]
 
-[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
 profile_name = "staff"
-idle_0_pos = Vector2(-18.000002, -15.000002)
-idle_0_rot = 10.999999
-idle_1_pos = Vector2(-17.999998, -17)
-idle_1_rot = 10.999999
-idle_2_pos = Vector2(-19, -16.999998)
-idle_2_rot = 10.999998
-idle_3_pos = Vector2(-17.999998, -15)
-idle_3_rot = 10.999999
-run_0_pos = Vector2(16, -22)
-run_0_rot = -72.9
-run_1_pos = Vector2(9, -20.000004)
-run_1_rot = -76.49999
-run_2_pos = Vector2(2.999999, -20)
-run_2_rot = -39.999996
-run_3_pos = Vector2(-5, -25.999998)
-run_3_rot = -3.4999998
-run_4_pos = Vector2(1.999999, -21)
-run_4_rot = -39.999996
-run_5_pos = Vector2(9, -18.000002)
-run_5_rot = -76.49999
-jump_0_pos = Vector2(-11, -14)
-jump_0_rot = -7.9999995
-jump_1_pos = Vector2(-13, -13)
-jump_1_rot = 18.499998
+idle_0_pos = Vector2(8, -18)
+idle_0_rot = -65.49999
+idle_1_pos = Vector2(8, -19)
+idle_1_rot = -65.499985
+idle_2_pos = Vector2(8, -20)
+idle_2_rot = -65.49999
+idle_3_pos = Vector2(8, -18)
+idle_3_rot = -65.5
+run_0_pos = Vector2(8, -16)
+run_0_rot = -61.0
+run_1_pos = Vector2(8, -20.000004)
+run_1_rot = -64.5
+run_2_pos = Vector2(14, -18)
+run_2_rot = -60.0
+run_3_pos = Vector2(18, -21)
+run_3_rot = -64.0
+run_4_pos = Vector2(14, -20)
+run_4_rot = -72.0
+run_5_pos = Vector2(7, -18.000002)
+run_5_rot = -54.0
+jump_0_pos = Vector2(9, -17)
+jump_0_rot = -7.9999976
+jump_1_pos = Vector2(9, -15)
+jump_1_rot = -17.5
 jump_2_pos = Vector2(6, -45)
 jump_2_rot = -111.49999
 jump_3_pos = Vector2(4, -50.8)
@@ -41,20 +41,20 @@ crouch_2_pos = Vector2(6, -14)
 crouch_2_rot = -40.0
 crouch_3_pos = Vector2(6, -14)
 crouch_3_rot = -40.0
-fall_0_pos = Vector2(-2, -46)
-fall_0_rot = -123.5
-fall_1_pos = Vector2(-2, -46)
-fall_1_rot = -111.5
+fall_0_pos = Vector2(8, -45)
+fall_0_rot = -123.49999
+fall_1_pos = Vector2(8, -45)
+fall_1_rot = -111.49999
 fall_from_jump_0_pos = Vector2(8, -46)
 fall_from_jump_0_rot = -170.5
-fall_from_jump_1_pos = Vector2(-1.999999, -46)
+fall_from_jump_1_pos = Vector2(8, -45)
 fall_from_jump_1_rot = -104.5
-fall_from_jump_2_pos = Vector2(-1.999999, -46)
-fall_from_jump_2_rot = -112.399994
-slide_0_pos = Vector2(-10.000002, -0.99999905)
-slide_0_rot = -15.0
-slide_1_pos = Vector2(-10.000002, -0.99999905)
-slide_1_rot = -11.0
+fall_from_jump_2_pos = Vector2(8, -46)
+fall_from_jump_2_rot = -112.39999
+slide_0_pos = Vector2(4, -13)
+slide_0_rot = -34.999996
+slide_1_pos = Vector2(4, -13)
+slide_1_rot = -30.999994
 roll_0_pos = Vector2(9.000001, -27)
 roll_0_rot = -105.49999
 roll_1_pos = Vector2(0, -19)
@@ -506,7 +506,7 @@ hand_frames = {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(15, -29),
-"rot": 0.0,
+"rot": -8.0,
 "visible": true,
 "z_index": 2
 },
@@ -514,7 +514,7 @@ hand_frames = {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(7.5, -25),
-"rot": 0.0,
+"rot": -12.0,
 "visible": true,
 "z_index": 2
 },
@@ -537,16 +537,16 @@ hand_frames = {
 "channeling_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(24.5, -25),
-"rot": 0.0,
+"pos": Vector2(20.5, -23),
+"rot": -24.0,
 "visible": true,
 "z_index": 2
 },
 "channeling_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(24.5, -25),
-"rot": 0.0,
+"pos": Vector2(20.5, -24),
+"rot": -24.0,
 "visible": true,
 "z_index": 2
 },
@@ -593,16 +593,16 @@ hand_frames = {
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-2, -46),
-"rot": -123.5,
+"pos": Vector2(8, -45),
+"rot": -123.49999,
 "visible": true,
 "z_index": 2
 },
 "fall_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-2, -46),
-"rot": -111.5,
+"pos": Vector2(8, -45),
+"rot": -111.49999,
 "visible": true,
 "z_index": 2
 },
@@ -617,7 +617,7 @@ hand_frames = {
 "fall_from_jump_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-1.999999, -46),
+"pos": Vector2(8, -45),
 "rot": -104.5,
 "visible": true,
 "z_index": 2
@@ -625,38 +625,58 @@ hand_frames = {
 "fall_from_jump_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-1.999999, -46),
-"rot": -112.399994,
+"pos": Vector2(8, -46),
+"rot": -112.39999,
 "visible": true,
 "z_index": 2
 },
 "idle_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -18),
+"rot": -65.49999,
+"visible": true,
 "z_index": 2
 },
 "idle_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -19),
+"rot": -65.499985,
+"visible": true,
 "z_index": 2
 },
 "idle_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -20),
+"rot": -65.49999,
+"visible": true,
 "z_index": 2
 },
 "idle_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -18),
+"rot": -65.5,
+"visible": true,
 "z_index": 2
 },
 "jump_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-11, -14),
-"rot": -7.9999995,
+"pos": Vector2(9, -17),
+"rot": -7.9999976,
 "visible": true,
-"z_index": 2
+"z_index": -1
 },
 "jump_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-13, -13),
-"rot": 18.499998,
+"pos": Vector2(9, -15),
+"rot": -17.5,
 "visible": true,
-"z_index": 2
+"z_index": -1
 },
 "jump_2": {
 "flip_h": false,
@@ -685,48 +705,66 @@ hand_frames = {
 "run_0": {
 "flip_h": false,
 "flip_v": true,
+"pos": Vector2(8, -16),
+"rot": -61.0,
+"visible": true,
 "z_index": -1
 },
 "run_1": {
 "flip_h": false,
 "flip_v": true,
-"z_index": 2
+"pos": Vector2(8, -20.000004),
+"rot": -64.5,
+"visible": true,
+"z_index": -1
 },
 "run_2": {
 "flip_h": false,
 "flip_v": true,
-"z_index": 2
+"pos": Vector2(14, -18),
+"rot": -60.0,
+"visible": true,
+"z_index": 1
 },
 "run_3": {
 "flip_h": false,
 "flip_v": true,
+"pos": Vector2(18, -21),
+"rot": -64.0,
+"visible": true,
 "z_index": 2
 },
 "run_4": {
 "flip_h": false,
 "flip_v": true,
+"pos": Vector2(14, -20),
+"rot": -72.0,
+"visible": true,
 "z_index": 2
 },
 "run_5": {
 "flip_h": false,
 "flip_v": true,
-"z_index": 2
+"pos": Vector2(7, -18.000002),
+"rot": -54.0,
+"visible": true,
+"z_index": -1
 },
 "slide_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-10.000002, -0.99999905),
-"rot": -15.0,
+"pos": Vector2(4, -13),
+"rot": -34.999996,
 "visible": true,
-"z_index": 2
+"z_index": 1
 },
 "slide_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-10.000002, -0.99999905),
-"rot": -11.0,
+"pos": Vector2(4, -13),
+"rot": -30.999994,
 "visible": true,
-"z_index": 2
+"z_index": 1
 },
 "wall_cling_0": {
 "flip_h": false,

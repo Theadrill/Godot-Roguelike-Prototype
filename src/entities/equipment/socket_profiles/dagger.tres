@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://c02q8gk3365ls"]
 
-[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -228,32 +228,32 @@ back_frames = {
 "cast_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-6, -16),
-"rot": -185.0,
+"pos": Vector2(-4, -16),
+"rot": -237.5,
 "visible": true,
 "z_index": 1
 },
 "cast_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-6.5, -14),
-"rot": -185.0,
+"pos": Vector2(-3, -15),
+"rot": -233.5,
 "visible": true,
 "z_index": 1
 },
 "cast_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-8.5, -16),
-"rot": -185.0,
+"pos": Vector2(-5, -15),
+"rot": -249.5,
 "visible": true,
 "z_index": 1
 },
 "cast_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-1.5, -16),
-"rot": -185.0,
+"pos": Vector2(-1, -16),
+"rot": -217.5,
 "visible": true,
 "z_index": 1
 },
@@ -606,32 +606,32 @@ hand_frames = {
 "cast_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(15, -29),
-"rot": 0.0,
+"pos": Vector2(-17, -21),
+"rot": -135.49998,
 "visible": true,
 "z_index": 2
 },
 "cast_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(7.5, -25),
-"rot": 0.0,
+"pos": Vector2(-10.5, -18),
+"rot": -169.0,
 "visible": true,
 "z_index": 2
 },
 "cast_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(3, -24),
-"rot": 0.0,
+"pos": Vector2(-9, -17),
+"rot": -201.0,
 "visible": true,
 "z_index": 2
 },
 "cast_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(24.5, -25),
-"rot": 0.0,
+"pos": Vector2(-10.5, -18),
+"rot": -169.0,
 "visible": true,
 "z_index": 2
 },
