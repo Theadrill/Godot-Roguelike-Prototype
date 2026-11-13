@@ -204,7 +204,7 @@ back_frames = {
 "attack3_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(0.5, -11),
+"pos": Vector2(-6.5, -11),
 "rot": -185.0,
 "visible": true,
 "z_index": 1
@@ -212,15 +212,15 @@ back_frames = {
 "attack3_4": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(0.5, -13),
-"rot": -185.0,
+"pos": Vector2(-6.5, -13),
+"rot": -181.0,
 "visible": true,
 "z_index": 1
 },
 "attack3_5": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(0.5, -13),
+"pos": Vector2(-6.5, -13),
 "rot": -185.0,
 "visible": true,
 "z_index": 1
