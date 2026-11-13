@@ -248,13 +248,14 @@ func physics_update(delta: float) -> void:
 	attack_timer -= delta
 	_update_active_hitbox_window()
 	
-	# Dodge-cancel: allowed anytime on normal hits, or only during Windup (spin) if lock_dodge_after_windup is true!
+	# Dodge-cancel: allowed during Windup (spin 0..1) and final Recovery pause (frame 5), blocked only during the Slash frames (2..4)!
 	var can_dodge_cancel: bool = true
+	var cur_frame: int = _get_current_attack_frame()
 	if player.weapon and player.weapon.is_step_dodge_locked_after_windup(current_step):
-		if _hitbox_opened_for_step or _get_current_attack_frame() >= _step_active_start_frame:
+		if cur_frame >= _step_active_start_frame and cur_frame < (_step_total_frames - 1):
 			can_dodge_cancel = false
 	elif not player.weapon and current_step >= 2:
-		if _hitbox_opened_for_step or _get_current_attack_frame() >= _step_active_start_frame:
+		if cur_frame >= _step_active_start_frame and cur_frame < (_step_total_frames - 1):
 			can_dodge_cancel = false
 
 	if can_dodge_cancel and player.is_slide_requested():
