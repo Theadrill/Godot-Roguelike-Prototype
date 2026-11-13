@@ -230,10 +230,16 @@ func get_combo_step_count() -> int:
 		return attack_set.get_step_count()
 	return maxi(1, combo_durations.size())
 
-## Retorna a janela de tempo (em segundos) para continuar o combo antes de resetar para o passo 0.
-func get_combo_window() -> float:
+## Retorna a janela de tempo (em segundos) para continuar o combo após o passo informado antes de resetar para o passo 0.
+func get_combo_window(after_step_index: int = -1) -> float:
 	if attack_set:
+		if after_step_index >= 0 and not attack_set.steps.is_empty():
+			var step_data: ComboStepData = attack_set.get_step(after_step_index)
+			if step_data and step_data.next_step_window > 0.0:
+				return step_data.next_step_window
 		return attack_set.combo_window
+	if after_step_index == 1:
+		return 0.675
 	return 1.35
 
 ## Retorna se o combo deve ciclar continuamente do último passo de volta para o primeiro.

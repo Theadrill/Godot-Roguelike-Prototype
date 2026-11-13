@@ -41,6 +41,12 @@ extends Resource
 ## Exemplo: 1.0 no Golpe 1 (100% do dano), 1.25 no Golpe 2 (+25% de dano), 1.5 num golpe finalizador.
 @export_range(0.1, 5.0, 0.05) var damage_multiplier: float = 1.0
 
+## Janela máxima de oportunidade (em segundos) que o jogador tem APÓS concluir este golpe para apertar ataque
+## e engatar o PRÓXIMO golpe da sequência antes que o combo resete de volta para o Golpe 1.
+## Se deixado em 0.0, herda o 'combo_window' padrão do AttackSetData (1.35s).
+## Exemplo: Golpe 1 -> 2 usa 1.35s (folgado); Golpe 2 -> 3 usa 0.675s (metade do tempo, exigindo compromisso imediato para o finalizador).
+@export_range(0.0, 5.0, 0.025, "suffix:s") var next_step_window: float = 0.0
+
 @export_group("Efeito Visual de Corte (Slash Padrão do Golpe)")
 
 ## Nome da animação de corte em 'slash_frames.tres' que acompanha este golpe específico

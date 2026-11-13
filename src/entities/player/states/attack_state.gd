@@ -41,7 +41,7 @@ func enter() -> void:
 
 	is_charging = false
 	var combo_size: int = player.weapon.get_combo_step_count() if player.weapon else 2
-	var combo_window: float = player.weapon.get_combo_window() if player.weapon else COMBO_WINDOW
+	var combo_window: float = player.weapon.get_combo_window(last_completed_step) if player.weapon else (COMBO_WINDOW * 0.5 if last_completed_step == 1 else COMBO_WINDOW)
 	var elapsed_sec: float = float(Time.get_ticks_msec() - last_attack_end_msec) / 1000.0
 	if elapsed_sec <= combo_window and last_completed_step >= 0:
 		if player.weapon and not player.weapon.is_combo_looping() and (last_completed_step + 1 >= combo_size):

@@ -115,6 +115,7 @@ Representa **1 golpe individual** dentro de um Set de Ataque.
 | **`duration`** | `float` | `0.36` | Tempo total de execução deste golpe em segundos. A velocidade da animação do corpo e do slash se ajustam automaticamente para caber neste tempo. |
 | **`forward_impulse`** | `float` | `80.0` | Impulso físico horizontal (em px/s) que projeta o personagem para frente ao desferir este golpe. |
 | **`damage_multiplier`** | `float` | `1.0` | Multiplicador de dano específico deste golpe (ex: `1.0` no golpe 1, `1.25` no golpe 2, `1.5` num golpe final pesado). Multiplica o `base_damage` da arma. |
+| **`next_step_window`** | `float` | `0.0` | Janela máxima de oportunidade (em segundos) após terminar este golpe para engatar o próximo passo do combo antes de resetar para o Golpe 1 (`1.35s` do Golpe 1 -> 2; `0.675s` do Golpe 2 -> 3 para exigir compromisso imediato no finalizador). Se `0.0`, usa o `combo_window` do Set. |
 | **`slash_animation`** | `StringName` | `&"slash_sword"` | Nome da animação de efeito de corte (em `slash_frames.tres`) que acompanha este golpe específico (ex: `slash_sword_1` no ataque 1, `slash_sword_2` no ataque 2). |
 | **`step_slash_offset`** | `Vector2` | `Vector2(0, 0)` | Deslocamento base (em pixels) do efeito de corte para esta pose de ataque. `X+` move para frente do golpe; `Y-` move para cima; `Y+` move para baixo. |
 | **`step_slash_scale`** | `Vector2` | `Vector2(1, 1)` | Escala base do efeito de corte para este passo (ex: `(1.2, 1.2)` se este golpe específico tiver um arco mais amplo). |
