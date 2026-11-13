@@ -372,6 +372,14 @@ func get_step_active_end_frame(step_index: int) -> int:
 			return maxi(get_step_active_start_frame(step_index), step_data.active_end_frame)
 	return 4 if step_index == 1 else 3
 
+## Retorna se este passo bloqueia o cancelamento por esquiva (Slide/Roll) após o fim do Windup (durante o corte e a pausa final).
+func is_step_dodge_locked_after_windup(step_index: int) -> bool:
+	if attack_set and not attack_set.steps.is_empty():
+		var step_data: ComboStepData = attack_set.get_step(step_index)
+		if step_data:
+			return step_data.lock_dodge_after_windup
+	return step_index >= 2
+
 ## Calcula a posição e tamanho finais da Hitbox física do golpe no chão,
 ## sincronizando automaticamente com o offset/escala do slash se 'hitbox_sync_with_slash' estiver ativo.
 func get_step_hitbox_metrics(step_index: int) -> Dictionary:

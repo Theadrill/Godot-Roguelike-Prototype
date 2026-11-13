@@ -47,6 +47,7 @@ duration = 1.0
 forward_impulse = 90.0
 damage_multiplier = 1.6
 next_step_window = 0.675
+lock_dodge_after_windup = true
 slash_animation = &"slash_sword_3"
 step_slash_offset = Vector2(2, 0)
 step_slash_scale = Vector2(1.2, 1.2)

@@ -248,8 +248,16 @@ func physics_update(delta: float) -> void:
 	attack_timer -= delta
 	_update_active_hitbox_window()
 	
-	# Dodge-cancel: can always slide out of an attack immediately!
-	if player.is_slide_requested():
+	# Dodge-cancel: allowed anytime on normal hits, or only during Windup (spin) if lock_dodge_after_windup is true!
+	var can_dodge_cancel: bool = true
+	if player.weapon and player.weapon.is_step_dodge_locked_after_windup(current_step):
+		if _hitbox_opened_for_step or _get_current_attack_frame() >= _step_active_start_frame:
+			can_dodge_cancel = false
+	elif not player.weapon and current_step >= 2:
+		if _hitbox_opened_for_step or _get_current_attack_frame() >= _step_active_start_frame:
+			can_dodge_cancel = false
+
+	if can_dodge_cancel and player.is_slide_requested():
 		last_completed_step = -1
 		state_machine.transition_to("slide")
 		return

@@ -47,6 +47,10 @@ extends Resource
 ## Exemplo: Golpe 1 -> 2 usa 1.35s (folgado); Golpe 2 -> 3 usa 0.675s (metade do tempo, exigindo compromisso imediato para o finalizador).
 @export_range(0.0, 5.0, 0.025, "suffix:s") var next_step_window: float = 0.0
 
+## Se 'true', o jogador só pode cancelar este golpe com Esquiva/Slide durante a preparação inicial (Windup / Giro, antes de 'active_start_frame').
+## Assim que o golpe é desferido, a esquiva fica bloqueada até o final da pausa de recuperação (Recovery) deste passo!
+@export var lock_dodge_after_windup: bool = false
+
 @export_group("Efeito Visual de Corte (Slash Padrão do Golpe)")
 
 ## Nome da animação de corte em 'slash_frames.tres' que acompanha este golpe específico
