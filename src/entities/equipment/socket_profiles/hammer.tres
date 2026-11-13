@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://cxvs5ooyxklab"]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
 
-[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -220,6 +220,54 @@ back_frames = {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(-3.5, -17.6),
+"rot": -96.5,
+"visible": true,
+"z_index": -1
+},
+"cast_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-7, -23.1),
+"rot": -96.5,
+"visible": true,
+"z_index": -1
+},
+"cast_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-7, -21.1),
+"rot": -96.5,
+"visible": true,
+"z_index": -1
+},
+"cast_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-9, -21.1),
+"rot": -96.5,
+"visible": true,
+"z_index": -1
+},
+"cast_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -21.1),
+"rot": -96.5,
+"visible": true,
+"z_index": -1
+},
+"channeling_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -21.1),
+"rot": -96.5,
+"visible": true,
+"z_index": -1
+},
+"channeling_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(0.5, -21.1),
 "rot": -96.5,
 "visible": true,
 "z_index": -1
@@ -587,6 +635,54 @@ hand_frames = {
 "flip_v": false,
 "pos": Vector2(-16, -24),
 "rot": 180.0,
+"visible": true,
+"z_index": 2
+},
+"cast_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(15, -29),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"cast_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(7.5, -25),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"cast_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3, -24),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"cast_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(24.5, -25),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"channeling_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(24.5, -25),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"channeling_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(24.5, -25),
+"rot": 0.0,
 "visible": true,
 "z_index": 2
 },

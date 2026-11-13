@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://erbsrtq4c7e8" path="res://assets/player/adventurer/attack/player_attack1_sheet.png" id="10_attack1_sheet"]
 [ext_resource type="Texture2D" uid="uid://b0n2i58gqlu7u" path="res://assets/player/adventurer/attack/player_attack2_sheet.png" id="11_attack2_sheet"]
 [ext_resource type="Texture2D" uid="uid://jm60xt00edle" path="res://assets/player/adventurer/attack/player_attack3_sheet.png" id="12_attack3_sheet"]
+[ext_resource type="Texture2D" uid="uid://bupe5wyev3685" path="res://assets/player/adventurer/cast/player_cast_sheet.png" id="13_cast_sheet"]
+[ext_resource type="Texture2D" uid="uid://cwh0rt0v1yfp5" path="res://assets/player/adventurer/channeling/player_channeling_sheet.png" id="14_channeling_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_attack1_0"]
 atlas = ExtResource("10_attack1_sheet")
@@ -80,6 +82,30 @@ region = Rect2(0, 124, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_attack3_5"]
 atlas = ExtResource("12_attack3_sheet")
 region = Rect2(83, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_0"]
+atlas = ExtResource("13_cast_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_1"]
+atlas = ExtResource("13_cast_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_2"]
+atlas = ExtResource("13_cast_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_3"]
+atlas = ExtResource("13_cast_sheet")
+region = Rect2(83, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_channeling_0"]
+atlas = ExtResource("14_channeling_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_channeling_1"]
+atlas = ExtResource("14_channeling_sheet")
+region = Rect2(0, 62, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_corner_climb_0"]
 atlas = ExtResource("9_corner_climb_sheet")
@@ -284,6 +310,34 @@ animations = [{
 "loop": 0,
 "name": &"attack3",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_3")
+}],
+"loop": 0,
+"name": &"cast",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_channeling_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_channeling_1")
+}],
+"loop": 1,
+"name": &"channeling",
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
