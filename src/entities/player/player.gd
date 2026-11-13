@@ -359,7 +359,10 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 			var step_dur: float = weapon.get_step_duration(combo_step) if weapon else 0.36
 			var slash_frame_count: int = maxi(1, slash_effect.sprite_frames.get_frame_count(anim_name))
 			var slash_fps: float = maxf(1.0, slash_effect.sprite_frames.get_animation_speed(anim_name))
-			var base_slash_dur: float = float(slash_frame_count) / slash_fps
+			var total_slash_units: float = 0.0
+			for i in range(slash_frame_count):
+				total_slash_units += slash_effect.sprite_frames.get_frame_duration(anim_name, i)
+			var base_slash_dur: float = total_slash_units / slash_fps
 			slash_effect.speed_scale = base_slash_dur / maxf(0.05, step_dur)
 			slash_effect.play(anim_name)
 

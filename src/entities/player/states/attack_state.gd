@@ -153,10 +153,16 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 			player.player_sprite.frame = 0
 			var target_duration: float = maxf(0.01, attack_timer)
 			var frame_count: int = 5
+			var total_duration_units: float = 5.0
+			var anim_fps: float = 10.0
 			if player.player_sprite.sprite_frames and player.player_sprite.sprite_frames.has_animation(anim_name):
 				frame_count = player.player_sprite.sprite_frames.get_frame_count(anim_name)
+				anim_fps = maxf(1.0, player.player_sprite.sprite_frames.get_animation_speed(anim_name))
+				total_duration_units = 0.0
+				for i in range(frame_count):
+					total_duration_units += player.player_sprite.sprite_frames.get_frame_duration(anim_name, i)
 			_step_total_frames = maxi(1, frame_count)
-			var base_duration: float = float(frame_count) / 10.0
+			var base_duration: float = total_duration_units / anim_fps
 			player.player_sprite.speed_scale = base_duration / target_duration
 			player._update_weapon_socket_for_frame(anim_name, 0)
 	else:

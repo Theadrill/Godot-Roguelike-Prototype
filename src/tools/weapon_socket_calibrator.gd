@@ -232,6 +232,14 @@ func _ready() -> void:
 	_on_configuration_changed()
 
 func _load_resources() -> void:
+	var sprite := _get_node_safe("Visual/CharacterSprite") as AnimatedSprite2D
+	if sprite and Engine.is_editor_hint():
+		var expected_frames: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4)
+		if not sprite.sprite_frames or (sprite.sprite_frames.has_animation(selected_animation) and sprite.sprite_frames.get_frame_count(selected_animation) < expected_frames):
+			var fresh_frames := ResourceLoader.load("res://assets/player/adventurer/player_frames.tres", "", ResourceLoader.CACHE_MODE_REPLACE) as SpriteFrames
+			if fresh_frames:
+				sprite.sprite_frames = fresh_frames
+
 	var w_path := "res://src/entities/equipment/socket_profiles/%s.tres" % selected_weapon
 	if ResourceLoader.exists(w_path):
 		_weapon_profile_resource = load(w_path) as WeaponSocketProfile

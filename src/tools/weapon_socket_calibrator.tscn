@@ -5,15 +5,15 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-socket_target = "Arma nas Costas (BackSocketWeapon)"
-selected_animation = "attack2"
+selected_weapon = "dagger"
+selected_animation = "attack3"
 current_frame = 5
 reference_secondary_weapon = "none"
-socket_pos_x = -5.0
-socket_pos_y = -30.0
-socket_rotation = 96.99999
-socket_z_index = -1
-status_message = "sword [Arma nas Costas (BackSocketWeapon)] -> attack2 Frame 5 (Z: -1, FlipH: false, FlipV: false)"
+socket_pos_x = -15.0
+socket_pos_y = -26.0
+socket_rotation = 284.5
+socket_z_index = 2
+status_message = "dagger [Arma na Mão (MainHandSocket)] -> attack3 Frame 5 (Z: 2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -27,25 +27,25 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"attack2"
+animation = &"attack3"
 frame = 5
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
-z_index = -1
+z_index = 1
 z_as_relative = false
-position = Vector2(-5, -30)
-rotation = 1.6929693
+position = Vector2(-1.5, -18)
+rotation = -3.6826446
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -2
-position = Vector2(-5, -26)
-rotation = 0.06981317
+position = Vector2(-3.5, -23)
+rotation = 0.06981316
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(-18, -19)
-rotation = 2.7750735
+position = Vector2(-15, -26)
+rotation = 4.9654617
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
