@@ -86,6 +86,23 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_slash1_3")
+}],
+"loop": 0,
+"name": &"slash_air_sword_1",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash1_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash1_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash1_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slash1_3")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_slash1_4")

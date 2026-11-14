@@ -59,11 +59,12 @@ func enter() -> void:
 
 func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	combo_buffered = false
+	var is_airborne: bool = not player.is_on_floor()
 	_step_duration = player.weapon.get_step_duration(current_step) if player.weapon else 0.36
 	attack_timer = _step_duration
-	_step_active_start_frame = player.weapon.get_step_active_start_frame(current_step) if player.weapon else (3 if current_step == 1 else 2)
-	_step_active_end_frame = player.weapon.get_step_active_end_frame(current_step) if player.weapon else (4 if current_step == 1 else 3)
-	_step_total_frames = 6 if current_step >= 1 else 5
+	_step_active_start_frame = player.weapon.get_step_active_start_frame(current_step, is_airborne) if player.weapon else (3 if current_step == 1 else 2)
+	_step_active_end_frame = player.weapon.get_step_active_end_frame(current_step, is_airborne) if player.weapon else (4 if current_step == 1 else 3)
+	_step_total_frames = 4 if (is_airborne and current_step == 0) else (6 if current_step >= 1 else 5)
 	_hitbox_opened_for_step = false
 	_pending_forward_impulse = 0.0
 	_step_body_anim_active = false
@@ -110,7 +111,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 		# Slight foot shift during windup; full lunge unleashes on the active slash frame!
 		player.velocity.x = player.facing_direction * (forward_impulse * 0.25)
 		if player.hitbox.has_node("CollisionShape2D"):
-			var hb_metrics: Dictionary = player.weapon.get_step_hitbox_metrics(current_step) if player.weapon else {"position": Vector2(20.0, -20.0), "size": Vector2(32.0, 28.0)}
+			var hb_metrics: Dictionary = player.weapon.get_step_hitbox_metrics(current_step, is_airborne) if player.weapon else {"position": Vector2(20.0, -20.0), "size": Vector2(32.0, 28.0)}
 			player.hitbox.get_node("CollisionShape2D").position = hb_metrics["position"]
 			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = hb_metrics["size"]
 		player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
@@ -144,9 +145,18 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	# Keep Hitbox OFF during Windup frames! It will activate on _step_active_start_frame.
 	player.hitbox.set_active(false)
 
-	# Dedicated combo animation on normal ground attack for melee weapons (sword, hammer, dagger, axe)
-	if player.is_on_floor() and not is_upward and not is_downward and is_melee_combo:
-		var anim_name: StringName = player.weapon.get_step_body_animation(current_step) if player.weapon else &"attack1"
+	# Dedicated combo animation on normal ground and air attacks for melee weapons (sword, hammer, dagger, axe)
+	if not is_upward and not is_downward and is_melee_combo:
+		var anim_name: StringName = player.weapon.get_step_body_animation(current_step, is_airborne) if player.weapon else (&"air_attack1" if is_airborne else &"attack1")
+		if player.player_sprite and player.player_sprite.sprite_frames and not player.player_sprite.sprite_frames.has_animation(anim_name):
+			# Fallback seguro: se air_attack2 / air_attack3 ainda não estiverem no SpriteFrames, usa a animação do chão correspondente (ou air_attack1)
+			var ground_fallback: StringName = player.weapon.get_step_body_animation(current_step, false) if player.weapon else &"attack1"
+			if player.player_sprite.sprite_frames.has_animation(ground_fallback):
+				anim_name = ground_fallback
+			elif player.player_sprite.sprite_frames.has_animation(&"air_attack1"):
+				anim_name = &"air_attack1"
+			else:
+				anim_name = &"attack1"
 		player.play_animation(anim_name)
 		_step_body_anim_active = true
 		if player.player_sprite:

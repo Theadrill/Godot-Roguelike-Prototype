@@ -22,11 +22,17 @@ extends Resource
 ## (ex: "Golpe 1 - Corte Descendente", "Golpe 2 - Estocada").
 @export var step_label: String = "Golpe 1"
 
-## Nome exato da animação do corpo do personagem em 'player_frames.tres'
+## Nome exato da animação do corpo do personagem no CHÃO em 'player_frames.tres'
 ## (ex: 'attack1', 'attack2', 'attack3').
 ## O sistema de sockets das mãos e costas usa automaticamente este nome para
 ## posicionar a arma frame a frame!
 @export var body_animation: StringName = &"attack1"
+
+## Nome exato da animação do corpo do personagem no AR em 'player_frames.tres'
+## (ex: 'air_attack1', 'air_attack2', 'air_attack3').
+## Se a animação configurada ainda não existir no SpriteFrames (ex: enquanto air_attack2 e air_attack3
+## estiverem em produção), o sistema faz fallback seguro automático para 'air_attack1' ou 'body_animation'!
+@export var air_body_animation: StringName = &"air_attack1"
 
 @export_group("Tempo, Física e Dano do Golpe")
 
@@ -58,10 +64,18 @@ extends Resource
 ## Nota: A arma pode sobrescrever isso em 'slash_step_animations' caso tenha um corte exclusivo.
 @export var slash_animation: StringName = &"slash_sword"
 
-## Deslocamento base (em pixels) do efeito de corte para a pose deste golpe.
+## [Opcional] Nome da animação de corte em 'slash_frames.tres' usada quando este golpe é executado no AR
+## (ex: 'slash_air_sword_1'). Se deixado vazio, usa 'slash_animation' padrão do passo.
+@export var air_slash_animation: StringName = &""
+
+## Deslocamento base (em pixels) do efeito de corte para a pose deste golpe no chão.
 ## X positivo (+) move para a frente do ataque; Y negativo (-) move para cima; Y positivo (+) move para baixo.
 ## O 'slash_offset' configurado na Arma será SOMADO a este valor!
 @export var step_slash_offset: Vector2 = Vector2.ZERO
+
+## Deslocamento adicional (em pixels) aplicado ao efeito de corte quando este golpe é executado no AR
+## (útil pois nos sprites de air_attack o corpo do aventureiro fica elevado na célula 83x62).
+@export var step_air_slash_offset: Vector2 = Vector2.ZERO
 
 ## Escala base do efeito de corte para este passo (1.0, 1.0 = tamanho original).
 ## A 'slash_scale' configurada na Arma será MULTIPLICADA por este valor!
@@ -84,6 +98,13 @@ extends Resource
 ## Último frame em que a Hitbox de dano permanece LIGADA antes de desligar na recuperação (Recovery).
 ## Ex: No 'attack1' permanece ativa nos frames 2 e 3; no 'attack2' nos frames 3 e 4.
 @export_range(0, 20, 1) var active_end_frame: int = 3
+
+## [Opcional] Frame inicial em que a Hitbox liga quando o golpe é desferido no AR (-1 = herda 'active_start_frame').
+## Útil quando a animação aérea possui menos frames que a terrestre (ex: air_attack1 tem 4 frames, ativa no frame 2).
+@export_range(-1, 20, 1) var air_active_start_frame: int = -1
+
+## [Opcional] Último frame em que a Hitbox permanece ligada quando o golpe é desferido no AR (-1 = herda 'active_end_frame').
+@export_range(-1, 20, 1) var air_active_end_frame: int = -1
 
 ## Tamanho base (Largura x Altura em pixels) da caixa de colisão de dano deste golpe.
 ## Se a arma estiver com 'sync_hitbox_with_slash' ativo, esta caixa crescerá automaticamente junto com a escala do slash!

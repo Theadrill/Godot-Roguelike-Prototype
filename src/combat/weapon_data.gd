@@ -254,12 +254,21 @@ func get_finisher_cooldown() -> float:
 		return attack_set.finisher_cooldown
 	return combo_finisher_cooldown
 
-## Retorna o nome da animação do corpo do aventureiro para o passo informado (ex: &"attack1", &"attack2").
-func get_step_body_animation(step_index: int) -> StringName:
+## Retorna o nome da animação do corpo do aventureiro para o passo informado (ex: &"attack1" no chão, &"air_attack1" no ar).
+func get_step_body_animation(step_index: int, is_airborne: bool = false) -> StringName:
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)
-		if step_data and step_data.body_animation != &"":
-			return step_data.body_animation
+		if step_data:
+			if is_airborne and step_data.air_body_animation != &"":
+				return step_data.air_body_animation
+			if step_data.body_animation != &"":
+				return step_data.body_animation
+	if is_airborne:
+		if step_index == 1:
+			return &"air_attack2"
+		elif step_index >= 2:
+			return &"air_attack3"
+		return &"air_attack1"
 	if step_index == 1:
 		return &"attack2"
 	elif step_index >= 2:
@@ -296,16 +305,21 @@ func get_step_damage_multiplier(step_index: int) -> float:
 			return step_data.damage_multiplier
 	return 1.0 + (float(step_index) * 0.25)
 
-## Retorna a animação de slash a ser usada no passo informado (Prioridade: Override da Arma -> Set -> Fallback).
-func get_step_slash_animation(step_index: int) -> StringName:
+## Retorna a animação de slash a ser usada no passo informado (Prioridade: Override da Arma -> Set (Ar/Chão) -> Fallback).
+func get_step_slash_animation(step_index: int, is_airborne: bool = false) -> StringName:
 	if step_index >= 0 and step_index < slash_step_animations.size():
 		var override_anim: StringName = slash_step_animations[step_index]
 		if override_anim != &"":
 			return override_anim
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)
-		if step_data and step_data.slash_animation != &"":
-			return step_data.slash_animation
+		if step_data:
+			if is_airborne and step_data.air_slash_animation != &"":
+				return step_data.air_slash_animation
+			if step_data.slash_animation != &"":
+				return step_data.slash_animation
+	if is_airborne and step_index == 0 and (slash_animation == &"" or slash_animation == &"slash_sword"):
+		return &"slash_air_sword_1"
 	if step_index == 1 and (slash_animation == &"" or slash_animation == &"slash_sword"):
 		return &"slash_sword_2"
 	elif step_index >= 2 and (slash_animation == &"" or slash_animation == &"slash_sword"):
@@ -313,13 +327,15 @@ func get_step_slash_animation(step_index: int) -> StringName:
 	return slash_animation if slash_animation != &"" else &"slash_sword"
 
 ## Retorna o deslocamento total (Offset Aditivo) do slash para o passo informado:
-## Offset do Passo (no Set) + Slash Offset Global da Arma (ex: +3 no X) + Slash Step Offset da Arma.
-func get_step_total_slash_offset(step_index: int) -> Vector2:
+## Offset do Passo (no Set + Offset Aéreo se no ar) + Slash Offset Global da Arma (ex: +3 no X) + Slash Step Offset da Arma.
+func get_step_total_slash_offset(step_index: int, is_airborne: bool = false) -> Vector2:
 	var total_offset: Vector2 = Vector2.ZERO
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)
 		if step_data:
 			total_offset += step_data.step_slash_offset
+			if is_airborne:
+				total_offset += step_data.step_air_slash_offset
 	total_offset += slash_offset
 	if step_index >= 0 and step_index < slash_step_offsets.size():
 		total_offset += slash_step_offsets[step_index]
@@ -357,19 +373,23 @@ func get_step_slash_flip_v(step_index: int) -> bool:
 	return false
 
 ## Retorna o frame inicial em que a Hitbox de dano liga neste passo (fim do Windup / início do Slash).
-func get_step_active_start_frame(step_index: int) -> int:
+func get_step_active_start_frame(step_index: int, is_airborne: bool = false) -> int:
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)
 		if step_data:
+			if is_airborne and step_data.air_active_start_frame >= 0:
+				return step_data.air_active_start_frame
 			return maxi(0, step_data.active_start_frame)
 	return 3 if step_index == 1 else 2
 
 ## Retorna o último frame em que a Hitbox de dano fica ligada neste passo (antes do Recovery).
-func get_step_active_end_frame(step_index: int) -> int:
+func get_step_active_end_frame(step_index: int, is_airborne: bool = false) -> int:
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)
 		if step_data:
-			return maxi(get_step_active_start_frame(step_index), step_data.active_end_frame)
+			if is_airborne and step_data.air_active_end_frame >= 0:
+				return maxi(get_step_active_start_frame(step_index, true), step_data.air_active_end_frame)
+			return maxi(get_step_active_start_frame(step_index, is_airborne), step_data.active_end_frame)
 	return 4 if step_index == 1 else 3
 
 ## Retorna se este passo bloqueia o cancelamento por esquiva (Slide/Roll) após o fim do Windup (durante o corte e a pausa final).
@@ -380,9 +400,9 @@ func is_step_dodge_locked_after_windup(step_index: int) -> bool:
 			return step_data.lock_dodge_after_windup
 	return step_index >= 2
 
-## Calcula a posição e tamanho finais da Hitbox física do golpe no chão,
+## Calcula a posição e tamanho finais da Hitbox física do golpe,
 ## sincronizando automaticamente com o offset/escala do slash se 'hitbox_sync_with_slash' estiver ativo.
-func get_step_hitbox_metrics(step_index: int) -> Dictionary:
+func get_step_hitbox_metrics(step_index: int, is_airborne: bool = false) -> Dictionary:
 	var base_size: Vector2 = Vector2(32.0, 28.0)
 	var base_pos: Vector2 = Vector2(20.0, -20.0)
 	if attack_set and not attack_set.steps.is_empty():
@@ -395,7 +415,7 @@ func get_step_hitbox_metrics(step_index: int) -> Dictionary:
 	var final_pos: Vector2 = base_pos
 
 	if hitbox_sync_with_slash:
-		var total_slash_off: Vector2 = get_step_total_slash_offset(step_index)
+		var total_slash_off: Vector2 = get_step_total_slash_offset(step_index, is_airborne)
 		var total_slash_sc: Vector2 = get_step_total_slash_scale(step_index)
 		final_size = Vector2(base_size.x * total_slash_sc.x, base_size.y * total_slash_sc.y) + hitbox_extra_reach
 		# Avança o centro da hitbox de acordo com o offset X/Y e metade do ganho de largura

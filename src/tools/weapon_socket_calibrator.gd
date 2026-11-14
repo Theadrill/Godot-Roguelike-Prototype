@@ -44,6 +44,9 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"attack1": 5,
 	"attack2": 6,
 	"attack3": 6,
+	"air_attack1": 4,
+	"air_attack2": 4,
+	"air_attack3": 4,
 	"air_attack": 4,
 	"cast": 4,
 	"channeling": 2,
@@ -77,7 +80,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 @export_group("2. Animação, Frame & File")
 ## Escolha a animação do aventureiro para visualizar e calibrar.
-@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack", "cast", "channeling", "block", "block_loop", "stagger") var selected_animation: String = "idle":
+@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack1", "air_attack2", "air_attack3", "cast", "channeling", "block", "block_loop", "stagger") var selected_animation: String = "idle":
 	set(value):
 		selected_animation = value
 		_on_configuration_changed()

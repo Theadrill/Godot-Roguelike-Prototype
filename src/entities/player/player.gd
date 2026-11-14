@@ -344,13 +344,17 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 			slash_effect.stop()
 		return
 
+	var is_airborne: bool = not is_on_floor()
+
 	# Configurar animação no AnimatedSprite2D
 	if slash_effect is AnimatedSprite2D:
 		var target_frames := weapon.slash_custom_frames if weapon.slash_custom_frames else default_slash_frames
 		if target_frames and slash_effect.sprite_frames != target_frames:
 			slash_effect.sprite_frames = target_frames
 
-		var anim_name: StringName = weapon.get_step_slash_animation(combo_step) if weapon else &"slash_sword"
+		var anim_name: StringName = weapon.get_step_slash_animation(combo_step, is_airborne) if weapon else &"slash_sword"
+		if slash_effect.sprite_frames and not slash_effect.sprite_frames.has_animation(anim_name):
+			anim_name = weapon.get_step_slash_animation(combo_step, false) if weapon else &"slash_sword"
 		if slash_effect.sprite_frames and not slash_effect.sprite_frames.has_animation(anim_name):
 			anim_name = weapon.slash_animation if (weapon and weapon.slash_animation) else &"slash_sword"
 		if slash_effect.sprite_frames and slash_effect.sprite_frames.has_animation(anim_name):
@@ -371,7 +375,7 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 
 	# Posição ancorada perfeitamente na mesma origem do PlayerSprite (pé do aventureiro)
 	var base_pos: Vector2 = player_sprite.position if player_sprite else Vector2(-2, -29)
-	var custom_offset: Vector2 = weapon.get_step_total_slash_offset(combo_step) if weapon else Vector2.ZERO
+	var custom_offset: Vector2 = weapon.get_step_total_slash_offset(combo_step, is_airborne) if weapon else Vector2.ZERO
 	var custom_scale: Vector2 = weapon.get_step_total_slash_scale(combo_step) if weapon else Vector2.ONE
 	var custom_mod: Color = weapon.slash_modulate if weapon else Color.WHITE
 	var custom_z: int = weapon.slash_z_index if weapon else 4
@@ -488,7 +492,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 	if state_machine and state_machine.current_state:
 		var current_state_name: String = state_machine.current_state.name.to_lower()
 		if current_state_name == "attack":
-			is_in_manual_socket_state = not (anim_name in [&"attack1", &"attack2", &"attack3"])
+			is_in_manual_socket_state = not (anim_name in [&"attack1", &"attack2", &"attack3", &"air_attack1", &"air_attack2", &"air_attack3", &"air_attack"])
 		elif current_state_name == "rangedattack":
 			is_in_manual_socket_state = not (anim_name in [&"cast", &"channeling"])
 		elif current_state_name == "guard":

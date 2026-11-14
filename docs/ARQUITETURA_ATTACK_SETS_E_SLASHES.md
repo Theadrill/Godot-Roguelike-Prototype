@@ -111,19 +111,24 @@ Representa **1 golpe individual** dentro de um Set de Ataque.
 | Propriedade (`@export`) | Tipo | Valor Padrão | O que faz no Editor Visual da Godot |
 | :--- | :--- | :--- | :--- |
 | **`step_label`** | `String` | `"Golpe 1"` | Nome organizacional deste passo no Inspector (ex: `"Golpe 1 - Corte Vertical"`, `"Golpe 2 - Estocada"`). |
-| **`body_animation`** | `StringName` | `&"attack1"` | Nome exato da animação do corpo do personagem em `player_frames.tres` (ex: `attack1`, `attack2`, `attack3`). Também dita qual pose o socket da mão/costas vai usar! |
+| **`body_animation`** | `StringName` | `&"attack1"` | Nome exato da animação do corpo do personagem no CHÃO em `player_frames.tres` (ex: `attack1`, `attack2`, `attack3`). Também dita qual pose o socket da mão/costas vai usar! |
+| **`air_body_animation`** | `StringName` | `&"air_attack1"` | Nome exato da animação do corpo do personagem no AR em `player_frames.tres` (`air_attack1`, `air_attack2`, `air_attack3`). Possui fallback automático para `body_animation` ou `air_attack1` caso a animação aérea ainda não exista. |
 | **`duration`** | `float` | `0.36` | Tempo total de execução deste golpe em segundos. A velocidade da animação do corpo e do slash se ajustam automaticamente para caber neste tempo. |
 | **`forward_impulse`** | `float` | `80.0` | Impulso físico horizontal (em px/s) que projeta o personagem para frente ao desferir este golpe. |
 | **`damage_multiplier`** | `float` | `1.0` | Multiplicador de dano específico deste golpe (ex: `1.0` no golpe 1, `1.25` no golpe 2, `1.5` num golpe final pesado). Multiplica o `base_damage` da arma. |
 | **`next_step_window`** | `float` | `0.0` | Janela máxima de oportunidade (em segundos) após terminar este golpe para engatar o próximo passo do combo antes de resetar para o Golpe 1 (`1.35s` do Golpe 1 -> 2; `0.675s` do Golpe 2 -> 3 para exigir compromisso imediato no finalizador). Se `0.0`, usa o `combo_window` do Set. |
 | **`lock_dodge_after_windup`** | `bool` | `false` | Se `true` (padrão no Golpe 3), bloqueia o cancelamento por Slide/Roll **apenas durante os frames do Slash** (`frames 2..4`), permitindo esquivar durante o giro inicial (`frames 0..1`) e na pausa final (`frame 5`). |
-| **`slash_animation`** | `StringName` | `&"slash_sword"` | Nome da animação de efeito de corte (em `slash_frames.tres`) que acompanha este golpe específico (ex: `slash_sword_1` no ataque 1, `slash_sword_2` no ataque 2). |
+| **`slash_animation`** | `StringName` | `&"slash_sword"` | Nome da animação de efeito de corte (em `slash_frames.tres`) que acompanha este golpe específico (ex: `slash_sword` no ataque 1, `slash_sword_2` no ataque 2). |
+| **`air_slash_animation`** | `StringName` | `&""` | Opcional: nome da animação de corte em `slash_frames.tres` usada quando o golpe é feito no AR (ex: `slash_air_sword_1` de 4 frames para sincronizar 1:1 com `air_attack1`). |
 | **`step_slash_offset`** | `Vector2` | `Vector2(0, 0)` | Deslocamento base (em pixels) do efeito de corte para esta pose de ataque. `X+` move para frente do golpe; `Y-` move para cima; `Y+` move para baixo. |
+| **`step_air_slash_offset`** | `Vector2` | `Vector2(0, 0)` | Deslocamento adicional (em pixels) somado ao slash quando este golpe é executado no AR. |
 | **`step_slash_scale`** | `Vector2` | `Vector2(1, 1)` | Escala base do efeito de corte para este passo (ex: `(1.2, 1.2)` se este golpe específico tiver um arco mais amplo). |
 | **`step_slash_flip_h`** | `bool` | `false` | Se `true`, espelha o desenho do slash horizontalmente neste golpe. |
 | **`step_slash_flip_v`** | `bool` | `false` | Se `true`, espelha o desenho do slash verticalmente neste golpe (muito útil para reaproveitar um slash descendente transformando-o em corte ascendente!). |
 | **`active_start_frame`** | `int` | `2` | **Frame Inicial Ativo da Hitbox** (padrão *Dead Cells* / *Blasphemous*): Antes deste frame o personagem está no *Windup* (puxando a arma para trás) com a Hitbox **desligada**. Neste frame exato, o slash surge na tela, o impulso para frente é liberado e a Hitbox **liga**! (`2` no `attack1`, `3` no `attack2`). |
 | **`active_end_frame`** | `int` | `3` | **Último Frame Ativo da Hitbox**: Após este frame, o golpe entra em *Recovery* (recuperação da pose) e a Hitbox **desliga** (`3` no `attack1`, `4` no `attack2`). |
+| **`air_active_start_frame`** | `int` | `-1` | Frame inicial ativo da Hitbox quando no AR (`-1` herda `active_start_frame`). |
+| **`air_active_end_frame`** | `int` | `-1` | Último frame ativo da Hitbox quando no AR (`-1` herda `active_end_frame`). |
 | **`hitbox_size`** | `Vector2` | `Vector2(32, 28)` | Tamanho base (largura x altura em pixels) da caixa de colisão de dano deste golpe. |
 | **`hitbox_position`** | `Vector2` | `Vector2(20, -20)` | Posição base do centro da caixa de colisão de dano relativa ao personagem neste golpe. |
 
