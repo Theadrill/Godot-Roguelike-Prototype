@@ -129,6 +129,12 @@ Representa **1 golpe individual** dentro de um Set de Ataque.
 | **`active_end_frame`** | `int` | `3` | **Último Frame Ativo da Hitbox**: Após este frame, o golpe entra em *Recovery* (recuperação da pose) e a Hitbox **desliga** (`3` no `attack1`, `4` no `attack2`). |
 | **`air_active_start_frame`** | `int` | `-1` | Frame inicial ativo da Hitbox quando no AR (`-1` herda `active_start_frame`). |
 | **`air_active_end_frame`** | `int` | `-1` | Último frame ativo da Hitbox quando no AR (`-1` herda `active_end_frame`). |
+| **`is_air_plunge`** | `bool` | `false` | Se `true` (ex: *War Hammer* com `air_attack3`), quando executado no ar, ativa a máquina de 4 fases: `Frame 0` (Preparação) -> `Frames 1..3` (Loop de Queda com Hitbox ativa) -> `Frames 4..5` (Golpe ao atingir inimigo ou chão, com freio curto se no ar) -> `Frame 6` (Finalização). |
+| **`plunge_prep_duration`** | `float` | `0.12` | Tempo (em segundos) do `Frame 0` de preparação no ar antes de iniciar a descida do ataque de queda. |
+| **`plunge_fall_speed`** | `float` | `420.0` | Velocidade vertical mínima de descida (`px/s`) durante o loop de queda (`Frames 1..3`). |
+| **`plunge_loop_fps`** | `float` | `12.0` | Velocidade (`FPS`) com que os `Frames 1, 2 e 3` ciclam em loop enquanto o personagem cai e ainda não atingiu ninguém. |
+| **`plunge_impact_duration`** | `float` | `0.20` | Duração total (em segundos) dos `Frames 4 e 5` (o golpe em si) quando atinge um inimigo no ar ou toca o chão. |
+| **`plunge_recovery_duration`** | `float` | `0.14` | Duração (em segundos) do `Frame 6` de finalização após o impacto antes de liberar o personagem. |
 | **`hitbox_size`** | `Vector2` | `Vector2(32, 28)` | Tamanho base (largura x altura em pixels) da caixa de colisão de dano deste golpe. |
 | **`hitbox_position`** | `Vector2` | `Vector2(20, -20)` | Posição base do centro da caixa de colisão de dano relativa ao personagem neste golpe. |
 

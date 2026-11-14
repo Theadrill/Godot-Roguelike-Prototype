@@ -30,6 +30,7 @@ enum PlungePhase {
 }
 
 var _is_plunge_active: bool = false
+var _is_air_stall_active: bool = false
 var _plunge_phase: PlungePhase = PlungePhase.PREP
 var _plunge_timer: float = 0.0
 var _plunge_loop_accum: float = 0.0
@@ -140,9 +141,21 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = hb_metrics["size"]
 		player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
 
-	# When on ground, clamp vertical speed to 0; when in air, leave gravity/fall speed completely untouched!
+	# When on ground, clamp vertical speed to 0; when in air, apply short finite mid-air brake (Air Stall) for melee weapons
+	_is_air_stall_active = false
 	if player.is_on_floor():
 		player.velocity.y = 0.0
+		player.set_meta("air_stall_steps", 0)
+	elif not is_upward and not is_downward and is_melee_combo:
+		var is_plunge_step: bool = player.weapon != null and player.weapon.is_step_air_plunge(current_step)
+		if not is_plunge_step:
+			var used_stalls: int = int(player.get_meta("air_stall_steps", 0)) if player.has_meta("air_stall_steps") else 0
+			var max_stalls: int = maxi(1, player.weapon.get_combo_step_count()) if player.weapon else 3
+			if used_stalls < max_stalls:
+				_is_air_stall_active = true
+				player.set_meta("air_stall_steps", used_stalls + 1)
+				player.velocity.y = 0.0
+				player.velocity.x = player.facing_direction * (_pending_forward_impulse * 0.15)
 
 	# Setup active hitbox metrics with scaling per combo step and charge ratio
 	var step_mult: float = player.weapon.get_step_damage_multiplier(current_step) if player.weapon else (1.0 + (current_step * 0.25))
@@ -216,6 +229,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 func exit() -> void:
 	is_charging = false
 	_is_plunge_active = false
+	_is_air_stall_active = false
 	if player and player.hitbox and player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
 		player.hitbox.hit_landed.disconnect(_on_plunge_hit_landed)
 	if player.player_sprite:
@@ -316,9 +330,14 @@ func physics_update(delta: float) -> void:
 		combo_buffered = true
 		queued_combo_presses = mini(3, queued_combo_presses + 1)
 		
-	# Decelerate horizontal impulse on ground; maintain full natural gravity in air
+	# Decelerate horizontal impulse on ground; in air, apply short finite air brake if active, otherwise full natural gravity
 	if player.is_on_floor():
+		_is_air_stall_active = false
+		player.set_meta("air_stall_steps", 0)
 		player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
+	elif _is_air_stall_active:
+		player.velocity.x = move_toward(player.velocity.x, 0.0, 500.0 * delta)
+		player.velocity.y += (player.gravity * 0.20) * delta
 	else:
 		player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
 		
@@ -382,9 +401,10 @@ func _update_active_hitbox_window() -> void:
 	if cur_frame >= _step_active_start_frame and not _hitbox_opened_for_step:
 		_hitbox_opened_for_step = true
 		player.hitbox.set_active(true)
-		# Apply full forward lunge at the exact moment the blade/slash unleashes!
+		# Apply full forward lunge at the exact moment the blade/slash unleashes! (Slightly dampened in mid-air so you stay on target)
 		if _pending_forward_impulse > 0.0:
-			player.velocity.x = player.facing_direction * _pending_forward_impulse
+			var lunge_mult: float = 0.45 if (_is_air_stall_active and not player.is_on_floor()) else 1.0
+			player.velocity.x = player.facing_direction * (_pending_forward_impulse * lunge_mult)
 	elif _hitbox_opened_for_step and cur_frame > _step_active_end_frame and player.hitbox.monitoring:
 		player.hitbox.set_active(false)
 

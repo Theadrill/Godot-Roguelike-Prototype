@@ -598,6 +598,7 @@ func _physics_process(delta: float) -> void:
 		can_double_jump = true
 		last_wall_jump_normal_x = 0.0 # Reset wall memory on ground touch
 		is_wall_recovery_active = false
+		set_meta("air_stall_steps", 0)
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 
