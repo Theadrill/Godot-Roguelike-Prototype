@@ -579,6 +579,7 @@ func _on_frame_changed() -> void:
 		socket_flip_v = active_vis.scale.y < 0.0
 	_is_syncing_from_frame = false
 
+	_sync_slash_from_weapon_data()
 	_update_slash_preview()
 
 	status_message = "%s [%s] -> %s Frame %d (Z: %d, FlipH: %s, FlipV: %s)" % [
@@ -706,8 +707,8 @@ func _sync_slash_from_weapon_data() -> void:
 	var is_air: bool = selected_animation.begins_with("air_")
 	var indices := _get_matching_step_indices_for_animation(selected_animation)
 	var step_idx: int = indices[0]
-	var total_off: Vector2 = _weapon_data_resource.get_step_total_slash_offset(step_idx, is_air)
-	var total_sc: Vector2 = _weapon_data_resource.get_step_total_slash_scale(step_idx)
+	var total_off: Vector2 = _weapon_data_resource.get_step_total_slash_offset(step_idx, is_air, current_frame)
+	var total_sc: Vector2 = _weapon_data_resource.get_step_total_slash_scale(step_idx, is_air, current_frame)
 	var fh: bool = _weapon_data_resource.get_step_slash_flip_h(step_idx)
 	var fv: bool = _weapon_data_resource.get_step_slash_flip_v(step_idx)
 
@@ -812,31 +813,41 @@ func _save_slash_to_set() -> void:
 		var st: ComboStepData = set_res.steps[idx]
 		if not st:
 			continue
-		if is_air:
-			st.step_air_slash_offset = target_total - st.step_slash_offset - _weapon_data_resource.slash_offset
-		else:
-			st.step_slash_offset = target_total - _weapon_data_resource.slash_offset
-		var w_sc: Vector2 = _weapon_data_resource.slash_scale
-		st.step_slash_scale = Vector2(
-			slash_preview_scale.x / (w_sc.x if not is_zero_approx(w_sc.x) else 1.0),
-			slash_preview_scale.y / (w_sc.y if not is_zero_approx(w_sc.y) else 1.0)
+		var w_step_off: Vector2 = _weapon_data_resource.slash_step_offsets[idx] if idx < _weapon_data_resource.slash_step_offsets.size() else Vector2.ZERO
+		var frame_off: Vector2 = target_total - _weapon_data_resource.slash_offset - w_step_off
+
+		var w_step_sc: Vector2 = Vector2.ONE
+		if idx < _weapon_data_resource.slash_step_scales.size() and _weapon_data_resource.slash_step_scales[idx] != Vector2.ZERO:
+			w_step_sc = _weapon_data_resource.slash_step_scales[idx]
+		var base_w_sc: Vector2 = _weapon_data_resource.slash_scale * w_step_sc
+		var frame_sc := Vector2(
+			slash_preview_scale.x / (base_w_sc.x if not is_zero_approx(base_w_sc.x) else 1.0),
+			slash_preview_scale.y / (base_w_sc.y if not is_zero_approx(base_w_sc.y) else 1.0)
 		)
+
+		if is_air:
+			st.step_frame_air_slash_offsets[current_frame] = frame_off
+			st.step_frame_air_slash_scales[current_frame] = frame_sc
+		else:
+			st.step_frame_slash_offsets[current_frame] = frame_off
+			st.step_frame_slash_scales[current_frame] = frame_sc
 		st.step_slash_flip_h = slash_preview_flip_h
 		st.step_slash_flip_v = slash_preview_flip_v
 
-		if idx < _weapon_data_resource.slash_step_offsets.size() and _weapon_data_resource.slash_step_offsets[idx] != Vector2.ZERO:
-			_weapon_data_resource.slash_step_offsets[idx] = Vector2.ZERO
+		var fkey: String = WeaponData.make_slash_frame_key(idx, is_air, current_frame)
+		if _weapon_data_resource.slash_frame_offsets.has(fkey):
+			_weapon_data_resource.slash_frame_offsets.erase(fkey)
 			weapon_modified = true
-		if idx < _weapon_data_resource.slash_step_scales.size() and _weapon_data_resource.slash_step_scales[idx] != Vector2.ONE:
-			_weapon_data_resource.slash_step_scales[idx] = Vector2.ONE
+		if _weapon_data_resource.slash_frame_scales.has(fkey):
+			_weapon_data_resource.slash_frame_scales.erase(fkey)
 			weapon_modified = true
 
 	var err := ResourceSaver.save(set_res, set_res.resource_path)
 	if weapon_modified:
 		ResourceSaver.save(_weapon_data_resource, _weapon_data_resource.resource_path)
 	if err == OK:
-		status_message = "SUCESSO! Slash salvo no Set '%s' para '%s' -> Offset: (%.1f, %.1f), Escala: %s" % [
-			set_res.resource_path.get_file(), selected_animation, slash_offset_x, slash_offset_y, str(slash_preview_scale)
+		status_message = "SUCESSO! Slash salvo no Set '%s' para '%s' Frame %d -> Offset: (%.1f, %.1f), Escala: %s" % [
+			set_res.resource_path.get_file(), selected_animation, current_frame, slash_offset_x, slash_offset_y, str(slash_preview_scale)
 		]
 		print(status_message)
 		_sync_slash_from_weapon_data()
@@ -899,19 +910,24 @@ func _save_slash_to_weapon() -> void:
 		if _weapon_data_resource.attack_set and idx < _weapon_data_resource.attack_set.steps.size():
 			var st: ComboStepData = _weapon_data_resource.attack_set.steps[idx]
 			if st:
-				set_off = st.step_slash_offset + (st.step_air_slash_offset if is_air else Vector2.ZERO)
-				set_sc = st.step_slash_scale
-		_weapon_data_resource.slash_step_offsets[idx] = target_total - set_off - _weapon_data_resource.slash_offset
-		var base_sc := set_sc * _weapon_data_resource.slash_scale
-		_weapon_data_resource.slash_step_scales[idx] = Vector2(
+				set_off = st.get_frame_slash_offset(current_frame, is_air)
+				set_sc = st.get_frame_slash_scale(current_frame, is_air)
+		var w_step_off: Vector2 = _weapon_data_resource.slash_step_offsets[idx] if idx < _weapon_data_resource.slash_step_offsets.size() else Vector2.ZERO
+		var w_step_sc: Vector2 = Vector2.ONE
+		if idx < _weapon_data_resource.slash_step_scales.size() and _weapon_data_resource.slash_step_scales[idx] != Vector2.ZERO:
+			w_step_sc = _weapon_data_resource.slash_step_scales[idx]
+		var fkey: String = WeaponData.make_slash_frame_key(idx, is_air, current_frame)
+		_weapon_data_resource.slash_frame_offsets[fkey] = target_total - set_off - _weapon_data_resource.slash_offset - w_step_off
+		var base_sc := set_sc * _weapon_data_resource.slash_scale * w_step_sc
+		_weapon_data_resource.slash_frame_scales[fkey] = Vector2(
 			slash_preview_scale.x / (base_sc.x if not is_zero_approx(base_sc.x) else 1.0),
 			slash_preview_scale.y / (base_sc.y if not is_zero_approx(base_sc.y) else 1.0)
 		)
 
 	var err := ResourceSaver.save(_weapon_data_resource, _weapon_data_resource.resource_path)
 	if err == OK:
-		status_message = "SUCESSO! Ajuste individual de Slash salvo em '%s' para '%s' -> Final: (%.1f, %.1f)" % [
-			_weapon_data_resource.resource_path.get_file(), selected_animation, slash_offset_x, slash_offset_y
+		status_message = "SUCESSO! Ajuste individual de Slash salvo em '%s' para '%s' Frame %d -> Final: (%.1f, %.1f)" % [
+			_weapon_data_resource.resource_path.get_file(), selected_animation, current_frame, slash_offset_x, slash_offset_y
 		]
 		print(status_message)
 		_sync_slash_from_weapon_data()

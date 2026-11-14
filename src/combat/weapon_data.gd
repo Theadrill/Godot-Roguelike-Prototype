@@ -327,34 +327,55 @@ func get_step_slash_animation(step_index: int, is_airborne: bool = false) -> Str
 		return &"slash_sword_3"
 	return slash_animation if slash_animation != &"" else &"slash_sword"
 
-## Retorna o deslocamento total (Offset Aditivo) do slash para o passo informado:
-## Offset do Passo (no Set + Offset Aéreo se no ar) + Slash Offset Global da Arma (ex: +3 no X) + Slash Step Offset da Arma.
-func get_step_total_slash_offset(step_index: int, is_airborne: bool = false) -> Vector2:
+## Ajustes individuais de offset de slash por frame nesta arma.
+## Chave String: "<step>_<ground|air>_<frame>" -> Vector2.
+@export var slash_frame_offsets: Dictionary = {}
+
+## Ajustes individuais de escala de slash por frame nesta arma.
+## Chave String: "<step>_<ground|air>_<frame>" -> Vector2.
+@export var slash_frame_scales: Dictionary = {}
+
+
+static func make_slash_frame_key(step_index: int, is_airborne: bool, frame_idx: int) -> String:
+	return "%d_%s_%d" % [step_index, "air" if is_airborne else "ground", frame_idx]
+
+
+## Retorna o deslocamento total (Offset Aditivo) do slash para o passo e frame informados:
+## Offset do Frame no Set + Slash Offset Global da Arma + Slash Step Offset da Arma + Slash Frame Offset da Arma.
+func get_step_total_slash_offset(step_index: int, is_airborne: bool = false, frame_idx: int = -1) -> Vector2:
 	var total_offset: Vector2 = Vector2.ZERO
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)
 		if step_data:
-			total_offset += step_data.step_slash_offset
-			if is_airborne:
-				total_offset += step_data.step_air_slash_offset
+			total_offset += step_data.get_frame_slash_offset(frame_idx, is_airborne)
 	total_offset += slash_offset
 	if step_index >= 0 and step_index < slash_step_offsets.size():
 		total_offset += slash_step_offsets[step_index]
+	if frame_idx >= 0:
+		var fkey: String = make_slash_frame_key(step_index, is_airborne, frame_idx)
+		if slash_frame_offsets.has(fkey):
+			total_offset += slash_frame_offsets[fkey]
 	return total_offset
 
-## Retorna a escala total (Multiplicativa) do slash para o passo informado:
-## Escala do Passo (no Set) * Slash Scale Global da Arma * Slash Step Scale da Arma.
-func get_step_total_slash_scale(step_index: int) -> Vector2:
+## Retorna a escala total (Multiplicativa) do slash para o passo e frame informados:
+## Escala do Frame no Set * Slash Scale Global da Arma * Slash Step Scale da Arma * Slash Frame Scale da Arma.
+func get_step_total_slash_scale(step_index: int, is_airborne: bool = false, frame_idx: int = -1) -> Vector2:
 	var total_scale: Vector2 = Vector2.ONE
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)
 		if step_data:
-			total_scale *= step_data.step_slash_scale
+			total_scale *= step_data.get_frame_slash_scale(frame_idx, is_airborne)
 	total_scale *= slash_scale
 	if step_index >= 0 and step_index < slash_step_scales.size():
 		var step_sc: Vector2 = slash_step_scales[step_index]
 		if step_sc != Vector2.ZERO:
 			total_scale *= step_sc
+	if frame_idx >= 0:
+		var fkey: String = make_slash_frame_key(step_index, is_airborne, frame_idx)
+		if slash_frame_scales.has(fkey):
+			var frame_sc: Vector2 = slash_frame_scales[fkey]
+			if frame_sc != Vector2.ZERO:
+				total_scale *= frame_sc
 	return total_scale
 
 ## Retorna se o slash deve sofrer flip horizontal neste passo.

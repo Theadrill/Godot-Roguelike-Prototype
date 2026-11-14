@@ -89,6 +89,46 @@ extends Resource
 ## Dica: Muito útil para inverter um corte de cima para baixo transformando-o em um corte de baixo para cima!
 @export var step_slash_flip_v: bool = false
 
+## Offsets de slash por frame (chave int = índice do frame -> Vector2) no chão.
+## Se o frame não estiver presente, usa 'step_slash_offset' como fallback.
+@export var step_frame_slash_offsets: Dictionary = {}
+
+## Offsets de slash por frame (chave int = índice do frame -> Vector2) no ar.
+## Se o frame não estiver presente, usa 'step_slash_offset + step_air_slash_offset' como fallback.
+@export var step_frame_air_slash_offsets: Dictionary = {}
+
+## Escalas de slash por frame (chave int = índice do frame -> Vector2) no chão.
+## Se o frame não estiver presente, usa 'step_slash_scale' como fallback.
+@export var step_frame_slash_scales: Dictionary = {}
+
+## Escalas de slash por frame (chave int = índice do frame -> Vector2) no ar.
+## Se o frame não estiver presente, usa 'step_slash_scale' como fallback.
+@export var step_frame_air_slash_scales: Dictionary = {}
+
+
+## Retorna o offset do slash para um frame específico (com fallback para o offset base do passo).
+func get_frame_slash_offset(frame_idx: int, is_airborne: bool = false) -> Vector2:
+	if frame_idx >= 0:
+		var dict: Dictionary = step_frame_air_slash_offsets if is_airborne else step_frame_slash_offsets
+		if dict.has(frame_idx):
+			return dict[frame_idx]
+		var str_key: String = str(frame_idx)
+		if dict.has(str_key):
+			return dict[str_key]
+	return step_slash_offset + (step_air_slash_offset if is_airborne else Vector2.ZERO)
+
+
+## Retorna a escala do slash para um frame específico (com fallback para a escala base do passo).
+func get_frame_slash_scale(frame_idx: int, is_airborne: bool = false) -> Vector2:
+	if frame_idx >= 0:
+		var dict: Dictionary = step_frame_air_slash_scales if is_airborne else step_frame_slash_scales
+		if dict.has(frame_idx):
+			return dict[frame_idx]
+		var str_key: String = str(frame_idx)
+		if dict.has(str_key):
+			return dict[str_key]
+	return step_slash_scale
+
 @export_group("Hitbox Base do Golpe (Active Frames)")
 
 ## Frame inicial em que a Hitbox de dano LIGA (padrão Dead Cells / Blasphemous / Nine Sols).

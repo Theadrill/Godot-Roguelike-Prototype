@@ -475,6 +475,7 @@ func _sync_plunge_frame(frame_idx: int) -> void:
 		if se.sprite_frames and se.sprite_frames.has_animation(se.animation):
 			var max_f: int = maxi(0, se.sprite_frames.get_frame_count(se.animation) - 1)
 			se.frame = clampi(_plunge_cur_frame, 0, max_f)
+			player.update_slash_frame_transform(se.frame)
 
 func _on_attack_hit_landed(_hurtbox: Hurtbox) -> void:
 	if not player:

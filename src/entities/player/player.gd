@@ -206,6 +206,7 @@ func _ready() -> void:
 
 	if slash_effect and slash_effect is AnimatedSprite2D:
 		slash_effect.animation_finished.connect(func(): slash_effect.visible = false)
+		slash_effect.frame_changed.connect(_on_slash_effect_frame_changed)
 
 func equip_weapon(new_weapon: WeaponData) -> void:
 	weapon = new_weapon
@@ -373,25 +374,13 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 		slash_effect.flip_h = weapon.get_step_slash_flip_h(combo_step) if weapon else false
 		slash_effect.flip_v = weapon.get_step_slash_flip_v(combo_step) if weapon else false
 
-	# Posição ancorada perfeitamente na mesma origem do PlayerSprite (pé do aventureiro)
-	var base_pos: Vector2 = player_sprite.position if player_sprite else Vector2(-2, -29)
-	var custom_offset: Vector2 = weapon.get_step_total_slash_offset(combo_step, is_airborne) if weapon else Vector2.ZERO
-	var custom_scale: Vector2 = weapon.get_step_total_slash_scale(combo_step) if weapon else Vector2.ONE
+	_slash_combo_step = combo_step
+	_slash_is_upward = is_upward
+	_slash_is_downward = is_downward
+	_slash_is_airborne = is_airborne
 	var custom_mod: Color = weapon.slash_modulate if weapon else Color.WHITE
 	var custom_z: int = weapon.slash_z_index if weapon else 4
-
-	if is_upward:
-		slash_effect.position = base_pos + Vector2(0.0, -8.0) + custom_offset
-		slash_effect.rotation_degrees = -90.0
-		slash_effect.scale = custom_scale * 1.1
-	elif is_downward:
-		slash_effect.position = base_pos + Vector2(4.0, 10.0) + custom_offset
-		slash_effect.rotation_degrees = 90.0
-		slash_effect.scale = custom_scale * 1.1
-	else:
-		slash_effect.position = base_pos + custom_offset
-		slash_effect.rotation_degrees = 0.0
-		slash_effect.scale = custom_scale
+	update_slash_frame_transform(0)
 
 	slash_effect.modulate = custom_mod
 	slash_effect.z_index = custom_z
@@ -429,6 +418,38 @@ func play_animation(anim_name: StringName) -> void:
 		if player_sprite.sprite_frames and player_sprite.sprite_frames.has_animation(anim_name):
 			player_sprite.play(anim_name)
 			_update_weapon_socket_for_frame(anim_name, player_sprite.frame)
+
+var _slash_combo_step: int = 0
+var _slash_is_upward: bool = false
+var _slash_is_downward: bool = false
+var _slash_is_airborne: bool = false
+
+
+func _on_slash_effect_frame_changed() -> void:
+	if slash_effect and slash_effect.visible:
+		update_slash_frame_transform(slash_effect.frame)
+
+
+func update_slash_frame_transform(frame_idx: int) -> void:
+	if not slash_effect or not is_instance_valid(slash_effect):
+		return
+	var base_pos: Vector2 = player_sprite.position if player_sprite else Vector2(-2, -29)
+	var custom_offset: Vector2 = weapon.get_step_total_slash_offset(_slash_combo_step, _slash_is_airborne, frame_idx) if weapon else Vector2.ZERO
+	var custom_scale: Vector2 = weapon.get_step_total_slash_scale(_slash_combo_step, _slash_is_airborne, frame_idx) if weapon else Vector2.ONE
+
+	if _slash_is_upward:
+		slash_effect.position = base_pos + Vector2(0.0, -8.0) + custom_offset
+		slash_effect.rotation_degrees = -90.0
+		slash_effect.scale = custom_scale * 1.1
+	elif _slash_is_downward:
+		slash_effect.position = base_pos + Vector2(4.0, 10.0) + custom_offset
+		slash_effect.rotation_degrees = 90.0
+		slash_effect.scale = custom_scale * 1.1
+	else:
+		slash_effect.position = base_pos + custom_offset
+		slash_effect.rotation_degrees = 0.0
+		slash_effect.scale = custom_scale
+
 
 func _on_player_sprite_animation_finished() -> void:
 	# Transição suave: após a ponte de desenrolar do pulo, mantém o loop de queda fluida
