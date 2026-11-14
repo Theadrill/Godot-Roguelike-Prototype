@@ -124,39 +124,39 @@ back_frames = {
 "air_attack3_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -21),
-"rot": -185.0,
+"pos": Vector2(-6, -21),
+"rot": -257.5,
 "visible": true,
 "z_index": 1
 },
 "air_attack3_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -16),
-"rot": -185.0,
+"pos": Vector2(-18, -22),
+"rot": -189.0,
 "visible": true,
 "z_index": 1
 },
 "air_attack3_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -14),
-"rot": -185.0,
+"pos": Vector2(-18, -22),
+"rot": -181.0,
 "visible": true,
 "z_index": 1
 },
 "air_attack3_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -14),
-"rot": -185.0,
+"pos": Vector2(-18, -22),
+"rot": -169.0,
 "visible": true,
 "z_index": 1
 },
 "air_attack3_4": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -12),
+"pos": Vector2(-7, -12),
 "rot": -185.0,
 "visible": true,
 "z_index": 1
@@ -164,16 +164,16 @@ back_frames = {
 "air_attack3_5": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -14),
-"rot": -185.0,
+"pos": Vector2(-7, -12),
+"rot": -177.0,
 "visible": true,
 "z_index": 1
 },
 "air_attack3_6": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -14),
-"rot": -185.0,
+"pos": Vector2(-7, -12),
+"rot": -193.0,
 "visible": true,
 "z_index": 1
 },

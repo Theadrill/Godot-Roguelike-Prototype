@@ -139,6 +139,20 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 			_prompt_apply_to_current_animation()
 		APPLY_TO_CURRENT_ANIMATION = false
 
+## Copia a posição (X, Y) e a rotação do socket no frame atual para a memória, permitindo colar em qualquer outra arma, escudo ou frame.
+@export var COPY_SOCKET_FRAME: bool = false:
+	set(value):
+		if value:
+			copy_current_socket_frame()
+		COPY_SOCKET_FRAME = false
+
+## Cola a posição (X, Y) e a rotação copiadas anteriormente no frame atual (apenas na pré-visualização, sem salvar automaticamente no arquivo).
+@export var PASTE_SOCKET_FRAME: bool = false:
+	set(value):
+		if value:
+			_prompt_paste_current_socket_frame()
+		PASTE_SOCKET_FRAME = false
+
 @export_group("3. Elementos de Apoio & Referência")
 ## Arma secundária para ver nas costas como referência.
 @export_enum("none", "bow", "sword", "dagger", "hammer", "axe", "staff", "crossbow") var reference_secondary_weapon: String = "bow":
@@ -1080,3 +1094,73 @@ func _report_save_status(err: Error, label: String) -> void:
 		print(status_message)
 	else:
 		status_message = "ERRO ao salvar %s: código %d" % [label, err]
+
+
+static var _has_copied_socket: bool = false
+static var _copied_socket_pos: Vector2 = Vector2.ZERO
+static var _copied_socket_rot: float = 0.0
+
+
+func copy_current_socket_frame() -> void:
+	var active_marker := _get_active_marker()
+	var pos := active_marker.position if active_marker else socket_position
+	var rot := active_marker.rotation_degrees if active_marker else socket_rotation
+	_copied_socket_pos = pos
+	_copied_socket_rot = rot
+	_has_copied_socket = true
+	status_message = "Socket copiado (%s | %s Frame %d): X=%.1f, Y=%.1f, Rot=%.1f°" % [
+		_get_active_item_name(), selected_animation, current_frame, pos.x, pos.y, rot
+	]
+	print(status_message)
+
+
+func _prompt_paste_current_socket_frame() -> void:
+	if not _has_copied_socket:
+		status_message = "AVISO: Nenhum posicionamento de socket copiado ainda. Use COPY_SOCKET_FRAME primeiro."
+		return
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Confirmar: Paste Socket Frame"
+	dlg.dialog_text = "Colar X=%.1f, Y=%.1f, Rot=%.1f° no frame atual?\nAlvo: %s | %s [%s Frame %d]\n(Apenas na pré-visualização, não salva automaticamente no .tres)" % [
+		_copied_socket_pos.x, _copied_socket_pos.y, _copied_socket_rot,
+		_get_active_item_name(), socket_target, selected_animation, current_frame
+	]
+	dlg.ok_button_text = "Sim, Colar"
+	dlg.cancel_button_text = "Cancelar"
+	dlg.confirmed.connect(func() -> void:
+		paste_current_socket_frame()
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func() -> void:
+		status_message = "Cancelado: Posicionamento do frame %d mantido." % current_frame
+		dlg.queue_free()
+	)
+	dlg.close_requested.connect(func() -> void:
+		dlg.queue_free()
+	)
+	var parent_node: Node = get_tree().root if get_tree() else self
+	if Engine.is_editor_hint() and ClassDB.class_exists("EditorInterface"):
+		var ed_base: Control = Engine.get_singleton("EditorInterface").get_base_control() if Engine.has_singleton("EditorInterface") else null
+		if ed_base:
+			parent_node = ed_base
+	parent_node.add_child(dlg)
+	dlg.popup_centered()
+
+
+func paste_current_socket_frame() -> void:
+	if not _has_copied_socket:
+		status_message = "AVISO: Nenhum posicionamento de socket copiado ainda. Use COPY_SOCKET_FRAME primeiro."
+		return
+	var active_marker := _get_active_marker()
+	if active_marker:
+		active_marker.position = _copied_socket_pos
+		active_marker.rotation_degrees = _copied_socket_rot
+	_is_syncing_from_frame = true
+	socket_position = _copied_socket_pos
+	socket_pos_x = _copied_socket_pos.x
+	socket_pos_y = _copied_socket_pos.y
+	socket_rotation = _copied_socket_rot
+	_is_syncing_from_frame = false
+	status_message = "Socket colado em %s [%s Frame %d] (não salvo): X=%.1f, Y=%.1f, Rot=%.1f°" % [
+		_get_active_item_name(), selected_animation, current_frame, _copied_socket_pos.x, _copied_socket_pos.y, _copied_socket_rot
+	]
+	print(status_message)

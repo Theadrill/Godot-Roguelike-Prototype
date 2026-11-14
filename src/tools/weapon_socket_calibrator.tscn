@@ -6,16 +6,17 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-selected_weapon = "axe"
-selected_animation = "air_attack1"
+socket_target = "Arma nas Costas (BackSocketWeapon)"
+selected_animation = "air_attack3"
+current_frame = 5
+COPY_SOCKET_FRAME = null
+PASTE_SOCKET_FRAME = null
 reference_secondary_weapon = "none"
-socket_pos_x = 2.5
-socket_pos_y = -43.0
-socket_rotation = 133.49998
-socket_flip_v = true
-socket_z_index = 2
-slash_preview_scale = Vector2(0.95, 1.05)
-status_message = "axe [Arma na Mão (MainHandSocket)] -> air_attack1 Frame 0 (Z: 2, FlipH: false, FlipV: true)"
+socket_pos_x = -5.0
+socket_pos_y = -27.6
+socket_rotation = 110.99999
+slash_preview_scale = Vector2(1.05, 1.05)
+status_message = "sword [Arma nas Costas (BackSocketWeapon)] -> air_attack3 Frame 5 (Z: -2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -29,24 +30,25 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"air_attack1"
+animation = &"air_attack3"
+frame = 5
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
-z_index = -1
+z_index = -2
 z_as_relative = false
-position = Vector2(0, -31.5)
-rotation = 1.4573498
+position = Vector2(-5, -27.6)
+rotation = 1.9373155
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3
-position = Vector2(-6, -25.6)
+position = Vector2(-2.5, -20.6)
 rotation = -0.20943952
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(2.5, -43)
-rotation = 2.3300145
+position = Vector2(-21.5, -38)
+rotation = -2.5220008
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
@@ -56,6 +58,7 @@ rotation = -0.61086524
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
 z_index = 4
 position = Vector2(-2, -29)
-scale = Vector2(0.95, 1.05)
+scale = Vector2(1.05, 1.05)
 sprite_frames = ExtResource("3_slash_frames")
-animation = &"slash_air_sword_1"
+animation = &"slash_sword_3"
+frame = 5
