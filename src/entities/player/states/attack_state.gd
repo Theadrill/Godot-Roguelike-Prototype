@@ -450,17 +450,31 @@ func _start_air_plunge(anim_name: StringName) -> void:
 	player.velocity.x *= 0.5
 
 	player.hitbox.set_active(false)
-	player.set_slash_visual(false, 0, false, false)
+	if step_data and step_data.air_slash_animation != &"":
+		player.set_slash_visual(true, current_step, false, false)
+	else:
+		player.set_slash_visual(false, 0, false, false)
 
 	if player.hitbox and not player.hitbox.hit_landed.is_connected(_on_attack_hit_landed):
 		player.hitbox.hit_landed.connect(_on_attack_hit_landed)
 
 	player.play_animation(anim_name)
 	if player.player_sprite:
-		player.player_sprite.pause()
-		player.player_sprite.frame = 0
 		player.player_sprite.speed_scale = 1.0
-		player._update_weapon_socket_for_frame(anim_name, 0)
+	_sync_plunge_frame(0)
+
+func _sync_plunge_frame(frame_idx: int) -> void:
+	_plunge_cur_frame = frame_idx
+	if player.player_sprite:
+		player.player_sprite.pause()
+		player.player_sprite.frame = _plunge_cur_frame
+		player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+	if player.slash_effect and player.slash_effect.visible and player.slash_effect is AnimatedSprite2D:
+		var se := player.slash_effect as AnimatedSprite2D
+		se.pause()
+		if se.sprite_frames and se.sprite_frames.has_animation(se.animation):
+			var max_f: int = maxi(0, se.sprite_frames.get_frame_count(se.animation) - 1)
+			se.frame = clampi(_plunge_cur_frame, 0, max_f)
 
 func _on_attack_hit_landed(_hurtbox: Hurtbox) -> void:
 	if not player:
@@ -509,17 +523,7 @@ func _enter_plunge_impact(in_midair: bool) -> void:
 	if not player.hitbox.monitoring:
 		player.hitbox.set_active(true)
 
-	if player.player_sprite:
-		player.player_sprite.pause()
-		player.player_sprite.frame = _plunge_cur_frame
-		player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
-
-	# Só ativa o SlashEffect se este passo de mergulho tiver uma animação de slash aéreo dedicada configurada
-	var step_data: ComboStepData = player.weapon.get_step_data(current_step) if player.weapon else null
-	if step_data and step_data.air_slash_animation != &"":
-		player.set_slash_visual(true, current_step, false, false)
-	else:
-		player.set_slash_visual(false, 0, false, false)
+	_sync_plunge_frame(_plunge_impact_start)
 
 func _update_air_plunge(delta: float) -> void:
 	# Ignora e limpa cliques repetidos de ataque durante o mergulho e a finalização para não soltar slash normal no chão ao terminar!
@@ -546,7 +550,6 @@ func _update_air_plunge(delta: float) -> void:
 				return
 			if _plunge_timer <= 0.0:
 				_plunge_phase = PlungePhase.FALL_LOOP
-				_plunge_cur_frame = _plunge_loop_start
 				_plunge_loop_accum = 0.0
 				# Ativa a Hitbox de descida posicionada embaixo/frente acompanhando a cabeça do martelo
 				if player.hitbox.has_node("CollisionShape2D"):
@@ -555,10 +558,7 @@ func _update_air_plunge(delta: float) -> void:
 				player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.5, 0.85).normalized()
 				player.hitbox.set_active(false)
 				player.hitbox.set_active(true)
-				if player.player_sprite:
-					player.player_sprite.pause()
-					player.player_sprite.frame = _plunge_cur_frame
-					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+				_sync_plunge_frame(_plunge_loop_start)
 
 		PlungePhase.FALL_LOOP:
 			# Continua caindo e ciclando entre os frames de loop enquanto não toca em ninguém nem chega no chão
@@ -578,12 +578,10 @@ func _update_air_plunge(delta: float) -> void:
 			_plunge_loop_accum += delta * _plunge_loop_fps
 			if _plunge_loop_accum >= 1.0:
 				_plunge_loop_accum -= 1.0
-				_plunge_cur_frame += 1
-				if _plunge_cur_frame > _plunge_loop_end:
-					_plunge_cur_frame = _plunge_loop_start
-				if player.player_sprite:
-					player.player_sprite.frame = _plunge_cur_frame
-					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+				var next_loop_frame: int = _plunge_cur_frame + 1
+				if next_loop_frame > _plunge_loop_end:
+					next_loop_frame = _plunge_loop_start
+				_sync_plunge_frame(next_loop_frame)
 
 		PlungePhase.IMPACT:
 			_plunge_timer -= delta
@@ -591,10 +589,7 @@ func _update_air_plunge(delta: float) -> void:
 			var impact_frame_span: int = maxi(1, _plunge_impact_end - _plunge_impact_start + 1)
 			var target_frame: int = clampi(_plunge_impact_start + int(floor(progress * float(impact_frame_span))), _plunge_impact_start, _plunge_impact_end)
 			if target_frame != _plunge_cur_frame:
-				_plunge_cur_frame = target_frame
-				if player.player_sprite:
-					player.player_sprite.frame = _plunge_cur_frame
-					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+				_sync_plunge_frame(target_frame)
 
 			if player.is_on_floor():
 				player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
@@ -608,12 +603,9 @@ func _update_air_plunge(delta: float) -> void:
 			if _plunge_timer <= 0.0:
 				_plunge_phase = PlungePhase.RECOVERY
 				_plunge_timer = _plunge_recovery_duration
-				_plunge_cur_frame = _plunge_recovery_frame
 				player.hitbox.set_active(false)
 				player.set_slash_visual(false, 0, false, false)
-				if player.player_sprite:
-					player.player_sprite.frame = _plunge_cur_frame
-					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+				_sync_plunge_frame(_plunge_recovery_frame)
 
 		PlungePhase.RECOVERY:
 			_plunge_timer -= delta

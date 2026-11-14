@@ -34,7 +34,7 @@ Estes estados não mostram o retângulo colorido, mas estão esticando/achatando
   - Durante o carregamento (*windup*), apenas rotaciona o `main_hand_socket` para `-65°` sem tocar animação dedicada no `PlayerSprite`.
 - [ ] **Animações de Combate Aéreo / Slashes Restantes:**
   - [ ] **`air_attack2`** (segundo golpe aéreo caso seja adicionado futuramente).
-  - [ ] **Slash dedicado do `air_attack3` (`slash_air_sword_3`)** (em implementação).
+  - [x] **Slash dedicado do `air_attack3` (`slash_air_sword_3`)** — alinhado via GUIDE amarelo e sincronizado frame a frame com as fases do mergulho (`PREP`, `FALL_LOOP`, `IMPACT`, `RECOVERY`).
 
 ---
 
@@ -51,4 +51,4 @@ Estes estados não mostram o retângulo colorido, mas estão esticando/achatando
 - [x] **`Guard` / Escudo** (`block` — 3 frames + `block_loop` — 2 frames)
 - [x] **`RangedAttack` (Magia/Cajado)** (`channeling` — 2 frames + `cast` — 4 frames)
 - [x] **`Attack` (Chão)** (`attack1` + `slash_sword`, `attack2` + `slash_sword_2`, `attack3` + `slash_sword_3`)
-- [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` corpo pronto)
+- [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` + `slash_air_sword_3`)
