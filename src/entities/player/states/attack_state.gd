@@ -31,6 +31,7 @@ enum PlungePhase {
 
 var _is_plunge_active: bool = false
 var _is_air_stall_active: bool = false
+var _step_started_in_air: bool = false
 var _plunge_phase: PlungePhase = PlungePhase.PREP
 var _plunge_timer: float = 0.0
 var _plunge_loop_accum: float = 0.0
@@ -80,11 +81,16 @@ func enter() -> void:
 
 	combo_buffered = false
 	queued_combo_presses = 0
+	player.attack_buffer_timer = 0.0
+	if player.hitbox and not player.hitbox.hit_landed.is_connected(_on_attack_hit_landed):
+		player.hitbox.hit_landed.connect(_on_attack_hit_landed)
 	_start_combo_step(0.0)
 
 func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	combo_buffered = false
+	player.attack_buffer_timer = 0.0
 	var is_airborne: bool = not player.is_on_floor()
+	_step_started_in_air = is_airborne
 	_step_duration = player.weapon.get_step_duration(current_step) if player.weapon else 0.36
 	attack_timer = _step_duration
 	_step_active_start_frame = player.weapon.get_step_active_start_frame(current_step, is_airborne) if player.weapon else (3 if current_step == 1 else 2)
@@ -141,21 +147,13 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = hb_metrics["size"]
 		player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
 
-	# When on ground, clamp vertical speed to 0; when in air, apply short finite mid-air brake (Air Stall) for melee weapons
+	# When on ground, clamp vertical speed to 0; when in air, fall naturally unless an enemy is hit (_on_attack_hit_landed)
 	_is_air_stall_active = false
 	if player.is_on_floor():
 		player.velocity.y = 0.0
 		player.set_meta("air_stall_steps", 0)
 	elif not is_upward and not is_downward and is_melee_combo:
-		var is_plunge_step: bool = player.weapon != null and player.weapon.is_step_air_plunge(current_step)
-		if not is_plunge_step:
-			var used_stalls: int = int(player.get_meta("air_stall_steps", 0)) if player.has_meta("air_stall_steps") else 0
-			var max_stalls: int = maxi(1, player.weapon.get_combo_step_count()) if player.weapon else 3
-			if used_stalls < max_stalls:
-				_is_air_stall_active = true
-				player.set_meta("air_stall_steps", used_stalls + 1)
-				player.velocity.y = 0.0
-				player.velocity.x = player.facing_direction * (_pending_forward_impulse * 0.15)
+		player.velocity.x = player.facing_direction * (_pending_forward_impulse * 0.15)
 
 	# Setup active hitbox metrics with scaling per combo step and charge ratio
 	var step_mult: float = player.weapon.get_step_damage_multiplier(current_step) if player.weapon else (1.0 + (current_step * 0.25))
@@ -230,8 +228,11 @@ func exit() -> void:
 	is_charging = false
 	_is_plunge_active = false
 	_is_air_stall_active = false
-	if player and player.hitbox and player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
-		player.hitbox.hit_landed.disconnect(_on_plunge_hit_landed)
+	_step_started_in_air = false
+	if player:
+		player.attack_buffer_timer = 0.0
+	if player and player.hitbox and player.hitbox.hit_landed.is_connected(_on_attack_hit_landed):
+		player.hitbox.hit_landed.disconnect(_on_attack_hit_landed)
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
 	if player._main_weapon_instance:
@@ -325,15 +326,22 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("slide")
 		return
 		
-	# Input queue / buffer: any tap during the swing queues the next combo hit!
+	# Prevent attack_buffer_timer from leaking out of AttackState when mashing X
+	player.attack_buffer_timer = 0.0
+
+	# Input queue / buffer: only queue the next 1 step once past initial windup, and do not queue ground attacks while landing from an air swing
 	if Input.is_action_just_pressed("attack_primary"):
-		combo_buffered = true
-		queued_combo_presses = mini(3, queued_combo_presses + 1)
+		if not (_step_started_in_air and player.is_on_floor()) and cur_frame >= maxi(1, _step_active_start_frame - 1):
+			combo_buffered = true
+			queued_combo_presses = 1
 		
-	# Decelerate horizontal impulse on ground; in air, apply short finite air brake if active, otherwise full natural gravity
+	# Decelerate horizontal impulse on ground; in air, apply short finite air brake ONLY if an enemy was hit (_is_air_stall_active), otherwise full natural gravity
 	if player.is_on_floor():
 		_is_air_stall_active = false
 		player.set_meta("air_stall_steps", 0)
+		if _step_started_in_air:
+			combo_buffered = false
+			queued_combo_presses = 0
 		player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
 	elif _is_air_stall_active:
 		player.velocity.x = move_toward(player.velocity.x, 0.0, 500.0 * delta)
@@ -353,11 +361,12 @@ func physics_update(delta: float) -> void:
 		var combo_size: int = player.weapon.get_combo_step_count() if player.weapon else 2
 		var is_looping: bool = player.weapon.is_combo_looping() if player.weapon else true
 		var can_advance: bool = is_looping or (current_step + 1 < combo_size)
+		var landed_from_air_attack: bool = _step_started_in_air and player.is_on_floor()
 		
 		# Combo continuation condition (Dead Cells design):
 		# 1. Player is holding the attack button (continuous auto-chain combo)
 		# 2. Player tapped attack again during the swing (queued/buffered next hit)
-		var wants_combo: bool = combo_buffered or queued_combo_presses > 0 or Input.is_action_pressed("attack_primary")
+		var wants_combo: bool = (combo_buffered or queued_combo_presses > 0 or Input.is_action_pressed("attack_primary")) and not landed_from_air_attack
 		
 		if wants_combo and can_advance:
 			if queued_combo_presses > 0:
@@ -366,13 +375,18 @@ func physics_update(delta: float) -> void:
 			_start_combo_step(0.0)
 			return
 			
-		# Step completed without immediate continuation (or end of non-looping set):
-		if not can_advance:
+		# Step completed without immediate continuation (or end of non-looping set / landing from air attack):
+		if landed_from_air_attack:
+			player.attack_cooldown_timer = 0.12
+			last_completed_step = -1
+		elif not can_advance:
 			player.attack_cooldown_timer = player.weapon.get_finisher_cooldown() if player.weapon else 0.0
 			last_completed_step = -1
 		else:
 			player.attack_cooldown_timer = 0.0
+		combo_buffered = false
 		queued_combo_presses = 0
+		player.attack_buffer_timer = 0.0
 		
 		if player.player_sprite:
 			player.player_sprite.speed_scale = 1.0
@@ -428,16 +442,18 @@ func _start_air_plunge(anim_name: StringName) -> void:
 	_plunge_loop_accum = 0.0
 	_plunge_cur_frame = 0
 	_plunge_triggered_in_air = false
+	combo_buffered = false
+	queued_combo_presses = 0
+	player.attack_buffer_timer = 0.0
 
-	# Brief mid-air suspension during Frame 0 windup
-	player.velocity.x *= 0.35
-	player.velocity.y = minf(player.velocity.y, 35.0)
+	# Maintain natural vertical trajectory during Frame 0 prep (no mid-air brake unless an enemy is hit!)
+	player.velocity.x *= 0.5
 
 	player.hitbox.set_active(false)
 	player.set_slash_visual(false, 0, false, false)
 
-	if player.hitbox and not player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
-		player.hitbox.hit_landed.connect(_on_plunge_hit_landed)
+	if player.hitbox and not player.hitbox.hit_landed.is_connected(_on_attack_hit_landed):
+		player.hitbox.hit_landed.connect(_on_attack_hit_landed)
 
 	player.play_animation(anim_name)
 	if player.player_sprite:
@@ -446,12 +462,27 @@ func _start_air_plunge(anim_name: StringName) -> void:
 		player.player_sprite.speed_scale = 1.0
 		player._update_weapon_socket_for_frame(anim_name, 0)
 
-func _on_plunge_hit_landed(_hurtbox: Hurtbox) -> void:
-	if not _is_plunge_active:
+func _on_attack_hit_landed(_hurtbox: Hurtbox) -> void:
+	if not player:
 		return
-	if _plunge_phase == PlungePhase.FALL_LOOP:
-		# Enemy touched during fall loop: immediately trigger Frames 4 & 5 (the strike!) with mid-air brake!
-		_enter_plunge_impact(not player.is_on_floor())
+	if _is_plunge_active:
+		if _plunge_phase == PlungePhase.FALL_LOOP:
+			# Enemy touched during fall loop: immediately trigger Frames 4 & 5 (the strike!) with mid-air brake!
+			_enter_plunge_impact(not player.is_on_floor())
+		return
+
+	# Normal melee attack in air: apply short finite mid-air brake ONLY when hitting an enemy!
+	if not player.is_on_floor() and not _is_air_stall_active:
+		var is_upward: bool = player.is_upward_attack_requested()
+		var is_downward: bool = player.is_crouch_requested()
+		if not is_upward and not is_downward:
+			var used_stalls: int = int(player.get_meta("air_stall_steps", 0)) if player.has_meta("air_stall_steps") else 0
+			var max_stalls: int = maxi(1, player.weapon.get_combo_step_count()) if player.weapon else 3
+			if used_stalls < max_stalls:
+				_is_air_stall_active = true
+				player.set_meta("air_stall_steps", used_stalls + 1)
+				player.velocity.y = 0.0
+				player.velocity.x *= 0.35
 
 func _enter_plunge_impact(in_midair: bool) -> void:
 	if _plunge_phase == PlungePhase.IMPACT or _plunge_phase == PlungePhase.RECOVERY:
@@ -462,7 +493,7 @@ func _enter_plunge_impact(in_midair: bool) -> void:
 	_plunge_cur_frame = _plunge_impact_start
 
 	if in_midair:
-		# Opção 1: Freio no ar curto para executar os frames 4 e 5 na altura do inimigo, sem flutuar infinitamente!
+		# Opção 1: Freio no ar curto quando atinge inimigo no ar para executar os frames 4 e 5 na altura do alvo!
 		player.velocity.y = 0.0
 		player.velocity.x = player.facing_direction * (_pending_forward_impulse * 0.45)
 	else:
@@ -483,14 +514,24 @@ func _enter_plunge_impact(in_midair: bool) -> void:
 		player.player_sprite.frame = _plunge_cur_frame
 		player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
 
-	player.set_slash_visual(true, current_step, false, false)
+	# Só ativa o SlashEffect se este passo de mergulho tiver uma animação de slash aéreo dedicada configurada
+	var step_data: ComboStepData = player.weapon.get_step_data(current_step) if player.weapon else null
+	if step_data and step_data.air_slash_animation != &"":
+		player.set_slash_visual(true, current_step, false, false)
+	else:
+		player.set_slash_visual(false, 0, false, false)
 
 func _update_air_plunge(delta: float) -> void:
+	# Ignora e limpa cliques repetidos de ataque durante o mergulho e a finalização para não soltar slash normal no chão ao terminar!
+	player.attack_buffer_timer = 0.0
+	combo_buffered = false
+	queued_combo_presses = 0
+
 	# Allow dodge-cancel during PREP, FALL_LOOP, and final RECOVERY (locked only during IMPACT strike frames 4..5)
 	if _plunge_phase != PlungePhase.IMPACT and player.is_slide_requested():
 		_is_plunge_active = false
-		if player.hitbox and player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
-			player.hitbox.hit_landed.disconnect(_on_plunge_hit_landed)
+		if player.hitbox and player.hitbox.hit_landed.is_connected(_on_attack_hit_landed):
+			player.hitbox.hit_landed.disconnect(_on_attack_hit_landed)
 		last_completed_step = -1
 		state_machine.transition_to("slide")
 		return
@@ -498,7 +539,7 @@ func _update_air_plunge(delta: float) -> void:
 	match _plunge_phase:
 		PlungePhase.PREP:
 			_plunge_timer -= delta
-			player.velocity.y = move_toward(player.velocity.y, 60.0, 400.0 * delta)
+			player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
 			player.move_and_slide()
 			if player.is_on_floor():
 				_enter_plunge_impact(false)
@@ -585,14 +626,16 @@ func _update_air_plunge(delta: float) -> void:
 
 			if _plunge_timer <= 0.0:
 				_is_plunge_active = false
-				if player.hitbox and player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
-					player.hitbox.hit_landed.disconnect(_on_plunge_hit_landed)
+				if player.hitbox and player.hitbox.hit_landed.is_connected(_on_attack_hit_landed):
+					player.hitbox.hit_landed.disconnect(_on_attack_hit_landed)
 				player.hitbox.set_active(false)
 				player.set_slash_visual(false, 0, false, false)
 				last_attack_end_msec = Time.get_ticks_msec()
-				last_completed_step = current_step
-				player.attack_cooldown_timer = 0.0
+				last_completed_step = -1
+				player.attack_cooldown_timer = 0.15
+				combo_buffered = false
 				queued_combo_presses = 0
+				player.attack_buffer_timer = 0.0
 				if player.player_sprite:
 					player.player_sprite.speed_scale = 1.0
 				if player.is_on_floor():
