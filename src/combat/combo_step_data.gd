@@ -113,3 +113,40 @@ extends Resource
 ## Posição base do centro da Hitbox relativa aos pés do personagem neste golpe.
 ## Se a arma tiver um 'slash_offset.x' (ex: +3 para armas mais longas), a posição X avançará automaticamente!
 @export var hitbox_position: Vector2 = Vector2(20.0, -20.0)
+
+@export_group("Ataque Aéreo em Fases / Mergulho (Air Plunge / Dive)")
+
+## Se 'true', quando este golpe é executado no AR, ele opera em 4 sub-fases dinâmicas:
+## 1) Preparação (Frame 0) -> 2) Loop de Queda enquanto não atinge ninguém nem o chão (Frames 1..3) ->
+## 3) Golpe/Impacto ao atingir inimigo ou chão (Frames 4..5) -> 4) Finalização (Frame 6).
+@export var is_air_plunge: bool = false
+
+## Velocidade vertical de descida (em px/s) durante o Loop de Queda do mergulho aéreo.
+@export_range(100.0, 1200.0, 10.0, "suffix:px/s") var plunge_fall_speed: float = 420.0
+
+## Duração (em segundos) da fase inicial de Preparação no ar (Frame 0) antes de iniciar a descida.
+@export_range(0.04, 0.5, 0.01, "suffix:s") var plunge_prep_duration: float = 0.12
+
+## Velocidade (FPS) com que a animação alterna entre os frames do Loop de Queda enquanto o personagem cai.
+@export_range(4.0, 30.0, 1.0, "suffix:fps") var plunge_loop_fps: float = 12.0
+
+## Duração total (em segundos) dos frames do Golpe em si (Frames 4 e 5) após atingir um inimigo ou o chão.
+@export_range(0.06, 1.0, 0.01, "suffix:s") var plunge_impact_duration: float = 0.20
+
+## Duração (em segundos) do último frame de Finalização/Recovery (Frame 6) antes de encerrar o estado.
+@export_range(0.05, 1.0, 0.01, "suffix:s") var plunge_recovery_duration: float = 0.14
+
+## Primeiro frame do Loop de Queda (padrão 1 no air_attack3).
+@export_range(0, 20, 1) var plunge_loop_start_frame: int = 1
+
+## Último frame do Loop de Queda (padrão 3 no air_attack3; cicla entre start e end enquanto cai).
+@export_range(0, 20, 1) var plunge_loop_end_frame: int = 3
+
+## Primeiro frame do Golpe/Impacto ao tocar em alguém ou no chão (padrão 4 no air_attack3).
+@export_range(0, 20, 1) var plunge_impact_start_frame: int = 4
+
+## Último frame do Golpe/Impacto antes da Finalização (padrão 5 no air_attack3).
+@export_range(0, 20, 1) var plunge_impact_end_frame: int = 5
+
+## Frame de Finalização/Recovery (padrão 6 no air_attack3).
+@export_range(0, 20, 1) var plunge_recovery_frame: int = 6

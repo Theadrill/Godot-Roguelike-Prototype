@@ -88,6 +88,62 @@ corner_climb_3_rot = -286.6
 corner_climb_4_pos = Vector2(-4, -5)
 corner_climb_4_rot = -286.6
 back_frames = {
+"air_attack3_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-1.7, -22.2),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"air_attack3_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-3.7, -18.2),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"air_attack3_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-4.2, -18.7),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"air_attack3_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5.2, -18.2),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"air_attack3_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(2.3, -11.7),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"air_attack3_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1.8, -15.7),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"air_attack3_6": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1.8, -15.7),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
 "air_attack1_0": {
 "flip_h": false,
 "flip_v": false,
@@ -578,6 +634,62 @@ back_frames = {
 }
 default_flip_h = true
 hand_frames = {
+"air_attack3_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(2.5, -43),
+"rot": 135.0,
+"visible": true,
+"z_index": 2
+},
+"air_attack3_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-5.5, -12),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"air_attack3_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-5.5, -12),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"air_attack3_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-5.5, -12),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"air_attack3_4": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-22.5, -30),
+"rot": -167.5,
+"visible": true,
+"z_index": 2
+},
+"air_attack3_5": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-21.5, -38),
+"rot": -144.5,
+"visible": true,
+"z_index": 2
+},
+"air_attack3_6": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-12.5, -22),
+"rot": 164.0,
+"visible": true,
+"z_index": 2
+},
 "air_attack1_0": {
 "flip_h": false,
 "flip_v": true,

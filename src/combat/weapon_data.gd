@@ -400,6 +400,20 @@ func is_step_dodge_locked_after_windup(step_index: int) -> bool:
 			return step_data.lock_dodge_after_windup
 	return step_index >= 2
 
+## Retorna se este passo utiliza a máquina de sub-fases de Mergulho Aéreo (Air Plunge: Prep -> Loop -> Impacto -> Finalização) quando no ar.
+func is_step_air_plunge(step_index: int) -> bool:
+	if attack_set and not attack_set.steps.is_empty():
+		var step_data: ComboStepData = attack_set.get_step(step_index)
+		if step_data:
+			return step_data.is_air_plunge
+	return false
+
+## Retorna o ComboStepData bruto do passo informado (ou null se não houver AttackSetData).
+func get_step_data(step_index: int) -> ComboStepData:
+	if attack_set and not attack_set.steps.is_empty():
+		return attack_set.get_step(step_index)
+	return null
+
 ## Calcula a posição e tamanho finais da Hitbox física do golpe,
 ## sincronizando automaticamente com o offset/escala do slash se 'hitbox_sync_with_slash' estiver ativo.
 func get_step_hitbox_metrics(step_index: int, is_airborne: bool = false) -> Dictionary:

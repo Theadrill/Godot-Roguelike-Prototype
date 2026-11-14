@@ -22,6 +22,30 @@ var _hitbox_opened_for_step: bool = false
 var _pending_forward_impulse: float = 0.0
 var _step_body_anim_active: bool = false
 
+enum PlungePhase {
+	PREP,
+	FALL_LOOP,
+	IMPACT,
+	RECOVERY
+}
+
+var _is_plunge_active: bool = false
+var _plunge_phase: PlungePhase = PlungePhase.PREP
+var _plunge_timer: float = 0.0
+var _plunge_loop_accum: float = 0.0
+var _plunge_cur_frame: int = 0
+var _plunge_prep_duration: float = 0.12
+var _plunge_fall_speed: float = 420.0
+var _plunge_loop_fps: float = 12.0
+var _plunge_impact_duration: float = 0.20
+var _plunge_recovery_duration: float = 0.14
+var _plunge_loop_start: int = 1
+var _plunge_loop_end: int = 3
+var _plunge_impact_start: int = 4
+var _plunge_impact_end: int = 5
+var _plunge_recovery_frame: int = 6
+var _plunge_triggered_in_air: bool = false
+
 const COMBO_WINDOW: float = 1.35
 
 func enter() -> void:
@@ -144,6 +168,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	
 	# Keep Hitbox OFF during Windup frames! It will activate on _step_active_start_frame.
 	player.hitbox.set_active(false)
+	_is_plunge_active = false
 
 	# Dedicated combo animation on normal ground and air attacks for melee weapons (sword, hammer, dagger, axe)
 	if not is_upward and not is_downward and is_melee_combo:
@@ -157,6 +182,12 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 				anim_name = &"air_attack1"
 			else:
 				anim_name = &"attack1"
+
+		# Check if this airborne melee attack uses the 4-phase Plunge / Dive state machine (e.g. Hammer in air_attack3)
+		if is_airborne and player.weapon and player.weapon.is_step_air_plunge(current_step) and anim_name == &"air_attack3":
+			_start_air_plunge(anim_name)
+			return
+
 		player.play_animation(anim_name)
 		_step_body_anim_active = true
 		if player.player_sprite:
@@ -184,6 +215,9 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 
 func exit() -> void:
 	is_charging = false
+	_is_plunge_active = false
+	if player and player.hitbox and player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
+		player.hitbox.hit_landed.disconnect(_on_plunge_hit_landed)
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
 	if player._main_weapon_instance:
@@ -253,6 +287,10 @@ func physics_update(delta: float) -> void:
 		if not Input.is_action_pressed("attack_primary"):
 			is_charging = false
 			_start_combo_step(charge_progress)
+		return
+
+	if _is_plunge_active:
+		_update_air_plunge(delta)
 		return
 
 	attack_timer -= delta
@@ -349,3 +387,198 @@ func _update_active_hitbox_window() -> void:
 			player.velocity.x = player.facing_direction * _pending_forward_impulse
 	elif _hitbox_opened_for_step and cur_frame > _step_active_end_frame and player.hitbox.monitoring:
 		player.hitbox.set_active(false)
+
+func _start_air_plunge(anim_name: StringName) -> void:
+	_is_plunge_active = true
+	_step_body_anim_active = true
+	var step_data: ComboStepData = player.weapon.get_step_data(current_step) if player.weapon else null
+	_plunge_prep_duration = step_data.plunge_prep_duration if step_data else 0.12
+	_plunge_fall_speed = step_data.plunge_fall_speed if step_data else 420.0
+	_plunge_loop_fps = step_data.plunge_loop_fps if step_data else 12.0
+	_plunge_impact_duration = step_data.plunge_impact_duration if step_data else 0.20
+	_plunge_recovery_duration = step_data.plunge_recovery_duration if step_data else 0.14
+	_plunge_loop_start = step_data.plunge_loop_start_frame if step_data else 1
+	_plunge_loop_end = step_data.plunge_loop_end_frame if step_data else 3
+	_plunge_impact_start = step_data.plunge_impact_start_frame if step_data else 4
+	_plunge_impact_end = step_data.plunge_impact_end_frame if step_data else 5
+	_plunge_recovery_frame = step_data.plunge_recovery_frame if step_data else 6
+
+	_plunge_phase = PlungePhase.PREP
+	_plunge_timer = _plunge_prep_duration
+	_plunge_loop_accum = 0.0
+	_plunge_cur_frame = 0
+	_plunge_triggered_in_air = false
+
+	# Brief mid-air suspension during Frame 0 windup
+	player.velocity.x *= 0.35
+	player.velocity.y = minf(player.velocity.y, 35.0)
+
+	player.hitbox.set_active(false)
+	player.set_slash_visual(false, 0, false, false)
+
+	if player.hitbox and not player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
+		player.hitbox.hit_landed.connect(_on_plunge_hit_landed)
+
+	player.play_animation(anim_name)
+	if player.player_sprite:
+		player.player_sprite.pause()
+		player.player_sprite.frame = 0
+		player.player_sprite.speed_scale = 1.0
+		player._update_weapon_socket_for_frame(anim_name, 0)
+
+func _on_plunge_hit_landed(_hurtbox: Hurtbox) -> void:
+	if not _is_plunge_active:
+		return
+	if _plunge_phase == PlungePhase.FALL_LOOP:
+		# Enemy touched during fall loop: immediately trigger Frames 4 & 5 (the strike!) with mid-air brake!
+		_enter_plunge_impact(not player.is_on_floor())
+
+func _enter_plunge_impact(in_midair: bool) -> void:
+	if _plunge_phase == PlungePhase.IMPACT or _plunge_phase == PlungePhase.RECOVERY:
+		return
+	_plunge_phase = PlungePhase.IMPACT
+	_plunge_triggered_in_air = in_midair
+	_plunge_timer = _plunge_impact_duration
+	_plunge_cur_frame = _plunge_impact_start
+
+	if in_midair:
+		# Opção 1: Freio no ar curto para executar os frames 4 e 5 na altura do inimigo, sem flutuar infinitamente!
+		player.velocity.y = 0.0
+		player.velocity.x = player.facing_direction * (_pending_forward_impulse * 0.45)
+	else:
+		player.velocity.y = 0.0
+		player.velocity.x = player.facing_direction * _pending_forward_impulse
+
+	# Posiciona e ativa a Hitbox do golpe (frames 4 e 5) preservando alvos já atingidos no mergulho para evitar hit duplo
+	if player.hitbox.has_node("CollisionShape2D"):
+		var hb_metrics: Dictionary = player.weapon.get_step_hitbox_metrics(current_step, in_midair) if player.weapon else {"position": Vector2(21.0, -20.0), "size": Vector2(36.0, 32.0)}
+		player.hitbox.get_node("CollisionShape2D").position = hb_metrics["position"]
+		(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = hb_metrics["size"]
+	player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
+	if not player.hitbox.monitoring:
+		player.hitbox.set_active(true)
+
+	if player.player_sprite:
+		player.player_sprite.pause()
+		player.player_sprite.frame = _plunge_cur_frame
+		player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+
+	player.set_slash_visual(true, current_step, false, false)
+
+func _update_air_plunge(delta: float) -> void:
+	# Allow dodge-cancel during PREP, FALL_LOOP, and final RECOVERY (locked only during IMPACT strike frames 4..5)
+	if _plunge_phase != PlungePhase.IMPACT and player.is_slide_requested():
+		_is_plunge_active = false
+		if player.hitbox and player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
+			player.hitbox.hit_landed.disconnect(_on_plunge_hit_landed)
+		last_completed_step = -1
+		state_machine.transition_to("slide")
+		return
+
+	match _plunge_phase:
+		PlungePhase.PREP:
+			_plunge_timer -= delta
+			player.velocity.y = move_toward(player.velocity.y, 60.0, 400.0 * delta)
+			player.move_and_slide()
+			if player.is_on_floor():
+				_enter_plunge_impact(false)
+				return
+			if _plunge_timer <= 0.0:
+				_plunge_phase = PlungePhase.FALL_LOOP
+				_plunge_cur_frame = _plunge_loop_start
+				_plunge_loop_accum = 0.0
+				# Ativa a Hitbox de descida posicionada embaixo/frente acompanhando a cabeça do martelo
+				if player.hitbox.has_node("CollisionShape2D"):
+					player.hitbox.get_node("CollisionShape2D").position = Vector2(10.0, -6.0)
+					(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(34.0, 28.0)
+				player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.5, 0.85).normalized()
+				player.hitbox.set_active(false)
+				player.hitbox.set_active(true)
+				if player.player_sprite:
+					player.player_sprite.pause()
+					player.player_sprite.frame = _plunge_cur_frame
+					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+
+		PlungePhase.FALL_LOOP:
+			# Continua caindo e ciclando entre os frames de loop enquanto não toca em ninguém nem chega no chão
+			var input_dir: float = Input.get_axis("move_left", "move_right")
+			player.velocity.x = move_toward(player.velocity.x, input_dir * (player.run_speed * 0.45), 500.0 * delta)
+			player.velocity.y = maxf(player.velocity.y + (player.gravity * player.fall_gravity_multiplier) * delta, _plunge_fall_speed)
+			player.move_and_slide()
+
+			# Caso hit_landed tenha disparado durante move_and_slide(), _plunge_phase já mudou para IMPACT
+			if _plunge_phase != PlungePhase.FALL_LOOP:
+				return
+
+			if player.is_on_floor():
+				_enter_plunge_impact(false)
+				return
+
+			_plunge_loop_accum += delta * _plunge_loop_fps
+			if _plunge_loop_accum >= 1.0:
+				_plunge_loop_accum -= 1.0
+				_plunge_cur_frame += 1
+				if _plunge_cur_frame > _plunge_loop_end:
+					_plunge_cur_frame = _plunge_loop_start
+				if player.player_sprite:
+					player.player_sprite.frame = _plunge_cur_frame
+					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+
+		PlungePhase.IMPACT:
+			_plunge_timer -= delta
+			var progress: float = 1.0 - clampf(_plunge_timer / maxf(0.01, _plunge_impact_duration), 0.0, 1.0)
+			var impact_frame_span: int = maxi(1, _plunge_impact_end - _plunge_impact_start + 1)
+			var target_frame: int = clampi(_plunge_impact_start + int(floor(progress * float(impact_frame_span))), _plunge_impact_start, _plunge_impact_end)
+			if target_frame != _plunge_cur_frame:
+				_plunge_cur_frame = target_frame
+				if player.player_sprite:
+					player.player_sprite.frame = _plunge_cur_frame
+					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+
+			if player.is_on_floor():
+				player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
+			else:
+				# Freio no ar durante os frames 4 e 5 (gravidade amortecida em 20% por apenas ~0.20s)
+				player.velocity.x = move_toward(player.velocity.x, 0.0, 500.0 * delta)
+				player.velocity.y += (player.gravity * 0.20) * delta
+
+			player.move_and_slide()
+
+			if _plunge_timer <= 0.0:
+				_plunge_phase = PlungePhase.RECOVERY
+				_plunge_timer = _plunge_recovery_duration
+				_plunge_cur_frame = _plunge_recovery_frame
+				player.hitbox.set_active(false)
+				player.set_slash_visual(false, 0, false, false)
+				if player.player_sprite:
+					player.player_sprite.frame = _plunge_cur_frame
+					player._update_weapon_socket_for_frame(player.player_sprite.animation, _plunge_cur_frame)
+
+		PlungePhase.RECOVERY:
+			_plunge_timer -= delta
+			if player.is_on_floor():
+				player.velocity.x = move_toward(player.velocity.x, 0.0, 800.0 * delta)
+			else:
+				# Gravidade normal retomada imediatamente na finalização para não flutuar no ar!
+				player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
+			player.move_and_slide()
+
+			if _plunge_timer <= 0.0:
+				_is_plunge_active = false
+				if player.hitbox and player.hitbox.hit_landed.is_connected(_on_plunge_hit_landed):
+					player.hitbox.hit_landed.disconnect(_on_plunge_hit_landed)
+				player.hitbox.set_active(false)
+				player.set_slash_visual(false, 0, false, false)
+				last_attack_end_msec = Time.get_ticks_msec()
+				last_completed_step = current_step
+				player.attack_cooldown_timer = 0.0
+				queued_combo_presses = 0
+				if player.player_sprite:
+					player.player_sprite.speed_scale = 1.0
+				if player.is_on_floor():
+					if abs(Input.get_axis("move_left", "move_right")) > 0.1:
+						state_machine.transition_to("run")
+					else:
+						state_machine.transition_to("idle")
+				else:
+					state_machine.transition_to("fall")
