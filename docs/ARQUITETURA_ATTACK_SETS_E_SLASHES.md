@@ -205,6 +205,16 @@ Na arma (`.tres`), além dos atributos de identidade e dano, ficam o vínculo co
      * Quer que esse Set tenha 3 ou 4 ataques? Basta clicar em **Add Element** no array `steps` e configurar o novo passo!
 4. Salve o Set e arraste-o para o campo **Attack Set** da sua arma!
 
+### Cenário C: "Quero calibrar o Offset e a Escala do Slash visualmente no `WeaponSocketCalibrator`"
+1. Abra a cena `res://src/tools/weapon_socket_calibrator.tscn` e selecione o nó raiz **`WeaponSocketCalibrator`**.
+2. Em **1. Equipamento & Alvo**, escolha a arma (`selected_weapon`).
+3. Em **2. Animação & Frame**, escolha uma animação de ataque (`attack1`, `attack2`, `attack3`, `air_attack1`, `air_attack2` ou `air_attack3`) e navegue até os frames ativos para ver o Slash ao vivo sobre o personagem.
+4. Na seção **5. Calibração de Slash (Offset & Escala)** do Inspector:
+   * Ajuste **`slash_offset_x`**, **`slash_offset_y`** (ou use os botões `-1.0px / -0.1px / +0.1px / +1.0px`, ou arraste o nó `Visual/SlashEffect` no viewport 2D), **`slash_preview_scale`**, **`slash_preview_flip_h`** e **`slash_preview_flip_v`**.
+   * Ao final, escolha o destino do salvamento (ambos possuem janela de confirmação):
+     * **`💾 Salvar Slash no Set (Esta Animação)`**: Grava o offset/escala/flip diretamente no `AttackSetData` (`res://src/combat/sets/*.tres`) para todas as armas que compartilham esse Set.
+     * **`💾 Salvar Ajuste Individual na Arma`**: Calcula e grava a diferença individual apenas no `WeaponData` da arma selecionada (`slash_step_offsets` / `slash_step_scales`), mantendo o Set base intacto!
+
 ---
 
 ## 6. Passo a Passo do Plano de Implementação (Checklist de Refatoração)

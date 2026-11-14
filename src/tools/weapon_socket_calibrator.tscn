@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cbvjvtolls7v" path="res://src/tools/weapon_socket_calibrator.gd" id="1_calibrator"]
 [ext_resource type="SpriteFrames" uid="uid://b3mi8waob4tc5" path="res://assets/player/adventurer/player_frames.tres" id="2_player_frames"]
+[ext_resource type="SpriteFrames" uid="uid://chow11bdony5b" path="res://assets/effects/slashes/slash_frames.tres" id="3_slash_frames"]
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
@@ -51,3 +52,10 @@ rotation = -4.118977
 z_index = 2
 position = Vector2(6, -20)
 rotation = -0.61086524
+
+[node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
+visible = false
+z_index = 4
+position = Vector2(-2, -29)
+sprite_frames = ExtResource("3_slash_frames")
+animation = &"slash_sword"

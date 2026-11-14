@@ -28,6 +28,33 @@ const SHIELD_SCENES: Dictionary = {
 	"shield_2": "res://src/entities/equipment/shields/shield_visual.tscn",
 }
 
+const WEAPON_DATA_PATHS: Dictionary = {
+	"sword": "res://src/entities/equipment/swords/weapon_sword_base.tres",
+	"sword_2": "res://src/entities/equipment/swords/weapon_sword_base.tres",
+	"dagger": "res://src/entities/equipment/daggers/weapon_dagger_base.tres",
+	"dagger_2": "res://src/entities/equipment/daggers/weapon_dagger_base.tres",
+	"hammer": "res://src/entities/equipment/hammers/weapon_hammer_base.tres",
+	"hammer_2": "res://src/entities/equipment/hammers/weapon_hammer_base.tres",
+	"axe": "res://src/entities/equipment/axes/weapon_axe_base.tres",
+	"axe_2": "res://src/entities/equipment/axes/weapon_axe_base.tres",
+	"staff": "res://src/entities/equipment/staffs/weapon_staff_base.tres",
+	"staff_2": "res://src/entities/equipment/staffs/weapon_staff_base.tres",
+	"bow": "res://src/entities/equipment/bows/weapon_bow_base.tres",
+	"bow_2": "res://src/entities/equipment/bows/weapon_bow_base.tres",
+	"crossbow": "res://src/entities/equipment/crossbows/weapon_crossbow_base.tres",
+	"crossbow_2": "res://src/entities/equipment/crossbows/weapon_crossbow_base.tres",
+}
+
+const ATTACK_ANIMATIONS: Array[String] = [
+	"attack1",
+	"attack2",
+	"attack3",
+	"air_attack1",
+	"air_attack2",
+	"air_attack3",
+	"air_attack",
+]
+
 const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"idle": 4,
 	"run": 6,
@@ -211,7 +238,66 @@ var socket_position: Vector2:
 			if vis and is_instance_valid(vis):
 				vis.visible = value
 
-@export_group("5. Status")
+@export_group("5. Calibração de Slash (Offset & Escala)")
+## Exibe ou oculta a prévia do efeito de corte (SlashEffect) quando estiver inspecionando uma animação de ataque (attack1, attack2, attack3, air_attack1, air_attack3).
+@export var show_slash_preview: bool = true:
+	set(value):
+		show_slash_preview = value
+		_update_slash_preview()
+
+## Deslocamento X do Slash na tela (relativo à origem do pé do personagem).
+@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "hide_slider", "suffix:px") var slash_offset_x: float = 0.0:
+	set(value):
+		slash_offset_x = value
+		if not _is_syncing_slash:
+			_apply_slash_transform_to_node()
+
+## Deslocamento Y do Slash na tela (relativo à origem do pé do personagem).
+@export_range(-200.0, 200.0, 0.1, "or_less", "or_greater", "hide_slider", "suffix:px") var slash_offset_y: float = 0.0:
+	set(value):
+		slash_offset_y = value
+		if not _is_syncing_slash:
+			_apply_slash_transform_to_node()
+
+@export_subgroup("Ajuste Fino do Slash (Botões X e Y)")
+@export_tool_button("◄ -1.0 px (Slash X)") var btn_slash_x_m1: Callable = _on_slash_x_m1
+@export_tool_button("◄ -0.1 px (Slash X)") var btn_slash_x_m01: Callable = _on_slash_x_m01
+@export_tool_button("► +0.1 px (Slash X)") var btn_slash_x_p01: Callable = _on_slash_x_p01
+@export_tool_button("► +1.0 px (Slash X)") var btn_slash_x_p1: Callable = _on_slash_x_p1
+
+@export_tool_button("▲ -1.0 px (Slash Y)") var btn_slash_y_m1: Callable = _on_slash_y_m1
+@export_tool_button("▲ -0.1 px (Slash Y)") var btn_slash_y_m01: Callable = _on_slash_y_m01
+@export_tool_button("▼ +0.1 px (Slash Y)") var btn_slash_y_p01: Callable = _on_slash_y_p01
+@export_tool_button("▼ +1.0 px (Slash Y)") var btn_slash_y_p1: Callable = _on_slash_y_p1
+@export_subgroup("")
+
+## Escala X e Y do Slash na tela (1.0 = tamanho original).
+@export var slash_preview_scale: Vector2 = Vector2.ONE:
+	set(value):
+		slash_preview_scale = value
+		if not _is_syncing_slash:
+			_apply_slash_transform_to_node()
+
+## Inverter horizontalmente o desenho do Slash neste golpe.
+@export var slash_preview_flip_h: bool = false:
+	set(value):
+		slash_preview_flip_h = value
+		if not _is_syncing_slash:
+			_apply_slash_transform_to_node()
+
+## Inverter verticalmente o desenho do Slash neste golpe.
+@export var slash_preview_flip_v: bool = false:
+	set(value):
+		slash_preview_flip_v = value
+		if not _is_syncing_slash:
+			_apply_slash_transform_to_node()
+
+@export_subgroup("Salvar Calibração do Slash (Com Confirmação)")
+@export_tool_button("💾 Salvar Slash no Set (Esta Animação)") var btn_save_slash_to_set: Callable = _prompt_save_slash_to_set
+@export_tool_button("💾 Salvar Ajuste Individual na Arma") var btn_save_slash_to_weapon: Callable = _prompt_save_slash_to_weapon
+@export_subgroup("")
+
+@export_group("6. Status")
 ## Mensagem de feedback do último salvamento.
 @export var status_message: String = "Pronto para calibrar."
 
@@ -220,16 +306,19 @@ var socket_position: Vector2:
 @onready var off_hand_socket: Marker2D = $Visual/OffHandSocket
 @onready var back_socket_weapon: Marker2D = $Visual/BackSocketWeapon
 @onready var back_socket_shield: Marker2D = $Visual/BackSocketShield
+@onready var slash_effect: AnimatedSprite2D = get_node_or_null("Visual/SlashEffect") as AnimatedSprite2D
 
 var _weapon_profile_resource: WeaponSocketProfile = null
 var _shield_profile_resource: WeaponSocketProfile = null
 var _ref_sec_weapon_profile: WeaponSocketProfile = null
+var _weapon_data_resource: WeaponData = null
 
 var _main_hand_instance: Node2D = null
 var _off_hand_instance: Node2D = null
 var _back_weapon_instance: Node2D = null
 var _back_shield_instance: Node2D = null
 var _is_syncing_from_frame: bool = false
+var _is_syncing_slash: bool = false
 
 func _ready() -> void:
 	_load_resources()
@@ -250,6 +339,12 @@ func _load_resources() -> void:
 		_weapon_profile_resource = load(w_path) as WeaponSocketProfile
 	else:
 		_weapon_profile_resource = null
+
+	var wd_path: String = WEAPON_DATA_PATHS.get(selected_weapon, "")
+	if wd_path != "" and ResourceLoader.exists(wd_path):
+		_weapon_data_resource = load(wd_path) as WeaponData
+	else:
+		_weapon_data_resource = null
 
 	var s_path := "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield
 	if ResourceLoader.exists(s_path):
@@ -376,6 +471,7 @@ func _on_configuration_changed() -> void:
 		current_frame = 0
 
 	_apply_roll_preview()
+	_sync_slash_from_weapon_data()
 	_on_frame_changed()
 
 func _apply_roll_preview() -> void:
@@ -483,6 +579,8 @@ func _on_frame_changed() -> void:
 		socket_flip_v = active_vis.scale.y < 0.0
 	_is_syncing_from_frame = false
 
+	_update_slash_preview()
+
 	status_message = "%s [%s] -> %s Frame %d (Z: %d, FlipH: %s, FlipV: %s)" % [
 		_get_active_item_name(),
 		socket_target,
@@ -545,6 +643,282 @@ func _nudge_y(delta: float) -> void:
 	socket_pos_y = snappedf(socket_pos_y + delta, 0.1)
 	notify_property_list_changed()
 
+func _on_slash_x_m1() -> void:
+	_nudge_slash_x(-1.0)
+
+func _on_slash_x_m01() -> void:
+	_nudge_slash_x(-0.1)
+
+func _on_slash_x_p01() -> void:
+	_nudge_slash_x(0.1)
+
+func _on_slash_x_p1() -> void:
+	_nudge_slash_x(1.0)
+
+func _on_slash_y_m1() -> void:
+	_nudge_slash_y(-1.0)
+
+func _on_slash_y_m01() -> void:
+	_nudge_slash_y(-0.1)
+
+func _on_slash_y_p01() -> void:
+	_nudge_slash_y(0.1)
+
+func _on_slash_y_p1() -> void:
+	_nudge_slash_y(1.0)
+
+func _nudge_slash_x(delta: float) -> void:
+	slash_offset_x = snappedf(slash_offset_x + delta, 0.1)
+	notify_property_list_changed()
+
+func _nudge_slash_y(delta: float) -> void:
+	slash_offset_y = snappedf(slash_offset_y + delta, 0.1)
+	notify_property_list_changed()
+
+func _get_matching_step_indices_for_animation(anim_name: String) -> Array[int]:
+	var indices: Array[int] = []
+	var is_air: bool = anim_name.begins_with("air_")
+	if _weapon_data_resource and _weapon_data_resource.attack_set and not _weapon_data_resource.attack_set.steps.is_empty():
+		var steps := _weapon_data_resource.attack_set.steps
+		for i in range(steps.size()):
+			var st: ComboStepData = steps[i]
+			if not st:
+				continue
+			if is_air and String(st.air_body_animation) == anim_name:
+				indices.append(i)
+			elif not is_air and String(st.body_animation) == anim_name:
+				indices.append(i)
+	if indices.is_empty():
+		match anim_name:
+			"attack1", "air_attack1", "air_attack":
+				indices.append(0)
+			"attack2", "air_attack2":
+				indices.append(1)
+			"attack3", "air_attack3":
+				indices.append(2)
+			_:
+				indices.append(0)
+	return indices
+
+func _sync_slash_from_weapon_data() -> void:
+	if not (selected_animation in ATTACK_ANIMATIONS) or not _weapon_data_resource:
+		return
+	var is_air: bool = selected_animation.begins_with("air_")
+	var indices := _get_matching_step_indices_for_animation(selected_animation)
+	var step_idx: int = indices[0]
+	var total_off: Vector2 = _weapon_data_resource.get_step_total_slash_offset(step_idx, is_air)
+	var total_sc: Vector2 = _weapon_data_resource.get_step_total_slash_scale(step_idx)
+	var fh: bool = _weapon_data_resource.get_step_slash_flip_h(step_idx)
+	var fv: bool = _weapon_data_resource.get_step_slash_flip_v(step_idx)
+
+	_is_syncing_slash = true
+	slash_offset_x = total_off.x
+	slash_offset_y = total_off.y
+	slash_preview_scale = total_sc
+	slash_preview_flip_h = fh
+	slash_preview_flip_v = fv
+	_is_syncing_slash = false
+
+func _update_slash_preview() -> void:
+	var se := _get_node_safe("Visual/SlashEffect") as AnimatedSprite2D
+	if not se:
+		return
+	if not show_slash_preview or not (selected_animation in ATTACK_ANIMATIONS) or not _weapon_data_resource or not _weapon_data_resource.slash_enabled:
+		se.visible = false
+		return
+
+	if Engine.is_editor_hint() and not se.sprite_frames:
+		var sf := ResourceLoader.load("res://assets/effects/slashes/slash_frames.tres", "", ResourceLoader.CACHE_MODE_REPLACE) as SpriteFrames
+		if sf:
+			se.sprite_frames = sf
+
+	var is_air: bool = selected_animation.begins_with("air_")
+	var indices := _get_matching_step_indices_for_animation(selected_animation)
+	var step_idx: int = indices[0]
+	var slash_anim: StringName = _weapon_data_resource.get_step_slash_animation(step_idx, is_air)
+	if se.sprite_frames and not se.sprite_frames.has_animation(slash_anim):
+		slash_anim = _weapon_data_resource.get_step_slash_animation(step_idx, false)
+	if not se.sprite_frames or not se.sprite_frames.has_animation(slash_anim):
+		se.visible = false
+		return
+
+	se.visible = true
+	se.animation = slash_anim
+	se.pause()
+	var max_f: int = maxi(0, se.sprite_frames.get_frame_count(slash_anim) - 1)
+	se.frame = clampi(current_frame, 0, max_f)
+	se.modulate = _weapon_data_resource.slash_modulate
+	se.z_index = _weapon_data_resource.slash_z_index
+	_apply_slash_transform_to_node()
+
+func _apply_slash_transform_to_node() -> void:
+	var se := _get_node_safe("Visual/SlashEffect") as AnimatedSprite2D
+	if not se:
+		return
+	var sprite := _get_node_safe("Visual/CharacterSprite") as AnimatedSprite2D
+	var base_pos: Vector2 = sprite.position if sprite else Vector2(-2, -29)
+	se.position = base_pos + Vector2(slash_offset_x, slash_offset_y)
+	se.scale = slash_preview_scale
+	se.flip_h = slash_preview_flip_h
+	se.flip_v = slash_preview_flip_v
+
+func _prompt_save_slash_to_set() -> void:
+	_load_resources()
+	if not (selected_animation in ATTACK_ANIMATIONS):
+		status_message = "AVISO: Selecione uma animação de ataque (attack1..3, air_attack1..3) para salvar o Slash!"
+		return
+	if not _weapon_data_resource or not _weapon_data_resource.attack_set:
+		status_message = "ERRO: A arma '%s' não possui um AttackSetData vinculado!" % selected_weapon
+		return
+	var set_res: AttackSetData = _weapon_data_resource.attack_set
+	var set_path: String = set_res.resource_path
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Confirmar: Salvar Slash no Set"
+	dlg.dialog_text = "Deseja salvar o Slash da animação '%s'\n(Offset: (%.1f, %.1f), Escala: %s, FlipH: %s, FlipV: %s)\ndiretamente no Set '%s'?" % [
+		selected_animation, slash_offset_x, slash_offset_y, str(slash_preview_scale), str(slash_preview_flip_h), str(slash_preview_flip_v), set_path.get_file()
+	]
+	dlg.ok_button_text = "Sim, Salvar no Set"
+	dlg.cancel_button_text = "Cancelar"
+	dlg.confirmed.connect(func() -> void:
+		_save_slash_to_set()
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func() -> void:
+		status_message = "Cancelado: Nenhuma alteração salva no Set."
+		dlg.queue_free()
+	)
+	dlg.close_requested.connect(func() -> void: dlg.queue_free())
+	var parent_node: Node = get_tree().root if get_tree() else self
+	if Engine.is_editor_hint() and ClassDB.class_exists("EditorInterface"):
+		var ed_base: Control = Engine.get_singleton("EditorInterface").get_base_control() if Engine.has_singleton("EditorInterface") else null
+		if ed_base:
+			parent_node = ed_base
+	parent_node.add_child(dlg)
+	dlg.popup_centered()
+
+func _save_slash_to_set() -> void:
+	_load_resources()
+	if not _weapon_data_resource or not _weapon_data_resource.attack_set:
+		return
+	var set_res: AttackSetData = _weapon_data_resource.attack_set
+	var is_air: bool = selected_animation.begins_with("air_")
+	var indices := _get_matching_step_indices_for_animation(selected_animation)
+	var target_total := Vector2(slash_offset_x, slash_offset_y)
+	var weapon_modified: bool = false
+
+	for idx in indices:
+		if idx < 0 or idx >= set_res.steps.size():
+			continue
+		var st: ComboStepData = set_res.steps[idx]
+		if not st:
+			continue
+		if is_air:
+			st.step_air_slash_offset = target_total - st.step_slash_offset - _weapon_data_resource.slash_offset
+		else:
+			st.step_slash_offset = target_total - _weapon_data_resource.slash_offset
+		var w_sc: Vector2 = _weapon_data_resource.slash_scale
+		st.step_slash_scale = Vector2(
+			slash_preview_scale.x / (w_sc.x if not is_zero_approx(w_sc.x) else 1.0),
+			slash_preview_scale.y / (w_sc.y if not is_zero_approx(w_sc.y) else 1.0)
+		)
+		st.step_slash_flip_h = slash_preview_flip_h
+		st.step_slash_flip_v = slash_preview_flip_v
+
+		if idx < _weapon_data_resource.slash_step_offsets.size() and _weapon_data_resource.slash_step_offsets[idx] != Vector2.ZERO:
+			_weapon_data_resource.slash_step_offsets[idx] = Vector2.ZERO
+			weapon_modified = true
+		if idx < _weapon_data_resource.slash_step_scales.size() and _weapon_data_resource.slash_step_scales[idx] != Vector2.ONE:
+			_weapon_data_resource.slash_step_scales[idx] = Vector2.ONE
+			weapon_modified = true
+
+	var err := ResourceSaver.save(set_res, set_res.resource_path)
+	if weapon_modified:
+		ResourceSaver.save(_weapon_data_resource, _weapon_data_resource.resource_path)
+	if err == OK:
+		status_message = "SUCESSO! Slash salvo no Set '%s' para '%s' -> Offset: (%.1f, %.1f), Escala: %s" % [
+			set_res.resource_path.get_file(), selected_animation, slash_offset_x, slash_offset_y, str(slash_preview_scale)
+		]
+		print(status_message)
+		_sync_slash_from_weapon_data()
+		_on_frame_changed()
+	else:
+		status_message = "ERRO ao salvar Set: código %d" % err
+
+func _prompt_save_slash_to_weapon() -> void:
+	_load_resources()
+	if not (selected_animation in ATTACK_ANIMATIONS):
+		status_message = "AVISO: Selecione uma animação de ataque (attack1..3, air_attack1..3) para salvar o Slash!"
+		return
+	if not _weapon_data_resource:
+		status_message = "ERRO: WeaponData para '%s' não encontrado!" % selected_weapon
+		return
+	var w_path: String = _weapon_data_resource.resource_path
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Confirmar: Salvar Ajuste Individual na Arma"
+	dlg.dialog_text = "Deseja salvar o ajuste de Slash da animação '%s'\n(Posição Final na Tela: (%.1f, %.1f), Escala: %s)\nindividualmente na arma '%s' (sem alterar o Set base)?" % [
+		selected_animation, slash_offset_x, slash_offset_y, str(slash_preview_scale), w_path.get_file()
+	]
+	dlg.ok_button_text = "Sim, Salvar na Arma"
+	dlg.cancel_button_text = "Cancelar"
+	dlg.confirmed.connect(func() -> void:
+		_save_slash_to_weapon()
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func() -> void:
+		status_message = "Cancelado: Nenhuma alteração salva na Arma."
+		dlg.queue_free()
+	)
+	dlg.close_requested.connect(func() -> void: dlg.queue_free())
+	var parent_node: Node = get_tree().root if get_tree() else self
+	if Engine.is_editor_hint() and ClassDB.class_exists("EditorInterface"):
+		var ed_base: Control = Engine.get_singleton("EditorInterface").get_base_control() if Engine.has_singleton("EditorInterface") else null
+		if ed_base:
+			parent_node = ed_base
+	parent_node.add_child(dlg)
+	dlg.popup_centered()
+
+func _save_slash_to_weapon() -> void:
+	_load_resources()
+	if not _weapon_data_resource:
+		return
+	var is_air: bool = selected_animation.begins_with("air_")
+	var indices := _get_matching_step_indices_for_animation(selected_animation)
+	var target_total := Vector2(slash_offset_x, slash_offset_y)
+	var step_count: int = _weapon_data_resource.get_combo_step_count()
+
+	while _weapon_data_resource.slash_step_offsets.size() < step_count:
+		_weapon_data_resource.slash_step_offsets.append(Vector2.ZERO)
+	while _weapon_data_resource.slash_step_scales.size() < step_count:
+		_weapon_data_resource.slash_step_scales.append(Vector2.ONE)
+
+	for idx in indices:
+		if idx < 0 or idx >= step_count:
+			continue
+		var set_off := Vector2.ZERO
+		var set_sc := Vector2.ONE
+		if _weapon_data_resource.attack_set and idx < _weapon_data_resource.attack_set.steps.size():
+			var st: ComboStepData = _weapon_data_resource.attack_set.steps[idx]
+			if st:
+				set_off = st.step_slash_offset + (st.step_air_slash_offset if is_air else Vector2.ZERO)
+				set_sc = st.step_slash_scale
+		_weapon_data_resource.slash_step_offsets[idx] = target_total - set_off - _weapon_data_resource.slash_offset
+		var base_sc := set_sc * _weapon_data_resource.slash_scale
+		_weapon_data_resource.slash_step_scales[idx] = Vector2(
+			slash_preview_scale.x / (base_sc.x if not is_zero_approx(base_sc.x) else 1.0),
+			slash_preview_scale.y / (base_sc.y if not is_zero_approx(base_sc.y) else 1.0)
+		)
+
+	var err := ResourceSaver.save(_weapon_data_resource, _weapon_data_resource.resource_path)
+	if err == OK:
+		status_message = "SUCESSO! Ajuste individual de Slash salvo em '%s' para '%s' -> Final: (%.1f, %.1f)" % [
+			_weapon_data_resource.resource_path.get_file(), selected_animation, slash_offset_x, slash_offset_y
+		]
+		print(status_message)
+		_sync_slash_from_weapon_data()
+		_on_frame_changed()
+	else:
+		status_message = "ERRO ao salvar Arma: código %d" % err
+
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		var active_marker := _get_active_marker()
@@ -557,6 +931,19 @@ func _process(_delta: float) -> void:
 				socket_rotation = active_marker.rotation_degrees
 			if active_marker.z_index != socket_z_index:
 				socket_z_index = active_marker.z_index
+		var se := _get_node_safe("Visual/SlashEffect") as AnimatedSprite2D
+		if se and se.visible and (selected_animation in ATTACK_ANIMATIONS):
+			var sprite := _get_node_safe("Visual/CharacterSprite") as AnimatedSprite2D
+			var base_pos: Vector2 = sprite.position if sprite else Vector2(-2, -29)
+			var cur_off: Vector2 = se.position - base_pos
+			if not is_equal_approx(cur_off.x, slash_offset_x):
+				_is_syncing_slash = true
+				slash_offset_x = snappedf(cur_off.x, 0.1)
+				_is_syncing_slash = false
+			if not is_equal_approx(cur_off.y, slash_offset_y):
+				_is_syncing_slash = true
+				slash_offset_y = snappedf(cur_off.y, 0.1)
+				_is_syncing_slash = false
 
 func save_current_frame_data() -> void:
 	_load_resources()
@@ -664,6 +1051,7 @@ func apply_to_current_animation() -> void:
 			str(socket_position), socket_rotation, socket_z_index, count, selected_animation, item_name
 		]
 		print(status_message)
+		_sync_slash_from_weapon_data()
 		_on_frame_changed()
 	else:
 		status_message = "ERRO ao salvar na animação: Código %d" % err
