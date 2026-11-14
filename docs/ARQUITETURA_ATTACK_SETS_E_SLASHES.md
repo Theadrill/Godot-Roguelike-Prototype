@@ -5,6 +5,8 @@
 > Este documento especifica o plano arquitetural e o guia definitivo de operação do **Sistema Modular de Combate Baseado em Attack Sets (`AttackSetData` + `ComboStepData` + `WeaponData`)**.
 > 
 > Qualquer agente de IA ou desenvolvedor que for criar novas armas, novos conjuntos de movimentos (*movesets*), novas poses de ataque (`attack1`, `attack2`, `attack3`, `attack4`...) ou novos efeitos visuais de corte (*slashes*) **deve seguir estritamente esta arquitetura**.
+> 
+> **REGRA OBRIGATÓRIA DE RASTREAMENTO (`docs/TODO.md`):** Sempre que uma animação de personagem ou de *slash* for concluída, alterada ou quando surgirem novas necessidades de sprites/estados, é **obrigatório atualizar imediatamente o arquivo [`docs/TODO.md`](TODO.md)** mantendo o checklist do projeto 100% sincronizado.
 
 ---
 
