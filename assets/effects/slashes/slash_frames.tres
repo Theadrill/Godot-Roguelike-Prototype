@@ -3,7 +3,23 @@
 [ext_resource type="Texture2D" uid="uid://dm2wrqlqyhtmk" path="res://assets/effects/slashes/sword/sword_slash_sheet.png" id="1_slash_sheet"]
 [ext_resource type="Texture2D" uid="uid://cgw8fsah7o6oi" path="res://assets/effects/slashes/sword/sword_slash2_sheet.png" id="2_slash2_sheet"]
 [ext_resource type="Texture2D" uid="uid://okkqyd5ynbf0" path="res://assets/effects/slashes/sword/sword_slash3_sheet.png" id="3_slash3_sheet"]
-[ext_resource type="Texture2D" path="res://assets/effects/slashes/sword/sword_air_slash3_sheet.png" id="4_air_slash3_sheet"]
+[ext_resource type="Texture2D" uid="uid://btask7tkyejuf" path="res://assets/effects/slashes/sword/sword_air_slash3_sheet.png" id="4_air_slash3_sheet"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_0"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_1"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_2"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(166, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_3"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(249, 0, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_slash3_0"]
 atlas = ExtResource("4_air_slash3_sheet")
@@ -32,22 +48,6 @@ region = Rect2(415, 0, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_slash3_6"]
 atlas = ExtResource("4_air_slash3_sheet")
 region = Rect2(498, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_0"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(0, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_1"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(83, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_2"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(166, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_3"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(249, 0, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_slash1_4"]
 atlas = ExtResource("1_slash_sheet")

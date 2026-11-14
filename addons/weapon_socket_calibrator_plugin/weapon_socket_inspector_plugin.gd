@@ -12,23 +12,44 @@ func _parse_property(object: Object, _type: Variant.Type, name: String, _hint_ty
 		container.add_theme_constant_override("separation", 8)
 
 		# Cruz 1: Ajuste Fino (0.1 px)
-		var dpad_fine := _create_cross_dpad("Ajuste Fino (±0.1 px)", 0.1, calibrator)
+		var dpad_fine := _create_cross_dpad("Ajuste Fino (±0.1 px)", 0.1, calibrator, false)
 		container.add_child(dpad_fine)
 
 		var sep := HSeparator.new()
 		container.add_child(sep)
 
 		# Cruz 2: Ajuste Rápido (1.0 px)
-		var dpad_coarse := _create_cross_dpad("Ajuste Rápido (±1.0 px)", 1.0, calibrator)
+		var dpad_coarse := _create_cross_dpad("Ajuste Rápido (±1.0 px)", 1.0, calibrator, false)
 		container.add_child(dpad_coarse)
 
 		add_custom_control(container)
 		return true
 	elif name.begins_with("btn_nudge_"):
 		return true
+	elif name == "btn_slash_x_m1":
+		var calibrator = object
+		var container := VBoxContainer.new()
+		container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		container.add_theme_constant_override("separation", 8)
+
+		# Cruz 1: Ajuste Fino do Slash (0.1 px)
+		var dpad_fine := _create_cross_dpad("Ajuste Fino (±0.1 px)", 0.1, calibrator, true)
+		container.add_child(dpad_fine)
+
+		var sep := HSeparator.new()
+		container.add_child(sep)
+
+		# Cruz 2: Ajuste Rápido do Slash (1.0 px)
+		var dpad_coarse := _create_cross_dpad("Ajuste Rápido (±1.0 px)", 1.0, calibrator, true)
+		container.add_child(dpad_coarse)
+
+		add_custom_control(container)
+		return true
+	elif name.begins_with("btn_slash_"):
+		return true
 	return false
 
-func _create_cross_dpad(title: String, step_val: float, calibrator: Object) -> VBoxContainer:
+func _create_cross_dpad(title: String, step_val: float, calibrator: Object, is_slash: bool = false) -> VBoxContainer:
 	var box := VBoxContainer.new()
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_theme_constant_override("separation", 3)
@@ -45,22 +66,34 @@ func _create_cross_dpad(title: String, step_val: float, calibrator: Object) -> V
 	var row1 := HBoxContainer.new()
 	row1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_add_spacer(row1, 1)
-	_add_nudge_btn(row1, "▲  -%s px" % step_str, func(): calibrator._nudge_y(-step_val), 2)
+	_add_nudge_btn(row1, "▲  -%s px" % step_str, func():
+		if is_slash: calibrator._nudge_slash_y(-step_val)
+		else: calibrator._nudge_y(-step_val)
+	, 2)
 	_add_spacer(row1, 1)
 	box.add_child(row1)
 
 	# Linha 2: 2 botões (◄ X e ► X)
 	var row2 := HBoxContainer.new()
 	row2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_add_nudge_btn(row2, "◄  -%s px" % step_str, func(): calibrator._nudge_x(-step_val), 1)
-	_add_nudge_btn(row2, "►  +%s px" % step_str, func(): calibrator._nudge_x(step_val), 1)
+	_add_nudge_btn(row2, "◄  -%s px" % step_str, func():
+		if is_slash: calibrator._nudge_slash_x(-step_val)
+		else: calibrator._nudge_x(-step_val)
+	, 1)
+	_add_nudge_btn(row2, "►  +%s px" % step_str, func():
+		if is_slash: calibrator._nudge_slash_x(step_val)
+		else: calibrator._nudge_x(step_val)
+	, 1)
 	box.add_child(row2)
 
 	# Linha 3: 1 botão centralizado (▼ Y)
 	var row3 := HBoxContainer.new()
 	row3.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_add_spacer(row3, 1)
-	_add_nudge_btn(row3, "▼  +%s px" % step_str, func(): calibrator._nudge_y(step_val), 2)
+	_add_nudge_btn(row3, "▼  +%s px" % step_str, func():
+		if is_slash: calibrator._nudge_slash_y(step_val)
+		else: calibrator._nudge_y(step_val)
+	, 2)
 	_add_spacer(row3, 1)
 	box.add_child(row3)
 

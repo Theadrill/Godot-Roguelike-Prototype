@@ -6,15 +6,17 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-selected_weapon = "crossbow"
-selected_animation = "cast"
-current_frame = 3
+selected_weapon = "hammer"
+selected_animation = "air_attack3"
+current_frame = 4
 reference_secondary_weapon = "none"
-socket_pos_x = -10.0
-socket_pos_y = -19.0
-socket_rotation = -235.99998
+socket_pos_x = -22.5
+socket_pos_y = -30.0
+socket_rotation = -167.49998
 socket_z_index = 2
-status_message = "crossbow [Arma na Mão (MainHandSocket)] -> cast Frame 3 (Z: 2, FlipH: false, FlipV: false)"
+slash_offset_x = 2.0
+slash_preview_scale = Vector2(1.15, 1.15)
+status_message = "hammer [Arma na Mão (MainHandSocket)] -> air_attack3 Frame 4 (Z: 2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,8 +30,8 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"cast"
-frame = 3
+animation = &"air_attack3"
+frame = 4
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
@@ -39,14 +41,14 @@ position = Vector2(0, -31.5)
 rotation = 1.4573498
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
-z_index = -2
-position = Vector2(3, -26.5)
-rotation = 0.06981317
+z_index = -3
+position = Vector2(-2, -16.6)
+rotation = -0.20943952
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(-10, -19)
-rotation = -4.118977
+position = Vector2(-22.5, -30)
+rotation = -2.9234264
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
@@ -54,8 +56,9 @@ position = Vector2(6, -20)
 rotation = -0.61086524
 
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
-visible = false
 z_index = 4
-position = Vector2(-2, -29)
+position = Vector2(0, -29)
+scale = Vector2(1.15, 1.15)
 sprite_frames = ExtResource("3_slash_frames")
-animation = &"slash_sword"
+animation = &"slash_air_sword_3"
+frame = 4
