@@ -9,6 +9,14 @@ step_label = "Golpe 1 - Corte Descendente"
 next_step_window = 1.35
 air_slash_animation = &"slash_air_sword_1"
 step_air_slash_offset = Vector2(-3, 0)
+step_frame_air_slash_offsets = {
+1: Vector2(3, 0),
+2: Vector2(-3, 4)
+}
+step_frame_air_slash_scales = {
+1: Vector2(1, 1),
+2: Vector2(1, 1)
+}
 air_active_start_frame = 1
 air_active_end_frame = 2
 

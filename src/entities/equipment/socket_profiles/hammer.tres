@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3]
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://bacylfapa7j0d"]
 
-[ext_resource type="Script" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -88,6 +88,38 @@ corner_climb_3_rot = -104.69999
 corner_climb_4_pos = Vector2(-6.999998, -7)
 corner_climb_4_rot = -104.69999
 back_frames = {
+"air_attack1_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-8.1, -22),
+"rot": -82.5,
+"visible": true,
+"z_index": -2
+},
+"air_attack1_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-5.1, -25),
+"rot": -94.5,
+"visible": true,
+"z_index": -2
+},
+"air_attack1_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-1.1, -26),
+"rot": -106.49999,
+"visible": true,
+"z_index": -2
+},
+"air_attack1_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2.1, -26.5),
+"rot": -106.49999,
+"visible": true,
+"z_index": -2
+},
 "air_attack3_0": {
 "flip_h": false,
 "flip_v": true,
@@ -140,38 +172,6 @@ back_frames = {
 "flip_h": false,
 "flip_v": true,
 "pos": Vector2(0.4, -15),
-"rot": -106.5,
-"visible": true,
-"z_index": -2
-},
-"air_attack1_1": {
-"flip_h": false,
-"flip_v": true,
-"pos": Vector2(-0.1, -23),
-"rot": -106.5,
-"visible": true,
-"z_index": -2
-},
-"air_attack1_0": {
-"flip_h": false,
-"flip_v": true,
-"pos": Vector2(-3.1, -20),
-"rot": -106.5,
-"visible": true,
-"z_index": -2
-},
-"air_attack1_2": {
-"flip_h": false,
-"flip_v": true,
-"pos": Vector2(0.9, -23),
-"rot": -106.5,
-"visible": true,
-"z_index": -2
-},
-"air_attack1_3": {
-"flip_h": false,
-"flip_v": true,
-"pos": Vector2(0.9, -23.5),
 "rot": -106.5,
 "visible": true,
 "z_index": -2
@@ -630,6 +630,38 @@ back_frames = {
 }
 }
 hand_frames = {
+"air_attack1_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(2.5, -43),
+"rot": 133.5,
+"visible": true,
+"z_index": 2
+},
+"air_attack1_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-18.5, -45.5),
+"rot": -153.5,
+"visible": true,
+"z_index": 2
+},
+"air_attack1_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-20.5, -42.5),
+"rot": -153.5,
+"visible": true,
+"z_index": 2
+},
+"air_attack1_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-18.5, -43.5),
+"rot": -153.5,
+"visible": true,
+"z_index": 2
+},
 "air_attack3_0": {
 "flip_h": false,
 "flip_v": false,
@@ -683,38 +715,6 @@ hand_frames = {
 "flip_v": false,
 "pos": Vector2(-12.5, -22),
 "rot": 164.0,
-"visible": true,
-"z_index": 2
-},
-"air_attack1_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-18.5, -45.5),
-"rot": -153.5,
-"visible": true,
-"z_index": 2
-},
-"air_attack1_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(2.5, -43),
-"rot": 133.5,
-"visible": true,
-"z_index": 2
-},
-"air_attack1_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-20.5, -42.5),
-"rot": -153.5,
-"visible": true,
-"z_index": 2
-},
-"air_attack1_3": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-18.5, -43.5),
-"rot": -153.5,
 "visible": true,
 "z_index": 2
 },

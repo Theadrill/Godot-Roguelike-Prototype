@@ -12,10 +12,12 @@ next_step_window = 1.35
 air_slash_animation = &"slash_air_sword_1"
 step_slash_scale = Vector2(0.95, 1.05)
 step_frame_air_slash_offsets = {
-2: Vector2(0, 1),
+1: Vector2(3, -1),
+2: Vector2(-6, 3),
 3: Vector2(-3, 0)
 }
 step_frame_air_slash_scales = {
+1: Vector2(0.95, 1.05),
 2: Vector2(0.9, 1.05),
 3: Vector2(0.95, 1.05)
 }

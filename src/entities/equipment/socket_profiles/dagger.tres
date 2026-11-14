@@ -92,15 +92,15 @@ back_frames = {
 "air_attack1_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -21),
-"rot": -185.0,
+"pos": Vector2(-4, -21),
+"rot": -221.0,
 "visible": true,
 "z_index": 1
 },
 "air_attack1_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -20),
+"pos": Vector2(-5, -20),
 "rot": -185.0,
 "visible": true,
 "z_index": 1
@@ -108,16 +108,16 @@ back_frames = {
 "air_attack1_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -21),
-"rot": -185.0,
+"pos": Vector2(-7, -21),
+"rot": -173.0,
 "visible": true,
 "z_index": 1
 },
 "air_attack1_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-3, -21),
-"rot": -185.0,
+"pos": Vector2(-6, -21),
+"rot": -173.0,
 "visible": true,
 "z_index": 1
 },

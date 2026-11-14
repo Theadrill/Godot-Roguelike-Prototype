@@ -6,16 +6,16 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-selected_weapon = "dagger"
+selected_weapon = "axe"
 selected_animation = "air_attack1"
 reference_secondary_weapon = "none"
-socket_pos_x = -15.5
-socket_pos_y = -46.5
-socket_rotation = -61.0
+socket_pos_x = 2.5
+socket_pos_y = -43.0
+socket_rotation = 133.49998
+socket_flip_v = true
 socket_z_index = 2
-slash_offset_y = 2.0
-slash_preview_scale = Vector2(0.65, 0.85)
-status_message = "dagger [Arma na Mão (MainHandSocket)] -> air_attack1 Frame 0 (Z: 2, FlipH: false, FlipV: false)"
+slash_preview_scale = Vector2(0.95, 1.05)
+status_message = "axe [Arma na Mão (MainHandSocket)] -> air_attack1 Frame 0 (Z: 2, FlipH: false, FlipV: true)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -40,13 +40,13 @@ rotation = 1.4573498
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3
-position = Vector2(-3, -28.6)
+position = Vector2(-6, -25.6)
 rotation = -0.20943952
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(-15.5, -46.5)
-rotation = -1.0646509
+position = Vector2(2.5, -43)
+rotation = 2.3300145
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
@@ -55,7 +55,7 @@ rotation = -0.61086524
 
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
 z_index = 4
-position = Vector2(-2, -27)
-scale = Vector2(0.65, 0.85)
+position = Vector2(-2, -29)
+scale = Vector2(0.95, 1.05)
 sprite_frames = ExtResource("3_slash_frames")
 animation = &"slash_air_sword_1"

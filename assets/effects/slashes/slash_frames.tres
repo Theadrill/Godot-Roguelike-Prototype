@@ -10,10 +10,6 @@
 atlas = ExtResource("5_air_slash1_sheet")
 region = Rect2(0, 0, 83, 62)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_air_slash1_1"]
-atlas = ExtResource("5_air_slash1_sheet")
-region = Rect2(83, 0, 83, 62)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_slash1_2"]
 atlas = ExtResource("5_air_slash1_sheet")
 region = Rect2(166, 0, 83, 62)
@@ -21,6 +17,10 @@ region = Rect2(166, 0, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_slash1_3"]
 atlas = ExtResource("5_air_slash1_sheet")
 region = Rect2(249, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_air_slash1_1"]
+atlas = ExtResource("5_air_slash1_sheet")
+region = Rect2(83, 0, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_slash3_0"]
 atlas = ExtResource("4_air_slash3_sheet")

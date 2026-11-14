@@ -88,35 +88,35 @@ corner_climb_3_rot = -286.6
 corner_climb_4_pos = Vector2(-4, -5)
 corner_climb_4_rot = -286.6
 back_frames = {
-"air_attack1_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(1.3, -23.7),
-"rot": -130.0,
-"visible": true,
-"z_index": -2
-},
 "air_attack1_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-1.7, -20.7),
-"rot": -130.0,
+"pos": Vector2(-8.7, -22.7),
+"rot": -73.5,
+"visible": true,
+"z_index": -2
+},
+"air_attack1_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-0.7, -27.7),
+"rot": -109.5,
 "visible": true,
 "z_index": -2
 },
 "air_attack1_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(2.3, -23.7),
-"rot": -130.0,
+"pos": Vector2(-2.7, -26.7),
+"rot": -106.0,
 "visible": true,
 "z_index": -2
 },
 "air_attack1_3": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(2.3, -24.2),
-"rot": -130.0,
+"pos": Vector2(-2.7, -26.2),
+"rot": -98.0,
 "visible": true,
 "z_index": -2
 },
@@ -634,19 +634,19 @@ back_frames = {
 }
 default_flip_h = true
 hand_frames = {
-"air_attack1_1": {
-"flip_h": false,
-"flip_v": true,
-"pos": Vector2(-18.5, -45.5),
-"rot": -153.5,
-"visible": true,
-"z_index": 2
-},
 "air_attack1_0": {
 "flip_h": false,
 "flip_v": true,
 "pos": Vector2(2.5, -43),
 "rot": 133.5,
+"visible": true,
+"z_index": 2
+},
+"air_attack1_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-18.5, -45.5),
+"rot": -153.5,
 "visible": true,
 "z_index": 2
 },
