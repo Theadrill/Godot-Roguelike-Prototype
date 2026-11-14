@@ -6,22 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://btask7tkyejuf" path="res://assets/effects/slashes/sword/sword_air_slash3_sheet.png" id="4_air_slash3_sheet"]
 [ext_resource type="Texture2D" uid="uid://evj06nojjf4i" path="res://assets/effects/slashes/sword/sword_air_slash1_sheet.png" id="5_air_slash1_sheet"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_0"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(0, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_1"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(83, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_2"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(166, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_3"]
-atlas = ExtResource("1_slash_sheet")
-region = Rect2(249, 0, 83, 62)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_slash1_0"]
 atlas = ExtResource("5_air_slash1_sheet")
 region = Rect2(0, 0, 83, 62)
@@ -65,6 +49,22 @@ region = Rect2(415, 0, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_slash3_6"]
 atlas = ExtResource("4_air_slash3_sheet")
 region = Rect2(498, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_0"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_1"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_2"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(166, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slash1_3"]
+atlas = ExtResource("1_slash_sheet")
+region = Rect2(249, 0, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_slash1_4"]
 atlas = ExtResource("1_slash_sheet")
@@ -125,13 +125,13 @@ animations = [{
 "texture": SubResource("AtlasTexture_air_slash1_0")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_air_slash1_1")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_air_slash1_2")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_air_slash1_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_air_slash1_1")
 }],
 "loop": 0,
 "name": &"slash_air_sword_1",

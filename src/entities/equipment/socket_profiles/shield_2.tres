@@ -72,7 +72,7 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
-"air_attack1_0": {
+"air_attack1_1": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(-3, -28.6),
@@ -80,7 +80,7 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
-"air_attack1_1": {
+"air_attack1_0": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(-6, -25.6),

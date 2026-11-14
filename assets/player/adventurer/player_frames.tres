@@ -19,13 +19,13 @@
 [ext_resource type="Texture2D" uid="uid://4yde86a8qv3v" path="res://assets/player/adventurer/attack/player_air_attack1_sheet.png" id="17_air_attack1_sheet"]
 [ext_resource type="Texture2D" uid="uid://msrdnhh15mfh" path="res://assets/player/adventurer/attack/player_air_attack3_sheet.png" id="18_air_attack3_sheet"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_0"]
-atlas = ExtResource("17_air_attack1_sheet")
-region = Rect2(0, 0, 83, 62)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_1"]
 atlas = ExtResource("17_air_attack1_sheet")
 region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_0"]
+atlas = ExtResource("17_air_attack1_sheet")
+region = Rect2(0, 0, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_2"]
 atlas = ExtResource("17_air_attack1_sheet")
@@ -315,10 +315,10 @@ region = Rect2(0, 124, 83, 62)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_air_attack1_0")
+"texture": SubResource("AtlasTexture_air_attack1_1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_air_attack1_1")
+"texture": SubResource("AtlasTexture_air_attack1_0")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_air_attack1_2")

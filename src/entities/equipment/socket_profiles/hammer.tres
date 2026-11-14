@@ -144,7 +144,7 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
-"air_attack1_0": {
+"air_attack1_1": {
 "flip_h": false,
 "flip_v": true,
 "pos": Vector2(-0.1, -23),
@@ -152,7 +152,7 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
-"air_attack1_1": {
+"air_attack1_0": {
 "flip_h": false,
 "flip_v": true,
 "pos": Vector2(-3.1, -20),
@@ -686,7 +686,7 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
-"air_attack1_0": {
+"air_attack1_1": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(-18.5, -45.5),
@@ -694,7 +694,7 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
-"air_attack1_1": {
+"air_attack1_0": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(2.5, -43),

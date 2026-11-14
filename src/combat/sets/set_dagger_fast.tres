@@ -1,28 +1,20 @@
-[gd_resource type="Resource" script_class="AttackSetData" load_steps=6 format=3 uid="uid://set_dagger_fast_01"]
+[gd_resource type="Resource" script_class="AttackSetData" format=3 uid="uid://bq21sbfxdorqm"]
 
-[ext_resource type="Script" path="res://src/combat/attack_set_data.gd" id="1_set_script"]
-[ext_resource type="Script" path="res://src/combat/combo_step_data.gd" id="2_step_script"]
+[ext_resource type="Script" uid="uid://1pl042bt65kw" path="res://src/combat/attack_set_data.gd" id="1_set_script"]
+[ext_resource type="Script" uid="uid://dwnvely5ut5oe" path="res://src/combat/combo_step_data.gd" id="2_step_script"]
 
 [sub_resource type="Resource" id="Resource_step_0"]
 script = ExtResource("2_step_script")
 step_label = "Golpe 1 - Corte Rápido"
-body_animation = &"attack1"
-air_body_animation = &"air_attack1"
 duration = 0.24
 forward_impulse = 60.0
-damage_multiplier = 1.0
 next_step_window = 1.35
-slash_animation = &"slash_sword"
 air_slash_animation = &"slash_air_sword_1"
 step_slash_offset = Vector2(-2, 0)
-step_air_slash_offset = Vector2(0, 0)
-step_slash_scale = Vector2(0.85, 0.85)
-step_slash_flip_h = false
-step_slash_flip_v = false
-active_start_frame = 2
-active_end_frame = 3
-air_active_start_frame = 2
-air_active_end_frame = 3
+step_air_slash_offset = Vector2(2, 2)
+step_slash_scale = Vector2(0.65, 0.85)
+air_active_start_frame = 1
+air_active_end_frame = 2
 hitbox_size = Vector2(28, 24)
 hitbox_position = Vector2(18, -20)
 
@@ -38,8 +30,6 @@ next_step_window = 0.675
 slash_animation = &"slash_sword_2"
 step_slash_offset = Vector2(-2, 0)
 step_slash_scale = Vector2(0.85, 0.85)
-step_slash_flip_h = false
-step_slash_flip_v = false
 active_start_frame = 3
 active_end_frame = 4
 hitbox_size = Vector2(28, 24)
@@ -58,10 +48,6 @@ lock_dodge_after_windup = true
 slash_animation = &"slash_sword_3"
 step_slash_offset = Vector2(-2, 0)
 step_slash_scale = Vector2(0.9, 0.9)
-step_slash_flip_h = false
-step_slash_flip_v = false
-active_start_frame = 2
-active_end_frame = 3
 hitbox_size = Vector2(28, 24)
 hitbox_position = Vector2(18, -20)
 
@@ -69,6 +55,3 @@ hitbox_position = Vector2(18, -20)
 script = ExtResource("1_set_script")
 set_name = "Fast Dagger Set (1-2-3)"
 steps = Array[ExtResource("2_step_script")]([SubResource("Resource_step_0"), SubResource("Resource_step_1"), SubResource("Resource_step_2")])
-combo_window = 1.35
-loop_combo = true
-finisher_cooldown = 0.0
