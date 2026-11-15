@@ -33,20 +33,27 @@ func _start_shot_cycle() -> void:
 
 	var is_spell: bool = player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_SPELL
 
-	# Crossbow fires instantly on trigger; Bow/Spell begin drawing string or channeling energy
+	# Crossbow fires instantly on trigger; if charge weapon is airborne and not chargeable_in_the_air, fire/cast immediately!
+	var skip_air_charge: bool = player.weapon.is_charge_attack and (not player.is_on_floor()) and (not player.weapon.chargeable_in_the_air)
 	if player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_CROSSBOW:
 		_fire_projectile()
 	elif is_spell:
-		attack_phase = 0
-		if player.player_sprite:
-			player.player_sprite.speed_scale = 1.0
-		player.play_animation(&"channeling")
-		player._update_weapon_socket_for_frame(&"channeling", 0)
+		if skip_air_charge:
+			_start_spell_cast()
+		else:
+			attack_phase = 0
+			if player.player_sprite:
+				player.player_sprite.speed_scale = 1.0
+			player.play_animation(&"channeling")
+			player._update_weapon_socket_for_frame(&"channeling", 0)
 	else:
-		attack_phase = 0
-		var is_aiming_up: bool = Input.is_action_pressed("up") or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP)
-		if player.main_hand_socket:
-			player.main_hand_socket.rotation_degrees = -45.0 if is_aiming_up else 0.0
+		if skip_air_charge:
+			_fire_projectile()
+		else:
+			attack_phase = 0
+			var is_aiming_up: bool = Input.is_action_pressed("up") or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP)
+			if player.main_hand_socket:
+				player.main_hand_socket.rotation_degrees = -45.0 if is_aiming_up else 0.0
 
 func exit() -> void:
 	has_fired = false

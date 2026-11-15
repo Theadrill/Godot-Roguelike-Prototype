@@ -54,8 +54,8 @@ const COMBO_WINDOW: float = 1.35
 func enter() -> void:
 	player = character as Player
 
-	# If weapon has is_charge_attack enabled (respecting charge_only_on_ground)
-	var should_charge: bool = player.weapon != null and player.weapon.is_charge_attack and (not player.weapon.charge_only_on_ground or player.is_on_floor())
+	# If weapon has is_charge_attack enabled (respecting chargeable_in_the_air)
+	var should_charge: bool = player.weapon != null and player.weapon.is_charge_attack and (player.is_on_floor() or player.weapon.chargeable_in_the_air)
 	if should_charge:
 		is_charging = true
 		charge_progress = 0.0

@@ -51,7 +51,11 @@ enum WeaponCategory {
 @export_group("Weapon Identity")
 
 ## Define a categoria comportamental da arma (Corpo a Corpo, Arco, Besta ou Cajado/Magia).
-@export var weapon_category: WeaponCategory = WeaponCategory.MELEE
+@export var weapon_category: WeaponCategory = WeaponCategory.MELEE:
+	set(value):
+		weapon_category = value
+		if Engine.is_editor_hint():
+			notify_property_list_changed()
 
 ## Nome de exibição da arma (sincronizado automaticamente com 'equipment_name').
 @export var weapon_name: String = "Broadsword":
@@ -157,8 +161,9 @@ func get_socket_profile() -> WeaponSocketProfile:
 		if Engine.is_editor_hint():
 			notify_property_list_changed()
 
-## Se 'true', o carregamento ocorre apenas no chão; no ar o botão dispara o ataque aéreo imediatamente.
-@export var charge_only_on_ground: bool = true
+## Se 'true', permite segurar para carregar ataques também no ar.
+## Se 'false', ataques no ar disparam imediatamente o golpe aéreo normal do Attack Set (ou disparo direto).
+@export var chargeable_in_the_air: bool = false
 
 ## Animação exibida enquanto o jogador segura o botão carregando o golpe (usa os sockets calibrados no Tool).
 @export_enum("attack1", "attack2", "attack3", "channeling", "block", "idle") var charge_ready_animation: String = "attack1"
@@ -185,7 +190,7 @@ func get_socket_profile() -> WeaponSocketProfile:
 @export var charge_energy_color: Color = Color(0.2, 0.9, 1.0, 1.0)
 
 const _CHARGE_SUB_PROPERTIES: Array[StringName] = [
-	&"charge_only_on_ground",
+	&"chargeable_in_the_air",
 	&"charge_ready_animation",
 	&"charge_ready_frame",
 	&"charge_attack_step",
@@ -196,10 +201,19 @@ const _CHARGE_SUB_PROPERTIES: Array[StringName] = [
 	&"charge_energy_color",
 ]
 
+const _MELEE_ONLY_CHARGE_PROPERTIES: Array[StringName] = [
+	&"charge_ready_animation",
+	&"charge_ready_frame",
+	&"charge_attack_step",
+]
+
 func _validate_property(property: Dictionary) -> void:
 	var prop_name: StringName = property.get("name", &"")
 	if prop_name in _CHARGE_SUB_PROPERTIES:
 		if not is_charge_attack:
+			property["usage"] = PROPERTY_USAGE_NO_EDITOR
+			return
+		if weapon_category == WeaponCategory.RANGED_SPELL and prop_name in _MELEE_ONLY_CHARGE_PROPERTIES:
 			property["usage"] = PROPERTY_USAGE_NO_EDITOR
 			return
 		if prop_name == &"charge_attack_step":
