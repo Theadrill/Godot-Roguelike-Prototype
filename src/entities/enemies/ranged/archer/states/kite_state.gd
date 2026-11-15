@@ -36,10 +36,12 @@ func physics_update(delta: float) -> void:
 		archer.update_facing(face_dir)
 
 	var dist: float = diff.length()
+	var target_pos: Vector2 = player.global_position + Vector2(0.0, -20.0)
+	var angle_ok: bool = archer.is_target_within_aim_angle(target_pos)
 	kite_timer += delta
 
-	# If reached comfortable distance or cornered or kited for long enough -> AIM and SHOOT!
-	if dist >= archer.min_kite_distance * 1.3 or not archer.can_step_backward() or kite_timer >= max_kite_duration:
+	# If reached comfortable distance with a valid shooting angle, or cornered/timed out -> AIM!
+	if (dist >= archer.min_kite_distance * 1.3 and angle_ok) or not archer.can_step_backward() or kite_timer >= max_kite_duration:
 		state_machine.transition_to("aim")
 		return
 

@@ -89,9 +89,10 @@ func physics_update(delta: float) -> void:
 			return
 
 		var dist := archer.global_position.distance_to(player.global_position)
+		var target_pos := player.global_position + Vector2(0.0, -20.0)
 		if dist > archer.lose_target_range:
 			state_machine.transition_to("patrol")
-		elif archer.can_move and dist < archer.min_kite_distance and archer.can_step_backward():
+		elif archer.can_move and (dist < archer.min_kite_distance or not archer.is_target_within_aim_angle(target_pos)) and archer.can_step_backward():
 			state_machine.transition_to("kite")
 		else:
 			state_machine.transition_to("aim")
@@ -109,9 +110,9 @@ func _loose_arrow() -> void:
 	if not proj_scene:
 		return
 
-	var spawn_pos: Vector2 = archer.arrow_spawn_marker.global_position if archer.arrow_spawn_marker else archer.global_position + Vector2(float(archer.facing_direction) * 16.0, -20.0)
+	var spawn_pos: Vector2 = archer.get_arrow_spawn_pos()
 	var target_pos: Vector2 = player.global_position + Vector2(0.0, -20.0)
-	var shoot_dir: Vector2 = (target_pos - spawn_pos).normalized()
+	var shoot_dir: Vector2 = archer.get_clamped_aim_direction(target_pos)
 
 	# Balancing metrics per 3-signal attack type
 	var final_damage: float = archer.normal_damage

@@ -17,19 +17,18 @@ func enter() -> void:
 		var diff := player.global_position - archer.global_position
 		if diff.x != 0.0:
 			archer.update_facing(signf(diff.x))
+		var target_pos := player.global_position + Vector2(0.0, -20.0)
+		if archer.can_move and archer.can_step_backward() and not archer.is_target_within_aim_angle(target_pos):
+			state_machine.transition_to("kite")
+			return
 
 	# Choose next 3-signal telegraph (White / Yellow / Red)
 	var attack_type := archer.advance_attack_cycle()
 	archer.show_telegraph(attack_type)
 
-	# Visual bow draw angle
-	if archer.bow_node and is_instance_valid(player):
-		var target_pos := player.global_position + Vector2(0.0, -18.0)
-		var aim_vec := (target_pos - archer.bow_node.global_position).normalized()
-		var aim_angle := aim_vec.angle()
-		if archer.facing_direction == -1:
-			aim_angle = PI - aim_angle
-		archer.bow_node.rotation = aim_angle
+	# Keep enemy bow pose horizontal (only projectile tilts slightly on Y)
+	if archer.bow_node:
+		archer.bow_node.rotation = 0.0
 
 func exit() -> void:
 	if archer.bow_node:
@@ -50,14 +49,14 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("patrol")
 		return
 
-	# Keep bow aimed at player
+	# Keep enemy bow pose horizontal; if target moves into a steep vertical angle, reposition
 	if archer.bow_node:
-		var target_pos := player.global_position + Vector2(0.0, -18.0)
-		var aim_vec := (target_pos - archer.bow_node.global_position).normalized()
-		var aim_angle := aim_vec.angle()
-		if archer.facing_direction == -1:
-			aim_angle = PI - aim_angle
-		archer.bow_node.rotation = aim_angle
+		archer.bow_node.rotation = 0.0
+	var target_pos := player.global_position + Vector2(0.0, -20.0)
+	if not archer.is_target_within_aim_angle(target_pos):
+		if archer.can_move and archer.can_step_backward():
+			state_machine.transition_to("kite")
+		return
 
 	aim_timer -= delta
 	if aim_timer <= 0.0:

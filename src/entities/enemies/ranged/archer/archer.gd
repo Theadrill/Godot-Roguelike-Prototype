@@ -44,6 +44,7 @@ var min_kite_distance: float:
 @export_range(0.1, 1.5, 0.05, "suffix:s") var telegraph_duration: float = 0.50
 @export_range(0.0, 20.0, 0.05, "suffix:s") var attack_cooldown: float = 2.0
 @export_range(0.1, 1.0, 0.05) var cooldown_speed_mult: float = 0.50
+@export_range(5.0, 45.0, 1.0, "suffix:deg") var max_aim_angle_deg: float = 25.0
 var shoot_cooldown: float:
 	get: return attack_cooldown
 	set(val): attack_cooldown = val
@@ -309,6 +310,25 @@ func respawn() -> void:
 		visual.scale.y = 1.0
 	if bow_node:
 		bow_node.rotation = 0.0
+
+func get_arrow_spawn_pos() -> Vector2:
+	return arrow_spawn_marker.global_position if arrow_spawn_marker else global_position + Vector2(float(facing_direction) * 16.0, -20.0)
+
+func is_target_within_aim_angle(target_pos: Vector2) -> bool:
+	var diff: Vector2 = target_pos - get_arrow_spawn_pos()
+	var abs_x: float = absf(diff.x)
+	if abs_x < 8.0:
+		return absf(diff.y) < 12.0
+	var max_tan: float = tan(deg_to_rad(max_aim_angle_deg))
+	return absf(diff.y) <= abs_x * max_tan
+
+func get_clamped_aim_direction(target_pos: Vector2) -> Vector2:
+	var diff: Vector2 = target_pos - get_arrow_spawn_pos()
+	var dir_x: float = float(facing_direction)
+	var abs_x: float = maxf(16.0, absf(diff.x))
+	var max_dy: float = abs_x * tan(deg_to_rad(max_aim_angle_deg))
+	var clamped_dy: float = clampf(diff.y, -max_dy, max_dy)
+	return Vector2(dir_x * abs_x, clamped_dy).normalized()
 
 	# Reset collision & hurtbox
 	set_collision_layer_value(3, true)
