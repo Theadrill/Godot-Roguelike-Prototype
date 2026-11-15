@@ -44,4 +44,10 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`Attack` (Chão)** (`attack1` + `slash_sword`, `attack2` + `slash_sword_2`, `attack3` + `slash_sword_3`)
 - [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` + `slash_air_sword_3` para plunge do Martelo)
 - [x] **Ataques a partir de `Crouch`, `Cima` ou `Baixo no ar` (sem plunge)** — levantam/normalizam automaticamente para o combo padrão (bloqueando ataque sob teto baixo via `ceiling_check`).
-- [x] **Ataque Carregado (`is_charge_attack`)** — segura o frame 0 de `attack1` durante o windup antes de soltar o golpe.
+- [x] **Ataque Carregado (`is_charge_attack`)** — segura o frame configurável (`charge_ready_animation` / `charge_ready_frame`) com sockets do Tool e `EnergizeProfile` elemental.
+
+---
+
+## 💡 4. Ideias Futuras / Modificadores Elementais
+- [ ] **Modificador de Chão Queimando (DoT de Fogo):**
+  - Criar um afixo/modificador futuro para armas ou habilidades de Fogo que deixe a faixa do chão queimando por mais tempo após o impacto (com área de dano contínuo), diferente do efeito atual que dura apenas alguns frames para feedback visual sem parecer dano contínuo.

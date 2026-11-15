@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="EnergizeProfile" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="EnergizeProfile" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/combat/energize_profile.gd" id="1_profile"]
 [ext_resource type="PackedScene" path="res://src/combat/energize_particles/earth_charge.tscn" id="2_charge"]
 [ext_resource type="PackedScene" path="res://src/combat/energize_particles/earth_release.tscn" id="3_release"]
+[ext_resource type="PackedScene" path="res://src/combat/energize_particles/earth_ground.tscn" id="4_ground"]
 
 [resource]
 script = ExtResource("1_profile")
@@ -13,3 +14,4 @@ pulse_speed = 8.0
 scale_boost = 0.1
 particle_scene = ExtResource("2_charge")
 release_particle_scene = ExtResource("3_release")
+ground_impact_scene = ExtResource("4_ground")

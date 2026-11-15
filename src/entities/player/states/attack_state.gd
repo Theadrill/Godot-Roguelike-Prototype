@@ -16,6 +16,7 @@ var charge_progress: float = 0.0
 var _charge_base_socket_rot: float = -35.0
 var _charge_base_weapon_scale: Vector2 = Vector2.ONE
 var _was_energized_swing: bool = false
+var _step_charge_ratio: float = 0.0
 
 var _step_duration: float = 0.36
 var _step_total_frames: int = 5
@@ -118,6 +119,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	_hitbox_opened_for_step = false
 	_pending_forward_impulse = 0.0
 	_step_body_anim_active = false
+	_step_charge_ratio = charge_ratio
 	
 	# Allow reversing direction between combo steps if steering
 	var input_dir: float = Input.get_axis("move_left", "move_right")
@@ -403,6 +405,11 @@ func _update_active_hitbox_window() -> void:
 	if cur_frame >= _step_active_start_frame and not _hitbox_opened_for_step:
 		_hitbox_opened_for_step = true
 		player.hitbox.set_active(true)
+		if _step_charge_ratio > 0.0 and player.is_on_floor() and player.hitbox.has_node("CollisionShape2D"):
+			var hb_node := player.hitbox.get_node("CollisionShape2D") as CollisionShape2D
+			var hb_w: float = (hb_node.shape as RectangleShape2D).size.x if (hb_node and hb_node.shape is RectangleShape2D) else 32.0
+			var hb_x: float = hb_node.global_position.x if hb_node else player.global_position.x
+			player.spawn_ground_impact_particles(hb_x, player.global_position.y, hb_w, player.facing_direction)
 		# Apply full forward lunge at the exact moment the blade/slash unleashes! (Slightly dampened in mid-air so you stay on target)
 		if _pending_forward_impulse > 0.0:
 			var lunge_mult: float = 0.45 if (_is_air_stall_active and not player.is_on_floor()) else 1.0

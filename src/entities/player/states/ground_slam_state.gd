@@ -91,6 +91,15 @@ func _on_slam_impact() -> void:
 	# Heavy tactile rumble & screen hitstop
 	CombatFeedback.apply_hit_feedback(0.08, 0.7, 1.0, 0.18)
 
+	# Ground impact particles sized to shockwave width (uses equipped EnergizeProfile if active, else earth dust/rocks)
+	player.spawn_ground_impact_particles(
+		player.global_position.x,
+		player.global_position.y,
+		shockwave_radius * 1.1,
+		player.facing_direction,
+		"res://src/combat/energize_particles/earth_ground.tscn"
+	)
+
 	# Spawn RadialShockwave with area damage
 	var shockwave_scene := load("res://src/combat/radial_shockwave.tscn") as PackedScene
 	if shockwave_scene:

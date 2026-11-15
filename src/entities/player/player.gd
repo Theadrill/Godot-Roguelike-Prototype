@@ -1219,3 +1219,27 @@ func cycle_axe_energize_profile_debug() -> void:
 	print("[DEBUG] Axe Energize Profile -> %s (%s)" % [label, next_name])
 	if has_method("show_bark"):
 		show_bark("Energize: %s" % label)
+
+func spawn_ground_impact_particles(center_x: float, ground_y: float, width: float, facing: int = 1, fallback_scene_path: String = "") -> void:
+	var target_scene: PackedScene = null
+	if weapon and weapon.charge_has_energize:
+		var prof: EnergizeProfile = weapon.get_energize_profile()
+		if prof and prof.ground_impact_scene:
+			target_scene = prof.ground_impact_scene
+	if not target_scene and fallback_scene_path != "" and ResourceLoader.exists(fallback_scene_path):
+		target_scene = load(fallback_scene_path) as PackedScene
+	if not target_scene:
+		return
+	var fx := target_scene.instantiate() as CPUParticles2D
+	if not fx:
+		return
+	var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
+	if not spawn_parent:
+		fx.queue_free()
+		return
+	fx.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	fx.emission_rect_extents = Vector2(maxf(8.0, width * 0.5), 2.0)
+	if facing < 0:
+		fx.direction.x = -absf(fx.direction.x)
+	spawn_parent.add_child(fx)
+	fx.global_position = Vector2(center_x, ground_y - 1.0)

@@ -22,6 +22,8 @@ extends Resource
 @export var particle_scene: PackedScene = null
 ## Cena de partículas (one-shot) disparada no momento em que o jogador solta o ataque carregado.
 @export var release_particle_scene: PackedScene = null
+## Cena de partículas (one-shot) espalhada no chão ao longo da largura do corte/impacto.
+@export var ground_impact_scene: PackedScene = null
 
 @export_group("Slash Color Filter")
 ## Se 'true', aplica a cor deste EnergizeProfile como filtro de luminância no Slash ao soltar o golpe.
