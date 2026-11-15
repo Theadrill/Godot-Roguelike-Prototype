@@ -60,6 +60,7 @@ func enter() -> void:
 	if should_charge:
 		is_charging = true
 		charge_progress = 0.0
+		player.velocity.x = 0.0
 		var charge_step_count: int = maxi(1, player.weapon.get_combo_step_count())
 		current_step = clampi(player.weapon.charge_attack_step, 0, charge_step_count - 1)
 		last_completed_step = -1
@@ -273,13 +274,14 @@ func physics_update(delta: float) -> void:
 				player._main_weapon_instance.modulate = Color.WHITE
 				player._main_weapon_instance.scale = _charge_base_weapon_scale
 
-		# Slow foot movement on ground during windup
+		# Keep player planted in place during charge windup (only allow turning facing direction)
 		if player.is_on_floor():
 			var dir := Input.get_axis("move_left", "move_right")
-			player.velocity.x = move_toward(player.velocity.x, dir * (player.run_speed * 0.25), 600.0 * delta)
+			player.velocity.x = move_toward(player.velocity.x, 0.0, 1200.0 * delta)
 			if dir != 0.0:
 				player.update_facing(dir)
 		else:
+			player.velocity.x = move_toward(player.velocity.x, 0.0, 600.0 * delta)
 			player.velocity.y += (player.gravity * player.fall_gravity_multiplier) * delta
 
 		player.move_and_slide()
