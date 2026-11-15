@@ -85,7 +85,11 @@ func get_socket_profile() -> WeaponSocketProfile:
 ## Arraste um recurso de 'res://src/combat/sets/' (ex: 'set_sword_standard.tres', 'set_hammer_crusher.tres').
 ## Ele define a sequência de animações do corpo (attack1, attack2...), os slashes padrão de cada golpe,
 ## durações e impulsos. Se deixado vazio, usa os valores de fallback abaixo.
-@export var attack_set: AttackSetData
+@export var attack_set: AttackSetData:
+	set(value):
+		attack_set = value
+		if Engine.is_editor_hint():
+			notify_property_list_changed()
 
 @export_subgroup("Fallback / Legacy Combo Arrays (Usado apenas se Attack Set estiver vazio)")
 
@@ -147,7 +151,23 @@ func get_socket_profile() -> WeaponSocketProfile:
 
 ## Se 'true', segurar o botão de ataque carrega energia até soltar para desferir um golpe esmagador carregado.
 ## Se 'false', segurar ou apertar o botão executa os golpes do Attack Set em sequência fluida.
-@export var is_charge_attack: bool = false
+@export var is_charge_attack: bool = false:
+	set(value):
+		is_charge_attack = value
+		if Engine.is_editor_hint():
+			notify_property_list_changed()
+
+## Se 'true', o carregamento ocorre apenas no chão; no ar o botão dispara o ataque aéreo imediatamente.
+@export var charge_only_on_ground: bool = true
+
+## Animação exibida enquanto o jogador segura o botão carregando o golpe (usa os sockets calibrados no Tool).
+@export_enum("attack1", "attack2", "attack3", "channeling", "block", "idle") var charge_ready_animation: String = "attack1"
+
+## Frame da 'charge_ready_animation' que ficará congelado durante o carregamento.
+@export_range(0, 10, 1) var charge_ready_frame: int = 0
+
+## Step do Attack Set que será disparado ao soltar o botão (dropdown dinâmico no Inspector mostra 'Step X [anim]').
+@export var charge_attack_step: int = 0
 
 ## Tempo necessário segurando o botão para atingir 100% de carga máxima (em segundos).
 @export_range(0.05, 3.0, 0.05, "suffix:s") var max_charge_time: float = 0.5
@@ -163,6 +183,36 @@ func get_socket_profile() -> WeaponSocketProfile:
 
 ## Cor do brilho energético emitido durante o carregamento da arma.
 @export var charge_energy_color: Color = Color(0.2, 0.9, 1.0, 1.0)
+
+const _CHARGE_SUB_PROPERTIES: Array[StringName] = [
+	&"charge_only_on_ground",
+	&"charge_ready_animation",
+	&"charge_ready_frame",
+	&"charge_attack_step",
+	&"max_charge_time",
+	&"charge_damage_multiplier",
+	&"charge_has_tremor",
+	&"charge_has_energize",
+	&"charge_energy_color",
+]
+
+func _validate_property(property: Dictionary) -> void:
+	var prop_name: StringName = property.get("name", &"")
+	if prop_name in _CHARGE_SUB_PROPERTIES:
+		if not is_charge_attack:
+			property["usage"] = PROPERTY_USAGE_NO_EDITOR
+			return
+		if prop_name == &"charge_attack_step":
+			var options: PackedStringArray = []
+			if attack_set and not attack_set.steps.is_empty():
+				for i in range(attack_set.steps.size()):
+					var st: ComboStepData = attack_set.steps[i]
+					var anim_label: String = String(st.body_animation) if (st and st.body_animation != &"") else "attack1"
+					options.append("Step %d [%s]:%d" % [i, anim_label, i])
+			else:
+				options.append("Step 0 [attack1]:0")
+			property["hint"] = PROPERTY_HINT_ENUM
+			property["hint_string"] = ",".join(options)
 
 @export_group("Attack Slash Effect", "slash_")
 

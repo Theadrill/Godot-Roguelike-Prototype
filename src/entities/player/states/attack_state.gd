@@ -13,6 +13,7 @@ var last_completed_step: int = -1
 
 var is_charging: bool = false
 var charge_progress: float = 0.0
+var _charge_base_socket_rot: float = -35.0
 
 var _step_duration: float = 0.36
 var _step_total_frames: int = 5
@@ -53,21 +54,29 @@ const COMBO_WINDOW: float = 1.35
 func enter() -> void:
 	player = character as Player
 
-	# If weapon has is_charge_attack enabled (e.g. War Hammer)
-	if player.weapon and player.weapon.is_charge_attack:
+	# If weapon has is_charge_attack enabled (respecting charge_only_on_ground)
+	var should_charge: bool = player.weapon != null and player.weapon.is_charge_attack and (not player.weapon.charge_only_on_ground or player.is_on_floor())
+	if should_charge:
 		is_charging = true
 		charge_progress = 0.0
-		current_step = 0
+		var charge_step_count: int = maxi(1, player.weapon.get_combo_step_count())
+		current_step = clampi(player.weapon.charge_attack_step, 0, charge_step_count - 1)
 		last_completed_step = -1
 		queued_combo_presses = 0
-		# Windup pose: hold attack1 frame 0 and pull weapon back
-		player.play_animation(&"attack1")
+		# Windup pose: hold configured ready animation/frame using calibrated WeaponSocketProfile
+		var ready_anim: StringName = StringName(player.weapon.charge_ready_animation)
+		if ready_anim == &"" or (player.player_sprite and player.player_sprite.sprite_frames and not player.player_sprite.sprite_frames.has_animation(ready_anim)):
+			ready_anim = &"attack1"
+		player.play_animation(ready_anim)
+		var ready_frame: int = maxi(0, player.weapon.charge_ready_frame)
 		if player.player_sprite:
 			player.player_sprite.pause()
-			player.player_sprite.frame = 0
-			player._update_weapon_socket_for_frame(&"attack1", 0)
-		if player.main_hand_socket:
-			player.main_hand_socket.rotation_degrees = -65.0
+			if player.player_sprite.sprite_frames and player.player_sprite.sprite_frames.has_animation(ready_anim):
+				var max_f: int = maxi(0, player.player_sprite.sprite_frames.get_frame_count(ready_anim) - 1)
+				ready_frame = clampi(ready_frame, 0, max_f)
+			player.player_sprite.frame = ready_frame
+			player._update_weapon_socket_for_frame(ready_anim, ready_frame)
+		_charge_base_socket_rot = player.main_hand_socket.rotation_degrees if player.main_hand_socket else -35.0
 		return
 
 	is_charging = false
@@ -240,7 +249,7 @@ func physics_update(delta: float) -> void:
 			jitter = (randf() - 0.5) * 5.0 * charge_progress
 
 		if player.main_hand_socket:
-			player.main_hand_socket.rotation_degrees = -65.0 + jitter
+			player.main_hand_socket.rotation_degrees = _charge_base_socket_rot + jitter
 
 		# Energizing glow feedback flag
 		if player._main_weapon_instance:
