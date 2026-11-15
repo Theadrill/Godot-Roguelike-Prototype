@@ -7,11 +7,15 @@ extends State
 var archer: Archer
 var max_kite_duration: float = 1.2
 var kite_timer: float = 0.0
+var _no_angle_timer: float = 0.0
+var _move_sign: int = -1 # -1: step backward away from player, +1: step forward to seek angle
 
 func enter() -> void:
 	archer = character as Archer
 	archer.hide_telegraph()
 	kite_timer = 0.0
+	_no_angle_timer = 0.0
+	_move_sign = -1 if archer.can_step_backward() else 1
 
 func physics_update(delta: float) -> void:
 	# Gravity
@@ -36,15 +40,31 @@ func physics_update(delta: float) -> void:
 		archer.update_facing(face_dir)
 
 	var dist: float = diff.length()
-	var target_pos: Vector2 = player.global_position + Vector2(0.0, -20.0)
-	var angle_ok: bool = archer.is_target_within_aim_angle(target_pos)
+	var has_angle: bool = archer.has_valid_shot_angle(player)
 	kite_timer += delta
 
-	# If reached comfortable distance with a valid shooting angle, or cornered/timed out -> AIM!
-	if (dist >= archer.min_kite_distance * 1.3 and angle_ok) or not archer.can_step_backward() or kite_timer >= max_kite_duration:
-		state_machine.transition_to("aim")
-		return
+	if has_angle:
+		_no_angle_timer = 0.0
+		if dist >= archer.min_kite_distance * 1.3 or not archer.can_step_backward() or kite_timer >= max_kite_duration:
+			state_machine.transition_to("aim")
+			return
+	else:
+		_no_angle_timer += delta
+		if _no_angle_timer >= archer.lose_aggro_time or dist > archer.lose_target_range:
+			archer.drop_aggro()
+			state_machine.transition_to("patrol")
+			return
 
-	# Walk backwards away from player
-	archer.velocity.x = -float(archer.facing_direction) * archer.kite_speed
+	# Walk along platform trying to find a valid angle (retreat first, or advance if cornered)
+	if _move_sign == -1 and not archer.can_step_backward():
+		_move_sign = 1
+	elif _move_sign == 1 and not archer.can_step_forward():
+		if archer.can_step_backward():
+			_move_sign = -1
+		else:
+			archer.velocity.x = 0.0
+			archer.move_and_slide()
+			return
+
+	archer.velocity.x = float(archer.facing_direction * _move_sign) * archer.kite_speed
 	archer.move_and_slide()

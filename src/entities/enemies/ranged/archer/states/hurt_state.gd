@@ -12,6 +12,7 @@ var hitstop_time: float = 0.0
 func enter() -> void:
 	archer = character as Archer
 	stun_timer = 0.25
+	archer.reaggro_cooldown = 0.0
 	archer.hide_telegraph()
 	if archer.bow_node:
 		archer.bow_node.rotation = 0.0
@@ -48,9 +49,11 @@ func physics_update(delta: float) -> void:
 
 		if is_instance_valid(player) and archer.has_line_of_sight_to(player):
 			var dist := archer.global_position.distance_to(player.global_position)
-			if dist < archer.min_kite_distance and archer.can_step_backward():
+			if archer.can_move and ((dist < archer.min_kite_distance and archer.can_step_backward()) or not archer.has_valid_shot_angle(player)):
 				state_machine.transition_to("kite")
-			else:
+			elif archer.has_valid_shot_angle(player):
 				state_machine.transition_to("aim")
+			else:
+				state_machine.transition_to("patrol")
 		else:
 			state_machine.transition_to("patrol")

@@ -45,6 +45,10 @@ var min_kite_distance: float:
 @export_range(0.0, 20.0, 0.05, "suffix:s") var attack_cooldown: float = 2.0
 @export_range(0.1, 1.0, 0.05) var cooldown_speed_mult: float = 0.50
 @export_range(5.0, 45.0, 1.0, "suffix:deg") var max_aim_angle_deg: float = 25.0
+@export_range(0.5, 8.0, 0.25, "suffix:s") var lose_aggro_time: float = 2.5
+@export_range(0.5, 5.0, 0.25, "suffix:s") var reaggro_cooldown_duration: float = 1.5
+
+var reaggro_cooldown: float = 0.0
 var shoot_cooldown: float:
 	get: return attack_cooldown
 	set(val): attack_cooldown = val
@@ -204,11 +208,15 @@ func update_facing(direction: float) -> void:
 		facing_direction = new_facing
 		visual.scale.x = float(facing_direction)
 
-		# Sync raycasts direction
+		# Sync raycasts direction and refresh immediately so same-frame checks don't read stale edges
 		wall_check.target_position.x = absf(wall_check.target_position.x) * float(facing_direction)
 		ledge_check.position.x = absf(ledge_check.position.x) * float(facing_direction)
 		back_wall_check.target_position.x = -absf(back_wall_check.target_position.x) * float(facing_direction)
 		back_ledge_check.position.x = -absf(back_ledge_check.position.x) * float(facing_direction)
+		wall_check.force_raycast_update()
+		ledge_check.force_raycast_update()
+		back_wall_check.force_raycast_update()
+		back_ledge_check.force_raycast_update()
 
 func can_step_forward() -> bool:
 	if not is_on_floor():
@@ -329,6 +337,16 @@ func get_clamped_aim_direction(target_pos: Vector2) -> Vector2:
 	var max_dy: float = abs_x * tan(deg_to_rad(max_aim_angle_deg))
 	var clamped_dy: float = clampf(diff.y, -max_dy, max_dy)
 	return Vector2(dir_x * abs_x, clamped_dy).normalized()
+
+func has_valid_shot_angle(player: Player) -> bool:
+	if not is_instance_valid(player):
+		return false
+	return has_line_of_sight_to(player) and is_target_within_aim_angle(player.global_position + Vector2(0.0, -20.0))
+
+func drop_aggro() -> void:
+	target_player = null
+	reaggro_cooldown = reaggro_cooldown_duration
+	hide_telegraph()
 
 	# Reset collision & hurtbox
 	set_collision_layer_value(3, true)

@@ -87,7 +87,7 @@ position = Vector2(0, -16)
 target_position = Vector2(14, 0)
 
 [node name="LedgeCheck" type="RayCast2D" parent="." unique_id=154651331]
-position = Vector2(14, 0)
+position = Vector2(14, -4)
 target_position = Vector2(0, 16)
 
 [node name="BackWallCheck" type="RayCast2D" parent="." unique_id=2109402834]
@@ -95,7 +95,7 @@ position = Vector2(0, -16)
 target_position = Vector2(-14, 0)
 
 [node name="BackLedgeCheck" type="RayCast2D" parent="." unique_id=1882452810]
-position = Vector2(-14, 0)
+position = Vector2(-14, -4)
 target_position = Vector2(0, 16)
 
 [node name="SightRay" type="RayCast2D" parent="." unique_id=956198515]

@@ -21,8 +21,11 @@ func physics_update(delta: float) -> void:
 	else:
 		archer.velocity.y = 0.0
 
-	# Scan for Player
-	var player := _find_player()
+	if archer.reaggro_cooldown > 0.0:
+		archer.reaggro_cooldown = maxf(0.0, archer.reaggro_cooldown - delta)
+
+	# Scan for Player (skipped while cooling down after losing aggro)
+	var player := _find_player() if archer.reaggro_cooldown <= 0.0 else null
 	if player:
 		var to_player := player.global_position - archer.global_position
 		var dist := to_player.length()
@@ -35,9 +38,10 @@ func physics_update(delta: float) -> void:
 			if not is_in_front and dir_to_player != 0.0:
 				archer.update_facing(dir_to_player)
 
-			if archer.can_move and dist < archer.min_kite_distance and archer.can_step_backward():
+			var has_angle: bool = archer.has_valid_shot_angle(player)
+			if archer.can_move and ((dist < archer.min_kite_distance and archer.can_step_backward()) or not has_angle):
 				state_machine.transition_to("kite")
-			else:
+			elif has_angle:
 				state_machine.transition_to("aim")
 			return
 
@@ -55,7 +59,12 @@ func physics_update(delta: float) -> void:
 			archer.update_facing(-archer.facing_direction)
 		return
 
-	# Move forward along patrol ledge
+	# Move forward along patrol ledge (wait & turn only when grounded at an edge/wall)
+	if not archer.is_on_floor():
+		archer.velocity.x = 0.0
+		archer.move_and_slide()
+		return
+
 	if not archer.can_step_forward():
 		is_waiting = true
 		wait_timer = 1.0
