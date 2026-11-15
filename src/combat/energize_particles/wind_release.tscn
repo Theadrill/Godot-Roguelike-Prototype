@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/combat/energize_particles/energize_one_shot.gd" id="1_oneshot"]
+
+[sub_resource type="Gradient" id="Gradient_wind_rel"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.65, 1, 0.82, 0.95, 0.5, 1, 0.78, 0)
+
+[node name="WindReleaseParticles" type="CPUParticles2D"]
+emitting = false
+amount = 34
+lifetime = 0.30
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 95.0
+initial_velocity_max = 185.0
+damping_min = 140.0
+damping_max = 200.0
+scale_amount_min = 1.5
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_wind_rel")
+script = ExtResource("1_oneshot")

@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[sub_resource type="Gradient" id="Gradient_earth"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.95, 0.78, 0.42, 1, 0.68, 0.46, 0.22, 0.95, 0.35, 0.24, 0.14, 0)
+
+[node name="EarthChargeParticles" type="CPUParticles2D"]
+amount = 16
+lifetime = 0.5
+local_coords = false
+emission_shape = 1
+emission_sphere_radius = 9.0
+direction = Vector2(0, -1)
+spread = 45.0
+gravity = Vector2(0, -35)
+initial_velocity_min = 10.0
+initial_velocity_max = 26.0
+scale_amount_min = 2.0
+scale_amount_max = 3.5
+color_ramp = SubResource("Gradient_earth")

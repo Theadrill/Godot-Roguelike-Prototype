@@ -12,6 +12,7 @@ var phase_timer: float = 0.0
 var charge_progress: float = 0.0
 var has_fired: bool = false
 var _cast_total_duration: float = 0.36
+var _charge_base_weapon_scale: Vector2 = Vector2.ONE
 
 func enter() -> void:
 	player = character as Player
@@ -23,6 +24,7 @@ func enter() -> void:
 	if not is_spell and player._main_weapon_instance:
 		player._main_weapon_instance.position = player.weapon.attack_visual_offset
 		player._main_weapon_instance.rotation_degrees = player.weapon.attack_visual_rotation_degrees
+	_charge_base_weapon_scale = player._main_weapon_instance.scale if player._main_weapon_instance else Vector2.ONE
 
 	_start_shot_cycle()
 
@@ -64,8 +66,9 @@ func exit() -> void:
 		var has_socket_profile: bool = player.weapon.get_socket_profile() != null
 		player._main_weapon_instance.position = Vector2.ZERO if has_socket_profile else player.weapon.visual_offset
 		player._main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else player.weapon.visual_rotation_degrees
-		player._main_weapon_instance.modulate = Color.WHITE
-		player._main_weapon_instance.scale = Vector2.ONE
+		player.clear_weapon_energize(_charge_base_weapon_scale)
+	elif player:
+		player.clear_weapon_energize(_charge_base_weapon_scale)
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = -35.0
 
@@ -106,23 +109,8 @@ func physics_update(delta: float) -> void:
 				if player.main_hand_socket:
 					player.main_hand_socket.rotation_degrees = base_angle + jitter
 
-			# Energizing glow feedback flag
-			if player._main_weapon_instance:
-				if player.weapon.charge_has_energize:
-					var pulse: float = sin(float(Time.get_ticks_msec()) * 0.015) * 0.2 if charge_progress >= 1.0 else 0.0
-					var intensity: float = 1.0 + (charge_progress * 1.6) + pulse
-					var energy_col := player.weapon.charge_energy_color
-					player._main_weapon_instance.modulate = Color(
-						1.0 + (energy_col.r * intensity * 0.7),
-						1.0 + (energy_col.g * intensity * 0.7),
-						1.0 + (energy_col.b * intensity * 0.7),
-						1.0
-					)
-					var scale_mult: float = 1.0 + (charge_progress * 0.15)
-					player._main_weapon_instance.scale = Vector2(scale_mult, scale_mult)
-				else:
-					player._main_weapon_instance.modulate = Color.WHITE
-					player._main_weapon_instance.scale = Vector2.ONE
+			# Energizing glow & particle FX controlled by WeaponData's EnergizeProfile
+			player.update_weapon_energize(charge_progress, _charge_base_weapon_scale)
 
 			# Slow tactical movement while aiming bow on floor; planted stance while channeling staff
 			if player.is_on_floor():
@@ -223,10 +211,10 @@ func _fire_projectile(advance_to_recovery: bool = true) -> void:
 	if advance_to_recovery:
 		attack_phase = 2 # Enter recovery/reload
 
-	# Reset visual charge aura upon discharge
+	# Reset visual charge aura and spawn release burst upon discharge
+	player.trigger_weapon_energize_release()
+	player.clear_weapon_energize(_charge_base_weapon_scale)
 	if player._main_weapon_instance:
-		player._main_weapon_instance.modulate = Color.WHITE
-		player._main_weapon_instance.scale = Vector2.ONE
 		player._main_weapon_instance.rotation_degrees = 0.0
 
 	var weapon := player.weapon

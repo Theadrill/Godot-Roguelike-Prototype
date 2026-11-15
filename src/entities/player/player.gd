@@ -1111,3 +1111,53 @@ func check_ledge() -> bool:
 
 	ledge_target_position = Vector2(target_x, floor_y)
 	return true
+
+var _active_energize_particles: Node2D = null
+
+func update_weapon_energize(charge_progress: float, base_scale: Vector2) -> void:
+	if not _main_weapon_instance or not is_instance_valid(_main_weapon_instance):
+		return
+	if not weapon or not weapon.charge_has_energize:
+		clear_weapon_energize(base_scale)
+		return
+	var prof: EnergizeProfile = weapon.get_energize_profile()
+	if prof:
+		_main_weapon_instance.modulate = prof.compute_modulate(charge_progress)
+		_main_weapon_instance.scale = prof.compute_scale(base_scale, charge_progress)
+		if prof.particle_scene and main_hand_socket:
+			if not _active_energize_particles or not is_instance_valid(_active_energize_particles):
+				var p_inst := prof.particle_scene.instantiate() as Node2D
+				if p_inst:
+					main_hand_socket.add_child(p_inst)
+					p_inst.position = weapon.energize_offset
+					_active_energize_particles = p_inst
+			else:
+				_active_energize_particles.position = weapon.energize_offset
+	else:
+		_main_weapon_instance.modulate = Color.WHITE
+		_main_weapon_instance.scale = base_scale
+
+func trigger_weapon_energize_release() -> void:
+	if not weapon or not weapon.charge_has_energize:
+		return
+	var prof: EnergizeProfile = weapon.get_energize_profile()
+	if not prof or not prof.release_particle_scene:
+		return
+	var burst := prof.release_particle_scene.instantiate() as Node2D
+	if not burst:
+		return
+	var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
+	if not spawn_parent:
+		burst.queue_free()
+		return
+	var world_pos: Vector2 = main_hand_socket.to_global(weapon.energize_offset) if main_hand_socket else global_position
+	spawn_parent.add_child(burst)
+	burst.global_position = world_pos
+
+func clear_weapon_energize(base_scale: Vector2) -> void:
+	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+		_main_weapon_instance.modulate = Color.WHITE
+		_main_weapon_instance.scale = base_scale
+	if _active_energize_particles and is_instance_valid(_active_energize_particles):
+		_active_energize_particles.queue_free()
+	_active_energize_particles = null

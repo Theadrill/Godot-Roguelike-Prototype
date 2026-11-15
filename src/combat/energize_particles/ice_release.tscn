@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/combat/energize_particles/energize_one_shot.gd" id="1_oneshot"]
+
+[sub_resource type="Gradient" id="Gradient_ice_rel"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.55, 0.94, 1, 0.95, 0.2, 0.6, 1, 0)
+
+[node name="IceReleaseParticles" type="CPUParticles2D"]
+emitting = false
+amount = 24
+lifetime = 0.38
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+spread = 180.0
+gravity = Vector2(0, 160)
+initial_velocity_min = 50.0
+initial_velocity_max = 115.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+scale_amount_min = 1.5
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_ice_rel")
+script = ExtResource("1_oneshot")

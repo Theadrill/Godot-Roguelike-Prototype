@@ -229,9 +229,10 @@ func exit() -> void:
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
 	if player._main_weapon_instance:
-		player._main_weapon_instance.modulate = Color.WHITE
 		if was_charging:
-			player._main_weapon_instance.scale = _charge_base_weapon_scale
+			player.clear_weapon_energize(_charge_base_weapon_scale)
+		else:
+			player._main_weapon_instance.modulate = Color.WHITE
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = -35.0
 	if player.hitbox.has_node("CollisionShape2D"):
@@ -256,23 +257,8 @@ func physics_update(delta: float) -> void:
 		if player.main_hand_socket:
 			player.main_hand_socket.rotation_degrees = _charge_base_socket_rot + jitter
 
-		# Energizing glow feedback flag
-		if player._main_weapon_instance:
-			if player.weapon.charge_has_energize:
-				var pulse: float = sin(float(Time.get_ticks_msec()) * 0.015) * 0.2 if charge_progress >= 1.0 else 0.0
-				var intensity: float = 1.0 + (charge_progress * 1.5) + pulse
-				var energy_col := player.weapon.charge_energy_color
-				player._main_weapon_instance.modulate = Color(
-					1.0 + (energy_col.r * intensity * 0.7),
-					1.0 + (energy_col.g * intensity * 0.7),
-					1.0 + (energy_col.b * intensity * 0.7),
-					1.0
-				)
-				var scale_mult: float = 1.0 + (charge_progress * 0.12)
-				player._main_weapon_instance.scale = _charge_base_weapon_scale * scale_mult
-			else:
-				player._main_weapon_instance.modulate = Color.WHITE
-				player._main_weapon_instance.scale = _charge_base_weapon_scale
+		# Energizing glow & particle FX controlled by WeaponData's EnergizeProfile
+		player.update_weapon_energize(charge_progress, _charge_base_weapon_scale)
 
 		# Keep player planted in place during charge windup (only allow turning facing direction)
 		if player.is_on_floor():
@@ -296,9 +282,8 @@ func physics_update(delta: float) -> void:
 		# Release button: UNLEASH CHARGED SMASH!
 		if not Input.is_action_pressed("attack_primary"):
 			is_charging = false
-			if player._main_weapon_instance:
-				player._main_weapon_instance.modulate = Color.WHITE
-				player._main_weapon_instance.scale = _charge_base_weapon_scale
+			player.trigger_weapon_energize_release()
+			player.clear_weapon_energize(_charge_base_weapon_scale)
 			_start_combo_step(charge_progress)
 		return
 

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EnergizeProfile" format=3]
+
+[ext_resource type="Script" path="res://src/combat/energize_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+profile_name = "Glow & Bigger"
+glow_color = Color(0.2, 0.9, 1, 1)
+glow_intensity = 1.5
+pulse_speed = 15.0
+scale_boost = 0.12

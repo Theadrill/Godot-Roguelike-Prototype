@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[sub_resource type="Gradient" id="Gradient_wind"]
+offsets = PackedFloat32Array(0, 0.35, 0.85, 1)
+colors = PackedColorArray(0.65, 1, 0.82, 0, 0.75, 1, 0.88, 0.9, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="WindChargeParticles" type="CPUParticles2D"]
+amount = 26
+lifetime = 0.32
+local_coords = true
+emission_shape = 2
+emission_sphere_radius = 18.0
+gravity = Vector2(0, 0)
+radial_accel_min = -180.0
+radial_accel_max = -120.0
+tangential_accel_min = 45.0
+tangential_accel_max = 75.0
+scale_amount_min = 1.0
+scale_amount_max = 2.5
+color_ramp = SubResource("Gradient_wind")

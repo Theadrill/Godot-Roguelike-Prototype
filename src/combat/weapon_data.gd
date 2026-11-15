@@ -183,11 +183,38 @@ func get_socket_profile() -> WeaponSocketProfile:
 ## Ativa tremor físico na arma enquanto o jogador segura e acumula carga.
 @export var charge_has_tremor: bool = true
 
-## Ativa brilho energético pulsante na arma enquanto o jogador acumula carga.
-@export var charge_has_energize: bool = false
+## Ativa brilho energético / partículas na arma enquanto o jogador acumula carga.
+@export var charge_has_energize: bool = false:
+	set(value):
+		charge_has_energize = value
+		if Engine.is_editor_hint():
+			notify_property_list_changed()
 
-## Cor do brilho energético emitido durante o carregamento da arma.
+## Perfil predefinido de Energize ('res://src/combat/energize_profiles/<nome>.tres').
+## Controla cor, brilho, escala e partículas elementais durante a carga e ao soltar!
+@export var energize_profile: String = "glow_and_bigger"
+
+## [Opcional] Arraste um EnergizeProfile (.tres) customizado para sobrescrever o dropdown acima.
+@export var custom_energize_profile: EnergizeProfile = null
+
+## [Opcional] Deslocamento em pixels (X, Y) para centralizar as partículas na lâmina/ponta desta arma.
+@export var energize_offset: Vector2 = Vector2.ZERO
+
+## [Legado] Cor de fallback caso nenhum EnergizeProfile seja encontrado.
 @export var charge_energy_color: Color = Color(0.2, 0.9, 1.0, 1.0)
+
+func get_energize_profile() -> EnergizeProfile:
+	if custom_energize_profile:
+		return custom_energize_profile
+	var prof_path := "res://src/combat/energize_profiles/%s.tres" % energize_profile
+	if ResourceLoader.exists(prof_path):
+		var prof := load(prof_path) as EnergizeProfile
+		if prof:
+			return prof
+	var fallback_path := "res://src/combat/energize_profiles/glow_and_bigger.tres"
+	if ResourceLoader.exists(fallback_path):
+		return load(fallback_path) as EnergizeProfile
+	return null
 
 const _CHARGE_SUB_PROPERTIES: Array[StringName] = [
 	&"chargeable_in_the_air",
@@ -198,7 +225,16 @@ const _CHARGE_SUB_PROPERTIES: Array[StringName] = [
 	&"charge_damage_multiplier",
 	&"charge_has_tremor",
 	&"charge_has_energize",
+	&"energize_profile",
+	&"custom_energize_profile",
+	&"energize_offset",
 	&"charge_energy_color",
+]
+
+const _ENERGIZE_SUB_PROPERTIES: Array[StringName] = [
+	&"energize_profile",
+	&"custom_energize_profile",
+	&"energize_offset",
 ]
 
 const _MELEE_ONLY_CHARGE_PROPERTIES: Array[StringName] = [
@@ -212,6 +248,30 @@ func _validate_property(property: Dictionary) -> void:
 	if prop_name in _CHARGE_SUB_PROPERTIES:
 		if not is_charge_attack:
 			property["usage"] = PROPERTY_USAGE_NO_EDITOR
+			return
+		if prop_name == &"charge_energy_color":
+			property["usage"] = PROPERTY_USAGE_NO_EDITOR
+			return
+		if prop_name in _ENERGIZE_SUB_PROPERTIES:
+			if not charge_has_energize:
+				property["usage"] = PROPERTY_USAGE_NO_EDITOR
+				return
+			if prop_name == &"energize_profile":
+				var presets: PackedStringArray = []
+				var dir := DirAccess.open("res://src/combat/energize_profiles")
+				if dir:
+					dir.list_dir_begin()
+					var file_name := dir.get_next()
+					while file_name != "":
+						if not dir.current_is_dir() and file_name.ends_with(".tres"):
+							presets.append(file_name.get_basename())
+						file_name = dir.get_next()
+					dir.list_dir_end()
+				presets.sort()
+				if presets.is_empty():
+					presets.append("glow_and_bigger")
+				property["hint"] = PROPERTY_HINT_ENUM
+				property["hint_string"] = ",".join(presets)
 			return
 		if weapon_category == WeaponCategory.RANGED_SPELL and prop_name in _MELEE_ONLY_CHARGE_PROPERTIES:
 			property["usage"] = PROPERTY_USAGE_NO_EDITOR
