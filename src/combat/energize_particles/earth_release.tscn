@@ -4,7 +4,7 @@
 
 [sub_resource type="Gradient" id="Gradient_earth_rel"]
 offsets = PackedFloat32Array(0, 0.45, 1)
-colors = PackedColorArray(0.95, 0.75, 0.38, 1, 0.62, 0.4, 0.18, 0.95, 0.3, 0.2, 0.12, 0)
+colors = PackedColorArray(1, 0.88, 0.32, 1, 0.68, 0.52, 0.18, 0.95, 0.36, 0.25, 0.12, 0)
 
 [node name="EarthReleaseParticles" type="CPUParticles2D"]
 emitting = false

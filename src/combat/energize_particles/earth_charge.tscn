@@ -2,7 +2,7 @@
 
 [sub_resource type="Gradient" id="Gradient_earth"]
 offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(0.95, 0.78, 0.42, 1, 0.68, 0.46, 0.22, 0.95, 0.35, 0.24, 0.14, 0)
+colors = PackedColorArray(1, 0.9, 0.35, 1, 0.72, 0.56, 0.2, 0.95, 0.42, 0.3, 0.14, 0)
 
 [node name="EarthChargeParticles" type="CPUParticles2D"]
 amount = 16

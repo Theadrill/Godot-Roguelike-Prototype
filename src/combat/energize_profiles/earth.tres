@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("1_profile")
 profile_name = "Terra (Earth)"
-glow_color = Color(0.9, 0.6, 0.22, 1)
+glow_color = Color(0.95, 0.82, 0.2, 1)
 glow_intensity = 1.35
 pulse_speed = 8.0
 scale_boost = 0.1
