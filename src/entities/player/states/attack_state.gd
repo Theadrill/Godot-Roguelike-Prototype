@@ -14,6 +14,7 @@ var last_completed_step: int = -1
 var is_charging: bool = false
 var charge_progress: float = 0.0
 var _charge_base_socket_rot: float = -35.0
+var _charge_base_weapon_scale: Vector2 = Vector2.ONE
 
 var _step_duration: float = 0.36
 var _step_total_frames: int = 5
@@ -77,6 +78,7 @@ func enter() -> void:
 			player.player_sprite.frame = ready_frame
 			player._update_weapon_socket_for_frame(ready_anim, ready_frame)
 		_charge_base_socket_rot = player.main_hand_socket.rotation_degrees if player.main_hand_socket else -35.0
+		_charge_base_weapon_scale = player._main_weapon_instance.scale if player._main_weapon_instance else Vector2.ONE
 		return
 
 	is_charging = false
@@ -214,6 +216,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	_update_active_hitbox_window()
 
 func exit() -> void:
+	var was_charging: bool = is_charging
 	is_charging = false
 	_is_plunge_active = false
 	_is_air_stall_active = false
@@ -226,7 +229,8 @@ func exit() -> void:
 		player.player_sprite.speed_scale = 1.0
 	if player._main_weapon_instance:
 		player._main_weapon_instance.modulate = Color.WHITE
-		player._main_weapon_instance.scale = Vector2.ONE
+		if was_charging:
+			player._main_weapon_instance.scale = _charge_base_weapon_scale
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = -35.0
 	if player.hitbox.has_node("CollisionShape2D"):
@@ -264,10 +268,10 @@ func physics_update(delta: float) -> void:
 					1.0
 				)
 				var scale_mult: float = 1.0 + (charge_progress * 0.12)
-				player._main_weapon_instance.scale = Vector2(scale_mult, scale_mult)
+				player._main_weapon_instance.scale = _charge_base_weapon_scale * scale_mult
 			else:
 				player._main_weapon_instance.modulate = Color.WHITE
-				player._main_weapon_instance.scale = Vector2.ONE
+				player._main_weapon_instance.scale = _charge_base_weapon_scale
 
 		# Slow foot movement on ground during windup
 		if player.is_on_floor():
@@ -290,6 +294,9 @@ func physics_update(delta: float) -> void:
 		# Release button: UNLEASH CHARGED SMASH!
 		if not Input.is_action_pressed("attack_primary"):
 			is_charging = false
+			if player._main_weapon_instance:
+				player._main_weapon_instance.modulate = Color.WHITE
+				player._main_weapon_instance.scale = _charge_base_weapon_scale
 			_start_combo_step(charge_progress)
 		return
 
