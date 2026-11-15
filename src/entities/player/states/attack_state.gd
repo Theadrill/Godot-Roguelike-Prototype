@@ -188,7 +188,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 
 		# Check if this airborne melee attack uses the 4-phase Plunge / Dive state machine (e.g. Hammer in air_attack3)
 		if is_airborne and player.weapon and player.weapon.is_step_air_plunge(current_step) and anim_name == &"air_attack3":
-			_start_air_plunge(anim_name)
+			_start_air_plunge(anim_name, charge_ratio)
 			return
 
 		player.play_animation(anim_name)
@@ -213,7 +213,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 		if player.player_sprite:
 			player.player_sprite.speed_scale = 1.0
 
-	player.set_slash_visual(true, current_step, false, false)
+	player.set_slash_visual(true, current_step, false, false, charge_ratio)
 	_update_active_hitbox_window()
 
 func exit() -> void:
@@ -405,7 +405,7 @@ func _update_active_hitbox_window() -> void:
 	elif _hitbox_opened_for_step and cur_frame > _step_active_end_frame and player.hitbox.monitoring:
 		player.hitbox.set_active(false)
 
-func _start_air_plunge(anim_name: StringName) -> void:
+func _start_air_plunge(anim_name: StringName, charge_ratio: float = 0.0) -> void:
 	_is_plunge_active = true
 	_step_body_anim_active = true
 	var step_data: ComboStepData = player.weapon.get_step_data(current_step) if player.weapon else null
@@ -434,7 +434,7 @@ func _start_air_plunge(anim_name: StringName) -> void:
 
 	player.hitbox.set_active(false)
 	if step_data and step_data.air_slash_animation != &"":
-		player.set_slash_visual(true, current_step, false, false)
+		player.set_slash_visual(true, current_step, false, false, charge_ratio)
 	else:
 		player.set_slash_visual(false, 0, false, false)
 

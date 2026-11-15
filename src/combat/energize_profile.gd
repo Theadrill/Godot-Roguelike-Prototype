@@ -23,6 +23,12 @@ extends Resource
 ## Cena de partículas (one-shot) disparada no momento em que o jogador solta o ataque carregado.
 @export var release_particle_scene: PackedScene = null
 
+@export_group("Slash Color Filter")
+## Se 'true', aplica a cor deste EnergizeProfile como filtro de luminância no Slash ao soltar o golpe.
+@export var tint_slash: bool = true
+## Intensidade máxima do filtro de cor aplicado sobre o Slash em carga completa (0.0 a 1.0).
+@export_range(0.0, 1.0, 0.05) var slash_tint_strength: float = 0.9
+
 func compute_modulate(charge_progress: float) -> Color:
 	var clamped: float = clampf(charge_progress, 0.0, 1.0)
 	var pulse: float = 0.0

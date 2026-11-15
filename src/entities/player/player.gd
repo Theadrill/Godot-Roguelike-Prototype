@@ -335,7 +335,7 @@ func _update_shield_visual() -> void:
 			_shield_instance.z_index = 0
 			_shield_instance.visible = not are_weapons_hidden
 
-func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false, is_downward: bool = false) -> void:
+func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false, is_downward: bool = false, charge_ratio: float = 0.0) -> void:
 	if not slash_effect:
 		return
 
@@ -343,6 +343,7 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 		slash_effect.visible = false
 		if slash_effect is AnimatedSprite2D and slash_effect.is_playing():
 			slash_effect.stop()
+		_apply_slash_energize_shader(0.0)
 		return
 
 	var is_airborne: bool = not is_on_floor()
@@ -384,6 +385,7 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 
 	slash_effect.modulate = custom_mod
 	slash_effect.z_index = custom_z
+	_apply_slash_energize_shader(charge_ratio)
 	slash_effect.visible = true
 
 	if main_hand_socket:
@@ -1115,6 +1117,27 @@ func check_ledge() -> bool:
 	return true
 
 var _active_energize_particles: Node2D = null
+var _slash_shader_mat: ShaderMaterial = null
+
+func _apply_slash_energize_shader(charge_ratio: float) -> void:
+	if not slash_effect:
+		return
+	if not _slash_shader_mat:
+		var sh := load("res://src/combat/slash_colorize.gdshader") as Shader
+		if sh:
+			_slash_shader_mat = ShaderMaterial.new()
+			_slash_shader_mat.shader = sh
+			slash_effect.material = _slash_shader_mat
+	if not _slash_shader_mat:
+		return
+	if weapon and weapon.charge_has_energize and charge_ratio > 0.0:
+		var prof: EnergizeProfile = weapon.get_energize_profile()
+		if prof and prof.tint_slash:
+			_slash_shader_mat.set_shader_parameter("tint_color", prof.glow_color)
+			var strength: float = prof.slash_tint_strength * clampf(0.35 + charge_ratio * 0.65, 0.0, 1.0)
+			_slash_shader_mat.set_shader_parameter("tint_strength", strength)
+			return
+	_slash_shader_mat.set_shader_parameter("tint_strength", 0.0)
 
 func update_weapon_energize(charge_progress: float, base_scale: Vector2) -> void:
 	if not _main_weapon_instance or not is_instance_valid(_main_weapon_instance):
