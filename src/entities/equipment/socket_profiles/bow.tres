@@ -662,6 +662,62 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
+"bow_attack_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(3.2, -17.4),
+"rot": 43.499996,
+"visible": true,
+"z_index": -1
+},
+"bow_attack_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(6.9, -14.8),
+"rot": 43.499996,
+"visible": true,
+"z_index": -1
+},
+"bow_attack_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(12, -25.5),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_attack_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(12, -27),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_attack_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(12, -25.5),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_attack_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(9.5, -26.6),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_attack_6": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(13.4, -22.9),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
 "cast_0": {
 "flip_h": false,
 "flip_v": false,
@@ -871,62 +927,6 @@ hand_frames = {
 "rot": -24.999998,
 "visible": true,
 "z_index": -2
-},
-"bow_attack_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(3.2, -17.4),
-"rot": 43.5,
-"visible": true,
-"z_index": 2
-},
-"bow_attack_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(6.3, -15.5),
-"rot": 43.5,
-"visible": true,
-"z_index": 2
-},
-"bow_attack_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(12, -25.5),
-"rot": 0.0,
-"visible": true,
-"z_index": 2
-},
-"bow_attack_3": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(12, -27),
-"rot": 0.0,
-"visible": true,
-"z_index": 2
-},
-"bow_attack_4": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(12, -25.5),
-"rot": 0.0,
-"visible": true,
-"z_index": 2
-},
-"bow_attack_5": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(10.5, -26.6),
-"rot": 0.0,
-"visible": true,
-"z_index": 2
-},
-"bow_attack_6": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(14, -22.9),
-"rot": 0.0,
-"visible": true,
-"z_index": 2
 },
 "wall_cling_0": {
 "flip_h": true,
