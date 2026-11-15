@@ -1178,6 +1178,7 @@ func trigger_weapon_energize_release() -> void:
 	var world_pos: Vector2 = main_hand_socket.to_global(weapon.energize_offset) if main_hand_socket else global_position
 	spawn_parent.add_child(burst)
 	burst.global_position = world_pos
+	burst.z_index = 5
 
 func stop_weapon_energize_particles() -> void:
 	if _active_energize_particles and is_instance_valid(_active_energize_particles):
@@ -1243,3 +1244,4 @@ func spawn_ground_impact_particles(center_x: float, ground_y: float, width: floa
 		fx.direction.x = -absf(fx.direction.x)
 	spawn_parent.add_child(fx)
 	fx.global_position = Vector2(center_x, ground_y - 1.0)
+	fx.z_index = 5
