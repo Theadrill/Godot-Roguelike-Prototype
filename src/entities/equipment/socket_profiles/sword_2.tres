@@ -58,14 +58,14 @@ back_frames = {
 "flip_h": true,
 "flip_v": false,
 "pos": Vector2(-14, -32),
-"rot": 268.0,
+"rot": 259.5,
 "visible": true,
 "z_index": -2
 },
 "bow_air_attack_1": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-16, -31),
+"pos": Vector2(-17, -31),
 "rot": 268.0,
 "visible": true,
 "z_index": -2
@@ -73,16 +73,16 @@ back_frames = {
 "bow_air_attack_2": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-18, -31),
-"rot": 268.0,
+"pos": Vector2(-19, -31),
+"rot": 272.0,
 "visible": true,
 "z_index": -2
 },
 "bow_air_attack_3": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-16, -31),
-"rot": 268.0,
+"pos": Vector2(-17, -31),
+"rot": 276.49994,
 "visible": true,
 "z_index": -2
 },
@@ -90,7 +90,7 @@ back_frames = {
 "flip_h": true,
 "flip_v": false,
 "pos": Vector2(-20, -30),
-"rot": 268.0,
+"rot": 276.49997,
 "visible": true,
 "z_index": -2
 },
@@ -98,7 +98,7 @@ back_frames = {
 "flip_h": true,
 "flip_v": false,
 "pos": Vector2(-18, -32),
-"rot": 268.0,
+"rot": 263.5,
 "visible": true,
 "z_index": -2
 },

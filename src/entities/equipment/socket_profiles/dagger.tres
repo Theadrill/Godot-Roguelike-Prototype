@@ -353,6 +353,54 @@ back_frames = {
 "visible": true,
 "z_index": 1
 },
+"bow_air_attack_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-12, -16),
+"rot": -257.0,
+"visible": true,
+"z_index": 1
+},
+"bow_air_attack_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-12, -17),
+"rot": -230.99997,
+"visible": true,
+"z_index": 1
+},
+"bow_air_attack_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-13, -16),
+"rot": -248.0,
+"visible": true,
+"z_index": 1
+},
+"bow_air_attack_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-13, -14),
+"rot": -230.99998,
+"visible": true,
+"z_index": 1
+},
+"bow_air_attack_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-17, -14),
+"rot": -248.0,
+"visible": true,
+"z_index": 1
+},
+"bow_air_attack_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-13, -14),
+"rot": -222.5,
+"visible": true,
+"z_index": 1
+},
 "bow_attack_0": {
 "flip_h": false,
 "flip_v": false,
