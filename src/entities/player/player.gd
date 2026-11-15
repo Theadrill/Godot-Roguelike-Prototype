@@ -743,6 +743,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_shield_repulsion()
 	elif event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_T:
 		cycle_enemy_tier_live()
+	elif event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_Y:
+		cycle_axe_energize_profile_debug()
 
 var player_level: int = 1
 
@@ -1161,3 +1163,30 @@ func clear_weapon_energize(base_scale: Vector2) -> void:
 	if _active_energize_particles and is_instance_valid(_active_energize_particles):
 		_active_energize_particles.queue_free()
 	_active_energize_particles = null
+
+func cycle_axe_energize_profile_debug() -> void:
+	if not weapon or _detect_weapon_type_string(weapon) != "axe":
+		return
+	var presets: PackedStringArray = []
+	var dir := DirAccess.open("res://src/combat/energize_profiles")
+	if dir:
+		dir.list_dir_begin()
+		var file_name := dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir() and file_name.ends_with(".tres"):
+				presets.append(file_name.get_basename())
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	presets.sort()
+	if presets.is_empty():
+		presets = PackedStringArray(["earth", "fire", "glow_and_bigger", "ice", "water", "wind"])
+	var idx: int = presets.find(weapon.energize_profile)
+	var next_name: String = presets[(idx + 1) % presets.size()]
+	weapon.charge_has_energize = true
+	weapon.custom_energize_profile = null
+	weapon.energize_profile = next_name
+	var prof: EnergizeProfile = weapon.get_energize_profile()
+	var label: String = prof.profile_name if (prof and prof.profile_name != "") else next_name
+	print("[DEBUG] Axe Energize Profile -> %s (%s)" % [label, next_name])
+	if has_method("show_bark"):
+		show_bark("Energize: %s" % label)
