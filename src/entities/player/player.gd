@@ -1179,13 +1179,19 @@ func trigger_weapon_energize_release() -> void:
 	spawn_parent.add_child(burst)
 	burst.global_position = world_pos
 
-func clear_weapon_energize(base_scale: Vector2) -> void:
-	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-		_main_weapon_instance.modulate = Color.WHITE
-		_main_weapon_instance.scale = base_scale
+func stop_weapon_energize_particles() -> void:
 	if _active_energize_particles and is_instance_valid(_active_energize_particles):
 		_active_energize_particles.queue_free()
 	_active_energize_particles = null
+
+func clear_weapon_energize(base_scale: Vector2) -> void:
+	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
+		_main_weapon_instance.modulate = Color.WHITE
+		var cur_s: Vector2 = _main_weapon_instance.scale
+		var sx: float = (-1.0 if cur_s.x < 0.0 else 1.0) * absf(base_scale.x)
+		var sy: float = (-1.0 if cur_s.y < 0.0 else 1.0) * absf(base_scale.y)
+		_main_weapon_instance.scale = Vector2(sx, sy)
+	stop_weapon_energize_particles()
 
 func cycle_axe_energize_profile_debug() -> void:
 	if not weapon or _detect_weapon_type_string(weapon) != "axe":

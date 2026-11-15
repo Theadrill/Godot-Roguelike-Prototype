@@ -15,6 +15,7 @@ var is_charging: bool = false
 var charge_progress: float = 0.0
 var _charge_base_socket_rot: float = -35.0
 var _charge_base_weapon_scale: Vector2 = Vector2.ONE
+var _was_energized_swing: bool = false
 
 var _step_duration: float = 0.36
 var _step_total_frames: int = 5
@@ -57,6 +58,7 @@ func enter() -> void:
 
 	# If weapon has is_charge_attack enabled (respecting chargeable_in_the_air)
 	var should_charge: bool = player.weapon != null and player.weapon.is_charge_attack and (player.is_on_floor() or player.weapon.chargeable_in_the_air)
+	_was_energized_swing = false
 	if should_charge:
 		is_charging = true
 		charge_progress = 0.0
@@ -218,7 +220,9 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 
 func exit() -> void:
 	var was_charging: bool = is_charging
+	var should_clear_energize: bool = was_charging or _was_energized_swing
 	is_charging = false
+	_was_energized_swing = false
 	_is_plunge_active = false
 	_is_air_stall_active = false
 	_step_started_in_air = false
@@ -229,7 +233,7 @@ func exit() -> void:
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
 	if player._main_weapon_instance:
-		if was_charging:
+		if should_clear_energize:
 			player.clear_weapon_energize(_charge_base_weapon_scale)
 		else:
 			player._main_weapon_instance.modulate = Color.WHITE
@@ -282,8 +286,9 @@ func physics_update(delta: float) -> void:
 		# Release button: UNLEASH CHARGED SMASH!
 		if not Input.is_action_pressed("attack_primary"):
 			is_charging = false
+			_was_energized_swing = true
 			player.trigger_weapon_energize_release()
-			player.clear_weapon_energize(_charge_base_weapon_scale)
+			player.stop_weapon_energize_particles()
 			_start_combo_step(charge_progress)
 		return
 
