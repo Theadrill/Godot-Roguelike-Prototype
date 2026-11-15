@@ -12,8 +12,6 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
   - Chama apenas `player.set_crouched(true)` sem `play_animation()`, exibindo o retângulo placeholder achatado quando leva ataque vermelho ou quebra de guarda. Falta sprite de `hurt` / `stagger`.
 - [ ] **`Heal` / Tomar o Chá da Mãe (`src/entities/player/states/heal_state.gd`):**
   - Não chama `play_animation()` e pisca a cor verde em `player.body_polygon`. Falta sprite dedicado de beber chá/poção.
-- [ ] **`RangedAttack` com Arco no Ar (`bow_air_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
-  - O Arco (`Bow`) já possui `bow_attack` no chão, mas ainda falta o sprite e a animação dedicada para o **disparo com Arco no ar**.
 - [ ] **`RangedAttack` com Besta no Chão (`crossbow_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
   - Falta sprite e animação dedicada para o **disparo com Besta (`Crossbow`) no chão**.
 - [ ] **`RangedAttack` com Besta no Ar (`crossbow_air_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
@@ -46,6 +44,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`Guard` / Escudo** (`block` — 3 frames + `block_loop` — 2 frames)
 - [x] **`RangedAttack` (Magia/Cajado)** (`channeling` — 2 frames + `cast` — 4 frames)
 - [x] **`RangedAttack` (Arco / Chão)** (`bow_attack` — 7 frames com cadência contínua ciclando do frame 3 ao 6 ao segurar o botão, disparo no penúltimo frame e trava de movimento no chão estilo Dead Cells)
+- [x] **`RangedAttack` (Arco / Ar)** (`bow_air_attack` — 6 frames no grid 83x62, puxada 0..3, disparo no penúltimo frame 4 e recuperação no frame 5)
 - [x] **`Attack` (Chão)** (`attack1` + `slash_sword`, `attack2` + `slash_sword_2`, `attack3` + `slash_sword_3`)
 - [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` + `slash_air_sword_3` para plunge do Martelo)
 - [x] **Ataques a partir de `Crouch`, `Cima` ou `Baixo no ar` (sem plunge)** — levantam/normalizam automaticamente para o combo padrão (bloqueando ataque sob teto baixo via `ceiling_check`).

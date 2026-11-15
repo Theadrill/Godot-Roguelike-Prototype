@@ -6,16 +6,14 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-selected_weapon = "axe"
-selected_animation = "attack2"
+selected_weapon = "bow"
+selected_animation = "bow_air_attack"
+current_frame = 5
 reference_secondary_weapon = "none"
-socket_pos_x = 5.0
-socket_pos_y = -43.0
-socket_rotation = 139.0
-socket_flip_v = true
+socket_pos_x = 8.0
+socket_pos_y = -28.0
 socket_z_index = 2
-slash_preview_scale = Vector2(1.05, 1.05)
-status_message = "axe [Arma na Mão (MainHandSocket)] -> attack2 Frame 0 (Z: 2, FlipH: false, FlipV: true)"
+status_message = "bow [Arma na Mão (MainHandSocket)] -> bow_air_attack Frame 5 (Z: 2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -29,7 +27,8 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"attack2"
+animation = &"bow_air_attack"
+frame = 5
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
@@ -39,13 +38,12 @@ position = Vector2(-5, -27.6)
 rotation = 1.9373155
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
-z_index = -2
-position = Vector2(-7, -31)
+z_index = -3
+position = Vector2(-21, -32)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(5, -43)
-rotation = 2.4260077
+position = Vector2(8, -28)
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
@@ -53,8 +51,8 @@ position = Vector2(6, -20)
 rotation = -0.61086524
 
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
+visible = false
 z_index = 4
 position = Vector2(-2, -29)
-scale = Vector2(1.05, 1.05)
 sprite_frames = ExtResource("3_slash_frames")
 animation = &"slash_sword_2"

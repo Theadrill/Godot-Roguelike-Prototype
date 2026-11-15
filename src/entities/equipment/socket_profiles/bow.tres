@@ -662,6 +662,54 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
+"bow_air_attack_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(2, -18),
+"rot": 47.0,
+"visible": true,
+"z_index": -1
+},
+"bow_air_attack_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -27),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_air_attack_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -29),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_air_attack_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -28),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_air_attack_4": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(5, -29),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"bow_air_attack_5": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -28),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
 "bow_attack_0": {
 "flip_h": false,
 "flip_v": false,

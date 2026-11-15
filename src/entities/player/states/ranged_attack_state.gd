@@ -17,6 +17,7 @@ var _cast_total_duration: float = 0.36
 var _charge_base_weapon_scale: Vector2 = Vector2.ONE
 var _is_bow_repeat_shot: bool = false
 var _bow_released_early: bool = false
+var _bow_anim_name: StringName = &"bow_attack"
 
 func enter() -> void:
 	player = character as Player
@@ -60,16 +61,16 @@ func _start_shot_cycle(is_repeat: bool = false) -> void:
 		else:
 			attack_phase = 0
 			if player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW:
+				_bow_anim_name = &"bow_attack" if player.is_on_floor() else &"bow_air_attack"
 				var start_frame: int = 2 if _is_bow_repeat_shot else 0
-				player.play_animation(&"bow_attack")
+				player.play_animation(_bow_anim_name)
 				if player.player_sprite:
 					player.player_sprite.pause()
 					player.player_sprite.frame = start_frame
-				player._update_weapon_socket_for_frame(&"bow_attack", start_frame)
+				player._update_weapon_socket_for_frame(_bow_anim_name, start_frame)
 			else:
-				var is_aiming_up: bool = Input.is_action_pressed("up") or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP)
 				if player.main_hand_socket:
-					player.main_hand_socket.rotation_degrees = -45.0 if is_aiming_up else 0.0
+					player.main_hand_socket.rotation_degrees = 0.0
 
 func exit() -> void:
 	has_fired = false
@@ -106,9 +107,6 @@ func physics_update(delta: float) -> void:
 			var charge_duration: float = player.weapon.max_charge_time if player.weapon.is_charge_attack else player.weapon.charge_time
 			charge_progress = minf(1.0, charge_progress + delta / maxf(0.05, charge_duration))
 
-			var is_aiming_up: bool = Input.is_action_pressed("up") or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP)
-			var base_angle: float = -45.0 if is_aiming_up else 0.0
-
 			# Tremor feedback flag
 			var jitter: float = 0.0
 			if player.weapon.charge_has_tremor:
@@ -120,22 +118,21 @@ func physics_update(delta: float) -> void:
 				if player._main_weapon_instance:
 					player._main_weapon_instance.rotation_degrees = jitter
 			elif player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW:
+				var draw_max: int = 3 if _bow_anim_name == &"bow_air_attack" else 4
 				var start_f: int = 2 if _is_bow_repeat_shot else 0
-				var span: float = float(5 - start_f)
-				var draw_frame: int = clampi(start_f + int(floor(charge_progress * span)), start_f, 4)
+				var span: float = float((draw_max + 1) - start_f)
+				var draw_frame: int = clampi(start_f + int(floor(charge_progress * span)), start_f, draw_max)
 				if player.player_sprite:
-					var anim_switched: bool = player.player_sprite.animation != &"bow_attack"
+					var anim_switched: bool = player.player_sprite.animation != _bow_anim_name
 					if anim_switched:
-						player.play_animation(&"bow_attack")
+						player.play_animation(_bow_anim_name)
 						player.player_sprite.pause()
 					if anim_switched or player.player_sprite.frame != draw_frame:
 						player.player_sprite.frame = draw_frame
-						player._update_weapon_socket_for_frame(&"bow_attack", draw_frame)
-				if player.main_hand_socket and is_aiming_up:
-					player.main_hand_socket.rotation_degrees = -45.0 + jitter
+						player._update_weapon_socket_for_frame(_bow_anim_name, draw_frame)
 			else:
 				if player.main_hand_socket:
-					player.main_hand_socket.rotation_degrees = base_angle + jitter
+					player.main_hand_socket.rotation_degrees = jitter
 
 			# Energizing glow & particle FX controlled by WeaponData's EnergizeProfile
 			player.update_weapon_energize(charge_progress, _charge_base_weapon_scale)
@@ -195,10 +192,12 @@ func physics_update(delta: float) -> void:
 			# Recovery / Reload phase
 			phase_timer -= delta
 			if player.weapon and player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW and player.player_sprite:
-				var rec_frame: int = 6 if phase_timer <= (player.weapon.reload_time * 0.5) else 5
+				var shoot_f: int = 4 if _bow_anim_name == &"bow_air_attack" else 5
+				var rec_f: int = shoot_f + 1
+				var rec_frame: int = rec_f if phase_timer <= (player.weapon.reload_time * 0.5) else shoot_f
 				if player.player_sprite.frame != rec_frame:
 					player.player_sprite.frame = rec_frame
-					player._update_weapon_socket_for_frame(&"bow_attack", rec_frame)
+					player._update_weapon_socket_for_frame(_bow_anim_name, rec_frame)
 			player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
 			player.move_and_slide()
 
@@ -260,21 +259,16 @@ func _fire_projectile(advance_to_recovery: bool = true) -> void:
 
 	var is_bow: bool = weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW
 	if is_bow and player.player_sprite:
-		player.play_animation(&"bow_attack")
+		var shoot_frame: int = 4 if _bow_anim_name == &"bow_air_attack" else 5
+		player.play_animation(_bow_anim_name)
 		player.player_sprite.pause()
-		player.player_sprite.frame = 5
-		player._update_weapon_socket_for_frame(&"bow_attack", 5)
+		player.player_sprite.frame = shoot_frame
+		player._update_weapon_socket_for_frame(_bow_anim_name, shoot_frame)
 
-	# Determine aiming angle: straight horizontal or 45-degree upward shot
-	var is_aiming_up: bool = Input.is_action_pressed("up") or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP)
+	# Player ranged shots always fire straight horizontally
 	var shoot_dir := Vector2(float(player.facing_direction), 0.0)
-	if is_aiming_up:
-		shoot_dir = Vector2(float(player.facing_direction) * 0.7, -0.7).normalized()
-		if player.main_hand_socket and not is_spell:
-			player.main_hand_socket.rotation_degrees = -45.0
-	else:
-		if player.main_hand_socket and not is_spell and not is_bow:
-			player.main_hand_socket.rotation_degrees = 0.0
+	if player.main_hand_socket and not is_spell and not is_bow:
+		player.main_hand_socket.rotation_degrees = 0.0
 
 	# Calculate speed and damage scaled by charge ratio
 	var final_speed: float = weapon.projectile_speed

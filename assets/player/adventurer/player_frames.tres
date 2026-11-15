@@ -18,35 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://dms67wymu7xwc" path="res://assets/player/adventurer/block_loop/player_block_loop_sheet.png" id="16_block_loop_sheet"]
 [ext_resource type="Texture2D" uid="uid://4yde86a8qv3v" path="res://assets/player/adventurer/attack/player_air_attack1_sheet.png" id="17_air_attack1_sheet"]
 [ext_resource type="Texture2D" uid="uid://msrdnhh15mfh" path="res://assets/player/adventurer/attack/player_air_attack3_sheet.png" id="18_air_attack3_sheet"]
-[ext_resource type="Texture2D" path="res://assets/player/adventurer/bow/player_bow_sheet.png" id="19_bow_sheet"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_0"]
-atlas = ExtResource("19_bow_sheet")
-region = Rect2(0, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_1"]
-atlas = ExtResource("19_bow_sheet")
-region = Rect2(83, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_2"]
-atlas = ExtResource("19_bow_sheet")
-region = Rect2(0, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_3"]
-atlas = ExtResource("19_bow_sheet")
-region = Rect2(83, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_4"]
-atlas = ExtResource("19_bow_sheet")
-region = Rect2(0, 124, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_5"]
-atlas = ExtResource("19_bow_sheet")
-region = Rect2(83, 124, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_6"]
-atlas = ExtResource("19_bow_sheet")
-region = Rect2(0, 186, 83, 62)
+[ext_resource type="Texture2D" uid="uid://ndiinsu6wojx" path="res://assets/player/adventurer/bow/player_bow_sheet.png" id="19_bow_sheet"]
+[ext_resource type="Texture2D" uid="uid://brqlvi8aenv04" path="res://assets/player/adventurer/bow/player_bow_air_sheet.png" id="20_bow_air_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_1"]
 atlas = ExtResource("17_air_attack1_sheet")
@@ -179,6 +152,58 @@ region = Rect2(0, 0, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_block_loop_1"]
 atlas = ExtResource("16_block_loop_sheet")
 region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_air_attack_0"]
+atlas = ExtResource("20_bow_air_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_air_attack_1"]
+atlas = ExtResource("20_bow_air_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_air_attack_2"]
+atlas = ExtResource("20_bow_air_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_air_attack_3"]
+atlas = ExtResource("20_bow_air_sheet")
+region = Rect2(83, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_air_attack_4"]
+atlas = ExtResource("20_bow_air_sheet")
+region = Rect2(0, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_air_attack_5"]
+atlas = ExtResource("20_bow_air_sheet")
+region = Rect2(83, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_0"]
+atlas = ExtResource("19_bow_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_1"]
+atlas = ExtResource("19_bow_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_2"]
+atlas = ExtResource("19_bow_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_3"]
+atlas = ExtResource("19_bow_sheet")
+region = Rect2(83, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_4"]
+atlas = ExtResource("19_bow_sheet")
+region = Rect2(0, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_5"]
+atlas = ExtResource("19_bow_sheet")
+region = Rect2(83, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bow_attack_6"]
+atlas = ExtResource("19_bow_sheet")
+region = Rect2(0, 186, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cast_0"]
 atlas = ExtResource("13_cast_sheet")
@@ -478,6 +503,55 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_air_attack_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_air_attack_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_air_attack_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_air_attack_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_air_attack_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_air_attack_5")
+}],
+"loop": 0,
+"name": &"bow_air_attack",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_attack_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_attack_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_attack_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_attack_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_attack_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_attack_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bow_attack_6")
+}],
+"loop": 0,
+"name": &"bow_attack",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_cast_0")
 }, {
 "duration": 1.0,
@@ -666,32 +740,6 @@ animations = [{
 "loop": 1,
 "name": &"wall_cling",
 "speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bow_attack_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bow_attack_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bow_attack_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bow_attack_3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bow_attack_4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bow_attack_5")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bow_attack_6")
-}],
-"loop": false,
-"name": &"bow_attack",
-"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
