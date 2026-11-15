@@ -60,7 +60,12 @@ func enter() -> void:
 		current_step = 0
 		last_completed_step = -1
 		queued_combo_presses = 0
-		# Windup pose: pull weapon back
+		# Windup pose: hold attack1 frame 0 and pull weapon back
+		player.play_animation(&"attack1")
+		if player.player_sprite:
+			player.player_sprite.pause()
+			player.player_sprite.frame = 0
+			player._update_weapon_socket_for_frame(&"attack1", 0)
 		if player.main_hand_socket:
 			player.main_hand_socket.rotation_degrees = -65.0
 		return
@@ -105,54 +110,29 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	if abs(input_dir) > 0.1:
 		player.update_facing(input_dir)
 
-	var is_upward: bool = player.is_upward_attack_requested()
-	var is_downward: bool = player.is_crouch_requested()
-	
 	var weapon_type: String = player._detect_weapon_type_string(player.weapon)
 	var is_melee_combo: bool = weapon_type in ["sword", "hammer", "dagger", "axe"]
-	
-	if is_upward:
-		player.velocity.x = 0.0
-		if player.hitbox.has_node("CollisionShape2D"):
-			player.hitbox.get_node("CollisionShape2D").position = Vector2(0.0, -36.0)
-			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 32.0)
-		player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.15, -1.0).normalized()
-	elif is_downward:
-		if not player.is_on_floor():
-			# Midair downward slash: maintain pure fall speed, zero upward bounce
-			player.velocity.x = 0.0
-			if player.hitbox.has_node("CollisionShape2D"):
-				player.hitbox.get_node("CollisionShape2D").position = Vector2(0.0, 6.0)
-				(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 28.0)
-			player.hitbox.knockback_direction = Vector2(player.facing_direction * 0.15, 1.0).normalized()
-		else:
-			# Ground low crouch sweep
-			_pending_forward_impulse = 25.0
-			player.velocity.x = player.facing_direction * 8.0
-			if player.hitbox.has_node("CollisionShape2D"):
-				player.hitbox.get_node("CollisionShape2D").position = Vector2(20.0, -10.0)
-				(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = Vector2(32.0, 20.0)
-			player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.1).normalized()
-	else:
-		# Forward physical step synchronized with windup -> active slash release (Dead Cells / Blasphemous pattern)
-		var impulse_mult: float = 1.0 + charge_ratio * 0.4
-		var base_impulse: float = player.weapon.get_step_impulse(current_step) if player.weapon else 80.0
-		var forward_impulse: float = base_impulse * impulse_mult
-		_pending_forward_impulse = forward_impulse
-		# Slight foot shift during windup; full lunge unleashes on the active slash frame!
-		player.velocity.x = player.facing_direction * (forward_impulse * 0.25)
-		if player.hitbox.has_node("CollisionShape2D"):
-			var hb_metrics: Dictionary = player.weapon.get_step_hitbox_metrics(current_step, is_airborne) if player.weapon else {"position": Vector2(20.0, -20.0), "size": Vector2(32.0, 28.0)}
-			player.hitbox.get_node("CollisionShape2D").position = hb_metrics["position"]
-			(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = hb_metrics["size"]
-		player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
+
+	# Forward physical step synchronized with windup -> active slash release (Dead Cells / Blasphemous pattern).
+	# Upward / crouched / mid-air downward inputs execute the standard directional-neutral combo (except weapons with air_plunge).
+	var impulse_mult: float = 1.0 + charge_ratio * 0.4
+	var base_impulse: float = player.weapon.get_step_impulse(current_step) if player.weapon else 80.0
+	var forward_impulse: float = base_impulse * impulse_mult
+	_pending_forward_impulse = forward_impulse
+	# Slight foot shift during windup; full lunge unleashes on the active slash frame!
+	player.velocity.x = player.facing_direction * (forward_impulse * 0.25)
+	if player.hitbox.has_node("CollisionShape2D"):
+		var hb_metrics: Dictionary = player.weapon.get_step_hitbox_metrics(current_step, is_airborne) if player.weapon else {"position": Vector2(20.0, -20.0), "size": Vector2(32.0, 28.0)}
+		player.hitbox.get_node("CollisionShape2D").position = hb_metrics["position"]
+		(player.hitbox.get_node("CollisionShape2D").shape as RectangleShape2D).size = hb_metrics["size"]
+	player.hitbox.knockback_direction = Vector2(player.facing_direction, -0.2).normalized()
 
 	# When on ground, clamp vertical speed to 0; when in air, fall naturally unless an enemy is hit (_on_attack_hit_landed)
 	_is_air_stall_active = false
 	if player.is_on_floor():
 		player.velocity.y = 0.0
 		player.set_meta("air_stall_steps", 0)
-	elif not is_upward and not is_downward and is_melee_combo:
+	elif is_melee_combo:
 		player.velocity.x = player.facing_direction * (_pending_forward_impulse * 0.15)
 
 	# Setup active hitbox metrics with scaling per combo step and charge ratio
@@ -182,7 +162,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	_is_plunge_active = false
 
 	# Dedicated combo animation on normal ground and air attacks for melee weapons (sword, hammer, dagger, axe)
-	if not is_upward and not is_downward and is_melee_combo:
+	if is_melee_combo:
 		var anim_name: StringName = player.weapon.get_step_body_animation(current_step, is_airborne) if player.weapon else (&"air_attack1" if is_airborne else &"attack1")
 		if player.player_sprite and player.player_sprite.sprite_frames and not player.player_sprite.sprite_frames.has_animation(anim_name):
 			# Fallback seguro: se air_attack2 / air_attack3 ainda não estiverem no SpriteFrames, usa a animação do chão correspondente (ou air_attack1)
@@ -221,7 +201,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 		if player.player_sprite:
 			player.player_sprite.speed_scale = 1.0
 
-	player.set_slash_visual(true, current_step, is_upward, is_downward)
+	player.set_slash_visual(true, current_step, false, false)
 	_update_active_hitbox_window()
 
 func exit() -> void:
@@ -488,16 +468,13 @@ func _on_attack_hit_landed(_hurtbox: Hurtbox) -> void:
 
 	# Normal melee attack in air: apply short finite mid-air brake ONLY when hitting an enemy!
 	if not player.is_on_floor() and not _is_air_stall_active:
-		var is_upward: bool = player.is_upward_attack_requested()
-		var is_downward: bool = player.is_crouch_requested()
-		if not is_upward and not is_downward:
-			var used_stalls: int = int(player.get_meta("air_stall_steps", 0)) if player.has_meta("air_stall_steps") else 0
-			var max_stalls: int = maxi(1, player.weapon.get_combo_step_count()) if player.weapon else 3
-			if used_stalls < max_stalls:
-				_is_air_stall_active = true
-				player.set_meta("air_stall_steps", used_stalls + 1)
-				player.velocity.y = 0.0
-				player.velocity.x *= 0.35
+		var used_stalls: int = int(player.get_meta("air_stall_steps", 0)) if player.has_meta("air_stall_steps") else 0
+		var max_stalls: int = maxi(1, player.weapon.get_combo_step_count()) if player.weapon else 3
+		if used_stalls < max_stalls:
+			_is_air_stall_active = true
+			player.set_meta("air_stall_steps", used_stalls + 1)
+			player.velocity.y = 0.0
+			player.velocity.x *= 0.35
 
 func _enter_plunge_impact(in_midair: bool) -> void:
 	if _plunge_phase == PlungePhase.IMPACT or _plunge_phase == PlungePhase.RECOVERY:

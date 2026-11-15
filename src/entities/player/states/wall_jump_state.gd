@@ -31,6 +31,11 @@ func enter() -> void:
 	player.velocity.y = player.wall_jump_vertical
 	player.update_facing(wall_normal.x)
 	player.fall_peak_y = player.global_position.y
+	player.play_animation(&"jump")
+
+func exit() -> void:
+	if player:
+		player.stop_animation()
 
 func physics_update(delta: float) -> void:
 	input_lock_timer -= delta

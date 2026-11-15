@@ -7,6 +7,8 @@ extends State
 var player: Player
 var has_impacted: bool = false
 var impact_recovery_timer: float = 0.0
+var _dive_loop_accum: float = 0.0
+var _dive_frame: int = 1
 
 @export_range(600.0, 1400.0, 50.0, "suffix:px/s") var slam_speed: float = 950.0
 @export_range(10.0, 100.0, 5.0) var slam_damage: float = 40.0
@@ -19,10 +21,16 @@ func enter() -> void:
 	player.can_double_jump = false
 	has_impacted = false
 	impact_recovery_timer = 0.0
+	_dive_loop_accum = 0.0
+	_dive_frame = 1
 	player.velocity.x = 0.0
 	player.velocity.y = slam_speed
 
-	player.play_animation(&"roll")
+	player.play_animation(&"air_attack3")
+	if player.player_sprite:
+		player.player_sprite.pause()
+		player.player_sprite.frame = _dive_frame
+		player._update_weapon_socket_for_frame(&"air_attack3", _dive_frame)
 
 	if player.visual:
 		player.visual.scale = Vector2(float(player.facing_direction), 1.0)
@@ -39,6 +47,15 @@ func exit() -> void:
 
 func physics_update(delta: float) -> void:
 	if not has_impacted:
+		# Cycle dive frames (1..3) of air_attack3 during descent
+		_dive_loop_accum += delta * 12.0
+		if _dive_loop_accum >= 1.0:
+			_dive_loop_accum -= 1.0
+			_dive_frame = 1 + ((_dive_frame - 1 + 1) % 3)
+			if player.player_sprite:
+				player.player_sprite.frame = _dive_frame
+				player._update_weapon_socket_for_frame(&"air_attack3", _dive_frame)
+
 		# Lock horizontal velocity, drive downwards at slam speed
 		player.velocity.x = 0.0
 		player.velocity.y = slam_speed
@@ -47,18 +64,10 @@ func physics_update(delta: float) -> void:
 		if player.is_on_floor():
 			_on_slam_impact()
 	else:
-		# Impact squash recovery
+		# Impact recovery holding crouch pose
 		impact_recovery_timer -= delta
 		player.velocity = Vector2.ZERO
 		player.move_and_slide()
-
-		if player.visual:
-			var face: float = float(player.facing_direction)
-			var t: float = 1.0 - clampf(impact_recovery_timer / maxf(impact_recovery, 0.001), 0.0, 1.0)
-			# Springs smoothly from squashed knee-impact (1.45, 0.52) back to normal (1.0, 1.0)
-			var cur_x: float = lerpf(1.45, 1.0, t * t)
-			var cur_y: float = lerpf(0.52, 1.0, t * t)
-			player.visual.scale = Vector2(face * cur_x, cur_y)
 
 		if impact_recovery_timer <= 0.0:
 			if player.visual:
@@ -78,10 +87,6 @@ func _on_slam_impact() -> void:
 	player.fall_peak_y = player.global_position.y
 
 	player.play_animation(&"crouch")
-
-	# Heavy impact squash: flattens down against the floor on contact
-	if player.visual:
-		player.visual.scale = Vector2(1.45 * float(player.facing_direction), 0.52)
 
 	# Heavy tactile rumble & screen hitstop
 	CombatFeedback.apply_hit_feedback(0.08, 0.7, 1.0, 0.18)

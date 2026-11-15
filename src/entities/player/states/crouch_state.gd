@@ -41,14 +41,18 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("jump")
 		return
 
-	# Attack from crouch (supports holding button)
+	# Attack from crouch (supports holding button): stand up and execute normal attack,
+	# but block if there is a low ceiling preventing standing up (Dead Cells pattern).
 	if (Input.is_action_pressed("attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
+		player.ceiling_check.force_raycast_update()
+		if not player.ceiling_check.is_colliding():
+			player.attack_buffer_timer = 0.0
+			if player.is_ranged_weapon_equipped():
+				state_machine.transition_to("rangedattack")
+			else:
+				state_machine.transition_to("attack")
+			return
 		player.attack_buffer_timer = 0.0
-		if player.is_ranged_weapon_equipped():
-			state_machine.transition_to("rangedattack")
-		else:
-			state_machine.transition_to("attack")
-		return
 
 	# Guard / Parry from crouch
 	if Input.is_action_just_pressed("defend") and player.can_defend():
