@@ -13,6 +13,8 @@ var charge_progress: float = 0.0
 var has_fired: bool = false
 var _cast_total_duration: float = 0.36
 var _charge_base_weapon_scale: Vector2 = Vector2.ONE
+var _is_bow_repeat_shot: bool = false
+var _bow_released_early: bool = false
 
 func enter() -> void:
 	player = character as Player
@@ -26,12 +28,14 @@ func enter() -> void:
 		player._main_weapon_instance.rotation_degrees = player.weapon.attack_visual_rotation_degrees
 	_charge_base_weapon_scale = player._main_weapon_instance.scale if player._main_weapon_instance else Vector2.ONE
 
-	_start_shot_cycle()
+	_start_shot_cycle(false)
 
-func _start_shot_cycle() -> void:
+func _start_shot_cycle(is_repeat: bool = false) -> void:
 	has_fired = false
 	charge_progress = 0.0
 	phase_timer = 0.0
+	_is_bow_repeat_shot = is_repeat
+	_bow_released_early = false
 
 	var is_spell: bool = player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_SPELL
 
@@ -54,11 +58,12 @@ func _start_shot_cycle() -> void:
 		else:
 			attack_phase = 0
 			if player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW:
+				var start_frame: int = 2 if _is_bow_repeat_shot else 0
 				player.play_animation(&"bow_attack")
 				if player.player_sprite:
 					player.player_sprite.pause()
-					player.player_sprite.frame = 0
-				player._update_weapon_socket_for_frame(&"bow_attack", 0)
+					player.player_sprite.frame = start_frame
+				player._update_weapon_socket_for_frame(&"bow_attack", start_frame)
 			else:
 				var is_aiming_up: bool = Input.is_action_pressed("up") or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP)
 				if player.main_hand_socket:
@@ -113,7 +118,9 @@ func physics_update(delta: float) -> void:
 				if player._main_weapon_instance:
 					player._main_weapon_instance.rotation_degrees = jitter
 			elif player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW:
-				var draw_frame: int = clampi(int(floor(charge_progress * 5.0)), 0, 4)
+				var start_f: int = 2 if _is_bow_repeat_shot else 0
+				var span: float = float(5 - start_f)
+				var draw_frame: int = clampi(start_f + int(floor(charge_progress * span)), start_f, 4)
 				if player.player_sprite:
 					if player.player_sprite.animation != &"bow_attack":
 						player.play_animation(&"bow_attack")
@@ -152,6 +159,12 @@ func physics_update(delta: float) -> void:
 						_start_spell_cast()
 					else:
 						_fire_projectile()
+			elif player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW:
+				if not Input.is_action_pressed("attack_primary"):
+					_bow_released_early = true
+				# Bow always reaches the penultimate frame (frame 5 / 1-based frame 6) to shoot!
+				if charge_progress >= 1.0:
+					_fire_projectile()
 			else:
 				if charge_progress >= 1.0 or not Input.is_action_pressed("attack_primary"):
 					if is_spell:
@@ -201,9 +214,9 @@ func physics_update(delta: float) -> void:
 				return
 
 			if phase_timer <= 0.0:
-				if Input.is_action_pressed("attack_primary") and not player.weapon.is_charge_attack:
-					# Keep firing while holding attack!
-					_start_shot_cycle()
+				if Input.is_action_pressed("attack_primary") and not player.weapon.is_charge_attack and not _bow_released_early:
+					# Keep firing while holding attack (Bow cycles from ready frame 2 -> shoot frame 5)!
+					_start_shot_cycle(true)
 				else:
 					_exit_to_movement()
 
