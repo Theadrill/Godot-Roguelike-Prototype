@@ -12,8 +12,8 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
   - Chama apenas `player.set_crouched(true)` sem `play_animation()`, exibindo o retângulo placeholder achatado quando leva ataque vermelho ou quebra de guarda. Falta sprite de `hurt` / `stagger`.
 - [ ] **`Heal` / Tomar o Chá da Mãe (`src/entities/player/states/heal_state.gd`):**
   - Não chama `play_animation()` e pisca a cor verde em `player.body_polygon`. Falta sprite dedicado de beber chá/poção.
-- [ ] **`RangedAttack` com Arco (`Bow`) e Besta (`Crossbow`) (`src/entities/player/states/ranged_attack_state.gd`):**
-  - O Cajado (`Staff`) já usa `channeling` e `cast`, mas quando equipado com **Arco** ou **Besta**, não chama `play_animation()`, caindo no retângulo placeholder.
+- [ ] **`RangedAttack` com Besta (`Crossbow`) (`src/entities/player/states/ranged_attack_state.gd`):**
+  - O Cajado (`Staff`) usa `channeling`/`cast` e o Arco (`Bow`) usa `bow_attack` no chão, mas a **Besta (`Crossbow`)** e o disparo aéreo do Arco ainda não possuem sprite dedicado.
 - [ ] **`Death` / Morte (`src/entities/player/player.gd`):**
   - Não possui animação de morte (`die` / `death`) antes de o vórtice espiral cobrir a tela.
 
@@ -41,6 +41,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`LedgeClimb`** (`corner_climb` — 5 frames)
 - [x] **`Guard` / Escudo** (`block` — 3 frames + `block_loop` — 2 frames)
 - [x] **`RangedAttack` (Magia/Cajado)** (`channeling` — 2 frames + `cast` — 4 frames)
+- [x] **`RangedAttack` (Arco / Chão)** (`bow_attack` — 7 frames sincronizados com puxada, disparo com flash embutido e recuperação)
 - [x] **`Attack` (Chão)** (`attack1` + `slash_sword`, `attack2` + `slash_sword_2`, `attack3` + `slash_sword_3`)
 - [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` + `slash_air_sword_3` para plunge do Martelo)
 - [x] **Ataques a partir de `Crouch`, `Cima` ou `Baixo no ar` (sem plunge)** — levantam/normalizam automaticamente para o combo padrão (bloqueando ataque sob teto baixo via `ceiling_check`).
