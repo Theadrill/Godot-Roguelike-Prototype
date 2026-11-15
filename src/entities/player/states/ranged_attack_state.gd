@@ -5,6 +5,8 @@ extends State
 ## Implements continuous fire (holding button to continuously loose arrows/bolts),
 ## charge mechanics for charge weapons/spells, directional aiming, and tactical recovery.
 
+const DEFAULT_PROJECTILE_SCENE: PackedScene = preload("res://src/combat/projectile.tscn")
+
 var player: Player
 
 var attack_phase: int = 0 # 0: Aim/Draw/Channeling, 1: Spell Cast Windup->Release, 2: Recovery/Reload
@@ -122,11 +124,13 @@ func physics_update(delta: float) -> void:
 				var span: float = float(5 - start_f)
 				var draw_frame: int = clampi(start_f + int(floor(charge_progress * span)), start_f, 4)
 				if player.player_sprite:
-					if player.player_sprite.animation != &"bow_attack":
+					var anim_switched: bool = player.player_sprite.animation != &"bow_attack"
+					if anim_switched:
 						player.play_animation(&"bow_attack")
 						player.player_sprite.pause()
-					player.player_sprite.frame = draw_frame
-				player._update_weapon_socket_for_frame(&"bow_attack", draw_frame)
+					if anim_switched or player.player_sprite.frame != draw_frame:
+						player.player_sprite.frame = draw_frame
+						player._update_weapon_socket_for_frame(&"bow_attack", draw_frame)
 				if player.main_hand_socket and is_aiming_up:
 					player.main_hand_socket.rotation_degrees = -45.0 + jitter
 			else:
@@ -136,17 +140,12 @@ func physics_update(delta: float) -> void:
 			# Energizing glow & particle FX controlled by WeaponData's EnergizeProfile
 			player.update_weapon_energize(charge_progress, _charge_base_weapon_scale)
 
-			# Slow tactical movement while aiming bow on floor; planted stance while channeling staff
+			# Planted stance while aiming/charging on floor (matches Dead Cells bow/spell lock)
 			if player.is_on_floor():
 				var move_dir := Input.get_axis("move_left", "move_right")
-				if is_spell:
-					player.velocity.x = move_toward(player.velocity.x, 0.0, 800.0 * delta)
-					if move_dir != 0.0:
-						player.update_facing(move_dir)
-				else:
-					player.velocity.x = move_toward(player.velocity.x, move_dir * (player.run_speed * 0.4), 800.0 * delta)
-					if move_dir != 0.0:
-						player.update_facing(move_dir)
+				player.velocity.x = move_toward(player.velocity.x, 0.0, 800.0 * delta)
+				if move_dir != 0.0:
+					player.update_facing(move_dir)
 			else:
 				player.velocity.x = move_toward(player.velocity.x, 0.0, 300.0 * delta)
 
@@ -254,7 +253,7 @@ func _fire_projectile(advance_to_recovery: bool = true) -> void:
 
 	var weapon := player.weapon
 	var is_spell: bool = weapon.weapon_category == WeaponData.WeaponCategory.RANGED_SPELL
-	var proj_scene: PackedScene = weapon.projectile_scene if weapon.projectile_scene else load("res://src/combat/projectile.tscn")
+	var proj_scene: PackedScene = weapon.projectile_scene if weapon.projectile_scene else DEFAULT_PROJECTILE_SCENE
 	if not proj_scene:
 		_exit_to_movement()
 		return

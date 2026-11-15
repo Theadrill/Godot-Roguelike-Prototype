@@ -9,13 +9,20 @@ extends EquipmentData
 ## Perfil predefinido de ancoragem do escudo (shield, shield_2).
 @export_enum("shield", "shield_2") var socket_profile: String = "shield"
 
+var _cached_socket_profile: WeaponSocketProfile = null
+var _cached_socket_profile_name: String = ""
+
 func get_socket_profile() -> WeaponSocketProfile:
 	if custom_socket_profile:
 		return custom_socket_profile
+	if _cached_socket_profile and _cached_socket_profile_name == socket_profile:
+		return _cached_socket_profile
 	var profile_res_path := "res://src/entities/equipment/socket_profiles/%s.tres" % socket_profile
 	if ResourceLoader.exists(profile_res_path):
 		var prof := load(profile_res_path) as WeaponSocketProfile
 		if prof:
+			_cached_socket_profile = prof
+			_cached_socket_profile_name = socket_profile
 			return prof
 	return null
 

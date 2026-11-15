@@ -5,6 +5,8 @@ extends State
 ## Looses the physical arrow matching the 3-signal attack type (Normal / Heavy / Perilous),
 ## manages tactical recovery, and transitions to kite or re-aim.
 
+const PROJECTILE_SCENE: PackedScene = preload("res://src/combat/projectile.tscn")
+
 var archer: Archer
 var recovery_timer: float = 0.0
 var has_shot: bool = false
@@ -103,7 +105,7 @@ func _loose_arrow() -> void:
 	if not is_instance_valid(player):
 		return
 
-	var proj_scene := load("res://src/combat/projectile.tscn") as PackedScene
+	var proj_scene: PackedScene = PROJECTILE_SCENE
 	if not proj_scene:
 		return
 

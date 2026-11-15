@@ -73,15 +73,24 @@ enum WeaponCategory {
 ## Carrega automaticamente 'res://src/entities/equipment/socket_profiles/<nome>.tres' quando 'custom_socket_profile' está vazio.
 @export_enum("sword", "sword_2", "dagger", "dagger_2", "hammer", "hammer_2", "axe", "axe_2", "staff", "staff_2", "bow", "bow_2", "crossbow", "crossbow_2") var socket_profile: String = "sword"
 
+var _cached_socket_profile: WeaponSocketProfile = null
+var _cached_socket_profile_name: String = ""
+
 func get_socket_profile() -> WeaponSocketProfile:
 	if custom_socket_profile:
 		return custom_socket_profile
+	if _cached_socket_profile and _cached_socket_profile_name == socket_profile:
+		return _cached_socket_profile
 	var profile_res_path := "res://src/entities/equipment/socket_profiles/%s.tres" % socket_profile
 	if ResourceLoader.exists(profile_res_path):
 		var prof := load(profile_res_path) as WeaponSocketProfile
 		if prof:
+			_cached_socket_profile = prof
+			_cached_socket_profile_name = socket_profile
 			return prof
-	return load("res://src/entities/equipment/socket_profiles/sword.tres") as WeaponSocketProfile
+	_cached_socket_profile = load("res://src/entities/equipment/socket_profiles/sword.tres") as WeaponSocketProfile
+	_cached_socket_profile_name = socket_profile
+	return _cached_socket_profile
 
 @export_group("Combo & Attack Set (Moveset)")
 
@@ -203,17 +212,26 @@ func get_socket_profile() -> WeaponSocketProfile:
 ## [Legado] Cor de fallback caso nenhum EnergizeProfile seja encontrado.
 @export var charge_energy_color: Color = Color(0.2, 0.9, 1.0, 1.0)
 
+var _cached_energize_profile: EnergizeProfile = null
+var _cached_energize_profile_name: String = ""
+
 func get_energize_profile() -> EnergizeProfile:
 	if custom_energize_profile:
 		return custom_energize_profile
+	if _cached_energize_profile and _cached_energize_profile_name == energize_profile:
+		return _cached_energize_profile
 	var prof_path := "res://src/combat/energize_profiles/%s.tres" % energize_profile
 	if ResourceLoader.exists(prof_path):
 		var prof := load(prof_path) as EnergizeProfile
 		if prof:
+			_cached_energize_profile = prof
+			_cached_energize_profile_name = energize_profile
 			return prof
 	var fallback_path := "res://src/combat/energize_profiles/glow_and_bigger.tres"
 	if ResourceLoader.exists(fallback_path):
-		return load(fallback_path) as EnergizeProfile
+		_cached_energize_profile = load(fallback_path) as EnergizeProfile
+		_cached_energize_profile_name = energize_profile
+		return _cached_energize_profile
 	return null
 
 const _CHARGE_SUB_PROPERTIES: Array[StringName] = [

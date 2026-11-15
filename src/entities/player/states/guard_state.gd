@@ -5,6 +5,8 @@ extends State
 ## Implements active 120ms perfect parry window, continuous simple guard with chip damage,
 ## guard breaks against red attacks, and strict 1.0s spam penalty on whiff.
 
+const SHOCKWAVE_SCENE: PackedScene = preload("res://src/combat/radial_shockwave.tscn")
+
 var player: Player
 
 var parry_timer: float = 0.0
@@ -124,7 +126,7 @@ func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, inco
 		# Forge Modifier & Death Blessing: Repulsion / Spectral Shockwave
 		var has_spectral: bool = player.has_meta("mod_onda_espectral") and player.get_meta("mod_onda_espectral")
 		if (player.shield and player.shield.has_repulsion_modifier) or has_spectral:
-			var shockwave_scene := load("res://src/combat/radial_shockwave.tscn") as PackedScene
+			var shockwave_scene: PackedScene = SHOCKWAVE_SCENE
 			if shockwave_scene:
 				var sw := shockwave_scene.instantiate() as RadialShockwave
 				sw.global_position = player.global_position + Vector2(0.0, -18.0)

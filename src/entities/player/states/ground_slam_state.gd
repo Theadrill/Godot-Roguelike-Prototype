@@ -4,6 +4,8 @@ extends State
 ## Aerial Ground Slam (Down + Jump in mid-air):
 ## Freezes horizontal speed, drives vertically down at 950 px/s, and creates a radial impact shockwave on floor touch.
 
+const SHOCKWAVE_SCENE: PackedScene = preload("res://src/combat/radial_shockwave.tscn")
+
 var player: Player
 var has_impacted: bool = false
 var impact_recovery_timer: float = 0.0
@@ -101,7 +103,7 @@ func _on_slam_impact() -> void:
 	)
 
 	# Spawn RadialShockwave with area damage
-	var shockwave_scene := load("res://src/combat/radial_shockwave.tscn") as PackedScene
+	var shockwave_scene: PackedScene = SHOCKWAVE_SCENE
 	if shockwave_scene:
 		var sw := shockwave_scene.instantiate() as RadialShockwave
 		sw.global_position = player.global_position + Vector2(0.0, -4.0)
