@@ -41,7 +41,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`LedgeClimb`** (`corner_climb` — 5 frames)
 - [x] **`Guard` / Escudo** (`block` — 3 frames + `block_loop` — 2 frames)
 - [x] **`RangedAttack` (Magia/Cajado)** (`channeling` — 2 frames + `cast` — 4 frames)
-- [x] **`RangedAttack` (Arco / Chão)** (`bow_attack` — 7 frames sincronizados com puxada, disparo com flash embutido e recuperação)
+- [x] **`RangedAttack` (Arco / Chão)** (`bow_attack` — 7 frames com cadência contínua ciclando do frame 3 ao 6 ao segurar o botão, disparo no penúltimo frame e trava de movimento no chão estilo Dead Cells)
 - [x] **`Attack` (Chão)** (`attack1` + `slash_sword`, `attack2` + `slash_sword_2`, `attack3` + `slash_sword_3`)
 - [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` + `slash_air_sword_3` para plunge do Martelo)
 - [x] **Ataques a partir de `Crouch`, `Cima` ou `Baixo no ar` (sem plunge)** — levantam/normalizam automaticamente para o combo padrão (bloqueando ataque sob teto baixo via `ceiling_check`).
