@@ -12,8 +12,10 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
   - Chama apenas `player.set_crouched(true)` sem `play_animation()`, exibindo o retângulo placeholder achatado quando leva ataque vermelho ou quebra de guarda. Falta sprite de `hurt` / `stagger`.
 - [ ] **`Heal` / Tomar o Chá da Mãe (`src/entities/player/states/heal_state.gd`):**
   - Não chama `play_animation()` e pisca a cor verde em `player.body_polygon`. Falta sprite dedicado de beber chá/poção.
+- [ ] **`RangedAttack` com Arco no Ar (`bow_air_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
+  - O Arco (`Bow`) já possui `bow_attack` no chão, mas ainda falta o sprite e a animação dedicada para o **disparo com Arco no ar**.
 - [ ] **`RangedAttack` com Besta (`Crossbow`) (`src/entities/player/states/ranged_attack_state.gd`):**
-  - O Cajado (`Staff`) usa `channeling`/`cast` e o Arco (`Bow`) usa `bow_attack` no chão, mas a **Besta (`Crossbow`)** e o disparo aéreo do Arco ainda não possuem sprite dedicado.
+  - O Cajado (`Staff`) usa `channeling`/`cast` e o Arco (`Bow`) usa `bow_attack` no chão, mas a **Besta (`Crossbow`)** ainda não possui sprite dedicado.
 - [ ] **`Death` / Morte (`src/entities/player/player.gd`):**
   - Não possui animação de morte (`die` / `death`) antes de o vórtice espiral cobrir a tela.
 
