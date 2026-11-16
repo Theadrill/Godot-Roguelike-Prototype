@@ -6,14 +6,15 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-socket_target = "Item sendo Pego (ItemPickupSocket)"
+socket_target = "Arma nas Costas (BackSocketWeapon)"
 selected_animation = "pickup"
 current_frame = 2
 reference_secondary_weapon = "none"
-socket_pos_x = 13.0
-socket_pos_y = -31.0
-socket_z_index = 2
-status_message = "SUCESSO! Salvo em item_pickup.tres (Item sendo Pego) -> [pickup Frame 2] (Pos: (13.000000, -31.000000), Rot: 0.0°, Z: 2, FlipH: false, FlipV: false)"
+socket_pos_x = -13.0
+socket_pos_y = -29.0
+socket_rotation = 267.99997
+socket_flip_h = true
+status_message = "sword [Arma nas Costas (BackSocketWeapon)] -> pickup Frame 2 (Z: -2, FlipH: true, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -34,8 +35,8 @@ metadata/_edit_lock_ = true
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
 z_index = -2
 z_as_relative = false
-position = Vector2(-20, -35)
-rotation = 4.5989428
+position = Vector2(-13, -29)
+rotation = 4.677482
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3

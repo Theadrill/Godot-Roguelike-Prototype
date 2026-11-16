@@ -514,6 +514,22 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"heal_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-9, -26),
+"rot": 0.0,
+"visible": true,
+"z_index": -3
+},
+"heal_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -27),
+"rot": 0.0,
+"visible": true,
+"z_index": -3
+},
 "idle_0": {
 "pos": Vector2(-9, -28),
 "rot": 0.0,
@@ -566,26 +582,10 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
-"heal_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-9, -26),
-"rot": 0.0,
-"visible": true,
-"z_index": -3
-},
-"heal_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -27),
-"rot": 0.0,
-"visible": true,
-"z_index": -3
-},
 "pickup_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-9, -26),
+"pos": Vector2(-7, -25),
 "rot": 0.0,
 "visible": true,
 "z_index": -3
@@ -593,7 +593,7 @@ back_frames = {
 "pickup_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-10, -27),
+"pos": Vector2(-7, -23),
 "rot": 0.0,
 "visible": true,
 "z_index": -3
@@ -601,7 +601,7 @@ back_frames = {
 "pickup_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-10, -27),
+"pos": Vector2(-7, -27),
 "rot": 0.0,
 "visible": true,
 "z_index": -3

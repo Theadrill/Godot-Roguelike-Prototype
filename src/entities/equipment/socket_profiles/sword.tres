@@ -581,6 +581,22 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"heal_0": {
+"flip_h": true,
+"flip_v": false,
+"pos": Vector2(-12, -28),
+"rot": 268.0,
+"visible": true,
+"z_index": -2
+},
+"heal_1": {
+"flip_h": true,
+"flip_v": false,
+"pos": Vector2(-13, -29),
+"rot": 268.0,
+"visible": true,
+"z_index": -2
+},
 "idle_0": {
 "pos": Vector2(-10, -34),
 "rot": 74.999985,
@@ -633,43 +649,27 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
-"heal_0": {
-"flip_h": true,
-"flip_v": false,
-"pos": Vector2(-12, -28),
-"rot": 268.0,
-"visible": true,
-"z_index": -2
-},
-"heal_1": {
-"flip_h": true,
-"flip_v": false,
-"pos": Vector2(-13, -29),
-"rot": 268.0,
-"visible": true,
-"z_index": -2
-},
 "pickup_0": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-12, -28),
-"rot": 268.0,
+"pos": Vector2(-9, -28),
+"rot": 264.0,
 "visible": true,
 "z_index": -2
 },
 "pickup_1": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-13, -29),
-"rot": 268.0,
+"pos": Vector2(-7, -26),
+"rot": 264.0,
 "visible": true,
 "z_index": -2
 },
 "pickup_2": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-13, -29),
-"rot": 268.0,
+"pos": Vector2(-7, -28),
+"rot": 264.0,
 "visible": true,
 "z_index": -2
 },
@@ -1163,6 +1163,22 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
+"heal_0": {
+"flip_h": true,
+"flip_v": false,
+"pos": Vector2(-9, -26),
+"rot": 274.0,
+"visible": true,
+"z_index": -2
+},
+"heal_1": {
+"flip_h": true,
+"flip_v": false,
+"pos": Vector2(-10, -27),
+"rot": 274.0,
+"visible": true,
+"z_index": -2
+},
 "jump_0": {
 "flip_h": false,
 "flip_v": false,
@@ -1195,43 +1211,27 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
-"heal_0": {
-"flip_h": true,
-"flip_v": false,
-"pos": Vector2(-9, -26),
-"rot": 274.0,
-"visible": true,
-"z_index": -2
-},
-"heal_1": {
-"flip_h": true,
-"flip_v": false,
-"pos": Vector2(-10, -27),
-"rot": 274.0,
-"visible": true,
-"z_index": -2
-},
 "pickup_0": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-9, -26),
-"rot": 274.0,
+"pos": Vector2(7, -27),
+"rot": 298.0,
 "visible": true,
 "z_index": -2
 },
 "pickup_1": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-10, -27),
-"rot": 274.0,
+"pos": Vector2(8, -27),
+"rot": 298.0,
 "visible": true,
 "z_index": -2
 },
 "pickup_2": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-10, -27),
-"rot": 274.0,
+"pos": Vector2(7, -30),
+"rot": 298.0,
 "visible": true,
 "z_index": -2
 },
