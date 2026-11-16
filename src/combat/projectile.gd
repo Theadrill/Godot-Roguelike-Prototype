@@ -72,6 +72,8 @@ func _on_area_entered(area: Area2D) -> void:
 
 	if area is Hurtbox:
 		var hurtbox := area as Hurtbox
+		if hurtbox.is_invulnerable:
+			return
 		var target_entity := hurtbox.get_parent()
 		if target_entity == shooter:
 			return
@@ -100,6 +102,8 @@ func _on_body_entered(body: Node2D) -> void:
 	# Check if body is an entity with a Hurtbox (like Soldier or Dummy)
 	var hurtbox: Hurtbox = body.get_node_or_null("Hurtbox") as Hurtbox
 	if hurtbox:
+		if hurtbox.is_invulnerable:
+			return
 		if body is Player:
 			var player := body as Player
 			if player.state_machine and player.state_machine.current_state is GuardState:

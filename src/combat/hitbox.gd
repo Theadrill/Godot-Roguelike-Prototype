@@ -52,7 +52,7 @@ func _on_area_entered(area: Area2D) -> void:
 func _try_hit_area(area: Area2D) -> void:
 	if area is Hurtbox:
 		var hurtbox: Hurtbox = area as Hurtbox
-		if _hit_targets.has(hurtbox):
+		if hurtbox.is_invulnerable or _hit_targets.has(hurtbox):
 			return
 
 		# Check line of sight: do not allow melee attacks to penetrate solid walls
