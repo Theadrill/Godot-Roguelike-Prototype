@@ -435,18 +435,19 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 func play_animation(anim_name: StringName) -> void:
 	if not player_sprite:
 		return
-	if hurt_flinch_timer > 0.0:
-		if anim_name in [&"idle", &"run", &"fall", &"fall_from_jump", &"crouch", &"wall_cling", &"wall_slide"]:
-			_pending_anim_after_flinch = anim_name
-			return
-		hurt_flinch_timer = 0.0
-		_pending_anim_after_flinch = &""
 	player_sprite.visible = true
 	if body_polygon:
 		body_polygon.visible = false
 	var headband := visual.get_node_or_null("HeadbandPlaceholder") as CanvasItem
 	if headband:
 		headband.visible = false
+
+	if hurt_flinch_timer > 0.0:
+		if anim_name in [&"idle", &"run", &"fall", &"fall_from_jump", &"crouch", &"wall_cling", &"wall_slide"]:
+			_pending_anim_after_flinch = anim_name
+			return
+		hurt_flinch_timer = 0.0
+		_pending_anim_after_flinch = &""
 
 	# Position handling: corner_climb has custom anchor; other animations use standard (-2, -29)
 	if anim_name == &"corner_climb":
@@ -667,6 +668,8 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			_item_pickup_instance.visible = false
 
 func stop_animation() -> void:
+	if hurt_flinch_timer > 0.0:
+		return
 	if animation_player and animation_player.is_playing():
 		animation_player.stop()
 	if player_sprite:
