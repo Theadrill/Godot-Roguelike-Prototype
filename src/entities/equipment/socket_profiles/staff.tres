@@ -771,6 +771,30 @@ back_frames = {
 "rot": -85.899994,
 "visible": true,
 "z_index": -2
+},
+"hurt_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-11, -32.5),
+"rot": -175.0,
+"visible": true,
+"z_index": -2
+},
+"hurt_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-7, -33.5),
+"rot": -175.0,
+"visible": true,
+"z_index": -2
+},
+"hurt_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-7, -33.5),
+"rot": -175.0,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {
@@ -1139,6 +1163,30 @@ hand_frames = {
 "flip_v": true,
 "pos": Vector2(-13, -21),
 "rot": -112.399994,
+"visible": true,
+"z_index": 2
+},
+"hurt_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(7, -21.5),
+"rot": -45.0,
+"visible": true,
+"z_index": 2
+},
+"hurt_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -19.5),
+"rot": -45.0,
+"visible": true,
+"z_index": 2
+},
+"hurt_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(0, -19.5),
+"rot": -45.0,
 "visible": true,
 "z_index": 2
 }

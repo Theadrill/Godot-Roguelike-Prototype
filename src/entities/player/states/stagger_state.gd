@@ -12,10 +12,10 @@ var timer: float = 0.0
 func enter() -> void:
 	player = character as Player
 	timer = duration
-	player.set_crouched(true)
+	player.play_animation(&"hurt")
 
 func exit() -> void:
-	player.set_crouched(false)
+	pass
 
 func physics_update(delta: float) -> void:
 	# Decelerate knockback smoothly
