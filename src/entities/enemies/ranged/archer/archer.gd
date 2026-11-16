@@ -308,6 +308,7 @@ func respawn() -> void:
 	current_health = max_health
 	velocity = Vector2.ZERO
 	target_player = null
+	reaggro_cooldown = 0.0
 	hide_telegraph()
 	visible = true
 
@@ -318,6 +319,19 @@ func respawn() -> void:
 		visual.scale.y = 1.0
 	if bow_node:
 		bow_node.rotation = 0.0
+
+	# Reset collision & hurtbox
+	set_collision_layer_value(3, true)
+	$CollisionShape2D.set_deferred("disabled", false)
+	if hurtbox:
+		hurtbox.is_invulnerable = false
+		hurtbox.set_deferred("monitoring", true)
+		hurtbox.set_deferred("monitorable", true)
+		if hurtbox.has_node("CollisionShape2D"):
+			hurtbox.get_node("CollisionShape2D").set_deferred("disabled", false)
+
+	update_facing(float(initial_facing))
+	state_machine.transition_to("patrol")
 
 func get_arrow_spawn_pos() -> Vector2:
 	return arrow_spawn_marker.global_position if arrow_spawn_marker else global_position + Vector2(float(facing_direction) * 16.0, -20.0)
@@ -347,16 +361,4 @@ func drop_aggro() -> void:
 	target_player = null
 	reaggro_cooldown = reaggro_cooldown_duration
 	hide_telegraph()
-
-	# Reset collision & hurtbox
-	set_collision_layer_value(3, true)
-	$CollisionShape2D.set_deferred("disabled", false)
-	if hurtbox:
-		hurtbox.is_invulnerable = false
-		hurtbox.set_deferred("monitoring", true)
-		hurtbox.set_deferred("monitorable", true)
-		if hurtbox.has_node("CollisionShape2D"):
-			hurtbox.get_node("CollisionShape2D").set_deferred("disabled", false)
-
-	update_facing(float(initial_facing))
 	state_machine.transition_to("patrol")
