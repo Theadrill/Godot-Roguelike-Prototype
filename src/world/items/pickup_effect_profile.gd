@@ -23,6 +23,14 @@ extends Resource
 ## Se true, aplica glow_color no modulate das partículas instanciadas.
 @export var tint_particles: bool = true
 
+@export_group("Gamepad Rumble")
+## Intensidade do motor fraco do gamepad ao disparar o brilho de coleta.
+@export_range(0.0, 1.0, 0.05) var rumble_weak: float = 0.25
+## Intensidade do motor forte do gamepad ao disparar o brilho de coleta.
+@export_range(0.0, 1.0, 0.05) var rumble_strong: float = 0.45
+## Duração da vibração do gamepad ao disparar o brilho de coleta.
+@export_range(0.0, 0.5, 0.01, "suffix:s") var rumble_duration: float = 0.12
+
 func compute_peak_modulate() -> Color:
 	return Color(
 		1.0 + glow_color.r * glow_intensity,

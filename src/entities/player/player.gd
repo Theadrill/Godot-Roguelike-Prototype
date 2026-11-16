@@ -1341,6 +1341,9 @@ func play_pickup_item_burst() -> void:
 	if not prof:
 		return
 
+	if prof.rumble_duration > 0.0 and (prof.rumble_weak > 0.0 or prof.rumble_strong > 0.0):
+		CombatFeedback.trigger_rumble(prof.rumble_weak, prof.rumble_strong, prof.rumble_duration)
+
 	if prof.burst_particle_scene and item_pickup_socket:
 		var fx := prof.burst_particle_scene.instantiate() as CPUParticles2D
 		if fx:
