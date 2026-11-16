@@ -45,6 +45,7 @@ func physics_update(delta: float) -> void:
 			_is_holding_last_frame = true
 			_hold_timer = last_frame_hold_duration
 			player._update_weapon_socket_for_frame(&"pickup", 2)
+			player.play_pickup_item_burst()
 		return
 
 	_hold_timer -= delta

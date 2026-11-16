@@ -158,6 +158,9 @@ var _tea_bottle_instance: Node2D = null
 var _tea_bottle_profile: WeaponSocketProfile = null
 var _item_pickup_instance: Node2D = null
 var _item_pickup_profile: WeaponSocketProfile = null
+var _pickup_effect_profile: PickupEffectProfile = null
+var _item_pickup_base_scale: Vector2 = Vector2.ONE
+var _pickup_fx_tween: Tween = null
 var tea_bottle_frame_override: int = -1
 var is_shield_raised: bool = false
 var is_dead: bool = false
@@ -1305,13 +1308,17 @@ func spawn_ground_impact_particles(center_x: float, ground_y: float, width: floa
 	fx.global_position = Vector2(center_x, ground_y - 1.0)
 	fx.z_index = 5
 
-func set_pickup_item_visual(source_visual: Node2D) -> void:
+func set_pickup_item_visual(source_visual: Node2D, effect_profile: PickupEffectProfile = null) -> void:
 	clear_pickup_item_visual()
+	_pickup_effect_profile = effect_profile
+	if not _pickup_effect_profile and ResourceLoader.exists("res://src/world/items/pickup_profiles/default_pickup.tres"):
+		_pickup_effect_profile = load("res://src/world/items/pickup_profiles/default_pickup.tres") as PickupEffectProfile
 	if not item_pickup_socket or not source_visual or not is_instance_valid(source_visual):
 		return
 	var cloned := source_visual.duplicate() as Node2D
 	if not cloned:
 		return
+	_item_pickup_base_scale = cloned.scale
 	cloned.position = Vector2.ZERO
 	cloned.rotation_degrees = 0.0
 	cloned.visible = false
@@ -1319,11 +1326,48 @@ func set_pickup_item_visual(source_visual: Node2D) -> void:
 	_item_pickup_instance = cloned
 
 func clear_pickup_item_visual() -> void:
+	if _pickup_fx_tween and _pickup_fx_tween.is_valid():
+		_pickup_fx_tween.kill()
+	_pickup_fx_tween = null
 	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
 		_item_pickup_instance.queue_free()
 	_item_pickup_instance = null
+	_pickup_effect_profile = null
 
-func trigger_pickup_animation(source_visual: Node2D = null) -> void:
-	set_pickup_item_visual(source_visual)
+func play_pickup_item_burst() -> void:
+	var prof: PickupEffectProfile = _pickup_effect_profile
+	if not prof and ResourceLoader.exists("res://src/world/items/pickup_profiles/default_pickup.tres"):
+		prof = load("res://src/world/items/pickup_profiles/default_pickup.tres") as PickupEffectProfile
+	if not prof:
+		return
+
+	if prof.burst_particle_scene and item_pickup_socket:
+		var fx := prof.burst_particle_scene.instantiate() as CPUParticles2D
+		if fx:
+			var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
+			if spawn_parent:
+				if prof.tint_particles:
+					fx.modulate = prof.glow_color
+				spawn_parent.add_child(fx)
+				fx.global_position = item_pickup_socket.global_position
+				fx.z_index = 6
+			else:
+				fx.queue_free()
+
+	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
+		if _pickup_fx_tween and _pickup_fx_tween.is_valid():
+			_pickup_fx_tween.kill()
+		var sx_sign: float = -1.0 if _item_pickup_instance.scale.x < 0.0 else 1.0
+		var sy_sign: float = -1.0 if _item_pickup_instance.scale.y < 0.0 else 1.0
+		var target_scale := Vector2(_item_pickup_base_scale.x * sx_sign, _item_pickup_base_scale.y * sy_sign)
+		_item_pickup_instance.scale = target_scale * (1.0 + prof.scale_pop)
+		_item_pickup_instance.modulate = prof.compute_peak_modulate()
+		_pickup_fx_tween = create_tween()
+		_pickup_fx_tween.set_parallel(true)
+		_pickup_fx_tween.tween_property(_item_pickup_instance, "scale", target_scale, prof.effect_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		_pickup_fx_tween.tween_property(_item_pickup_instance, "modulate", Color.WHITE, prof.effect_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func trigger_pickup_animation(source_visual: Node2D = null, effect_profile: PickupEffectProfile = null) -> void:
+	set_pickup_item_visual(source_visual, effect_profile)
 	if state_machine and state_machine.has_node("Pickup"):
 		state_machine.transition_to("pickup")

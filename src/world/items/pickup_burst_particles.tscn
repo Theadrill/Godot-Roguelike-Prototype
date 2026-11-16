@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://pickup_burst_particles_01"]
+
+[ext_resource type="Script" path="res://src/combat/energize_particles/energize_one_shot.gd" id="1_oneshot"]
+
+[sub_resource type="Gradient" id="Gradient_pickup_spark"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 0.95, 0.72, 0.9, 1, 0.9, 0.55, 0)
+
+[node name="PickupBurstParticles" type="CPUParticles2D"]
+emitting = false
+amount = 14
+lifetime = 0.28
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+spread = 180.0
+gravity = Vector2(0, -18)
+initial_velocity_min = 24.0
+initial_velocity_max = 52.0
+damping_min = 75.0
+damping_max = 110.0
+scale_amount_min = 1.0
+scale_amount_max = 1.8
+color_ramp = SubResource("Gradient_pickup_spark")
+script = ExtResource("1_oneshot")

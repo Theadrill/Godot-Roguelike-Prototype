@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PickupEffectProfile" format=3 uid="uid://default_pickup_profile_01"]
+
+[ext_resource type="Script" path="res://src/world/items/pickup_effect_profile.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://src/world/items/pickup_burst_particles.tscn" id="2_burst"]
+
+[resource]
+script = ExtResource("1_script")
+profile_name = "Default Pickup Spark"
+glow_color = Color(1, 0.92, 0.55, 1)
+glow_intensity = 0.85
+scale_pop = 0.22
+effect_duration = 0.2
+burst_particle_scene = ExtResource("2_burst")
+tint_particles = true

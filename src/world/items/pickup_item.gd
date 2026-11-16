@@ -3,8 +3,12 @@ extends Node2D
 
 ## Base collectible world item used to trigger the player's pickup animation and collect rewards.
 
+const DEFAULT_EFFECT_PROFILE_PATH: String = "res://src/world/items/pickup_profiles/default_pickup.tres"
+
 @export var respawn_for_test: bool = true
 @export_range(0.3, 5.0, 0.1, "suffix:s") var respawn_delay: float = 1.5
+## Perfil visual do efeito ao coletar este item (brilho + partículas). Se vazio, usa o padrão.
+@export var effect_profile: PickupEffectProfile = null
 
 @onready var visual: Node2D = $Visual
 @onready var prompt_label: Label = $PromptLabel
@@ -47,7 +51,7 @@ func _collect() -> void:
 	var dx: float = global_position.x - _player_near.global_position.x
 	if absf(dx) > 2.0:
 		_player_near.update_facing(signf(dx))
-	_player_near.trigger_pickup_animation(visual)
+	_player_near.trigger_pickup_animation(visual, _get_effect_profile())
 
 	if respawn_for_test:
 		await get_tree().create_timer(respawn_delay).timeout
@@ -59,6 +63,13 @@ func _collect() -> void:
 				prompt_label.visible = true
 	else:
 		queue_free()
+
+func _get_effect_profile() -> PickupEffectProfile:
+	if effect_profile:
+		return effect_profile
+	if ResourceLoader.exists(DEFAULT_EFFECT_PROFILE_PATH):
+		return load(DEFAULT_EFFECT_PROFILE_PATH) as PickupEffectProfile
+	return null
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is Player:
