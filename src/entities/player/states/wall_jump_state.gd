@@ -31,6 +31,7 @@ func enter() -> void:
 	player.velocity.y = player.wall_jump_vertical
 	player.update_facing(wall_normal.x)
 	player.fall_peak_y = player.global_position.y
+	player.can_double_jump = true
 	player.play_animation(&"jump")
 
 func exit() -> void:
@@ -50,6 +51,11 @@ func physics_update(delta: float) -> void:
 				return
 			state_machine.transition_to("wallslide")
 			return
+
+	# Double jump mid-air after wall jump (Dead Cells style)
+	if Input.is_action_just_pressed("jump") and player.can_double_jump:
+		state_machine.transition_to("doublejump")
+		return
 
 	# Air steering after input lock expires
 	if input_lock_timer <= 0.0:
