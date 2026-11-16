@@ -39,10 +39,10 @@ func _physics_process(_delta: float) -> void:
 
 func set_active(active: bool) -> void:
 	_hit_targets.clear()
-	monitoring = active
+	set_deferred("monitoring", active)
 	for child in get_children():
 		if child is CollisionShape2D:
-			child.disabled = not active
+			child.set_deferred("disabled", not active)
 
 func _on_area_entered(area: Area2D) -> void:
 	if not monitoring:
