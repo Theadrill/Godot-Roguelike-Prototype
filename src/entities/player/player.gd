@@ -207,14 +207,6 @@ func _ready() -> void:
 
 	if ResourceLoader.exists("res://src/entities/equipment/socket_profiles/item_pickup.tres"):
 		_item_pickup_profile = load("res://src/entities/equipment/socket_profiles/item_pickup.tres") as WeaponSocketProfile
-	if item_pickup_socket and ResourceLoader.exists("res://src/entities/equipment/items/tea_bottle_visual.tscn"):
-		var ip_scene := load("res://src/entities/equipment/items/tea_bottle_visual.tscn") as PackedScene
-		if ip_scene:
-			_item_pickup_instance = ip_scene.instantiate() as Node2D
-			item_pickup_socket.add_child(_item_pickup_instance)
-			_item_pickup_instance.position = Vector2.ZERO
-			_item_pickup_instance.rotation_degrees = 0.0
-			_item_pickup_instance.visible = false
 
 	if player_sprite:
 		player_sprite.animation_finished.connect(_on_player_sprite_animation_finished)
@@ -646,7 +638,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 		else:
 			_tea_bottle_instance.visible = false
 
-	# 5. Item sendo Pego (exibido durante a animação "pickup")
+	# 5. Item sendo Pego (exibido durante a animação "pickup" usando o visual do item coletado)
 	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
 		if anim_name == &"pickup" and item_pickup_socket:
 			var ip_data: Dictionary = _item_pickup_profile.get_frame_data(anim_name, frame_idx) if _item_pickup_profile else {}
@@ -657,9 +649,6 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 			_item_pickup_instance.rotation_degrees = 0.0
 			_item_pickup_instance.visible = ip_data.get("visible", frame_idx > 0) and not are_weapons_hidden
 			_apply_visual_instance_flip(_item_pickup_instance, ip_data.get("flip_h", false), ip_data.get("flip_v", false))
-			var ip_sprite := _item_pickup_instance.get_node_or_null("Sprite2D") as Sprite2D
-			if ip_sprite:
-				ip_sprite.frame = 0
 		else:
 			_item_pickup_instance.visible = false
 
@@ -1316,6 +1305,25 @@ func spawn_ground_impact_particles(center_x: float, ground_y: float, width: floa
 	fx.global_position = Vector2(center_x, ground_y - 1.0)
 	fx.z_index = 5
 
-func trigger_pickup_animation() -> void:
+func set_pickup_item_visual(source_visual: Node2D) -> void:
+	clear_pickup_item_visual()
+	if not item_pickup_socket or not source_visual or not is_instance_valid(source_visual):
+		return
+	var cloned := source_visual.duplicate() as Node2D
+	if not cloned:
+		return
+	cloned.position = Vector2.ZERO
+	cloned.rotation_degrees = 0.0
+	cloned.visible = false
+	item_pickup_socket.add_child(cloned)
+	_item_pickup_instance = cloned
+
+func clear_pickup_item_visual() -> void:
+	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
+		_item_pickup_instance.queue_free()
+	_item_pickup_instance = null
+
+func trigger_pickup_animation(source_visual: Node2D = null) -> void:
+	set_pickup_item_visual(source_visual)
 	if state_machine and state_machine.has_node("Pickup"):
 		state_machine.transition_to("pickup")

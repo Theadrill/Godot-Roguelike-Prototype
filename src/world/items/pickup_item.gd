@@ -47,7 +47,7 @@ func _collect() -> void:
 	var dx: float = global_position.x - _player_near.global_position.x
 	if absf(dx) > 2.0:
 		_player_near.update_facing(signf(dx))
-	_player_near.trigger_pickup_animation()
+	_player_near.trigger_pickup_animation(visual)
 
 	if respawn_for_test:
 		await get_tree().create_timer(respawn_delay).timeout
