@@ -584,16 +584,16 @@ back_frames = {
 "heal_0": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-12, -28),
-"rot": 268.0,
+"pos": Vector2(-9, -28),
+"rot": 264.0,
 "visible": true,
 "z_index": -2
 },
 "heal_1": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-13, -29),
-"rot": 268.0,
+"pos": Vector2(-7, -28),
+"rot": 264.0,
 "visible": true,
 "z_index": -2
 },
@@ -1166,16 +1166,16 @@ hand_frames = {
 "heal_0": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-9, -26),
-"rot": 274.0,
+"pos": Vector2(7, -27),
+"rot": 298.0,
 "visible": true,
 "z_index": -2
 },
 "heal_1": {
 "flip_h": true,
 "flip_v": false,
-"pos": Vector2(-10, -27),
-"rot": 274.0,
+"pos": Vector2(7, -30),
+"rot": 298.0,
 "visible": true,
 "z_index": -2
 },

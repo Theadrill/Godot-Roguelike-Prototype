@@ -7,14 +7,13 @@
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
 socket_target = "Arma nas Costas (BackSocketWeapon)"
-selected_animation = "pickup"
-current_frame = 2
+selected_animation = "heal"
 reference_secondary_weapon = "none"
-socket_pos_x = -13.0
-socket_pos_y = -29.0
-socket_rotation = 267.99997
+socket_pos_x = -9.0
+socket_pos_y = -28.0
+socket_rotation = 264.0
 socket_flip_h = true
-status_message = "sword [Arma nas Costas (BackSocketWeapon)] -> pickup Frame 2 (Z: -2, FlipH: true, FlipV: false)"
+status_message = "sword [Arma nas Costas (BackSocketWeapon)] -> heal Frame 0 (Z: -2, FlipH: true, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,24 +27,23 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"pickup"
-frame = 2
+animation = &"heal"
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
 z_index = -2
 z_as_relative = false
-position = Vector2(-13, -29)
-rotation = 4.677482
+position = Vector2(-9, -28)
+rotation = 4.6076694
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3
-position = Vector2(-10, -27)
+position = Vector2(-7, -25)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = -2
-position = Vector2(-10, -27)
-rotation = 4.7822022
+position = Vector2(7, -27)
+rotation = 5.2010813
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
@@ -54,12 +52,13 @@ rotation = -0.61086524
 
 [node name="TeaBottleSocket" type="Marker2D" parent="Visual" unique_id=1498765432]
 z_index = 2
-position = Vector2(6, -20)
-rotation = -0.61086524
+position = Vector2(13, -20)
+rotation = -0.08726646
 
 [node name="ItemPickupSocket" type="Marker2D" parent="Visual" unique_id=1598765433]
 z_index = 2
-position = Vector2(13, -31)
+position = Vector2(6, -20)
+rotation = -0.61086524
 
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
 visible = false

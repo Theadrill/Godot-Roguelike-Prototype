@@ -585,18 +585,18 @@ back_frames = {
 "z_index": -2
 },
 "heal_0": {
-"flip_h": true,
+"flip_h": false,
 "flip_v": false,
-"pos": Vector2(-12, -28),
-"rot": 268.0,
+"pos": Vector2(-8, -17),
+"rot": 267.99985,
 "visible": true,
 "z_index": -2
 },
 "heal_1": {
-"flip_h": true,
+"flip_h": false,
 "flip_v": false,
-"pos": Vector2(-13, -29),
-"rot": 268.0,
+"pos": Vector2(-8, -18),
+"rot": 267.99988,
 "visible": true,
 "z_index": -2
 },
@@ -1167,18 +1167,18 @@ hand_frames = {
 "z_index": 2
 },
 "heal_0": {
-"flip_h": true,
+"flip_h": false,
 "flip_v": false,
-"pos": Vector2(-9, -26),
-"rot": 274.0,
+"pos": Vector2(2, -17),
+"rot": 294.0,
 "visible": true,
 "z_index": -2
 },
 "heal_1": {
-"flip_h": true,
+"flip_h": false,
 "flip_v": false,
-"pos": Vector2(-10, -27),
-"rot": 274.0,
+"pos": Vector2(2, -19),
+"rot": 294.0,
 "visible": true,
 "z_index": -2
 },

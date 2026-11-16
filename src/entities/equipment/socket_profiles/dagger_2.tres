@@ -98,8 +98,8 @@ hand_frames = {
 "heal_0": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(-8, -12),
-"rot": -225.0,
+"pos": Vector2(-11, -14),
+"rot": -231.0,
 "visible": true,
 "z_index": 1
 },
@@ -112,6 +112,14 @@ hand_frames = {
 "z_index": 1
 },
 "pickup_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-12, -14),
+"rot": -231.0,
+"visible": true,
+"z_index": 1
+},
+"heal_1": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(-12, -14),
