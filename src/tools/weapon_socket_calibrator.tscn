@@ -9,7 +9,8 @@ script = ExtResource("1_calibrator")
 selected_animation = "hurt"
 current_frame = 2
 reference_secondary_weapon = "none"
-socket_pos_y = -19.5
+socket_pos_x = -1.0
+socket_pos_y = -17.5
 socket_rotation = -45.0
 socket_z_index = 2
 status_message = "sword [Arma na Mão (MainHandSocket)] -> hurt Frame 2 (Z: 2, FlipH: false, FlipV: false)"
@@ -31,19 +32,19 @@ frame = 2
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
-z_index = -2
+z_index = -1
 z_as_relative = false
-position = Vector2(-9, -28)
-rotation = 4.6076694
+position = Vector2(-7, -33.5)
+rotation = -4.886922
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -2
-position = Vector2(-7, -33.5)
-rotation = -3.054326
+position = Vector2(-7, -29.5)
+rotation = -3.0543258
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(0, -19.5)
+position = Vector2(-1, -17.5)
 rotation = -0.7853982
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
