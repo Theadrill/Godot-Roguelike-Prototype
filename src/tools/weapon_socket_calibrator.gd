@@ -28,6 +28,10 @@ const SHIELD_SCENES: Dictionary = {
 	"shield_2": "res://src/entities/equipment/shields/shield_visual.tscn",
 }
 
+const TEA_BOTTLE_SCENE: String = "res://src/entities/equipment/items/tea_bottle_visual.tscn"
+const TEA_BOTTLE_PROFILE_PATH: String = "res://src/entities/equipment/socket_profiles/tea_bottle.tres"
+const TARGET_TEA_BOTTLE: String = "Garrafa de Chá (TeaBottleSocket)"
+
 const WEAPON_DATA_PATHS: Dictionary = {
 	"sword": "res://src/entities/equipment/swords/weapon_sword_base.tres",
 	"sword_2": "res://src/entities/equipment/swords/weapon_sword_base.tres",
@@ -92,7 +96,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 ## - Arma nas Costas: Ajusta a arma de reserva guardada nas costas.
 ## - Escudo na Mão: Ajusta o escudo erguido em posição de guarda/mão secundária.
 ## - Escudo nas Costas: Ajusta o escudo guardado nas costas.
-@export_enum("Arma na Mão (MainHandSocket)", "Arma nas Costas (BackSocketWeapon)", "Escudo na Mão (OffHandSocket)", "Escudo nas Costas (BackSocketShield)") var socket_target: String = "Arma na Mão (MainHandSocket)":
+@export_enum("Arma na Mão (MainHandSocket)", "Arma nas Costas (BackSocketWeapon)", "Escudo na Mão (OffHandSocket)", "Escudo nas Costas (BackSocketShield)", "Garrafa de Chá (TeaBottleSocket)") var socket_target: String = "Arma na Mão (MainHandSocket)":
 	set(value):
 		socket_target = value
 		_on_configuration_changed()
@@ -324,10 +328,12 @@ var socket_position: Vector2:
 @onready var off_hand_socket: Marker2D = $Visual/OffHandSocket
 @onready var back_socket_weapon: Marker2D = $Visual/BackSocketWeapon
 @onready var back_socket_shield: Marker2D = $Visual/BackSocketShield
+@onready var tea_bottle_socket: Marker2D = get_node_or_null("Visual/TeaBottleSocket") as Marker2D
 @onready var slash_effect: AnimatedSprite2D = get_node_or_null("Visual/SlashEffect") as AnimatedSprite2D
 
 var _weapon_profile_resource: WeaponSocketProfile = null
 var _shield_profile_resource: WeaponSocketProfile = null
+var _tea_bottle_profile_resource: WeaponSocketProfile = null
 var _ref_sec_weapon_profile: WeaponSocketProfile = null
 var _weapon_data_resource: WeaponData = null
 
@@ -335,6 +341,7 @@ var _main_hand_instance: Node2D = null
 var _off_hand_instance: Node2D = null
 var _back_weapon_instance: Node2D = null
 var _back_shield_instance: Node2D = null
+var _tea_bottle_instance: Node2D = null
 var _is_syncing_from_frame: bool = false
 var _is_syncing_slash: bool = false
 
@@ -377,6 +384,11 @@ func _load_resources() -> void:
 	else:
 		_ref_sec_weapon_profile = null
 
+	if ResourceLoader.exists(TEA_BOTTLE_PROFILE_PATH):
+		_tea_bottle_profile_resource = load(TEA_BOTTLE_PROFILE_PATH) as WeaponSocketProfile
+	else:
+		_tea_bottle_profile_resource = null
+
 func _get_active_marker() -> Marker2D:
 	if socket_target == "Arma na Mão (MainHandSocket)":
 		if not main_hand_socket:
@@ -394,6 +406,10 @@ func _get_active_marker() -> Marker2D:
 		if not back_socket_shield:
 			back_socket_shield = get_node_or_null("Visual/BackSocketShield") as Marker2D
 		return back_socket_shield
+	elif socket_target == TARGET_TEA_BOTTLE:
+		if not tea_bottle_socket:
+			tea_bottle_socket = get_node_or_null("Visual/TeaBottleSocket") as Marker2D
+		return tea_bottle_socket
 	return null
 
 func _get_active_visual_instance() -> Node2D:
@@ -405,6 +421,8 @@ func _get_active_visual_instance() -> Node2D:
 		return _off_hand_instance
 	elif socket_target == "Escudo nas Costas (BackSocketShield)":
 		return _back_shield_instance
+	elif socket_target == TARGET_TEA_BOTTLE:
+		return _tea_bottle_instance
 	return null
 
 func _update_visual_instances() -> void:
@@ -412,6 +430,7 @@ func _update_visual_instances() -> void:
 	var hand_s := _get_node_safe("Visual/OffHandSocket") as Marker2D
 	var back_w := _get_node_safe("Visual/BackSocketWeapon") as Marker2D
 	var back_s := _get_node_safe("Visual/BackSocketShield") as Marker2D
+	var tea_s := _get_node_safe("Visual/TeaBottleSocket") as Marker2D
 
 	# Limpa instâncias anteriores
 	if hand_w:
@@ -426,6 +445,9 @@ func _update_visual_instances() -> void:
 	if back_s:
 		for c in back_s.get_children(): c.queue_free()
 		_back_shield_instance = null
+	if tea_s:
+		for c in tea_s.get_children(): c.queue_free()
+		_tea_bottle_instance = null
 
 	# 1. Arma na mão principal (sempre aparece, exceto se desativada)
 	if hand_w and selected_weapon != "none":
@@ -476,6 +498,17 @@ func _update_visual_instances() -> void:
 				_back_shield_instance.position = Vector2.ZERO
 				_back_shield_instance.rotation_degrees = 0.0
 				_back_shield_instance.z_index = 0
+
+	# 5. Garrafa de Chá (aparece quando selecionada OU durante a animação "heal")
+	var should_show_tea_bottle := (socket_target == TARGET_TEA_BOTTLE) or (selected_animation == "heal")
+	if tea_s and should_show_tea_bottle and ResourceLoader.exists(TEA_BOTTLE_SCENE):
+		var tb_scene := load(TEA_BOTTLE_SCENE) as PackedScene
+		if tb_scene:
+			_tea_bottle_instance = tb_scene.instantiate() as Node2D
+			tea_s.add_child(_tea_bottle_instance)
+			_tea_bottle_instance.position = Vector2.ZERO
+			_tea_bottle_instance.rotation_degrees = 0.0
+			_tea_bottle_instance.z_index = 0
 
 func _get_node_safe(path: String) -> Node:
 	return get_node_or_null(path)
@@ -533,6 +566,7 @@ func _on_frame_changed() -> void:
 	var hand_s := _get_node_safe("Visual/OffHandSocket") as Marker2D
 	var back_w := _get_node_safe("Visual/BackSocketWeapon") as Marker2D
 	var back_s := _get_node_safe("Visual/BackSocketShield") as Marker2D
+	var tea_s := _get_node_safe("Visual/TeaBottleSocket") as Marker2D
 
 	# 2. Posição da Arma na Mão Principal (Tudo na mão = 2)
 	if hand_w and _weapon_profile_resource and _weapon_profile_resource.has_method("get_frame_data"):
@@ -580,6 +614,19 @@ func _on_frame_changed() -> void:
 			_back_shield_instance.visible = bs_data.get("visible", true)
 			_apply_visual_flip(_back_shield_instance, bs_data.get("flip_h", false), bs_data.get("flip_v", false))
 
+	# 6. Posição da Garrafa de Chá (TeaBottleSocket)
+	if tea_s and _tea_bottle_profile_resource and _tea_bottle_profile_resource.has_method("get_frame_data"):
+		var tb_data: Dictionary = _tea_bottle_profile_resource.get_frame_data(selected_animation, current_frame)
+		tea_s.position = tb_data.get("pos", Vector2(10, -24))
+		tea_s.rotation_degrees = tb_data.get("rot", 0.0)
+		tea_s.z_index = tb_data.get("z_index", 3)
+		if _tea_bottle_instance and is_instance_valid(_tea_bottle_instance):
+			_tea_bottle_instance.visible = tb_data.get("visible", true)
+			_apply_visual_flip(_tea_bottle_instance, tb_data.get("flip_h", false), tb_data.get("flip_v", false))
+			var tb_sprite := _tea_bottle_instance.get_node_or_null("Sprite2D") as Sprite2D
+			if tb_sprite:
+				tb_sprite.frame = clampi(current_frame, 0, 1)
+
 	# 6. Atualiza os inputs do Inspector para o alvo ativo
 	_is_syncing_from_frame = true
 	var active_marker := _get_active_marker()
@@ -626,6 +673,8 @@ func _apply_active_visual_flip() -> void:
 		_apply_visual_flip(vis, socket_flip_h, socket_flip_v)
 
 func _get_active_item_name() -> String:
+	if socket_target == TARGET_TEA_BOTTLE:
+		return "tea_bottle"
 	if "Arma" in socket_target:
 		return selected_weapon
 	return selected_shield
@@ -1026,8 +1075,22 @@ func save_current_frame_data() -> void:
 		var err := ResourceSaver.save(_shield_profile_resource, "res://src/entities/equipment/socket_profiles/%s.tres" % selected_shield)
 		_report_save_status(err, "%s.tres (Escudo nas Costas)" % selected_shield)
 
+	elif socket_target == TARGET_TEA_BOTTLE:
+		if not _tea_bottle_profile_resource:
+			status_message = "ERRO: Perfil tea_bottle.tres não encontrado!"
+			return
+		_tea_bottle_profile_resource.set("%s_%d_pos" % [selected_animation, current_frame], socket_position)
+		_tea_bottle_profile_resource.set("%s_%d_rot" % [selected_animation, current_frame], socket_rotation)
+		_tea_bottle_profile_resource.set("%s_%d_visible" % [selected_animation, current_frame], item_visible_in_frame)
+		if _tea_bottle_profile_resource.has_method("set_hand_custom_data"):
+			_tea_bottle_profile_resource.set_hand_custom_data(selected_animation, current_frame, socket_z_index, socket_flip_h, socket_flip_v, socket_position, socket_rotation, item_visible_in_frame)
+		elif _tea_bottle_profile_resource.has_method("set_hand_z_index"):
+			_tea_bottle_profile_resource.set_hand_z_index(selected_animation, current_frame, socket_z_index)
+		var err := ResourceSaver.save(_tea_bottle_profile_resource, TEA_BOTTLE_PROFILE_PATH)
+		_report_save_status(err, "tea_bottle.tres (Garrafa de Chá)")
+
 func _prompt_apply_to_current_animation() -> void:
-	var item_name: String = selected_weapon if "Arma" in socket_target else selected_shield
+	var item_name: String = _get_active_item_name()
 	var count: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4)
 	var dlg := ConfirmationDialog.new()
 	dlg.title = "Confirmar: Apply to Current Animation"
@@ -1057,15 +1120,21 @@ func _prompt_apply_to_current_animation() -> void:
 
 func apply_to_current_animation() -> void:
 	_load_resources()
-	var prof: WeaponSocketProfile = _weapon_profile_resource if "Arma" in socket_target else _shield_profile_resource
-	var item_name: String = selected_weapon if "Arma" in socket_target else selected_shield
+	var prof: WeaponSocketProfile
+	var item_name: String = _get_active_item_name()
+	if socket_target == TARGET_TEA_BOTTLE:
+		prof = _tea_bottle_profile_resource
+	elif "Arma" in socket_target:
+		prof = _weapon_profile_resource
+	else:
+		prof = _shield_profile_resource
 	if not prof:
 		status_message = "ERRO: Perfil %s não encontrado!" % item_name
 		return
 
 	var count: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4)
 
-	if socket_target == "Arma na Mão (MainHandSocket)" or socket_target == "Escudo na Mão (OffHandSocket)":
+	if socket_target == "Arma na Mão (MainHandSocket)" or socket_target == "Escudo na Mão (OffHandSocket)" or socket_target == TARGET_TEA_BOTTLE:
 		for f in range(count):
 			prof.set("%s_%d_pos" % [selected_animation, f], socket_position)
 			prof.set("%s_%d_rot" % [selected_animation, f], socket_rotation)

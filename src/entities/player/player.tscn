@@ -110,6 +110,10 @@ rotation = -0.610865
 z_index = -1
 position = Vector2(7, -19)
 
+[node name="TeaBottleSocket" type="Marker2D" parent="Visual" unique_id=1685837079]
+z_index = 3
+position = Vector2(10, -24)
+
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1468099375]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("24_player_frames")

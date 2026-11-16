@@ -5,15 +5,19 @@ extends State
 ## Canalização estacionária de 0.55s com telegraph diegético esmeralda.
 ## Se interrompido por dano inimigo, a cura falha mas a carga é preservada (padrão Nine Sols).
 
+const EMPTY_PREVIEW_DURATION: float = 0.4
+
 var player: Player
 var channel_timer: float = 0.0
 var is_channeling: bool = false
+var is_empty_preview: bool = false
 var original_body_color: Color = Color(0.85, 0.72, 0.52, 1.0)
 
 func enter() -> void:
 	player = character as Player
 	channel_timer = 0.0
 	is_channeling = false
+	is_empty_preview = false
 	
 	if not player:
 		state_machine.transition_to("idle")
@@ -26,16 +30,23 @@ func enter() -> void:
 		state_machine.transition_to("fall")
 		return
 
-	# Se não tiver cargas de chá: não canaliza, dispara bark apenas se o anterior tiver se dissipado completamente
-	if player.current_flask_charges <= 0:
+	# Se não tiver cargas de chá: mostra pose de pegar (heal frame 0 + socket heal_0) com garrafa vazia (frame 2) e bark aleatório
+	if not player.debug_infinite_heal and player.current_flask_charges <= 0:
 		if not player.is_bark_active():
 			var bark_text: String = LocalizationService.get_random_variant("BARK_TEA_EMPTY", 4)
 			player.show_bark(bark_text)
-		state_machine.transition_to("idle")
+		is_empty_preview = true
+		player.velocity.x = 0.0
+		player.tea_bottle_frame_override = 2
+		player.play_animation(&"heal")
+		if player.player_sprite:
+			player.player_sprite.pause()
+			player.player_sprite.frame = 0
+			player._update_weapon_socket_for_frame(&"heal", 0)
 		return
 	
-	# Se a vida já estiver cheia (100%), não gasta o chá
-	if player.current_health >= player.max_health:
+	# Se a vida já estiver cheia (100%), não gasta o chá (liberado em modo debug)
+	if not player.debug_infinite_heal and player.current_health >= player.max_health:
 		state_machine.transition_to("idle")
 		return
 
@@ -53,21 +64,37 @@ func enter() -> void:
 func exit() -> void:
 	if is_channeling and player:
 		ProgressionManager.apply_skin_to_player(player)
-	if player and player.player_sprite:
-		player.player_sprite.modulate = Color.WHITE
+	if player:
+		player.tea_bottle_frame_override = -1
+		if player.player_sprite:
+			player.player_sprite.modulate = Color.WHITE
 	is_channeling = false
+	is_empty_preview = false
 
 func handle_incoming_hit(_damage: float, _knockback: Vector2, _hitstop: float, _incoming_hitbox: Hitbox) -> bool:
 	# Padrão Nine Sols: interrompe a canalização imediatamente, preservando a carga intacta
 	if is_channeling and player:
 		ProgressionManager.apply_skin_to_player(player)
-	if player and player.player_sprite:
-		player.player_sprite.modulate = Color.WHITE
+	if player:
+		player.tea_bottle_frame_override = -1
+		if player.player_sprite:
+			player.player_sprite.modulate = Color.WHITE
 	is_channeling = false
+	is_empty_preview = false
 	state_machine.transition_to("idle")
 	return false # Deixa o dano, recuo e hitstop serem processados normalmente pelo player
 
 func physics_update(delta: float) -> void:
+	if is_empty_preview:
+		if not player.is_on_floor():
+			state_machine.transition_to("fall")
+			return
+		player.velocity.x = 0.0
+		channel_timer += delta
+		if channel_timer >= EMPTY_PREVIEW_DURATION:
+			state_machine.transition_to("idle")
+		return
+
 	if not is_channeling:
 		return
 		
@@ -96,8 +123,9 @@ func physics_update(delta: float) -> void:
 		_complete_heal()
 
 func _complete_heal() -> void:
-	if player.current_flask_charges > 0:
-		player.current_flask_charges -= 1
+	if player.debug_infinite_heal or player.current_flask_charges > 0:
+		if not player.debug_infinite_heal:
+			player.current_flask_charges -= 1
 		var heal_amount: float = player.max_health * player.flask_heal_percent * ProgressionManager.get_tea_heal_multiplier()
 		player.current_health = minf(player.current_health + heal_amount, player.max_health)
 		player.emit_signal("flask_charges_changed", player.current_flask_charges, player.max_flask_charges)

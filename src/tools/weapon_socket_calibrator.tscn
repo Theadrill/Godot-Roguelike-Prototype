@@ -52,6 +52,10 @@ z_index = 2
 position = Vector2(6, -20)
 rotation = -0.61086524
 
+[node name="TeaBottleSocket" type="Marker2D" parent="Visual" unique_id=1498765432]
+z_index = 3
+position = Vector2(10, -24)
+
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
 visible = false
 z_index = 4

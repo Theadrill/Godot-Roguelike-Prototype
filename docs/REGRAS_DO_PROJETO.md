@@ -46,7 +46,7 @@
   * **`.agents/skills/procedural-level-design`**: Para o algoritmo de grafos, macro-padrões e conexão de chunks.
   * **`.agents/skills/gaming-ui-ux`**: Para HUD diegética, barra de bosses e acessibilidade a gamepads.
   * **`.agents/skills/game-audio-juice`**: Para vibração tátil no gamepad, shaders de hit-flash e efeitos de impacto.
-  * **`.agents/skills/godot-debugging`**: Para validação headless CLI (`godot --headless --check-only`), detecção de memory leaks e testes.
+  * **`.agents/skills/godot-debugging`**: Para validação headless CLI (`godot_console --headless --editor --quit --path .`), detecção de memory leaks e testes.
 
 ---
 
@@ -70,14 +70,18 @@ Todos os assets visuais (protagonista, inimigos, armas, cenários e NPCs) devem 
 ## 4. Engenharia, Validação e Autonomia
 
 ### Regra 7: Autonomia de Processo e Ferramental
-* O agente tem acesso total ao terminal Windows e ao executável da Godot (`C:\tools\godot\godot.exe`).
+* O agente tem acesso total ao terminal Windows e aos executáveis da Godot (`C:\tools\godot\godot_console.exe` para CLI/logs e `C:\tools\godot\godot.exe` para GUI).
 * **PROIBIDO pedir para o usuário fechar janelas ou copiar/colar logs de erro.** O agente inspeciona logs, processos e saídas de terminal proativamente.
 
 ### Regra 8: Validação Limpa Obrigatória (Headless CLI)
-* Antes de entregar qualquer código ou cena para o PO testar, o agente deve rodar a checagem headless da Godot via terminal:
+* Antes de entregar qualquer código ou cena para o PO testar, o agente deve rodar **exclusivamente** a checagem headless via binário de console carregando o editor:
   ```powershell
-  godot --headless --check-only --path .
+  godot_console --headless --editor --quit --path . 2>&1
   ```
+* **Por que este é o único jeito confiável de pegar erros no Windows:**
+  1. `godot_console` (`godot_console.exe`) imprime `stdout`/`stderr` reais no terminal; o binário GUI (`godot.exe` / `godot`) descarta silenciosamente toda a saída de erro no Windows.
+  2. `--editor --quit` carrega o projeto completo (autoloads, plugins `@tool`, recursos e cenas), detectando `SCRIPT ERROR`, `Parse Error` e dependências quebradas que `--check-only` sem `--script` ignora.
+* **NUNCA usar o comando antigo (`godot --headless --check-only --path .`)**, pois ele retorna saída `0` vazia mesmo com erros de compilação ou parse nos scripts.
 * Nenhuma cena com dependência quebrada, script com erro de sintaxe ou referência nula pode ser passada para teste do PO.
 
 ### Regra 9: Princípio da Reutilização & Modularidade Radical (DRY First)

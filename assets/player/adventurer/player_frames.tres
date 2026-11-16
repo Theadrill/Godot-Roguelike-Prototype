@@ -294,6 +294,14 @@ region = Rect2(0, 62, 83, 62)
 atlas = ExtResource("3_jump_sheet")
 region = Rect2(0, 62, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_pickup_0"]
+atlas = ExtResource("21_pickup_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pickup_1"]
+atlas = ExtResource("21_pickup_sheet")
+region = Rect2(0, 62, 83, 62)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
 atlas = ExtResource("1_idle_sheet")
 region = Rect2(0, 0, 83, 62)
@@ -321,14 +329,6 @@ region = Rect2(83, 0, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_jump_3"]
 atlas = ExtResource("3_jump_sheet")
 region = Rect2(83, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pickup_0"]
-atlas = ExtResource("21_pickup_sheet")
-region = Rect2(0, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pickup_1"]
-atlas = ExtResource("21_pickup_sheet")
-region = Rect2(0, 62, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pickup_2"]
 atlas = ExtResource("21_pickup_sheet")
@@ -672,6 +672,17 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_pickup_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pickup_1")
+}],
+"loop": 0,
+"name": &"heal",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_idle_0")
 }, {
 "duration": 1.0,
@@ -703,17 +714,6 @@ animations = [{
 "loop": 0,
 "name": &"jump",
 "speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pickup_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pickup_1")
-}],
-"loop": 0,
-"name": &"heal",
-"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
