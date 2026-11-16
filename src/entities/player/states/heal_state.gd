@@ -91,7 +91,7 @@ func physics_update(delta: float) -> void:
 			return
 		player.velocity.x = 0.0
 		channel_timer += delta
-		if channel_timer >= EMPTY_PREVIEW_DURATION:
+		if not Input.is_action_pressed("heal") and channel_timer >= EMPTY_PREVIEW_DURATION:
 			state_machine.transition_to("idle")
 		return
 
