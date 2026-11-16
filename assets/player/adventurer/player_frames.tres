@@ -21,7 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://ndiinsu6wojx" path="res://assets/player/adventurer/bow/player_bow_sheet.png" id="19_bow_sheet"]
 [ext_resource type="Texture2D" uid="uid://brqlvi8aenv04" path="res://assets/player/adventurer/bow/player_bow_air_sheet.png" id="20_bow_air_sheet"]
 [ext_resource type="Texture2D" uid="uid://c78gtdtrn44d" path="res://assets/player/adventurer/pickup/player_pickup_sheet.png" id="21_pickup_sheet"]
-[ext_resource type="Texture2D" path="res://assets/player/adventurer/hurt/player_hurt_sheet.png" id="22_hurt_sheet"]
+[ext_resource type="Texture2D" uid="uid://oiwx4fdmqw6d" path="res://assets/player/adventurer/hurt/player_hurt_sheet.png" id="22_hurt_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_1"]
 atlas = ExtResource("17_air_attack1_sheet")
@@ -303,6 +303,18 @@ region = Rect2(0, 0, 83, 62)
 atlas = ExtResource("21_pickup_sheet")
 region = Rect2(83, 0, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_hurt_0"]
+atlas = ExtResource("22_hurt_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hurt_1"]
+atlas = ExtResource("22_hurt_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hurt_2"]
+atlas = ExtResource("22_hurt_sheet")
+region = Rect2(0, 124, 83, 62)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
 atlas = ExtResource("1_idle_sheet")
 region = Rect2(0, 0, 83, 62)
@@ -338,18 +350,6 @@ region = Rect2(83, 62, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_pickup_2"]
 atlas = ExtResource("21_pickup_sheet")
 region = Rect2(0, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hurt_0"]
-atlas = ExtResource("22_hurt_sheet")
-region = Rect2(0, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hurt_1"]
-atlas = ExtResource("22_hurt_sheet")
-region = Rect2(0, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hurt_2"]
-atlas = ExtResource("22_hurt_sheet")
-region = Rect2(0, 124, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_run_0"]
 atlas = ExtResource("2_run_sheet")
@@ -700,6 +700,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_hurt_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hurt_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hurt_2")
+}],
+"loop": 0,
+"name": &"hurt",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_idle_0")
 }, {
 "duration": 1.0,
@@ -795,20 +809,6 @@ animations = [{
 "loop": 1,
 "name": &"wall_cling",
 "speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hurt_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hurt_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hurt_2")
-}],
-"loop": 0,
-"name": &"hurt",
-"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,

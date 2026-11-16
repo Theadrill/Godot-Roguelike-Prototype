@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cjijcwt58gu71"]
 
-[ext_resource type="PackedScene" path="res://src/entities/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://dmbfvuchogv7a" path="res://src/entities/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://c7kd6yq7h3dum" path="res://src/entities/dummy/combat_dummy.tscn" id="2_dummy"]
 [ext_resource type="PackedScene" uid="uid://dvfocnygtgl7k" path="res://src/entities/enemies/melee/soldier/soldier.tscn" id="3_soldier"]
 [ext_resource type="PackedScene" uid="uid://bpn67vaqb16p5" path="res://src/entities/enemies/ranged/archer/archer.tscn" id="4_archer"]
@@ -231,7 +231,8 @@ position = Vector2(472, 176)
 position = Vector2(960, 289)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
-position = Vector2(1023, 289)
+position = Vector2(-61, 288)
+max_health = 99999.0
 run_speed = 150.0
 wall_recovery_gravity_multiplier = 0.5
 slide_speed = 170.0

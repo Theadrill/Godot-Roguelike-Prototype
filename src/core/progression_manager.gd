@@ -372,7 +372,7 @@ func apply_to_player(player: CharacterBody2D) -> void:
 		return
 
 	# 1. Bônus de Vida da Linhagem (Chá de Raiz-de-Pedra)
-	var base_hp: float = 100.0
+	var base_hp: float = player.max_health if player.max_health >= 1000.0 else 100.0
 	player.max_health = base_hp + get_bonus_max_hp()
 	player.current_health = player.max_health
 
