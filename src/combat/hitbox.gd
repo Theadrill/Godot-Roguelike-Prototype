@@ -17,6 +17,10 @@ enum AttackCategory {
 @export var rumble_strong: float = 0.7
 @export var rumble_duration: float = 0.08
 @export var combo_step: int = 1
+## Duração (em segundos) do atordoamento (hurt/stagger) aplicado ao herói ao acertar este golpe.
+## 0.0 = sem trava de movimento (exceto golpes PERILOUS, que usam fallback padrão).
+## Valores > 0.0 tocam a animação 'hurt' e seguram o último frame até o tempo acabar.
+@export_range(0.0, 2.0, 0.05, "suffix:s") var stagger_duration: float = 0.0
 
 signal hit_landed(hurtbox: Hurtbox)
 

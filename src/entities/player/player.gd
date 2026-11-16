@@ -99,6 +99,9 @@ var fall_peak_y: float = 0.0
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
+@export_range(0.0, 2.0, 0.05, "suffix:s") var post_hit_invuln_duration: float = 0.45
+var post_hit_invuln_timer: float = 0.0
+var is_dodge_invulnerable: bool = false
 var attack_cooldown_timer: float = 0.0
 var parry_cooldown_timer: float = 0.0
 var ledge_target_position: Vector2 = Vector2.ZERO
@@ -712,6 +715,18 @@ func _physics_process(delta: float) -> void:
 		if flash_timer <= 0.0 and flash_material:
 			flash_material.set_shader_parameter("flash_active", false)
 
+	# Post-hit invulnerability frames (i-frames) + blink feedback
+	if post_hit_invuln_timer > 0.0:
+		post_hit_invuln_timer = maxf(0.0, post_hit_invuln_timer - delta)
+		if visual:
+			if post_hit_invuln_timer > 0.0:
+				var blink_on: bool = int(floor(post_hit_invuln_timer * 20.0)) % 2 == 0
+				visual.modulate.a = 0.45 if blink_on else 1.0
+			else:
+				visual.modulate.a = 1.0
+		if post_hit_invuln_timer <= 0.0:
+			_refresh_invulnerability()
+
 	# Attack cadence cooldown timer
 	if attack_cooldown_timer > 0.0:
 		attack_cooldown_timer = max(0.0, attack_cooldown_timer - delta)
@@ -888,13 +903,31 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	# Tactile juice: Gamepad rumble & hitstop
 	CombatFeedback.apply_hit_feedback(hitstop, 0.4, 0.7, 0.12)
 
-	# Perilous (Red) Attack hit in neutral:
-	# Triggers fast stun in crouched animation (0.22s) if no parry attempt,
-	# or longer stun (0.55s) if player recently failed a parry.
-	# Yellow attacks: DO NOT STUN.
-	if incoming_hitbox and incoming_hitbox.attack_category == Hitbox.AttackCategory.PERILOUS:
-		var stun_time: float = 0.55 if parry_cooldown_timer > 0.0 else 0.22
+	# Post-hit i-frames to prevent unfair stunlock/juggling
+	if post_hit_invuln_duration > 0.0:
+		post_hit_invuln_timer = post_hit_invuln_duration
+		_refresh_invulnerability()
+
+	# Stagger / Hurt animation with Last-Frame Hold:
+	# Uses Hitbox.stagger_duration if > 0.0; PERILOUS attacks fall back to 0.45s (or 0.65s after failed parry).
+	var stun_time: float = 0.0
+	if incoming_hitbox:
+		if incoming_hitbox.stagger_duration > 0.0:
+			stun_time = incoming_hitbox.stagger_duration
+			if incoming_hitbox.attack_category == Hitbox.AttackCategory.PERILOUS and parry_cooldown_timer > 0.0:
+				stun_time = maxf(stun_time, 0.65)
+		elif incoming_hitbox.attack_category == Hitbox.AttackCategory.PERILOUS:
+			stun_time = 0.65 if parry_cooldown_timer > 0.0 else 0.45
+	if stun_time > 0.0:
 		trigger_stagger(stun_time)
+
+func set_dodge_invulnerable(active: bool) -> void:
+	is_dodge_invulnerable = active
+	_refresh_invulnerability()
+
+func _refresh_invulnerability() -> void:
+	if hurtbox:
+		hurtbox.is_invulnerable = is_dodge_invulnerable or post_hit_invuln_timer > 0.0
 
 func trigger_stagger(custom_duration: float) -> void:
 	var stagger := state_machine.get_node_or_null("Stagger") as StaggerState

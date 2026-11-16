@@ -16,8 +16,7 @@ func enter() -> void:
 	_set_crouched(true)
 
 	# Full invulnerability (i-frames) during slide
-	if player.hurtbox:
-		player.hurtbox.is_invulnerable = true
+	player.set_dodge_invulnerable(true)
 
 	player.velocity.x = slide_direction * player.slide_speed
 	if player.is_on_floor():
@@ -26,8 +25,7 @@ func enter() -> void:
 func exit() -> void:
 	_set_crouched(false)
 	player.stop_animation()
-	if player.hurtbox:
-		player.hurtbox.is_invulnerable = false
+	player.set_dodge_invulnerable(false)
 	if player.has_meta("mod_folha_de_fogo") and player.get_meta("mod_folha_de_fogo"):
 		player.set_meta("has_post_roll_buff", true)
 
