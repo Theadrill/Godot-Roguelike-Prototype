@@ -99,7 +99,10 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 9
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
 @export_range(0.0, 2.0, 0.05, "suffix:s") var post_hit_invuln_duration: float = 0.45
+@export_range(0.0, 0.5, 0.01, "suffix:s") var hurt_flinch_duration: float = 0.14
 var post_hit_invuln_timer: float = 0.0
+var hurt_flinch_timer: float = 0.0
+var _pending_anim_after_flinch: StringName = &""
 var is_dodge_invulnerable: bool = false
 var attack_cooldown_timer: float = 0.0
 var parry_cooldown_timer: float = 0.0
@@ -432,6 +435,12 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 func play_animation(anim_name: StringName) -> void:
 	if not player_sprite:
 		return
+	if hurt_flinch_timer > 0.0:
+		if anim_name in [&"idle", &"run", &"fall", &"fall_from_jump", &"crouch", &"wall_cling", &"wall_slide"]:
+			_pending_anim_after_flinch = anim_name
+			return
+		hurt_flinch_timer = 0.0
+		_pending_anim_after_flinch = &""
 	player_sprite.visible = true
 	if body_polygon:
 		body_polygon.visible = false
@@ -726,6 +735,14 @@ func _physics_process(delta: float) -> void:
 		if post_hit_invuln_timer <= 0.0:
 			_refresh_invulnerability()
 
+	# Quick visual flinch on light hits (hurt frame 0 without stagger lock)
+	if hurt_flinch_timer > 0.0:
+		hurt_flinch_timer = maxf(0.0, hurt_flinch_timer - delta)
+		if hurt_flinch_timer <= 0.0 and _pending_anim_after_flinch != &"":
+			var next_anim := _pending_anim_after_flinch
+			_pending_anim_after_flinch = &""
+			play_animation(next_anim)
+
 	# Attack cadence cooldown timer
 	if attack_cooldown_timer > 0.0:
 		attack_cooldown_timer = max(0.0, attack_cooldown_timer - delta)
@@ -918,7 +935,20 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 		elif incoming_hitbox.attack_category == Hitbox.AttackCategory.PERILOUS:
 			stun_time = 0.65 if parry_cooldown_timer > 0.0 else 0.45
 	if stun_time > 0.0:
+		hurt_flinch_timer = 0.0
+		_pending_anim_after_flinch = &""
 		trigger_stagger(stun_time)
+	elif hurt_flinch_duration > 0.0:
+		var state_name: String = String(state_machine.current_state.name) if (state_machine and state_machine.current_state) else ""
+		if state_name in ["Idle", "Run", "Fall", "Jump", "DoubleJump", "Crouch", "WallSlide"]:
+			_pending_anim_after_flinch = player_sprite.animation if player_sprite else &"idle"
+			hurt_flinch_timer = hurt_flinch_duration
+			if player_sprite and player_sprite.sprite_frames and player_sprite.sprite_frames.has_animation(&"hurt"):
+				player_sprite.position = Vector2(-2, -29)
+				player_sprite.animation = &"hurt"
+				player_sprite.pause()
+				player_sprite.frame = 0
+				_update_weapon_socket_for_frame(&"hurt", 0)
 
 func set_dodge_invulnerable(active: bool) -> void:
 	is_dodge_invulnerable = active
