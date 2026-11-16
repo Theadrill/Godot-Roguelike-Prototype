@@ -39,22 +39,30 @@ func enter() -> void:
 		state_machine.transition_to("idle")
 		return
 
-	# Inicia canalização estacionária
+	# Inicia canalização estacionária com animação heal (frames 0 -> 1)
 	is_channeling = true
 	player.velocity.x = 0.0
-	
+	player.play_animation(&"heal")
+	if player.player_sprite:
+		player.player_sprite.pause()
+		player.player_sprite.frame = 0
+		player._update_weapon_socket_for_frame(&"heal", 0)
 	if player.body_polygon:
 		player.body_polygon.color = Color(0.2, 0.95, 0.5, 1.0)
 
 func exit() -> void:
 	if is_channeling and player:
 		ProgressionManager.apply_skin_to_player(player)
+	if player and player.player_sprite:
+		player.player_sprite.modulate = Color.WHITE
 	is_channeling = false
 
 func handle_incoming_hit(_damage: float, _knockback: Vector2, _hitstop: float, _incoming_hitbox: Hitbox) -> bool:
 	# Padrão Nine Sols: interrompe a canalização imediatamente, preservando a carga intacta
 	if is_channeling and player:
 		ProgressionManager.apply_skin_to_player(player)
+	if player and player.player_sprite:
+		player.player_sprite.modulate = Color.WHITE
 	is_channeling = false
 	state_machine.transition_to("idle")
 	return false # Deixa o dano, recuo e hitstop serem processados normalmente pelo player
@@ -70,10 +78,18 @@ func physics_update(delta: float) -> void:
 	# Trava pés no chão
 	player.velocity.x = 0.0
 	channel_timer += delta
+
+	# Transição frame 0 -> frame 1 (bebendo o chá da mãe)
+	var target_frame: int = 1 if channel_timer >= (player.flask_channel_duration * 0.35) else 0
+	if player.player_sprite and player.player_sprite.frame != target_frame:
+		player.player_sprite.frame = target_frame
+		player._update_weapon_socket_for_frame(&"heal", target_frame)
 	
-	# Pulso visual esmeralda diegético no tronco durante a canalização
+	# Pulso visual esmeralda diegético durante a canalização
+	var pulse: float = (sin(channel_timer * 20.0) + 1.0) * 0.5
+	if player.player_sprite and player.player_sprite.visible:
+		player.player_sprite.modulate = Color.WHITE.lerp(Color(0.55, 1.0, 0.72, 1.0), 0.35 + pulse * 0.45)
 	if player.body_polygon:
-		var pulse: float = (sin(channel_timer * 20.0) + 1.0) * 0.5
 		player.body_polygon.color = original_body_color.lerp(Color(0.2, 0.95, 0.5, 1.0), 0.5 + pulse * 0.5)
 	
 	if channel_timer >= player.flask_channel_duration:

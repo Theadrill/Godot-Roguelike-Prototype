@@ -10,8 +10,6 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 
 - [ ] **`Stagger` / Tomar Stun ou Guard Break (`src/entities/player/states/stagger_state.gd`):**
   - Chama apenas `player.set_crouched(true)` sem `play_animation()`, exibindo o retângulo placeholder achatado quando leva ataque vermelho ou quebra de guarda. Falta sprite de `hurt` / `stagger`.
-- [ ] **`Heal` / Tomar o Chá da Mãe (`src/entities/player/states/heal_state.gd`):**
-  - Não chama `play_animation()` e pisca a cor verde em `player.body_polygon`. Falta sprite dedicado de beber chá/poção.
 - [ ] **`RangedAttack` com Besta no Chão (`crossbow_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
   - Falta sprite e animação dedicada para o **disparo com Besta (`Crossbow`) no chão**.
 - [ ] **`RangedAttack` com Besta no Ar (`crossbow_air_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
@@ -42,6 +40,8 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`WallSlide`** (`wall_cling` — 1 frame + `wall_slide` — 2 frames)
 - [x] **`LedgeClimb`** (`corner_climb` — 5 frames)
 - [x] **`Guard` / Escudo** (`block` — 3 frames + `block_loop` — 2 frames)
+- [x] **`Pickup` / Pegar Item** (`pickup` — frames `0, 2` do sheet 3-frames 83x62, armas guardadas nas costas/cintura)
+- [x] **`Heal` / Tomar o Chá da Mãe** (`heal` — frames `0, 1` do sheet 3-frames 83x62, armas guardadas nas costas/cintura com pulso esmeralda)
 - [x] **`RangedAttack` (Magia/Cajado)** (`channeling` — 2 frames + `cast` — 4 frames)
 - [x] **`RangedAttack` (Arco / Chão)** (`bow_attack` — 7 frames com cadência contínua ciclando do frame 3 ao 6 ao segurar o botão, disparo no penúltimo frame e trava de movimento no chão estilo Dead Cells)
 - [x] **`RangedAttack` (Arco / Ar)** (`bow_air_attack` — 6 frames no grid 83x62, puxada 0..3, disparo no penúltimo frame 4 e recuperação no frame 5)

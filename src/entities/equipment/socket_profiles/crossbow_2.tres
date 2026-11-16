@@ -69,3 +69,67 @@ corner_climb_1_pos = Vector2(9, -34)
 corner_climb_2_pos = Vector2(12, -39)
 corner_climb_3_pos = Vector2(13, -42)
 corner_climb_4_pos = Vector2(14, -42)
+back_frames = {
+"heal_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-6, -14),
+"rot": -175.0,
+"visible": true,
+"z_index": -2
+},
+"heal_1": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-7, -14),
+"rot": -175.0,
+"visible": true,
+"z_index": -2
+}
+}
+
+hand_frames = {
+"heal_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-3, -12),
+"rot": -169.0,
+"visible": true,
+"z_index": -2
+},
+"pickup_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-6, -14),
+"rot": -175.0,
+"visible": true,
+"z_index": -2
+},
+"pickup_1": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-7, -14),
+"rot": -175.0,
+"visible": true,
+"z_index": -2
+}
+}
+
+hand_frames = {
+"pickup_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-3, -12),
+"rot": -169.0,
+"visible": true,
+"z_index": -2
+},
+"pickup_1": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-4, -12),
+"rot": -169.0,
+"visible": true,
+"z_index": -2
+}
+}

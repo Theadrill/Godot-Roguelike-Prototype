@@ -93,3 +93,4 @@ UI_PAUSE_RESUME,Continuar,Resume
 UI_PAUSE_DEV_MENU,"Painel DEV & Métricas","DEV & Metrics Panel"
 UI_PAUSE_SAVE_QUIT,"Salvar e Sair","Save & Quit"
 UI_PAUSE_RESTART,"Recarregar do Zero","Restart from Scratch"
+UI_PICKUP_PROMPT,"[E] Pegar","[E] Pick up"

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dvfocnygtgl7k" path="res://src/entities/enemies/melee/soldier/soldier.tscn" id="3_soldier"]
 [ext_resource type="PackedScene" uid="uid://bpn67vaqb16p5" path="res://src/entities/enemies/ranged/archer/archer.tscn" id="4_archer"]
 [ext_resource type="Script" uid="uid://bu341gq4akkm8" path="res://src/core/game_camera.gd" id="5_camera"]
+[ext_resource type="PackedScene" path="res://src/world/items/pickup_item.tscn" id="6_pickup_item"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
 size = Vector2(700, 72)
@@ -225,6 +226,9 @@ tier_2_behavior = 1
 
 [node name="Archer" parent="." unique_id=1638382328 instance=ExtResource("4_archer")]
 position = Vector2(472, 176)
+
+[node name="PickupItem" parent="." unique_id=1498765433 instance=ExtResource("6_pickup_item")]
+position = Vector2(960, 289)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(1023, 289)

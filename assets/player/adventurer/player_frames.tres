@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://msrdnhh15mfh" path="res://assets/player/adventurer/attack/player_air_attack3_sheet.png" id="18_air_attack3_sheet"]
 [ext_resource type="Texture2D" uid="uid://ndiinsu6wojx" path="res://assets/player/adventurer/bow/player_bow_sheet.png" id="19_bow_sheet"]
 [ext_resource type="Texture2D" uid="uid://brqlvi8aenv04" path="res://assets/player/adventurer/bow/player_bow_air_sheet.png" id="20_bow_air_sheet"]
+[ext_resource type="Texture2D" uid="uid://c78gtdtrn44d" path="res://assets/player/adventurer/pickup/player_pickup_sheet.png" id="21_pickup_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_1"]
 atlas = ExtResource("17_air_attack1_sheet")
@@ -320,6 +321,18 @@ region = Rect2(83, 0, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_jump_3"]
 atlas = ExtResource("3_jump_sheet")
 region = Rect2(83, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pickup_0"]
+atlas = ExtResource("21_pickup_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pickup_1"]
+atlas = ExtResource("21_pickup_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pickup_2"]
+atlas = ExtResource("21_pickup_sheet")
+region = Rect2(0, 124, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_run_0"]
 atlas = ExtResource("2_run_sheet")
@@ -690,6 +703,28 @@ animations = [{
 "loop": 0,
 "name": &"jump",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pickup_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pickup_1")
+}],
+"loop": 0,
+"name": &"heal",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pickup_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pickup_2")
+}],
+"loop": 0,
+"name": &"pickup",
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,

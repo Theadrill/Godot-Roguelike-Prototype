@@ -1245,3 +1245,7 @@ func spawn_ground_impact_particles(center_x: float, ground_y: float, width: floa
 	spawn_parent.add_child(fx)
 	fx.global_position = Vector2(center_x, ground_y - 1.0)
 	fx.z_index = 5
+
+func trigger_pickup_animation() -> void:
+	if state_machine and state_machine.has_node("Pickup"):
+		state_machine.transition_to("pickup")
