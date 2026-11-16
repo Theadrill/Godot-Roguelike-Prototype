@@ -6,15 +6,14 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-socket_target = "Arma nas Costas (BackSocketWeapon)"
-selected_animation = "bow_air_attack"
-current_frame = 5
+socket_target = "Garrafa de Chá (TeaBottleSocket)"
+selected_animation = "pickup"
 reference_secondary_weapon = "none"
-socket_pos_x = -20.0
-socket_pos_y = -35.0
-socket_rotation = 263.5
-socket_flip_h = true
-status_message = "sword [Arma nas Costas (BackSocketWeapon)] -> bow_air_attack Frame 5 (Z: -2, FlipH: true, FlipV: false)"
+socket_pos_x = 6.0
+socket_pos_y = -20.0
+socket_rotation = -34.999996
+socket_z_index = 2
+status_message = "tea_bottle [Garrafa de Chá (TeaBottleSocket)] -> pickup Frame 0 (Z: 2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,8 +27,7 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"bow_air_attack"
-frame = 5
+animation = &"pickup"
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
@@ -40,12 +38,12 @@ rotation = 4.5989428
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3
-position = Vector2(-21, -32)
+position = Vector2(-9, -26)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
-z_index = 2
-position = Vector2(6, -20)
-rotation = -0.61086524
+z_index = -2
+position = Vector2(-9, -26)
+rotation = 4.7822022
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
@@ -53,8 +51,9 @@ position = Vector2(6, -20)
 rotation = -0.61086524
 
 [node name="TeaBottleSocket" type="Marker2D" parent="Visual" unique_id=1498765432]
-z_index = 3
-position = Vector2(10, -24)
+z_index = 2
+position = Vector2(6, -20)
+rotation = -0.61086524
 
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
 visible = false
