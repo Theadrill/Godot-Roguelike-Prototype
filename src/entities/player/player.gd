@@ -147,6 +147,7 @@ const default_slash_frames = preload("res://assets/effects/slashes/slash_frames.
 @onready var back_socket_shield: Marker2D = $Visual/BackSocketShield
 @onready var back_socket_weapon: Marker2D = $Visual/BackSocketWeapon
 @onready var tea_bottle_socket: Marker2D = $Visual.get_node_or_null("TeaBottleSocket") as Marker2D
+@onready var item_pickup_socket: Marker2D = $Visual.get_node_or_null("ItemPickupSocket") as Marker2D
 @onready var bark_label: Label = get_node_or_null("BarkLabel") as Label
 @onready var death_screen: DeathScreen = get_node_or_null("DeathScreen") as DeathScreen
 
@@ -155,6 +156,8 @@ var _secondary_weapon_instance: Node2D = null
 var _shield_instance: Node2D = null
 var _tea_bottle_instance: Node2D = null
 var _tea_bottle_profile: WeaponSocketProfile = null
+var _item_pickup_instance: Node2D = null
+var _item_pickup_profile: WeaponSocketProfile = null
 var tea_bottle_frame_override: int = -1
 var is_shield_raised: bool = false
 var is_dead: bool = false
@@ -201,6 +204,17 @@ func _ready() -> void:
 			_tea_bottle_instance.position = Vector2.ZERO
 			_tea_bottle_instance.rotation_degrees = 0.0
 			_tea_bottle_instance.visible = false
+
+	if ResourceLoader.exists("res://src/entities/equipment/socket_profiles/item_pickup.tres"):
+		_item_pickup_profile = load("res://src/entities/equipment/socket_profiles/item_pickup.tres") as WeaponSocketProfile
+	if item_pickup_socket and ResourceLoader.exists("res://src/entities/equipment/items/tea_bottle_visual.tscn"):
+		var ip_scene := load("res://src/entities/equipment/items/tea_bottle_visual.tscn") as PackedScene
+		if ip_scene:
+			_item_pickup_instance = ip_scene.instantiate() as Node2D
+			item_pickup_socket.add_child(_item_pickup_instance)
+			_item_pickup_instance.position = Vector2.ZERO
+			_item_pickup_instance.rotation_degrees = 0.0
+			_item_pickup_instance.visible = false
 
 	if player_sprite:
 		player_sprite.animation_finished.connect(_on_player_sprite_animation_finished)
@@ -631,6 +645,23 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 				tb_sprite.frame = clampi(tb_frame, 0, 2)
 		else:
 			_tea_bottle_instance.visible = false
+
+	# 5. Item sendo Pego (exibido durante a animação "pickup")
+	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
+		if anim_name == &"pickup" and item_pickup_socket:
+			var ip_data: Dictionary = _item_pickup_profile.get_frame_data(anim_name, frame_idx) if _item_pickup_profile else {}
+			item_pickup_socket.position = ip_data.get("pos", Vector2(13, -10))
+			item_pickup_socket.rotation_degrees = ip_data.get("rot", 0.0)
+			item_pickup_socket.z_index = ip_data.get("z_index", 3)
+			_item_pickup_instance.position = Vector2.ZERO
+			_item_pickup_instance.rotation_degrees = 0.0
+			_item_pickup_instance.visible = ip_data.get("visible", frame_idx > 0) and not are_weapons_hidden
+			_apply_visual_instance_flip(_item_pickup_instance, ip_data.get("flip_h", false), ip_data.get("flip_v", false))
+			var ip_sprite := _item_pickup_instance.get_node_or_null("Sprite2D") as Sprite2D
+			if ip_sprite:
+				ip_sprite.frame = 0
+		else:
+			_item_pickup_instance.visible = false
 
 func stop_animation() -> void:
 	if animation_player and animation_player.is_playing():

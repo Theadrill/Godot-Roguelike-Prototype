@@ -114,6 +114,10 @@ position = Vector2(7, -19)
 z_index = 3
 position = Vector2(10, -24)
 
+[node name="ItemPickupSocket" type="Marker2D" parent="Visual" unique_id=1685837080]
+z_index = 3
+position = Vector2(13, -10)
+
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1468099375]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("24_player_frames")

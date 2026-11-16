@@ -108,6 +108,14 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"pickup_2": {
+"flip_h": true,
+"flip_v": false,
+"pos": Vector2(-13, -29),
+"rot": 268.0,
+"visible": true,
+"z_index": -2
+},
 "bow_air_attack_0": {
 "flip_h": true,
 "flip_v": false,
@@ -224,6 +232,14 @@ hand_frames = {
 "z_index": -2
 },
 "pickup_1": {
+"flip_h": true,
+"flip_v": false,
+"pos": Vector2(-10, -27),
+"rot": 274.0,
+"visible": true,
+"z_index": -2
+},
+"pickup_2": {
 "flip_h": true,
 "flip_v": false,
 "pos": Vector2(-10, -27),

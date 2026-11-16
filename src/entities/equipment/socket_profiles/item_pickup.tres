@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="WeaponSocketProfile" format=3 uid="uid://cgr0weoy7sh58"]
+
+[ext_resource type="Script" uid="uid://c5rv1prl1d8vr" path="res://src/entities/equipment/socket_profiles/weapon_socket_profile.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+hand_frames = {
+"pickup_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(13, -19),
+"rot": -0.5,
+"visible": true,
+"z_index": 2
+},
+"pickup_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(16, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+},
+"pickup_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(13, -31),
+"rot": 0.0,
+"visible": true,
+"z_index": 2
+}
+}

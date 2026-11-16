@@ -2,11 +2,11 @@ class_name PickupState
 extends State
 
 ## Pickup State:
-## Plays the 2-frame pickup animation with main-hand and secondary weapons stowed on the back/waist.
+## Plays the 3-frame pickup animation (ready -> pick up -> show) with main-hand and secondary weapons stowed on the back/waist.
 
 var player: Player
 var _timer: float = 0.0
-@export_range(0.15, 0.8, 0.02, "suffix:s") var pickup_duration: float = 0.34
+@export_range(0.15, 0.8, 0.02, "suffix:s") var pickup_duration: float = 0.42
 
 func enter() -> void:
 	player = character as Player

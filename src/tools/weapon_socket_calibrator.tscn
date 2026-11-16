@@ -6,14 +6,14 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-socket_target = "Garrafa de Chá (TeaBottleSocket)"
+socket_target = "Item sendo Pego (ItemPickupSocket)"
 selected_animation = "pickup"
+current_frame = 2
 reference_secondary_weapon = "none"
-socket_pos_x = 6.0
-socket_pos_y = -20.0
-socket_rotation = -34.999996
+socket_pos_x = 13.0
+socket_pos_y = -31.0
 socket_z_index = 2
-status_message = "tea_bottle [Garrafa de Chá (TeaBottleSocket)] -> pickup Frame 0 (Z: 2, FlipH: false, FlipV: false)"
+status_message = "SUCESSO! Salvo em item_pickup.tres (Item sendo Pego) -> [pickup Frame 2] (Pos: (13.000000, -31.000000), Rot: 0.0°, Z: 2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,6 +28,7 @@ metadata/_edit_lock_ = true
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
 animation = &"pickup"
+frame = 2
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
@@ -38,11 +39,11 @@ rotation = 4.5989428
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3
-position = Vector2(-9, -26)
+position = Vector2(-10, -27)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = -2
-position = Vector2(-9, -26)
+position = Vector2(-10, -27)
 rotation = 4.7822022
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
@@ -54,6 +55,10 @@ rotation = -0.61086524
 z_index = 2
 position = Vector2(6, -20)
 rotation = -0.61086524
+
+[node name="ItemPickupSocket" type="Marker2D" parent="Visual" unique_id=1598765433]
+z_index = 2
+position = Vector2(13, -31)
 
 [node name="SlashEffect" type="AnimatedSprite2D" parent="Visual" unique_id=1648291045]
 visible = false
