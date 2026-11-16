@@ -36,6 +36,7 @@ func enter() -> void:
 			var bark_text: String = LocalizationService.get_random_variant("BARK_TEA_EMPTY", 4)
 			player.show_bark(bark_text)
 		is_empty_preview = true
+		CombatFeedback.trigger_double_rumble(0.35, 0.30, 0.06, 0.07)
 		player.velocity.x = 0.0
 		player.tea_bottle_frame_override = 2
 		player.play_animation(&"heal")
@@ -130,6 +131,7 @@ func _complete_heal() -> void:
 		player.current_health = minf(player.current_health + heal_amount, player.max_health)
 		player.emit_signal("flask_charges_changed", player.current_flask_charges, player.max_flask_charges)
 		ProgressionManager.record_tea_consumed()
+		CombatFeedback.trigger_rumble(0.35, 0.55, 0.14)
 		
 		# Feedback sutil de sucesso: flash de luz rápida
 		if player.flash_material:
