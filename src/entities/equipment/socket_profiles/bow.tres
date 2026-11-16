@@ -1023,20 +1023,20 @@ hand_frames = {
 "z_index": -1
 },
 "heal_0": {
-"flip_h": false,
+"flip_h": true,
 "flip_v": false,
-"pos": Vector2(-8, -22),
-"rot": -169.0,
+"pos": Vector2(-8, -12),
+"rot": 262.0,
 "visible": true,
-"z_index": -2
+"z_index": 1
 },
 "heal_1": {
-"flip_h": false,
+"flip_h": true,
 "flip_v": false,
-"pos": Vector2(-5, -23),
-"rot": -168.99998,
+"pos": Vector2(-14, -16),
+"rot": -84.0,
 "visible": true,
-"z_index": -2
+"z_index": 1
 },
 "idle_0": {
 "z_index": 2

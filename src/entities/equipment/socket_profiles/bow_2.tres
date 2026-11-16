@@ -85,12 +85,12 @@ back_frames = {
 
 hand_frames = {
 "heal_0": {
-"flip_h": false,
+"flip_h": true,
 "flip_v": false,
-"pos": Vector2(-11, -24),
-"rot": -175.0,
+"pos": Vector2(-6, -12),
+"rot": 173.5,
 "visible": true,
-"z_index": -2
+"z_index": 1
 },
 "pickup_0": {
 "flip_h": false,
@@ -101,14 +101,6 @@ hand_frames = {
 "z_index": -2
 },
 "pickup_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-12, -25),
-"rot": -175.0,
-"visible": true,
-"z_index": -2
-},
-"heal_1": {
 "flip_h": false,
 "flip_v": false,
 "pos": Vector2(-12, -25),
@@ -150,5 +142,13 @@ hand_frames = {
 "rot": -169.0,
 "visible": true,
 "z_index": -2
+},
+"heal_1": {
+"flip_h": true,
+"flip_v": false,
+"pos": Vector2(-12, -16),
+"rot": 193.5,
+"visible": true,
+"z_index": 1
 }
 }

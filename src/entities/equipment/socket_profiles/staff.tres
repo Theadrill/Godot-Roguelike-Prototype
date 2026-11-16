@@ -943,20 +943,20 @@ hand_frames = {
 "z_index": 2
 },
 "heal_0": {
-"flip_h": false,
+"flip_h": true,
 "flip_v": false,
-"pos": Vector2(2, -12),
-"rot": 286.0,
+"pos": Vector2(-12, -12),
+"rot": 173.49998,
 "visible": true,
-"z_index": -2
+"z_index": 1
 },
 "heal_1": {
-"flip_h": false,
+"flip_h": true,
 "flip_v": false,
-"pos": Vector2(4, -14),
-"rot": 285.99997,
+"pos": Vector2(-18, -18),
+"rot": 193.49998,
 "visible": true,
-"z_index": -2
+"z_index": 1
 },
 "idle_0": {
 "flip_h": false,
