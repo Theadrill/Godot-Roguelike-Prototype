@@ -4,8 +4,6 @@ extends CanvasLayer
 ## Menu de Pausa Oficial: Acessível via ESC (Teclado) ou Start (Gamepad).
 ## Opções: Continuar, Painel DEV / Métricas, Salvar e Sair, Recarregar do Zero.
 
-const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
-
 @onready var btn_resume: Button = $MainPanel/VBoxContainer/BtnResume
 @onready var btn_dev_menu: Button = $MainPanel/VBoxContainer/BtnDevMenu
 @onready var btn_save_quit: Button = $MainPanel/VBoxContainer/BtnSaveQuit

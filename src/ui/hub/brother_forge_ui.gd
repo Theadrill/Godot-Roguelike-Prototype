@@ -1,8 +1,6 @@
 class_name BrotherForgeUI
 extends CanvasLayer
 
-const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
-
 signal closed(did_upgrade: bool)
 
 @onready var weapon_1_level_label: Label = $MainPanel/ScrollContainer/VBox/Item1/LevelLabel

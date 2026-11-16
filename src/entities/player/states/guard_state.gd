@@ -97,7 +97,7 @@ func _exit_to_movement() -> void:
 
 ## Intercepts incoming hits from Hurtbox
 ## Returns true if the hit was completely or partially handled by the shield
-func handle_incoming_hit(damage: float, knockback: Vector2, hitstop: float, incoming_hitbox: Hitbox) -> bool:
+func handle_incoming_hit(damage: float, knockback: Vector2, _hitstop: float, incoming_hitbox: Hitbox) -> bool:
 	var category: Hitbox.AttackCategory = incoming_hitbox.attack_category if incoming_hitbox else Hitbox.AttackCategory.NORMAL
 
 	# --- 1. PERFECT PARRY (Active 120ms Window) ---

@@ -57,7 +57,8 @@ func transition_to(target_state_name: String) -> void:
 		current_state.exit()
 
 	if owner and owner.is_in_group("player"):
-		RuntimeDebugger.log_event("PLAYER_FSM", "%s -> %s" % [current_state.name if current_state else "None", new_state.name])
+		var prev_name: String = String(current_state.name) if current_state else "None"
+		RuntimeDebugger.log_event("PLAYER_FSM", "%s -> %s" % [prev_name, new_state.name])
 
 	current_state = new_state
 	new_state.enter()

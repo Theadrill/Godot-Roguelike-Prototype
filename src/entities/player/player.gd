@@ -17,7 +17,6 @@ var _bark_tween: Tween = null
 @export_range(0.0, 500.0, 1.0, "or_greater") var max_mana: float = 100.0
 var current_health: float = 250.0
 var current_mana: float = 100.0
-var _debug_respawn_timer: float = 0.0
 
 @export_group("Debug")
 @export var debug_start_at_90_health: bool = true

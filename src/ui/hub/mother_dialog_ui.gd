@@ -1,8 +1,6 @@
 class_name MotherDialogUI
 extends CanvasLayer
 
-const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
-
 signal closed(did_take_tea: bool)
 
 @onready var category_view: Control = $MainPanel/CategoryView

@@ -39,6 +39,7 @@ const DEFAULT_GUIDE_TEXT: String = (
 @export_group("Configuração da Sequência de Golpes")
 
 ## Nome identificador deste Conjunto de Ataques (ex: "Set Espada Padrão 1-2", "Set Martelo Pesado").
+@warning_ignore("shadowed_variable_base_class")
 @export var set_name: String = "Standard Sword Set"
 
 ## Lista ordenada de golpes que compõem este Set.

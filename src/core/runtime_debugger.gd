@@ -67,7 +67,7 @@ func _process(delta: float) -> void:
 	# Heartbeat periódico a cada 1.0 segundo
 	if heartbeat_timer >= 1.0:
 		heartbeat_timer = 0.0
-		var fps: int = Engine.get_frames_per_second()
+		var fps: int = int(Engine.get_frames_per_second())
 		var mem_mb: float = float(OS.get_static_memory_usage()) / (1024.0 * 1024.0)
 		log_info("HEARTBEAT", "FPS: %d | Mem: %.1f MB | Frame: %d | Scene: %s" % [fps, mem_mb, frame_counter, _get_active_scene_name()])
 

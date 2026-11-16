@@ -1,8 +1,6 @@
 class_name TouchOfDeathUI
 extends CanvasLayer
 
-const GamepadPromptBar = preload("res://src/ui/components/gamepad_prompt_bar.gd")
-
 signal blessing_chosen(blessing_id: String)
 signal closed
 
