@@ -36,7 +36,7 @@ func enter() -> void:
 			var bark_text: String = LocalizationService.get_random_variant("BARK_TEA_EMPTY", 4)
 			player.show_bark(bark_text)
 		is_empty_preview = true
-		CombatFeedback.trigger_double_rumble(0.35, 0.30, 0.06, 0.07)
+		CombatFeedback.trigger_double_rumble(0.35, 0.30, 0.06, 0.14)
 		player.velocity.x = 0.0
 		player.tea_bottle_frame_override = 2
 		player.play_animation(&"heal")

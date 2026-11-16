@@ -20,7 +20,7 @@ func trigger_rumble(weak: float = 0.4, strong: float = 0.7, duration: float = 0.
 	# Device 0 is the primary connected gamepad
 	Input.start_joy_vibration(0, weak, strong, duration)
 
-func trigger_double_rumble(weak: float = 0.35, strong: float = 0.30, pulse_duration: float = 0.06, gap_duration: float = 0.07) -> void:
+func trigger_double_rumble(weak: float = 0.35, strong: float = 0.30, pulse_duration: float = 0.06, gap_duration: float = 0.14) -> void:
 	trigger_rumble(weak, strong, pulse_duration)
 	if not is_inside_tree():
 		return
