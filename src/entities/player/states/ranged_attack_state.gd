@@ -45,7 +45,15 @@ func _start_shot_cycle(is_repeat: bool = false) -> void:
 	# Crossbow fires instantly on trigger; if charge weapon is airborne and not chargeable_in_the_air, fire/cast immediately!
 	var skip_air_charge: bool = player.weapon.is_charge_attack and (not player.is_on_floor()) and (not player.weapon.chargeable_in_the_air)
 	if player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_CROSSBOW:
-		_fire_projectile()
+		if player.is_on_floor():
+			attack_phase = 0
+			player.play_animation(&"crossbow_attack")
+			if player.player_sprite:
+				player.player_sprite.pause()
+				player.player_sprite.frame = 0
+			player._update_weapon_socket_for_frame(&"crossbow_attack", 0)
+		else:
+			_fire_projectile()
 	elif is_spell:
 		if skip_air_charge:
 			_start_spell_cast()
@@ -198,6 +206,11 @@ func physics_update(delta: float) -> void:
 				if player.player_sprite.frame != rec_frame:
 					player.player_sprite.frame = rec_frame
 					player._update_weapon_socket_for_frame(_bow_anim_name, rec_frame)
+			elif player.weapon and player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_CROSSBOW and player.player_sprite and player.player_sprite.animation == &"crossbow_attack":
+				var cb_frame: int = 2 if phase_timer <= (player.weapon.reload_time * 0.5) else 1
+				if player.player_sprite.frame != cb_frame:
+					player.player_sprite.frame = cb_frame
+					player._update_weapon_socket_for_frame(&"crossbow_attack", cb_frame)
 			player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
 			player.move_and_slide()
 
@@ -258,12 +271,18 @@ func _fire_projectile(advance_to_recovery: bool = true) -> void:
 		return
 
 	var is_bow: bool = weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW
+	var is_crossbow: bool = weapon.weapon_category == WeaponData.WeaponCategory.RANGED_CROSSBOW
 	if is_bow and player.player_sprite:
 		var shoot_frame: int = 4 if _bow_anim_name == &"bow_air_attack" else 5
 		player.play_animation(_bow_anim_name)
 		player.player_sprite.pause()
 		player.player_sprite.frame = shoot_frame
 		player._update_weapon_socket_for_frame(_bow_anim_name, shoot_frame)
+	elif is_crossbow and player.is_on_floor() and player.player_sprite:
+		player.play_animation(&"crossbow_attack")
+		player.player_sprite.pause()
+		player.player_sprite.frame = 1
+		player._update_weapon_socket_for_frame(&"crossbow_attack", 1)
 
 	# Player ranged shots always fire straight horizontally
 	var shoot_dir := Vector2(float(player.facing_direction), 0.0)
