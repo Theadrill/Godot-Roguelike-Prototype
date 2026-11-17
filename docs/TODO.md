@@ -8,8 +8,6 @@
 ## 🔴 1. Estados que Ainda Caem no Placeholder Geométrico (`BodyPlaceholder` / Sem `play_animation`)
 Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o novo estado ainda não possui animação vinculada, o sprite do aventureiro some e aparece o retângulo colorido (`BodyPlaceholder`):
 
-- [ ] **`RangedAttack` com Besta no Ar (`crossbow_air_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
-  - Falta sprite e animação dedicada para o **disparo com Besta (`Crossbow`) no ar**.
 - [ ] **`Death` / Morte (`src/entities/player/player.gd`):**
   - Não possui animação de morte (`die` / `death`) antes de o vórtice espiral cobrir a tela.
 
@@ -42,6 +40,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`RangedAttack` (Arco / Chão)** (`bow_attack` — 7 frames com cadência contínua ciclando do frame 3 ao 6 ao segurar o botão, disparo no penúltimo frame e trava de movimento no chão estilo Dead Cells)
 - [x] **`RangedAttack` (Arco / Ar)** (`bow_air_attack` — 6 frames no grid 83x62, puxada 0..3, disparo no penúltimo frame 4 e recuperação no frame 5)
 - [x] **`RangedAttack` (Besta / Chão)** (`crossbow_attack` — 3 frames: mira 0, disparo 1 e recuperação 2)
+- [x] **`RangedAttack` (Besta / Ar)** (`crossbow_air_attack` — 3 frames: mira 0, disparo 1 e recuperação 2)
 - [x] **`Attack` (Chão)** (`attack1` + `slash_sword`, `attack2` + `slash_sword_2`, `attack3` + `slash_sword_3`)
 - [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` + `slash_air_sword_3` para plunge do Martelo)
 - [x] **Ataques a partir de `Crouch`, `Cima` ou `Baixo no ar` (sem plunge)** — levantam/normalizam automaticamente para o combo padrão (bloqueando ataque sob teto baixo via `ceiling_check`).
