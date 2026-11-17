@@ -559,7 +559,7 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 		if current_state_name == "attack":
 			is_in_manual_socket_state = not (anim_name in [&"attack1", &"attack2", &"attack3", &"air_attack1", &"air_attack2", &"air_attack3", &"air_attack"])
 		elif current_state_name == "rangedattack":
-			is_in_manual_socket_state = not (anim_name in [&"cast", &"channeling", &"bow_attack", &"bow_air_attack"])
+			is_in_manual_socket_state = not (anim_name in [&"cast", &"channeling", &"bow_attack", &"bow_air_attack", &"crossbow_attack"])
 		elif current_state_name == "guard":
 			is_in_manual_socket_state = not (anim_name in [&"block", &"block_loop"])
 
