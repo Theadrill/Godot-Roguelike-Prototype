@@ -544,6 +544,54 @@ back_frames = {
 "visible": true,
 "z_index": -1
 },
+"crossbow_air_attack_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14, -22),
+"rot": 267.9999,
+"visible": true,
+"z_index": -2
+},
+"crossbow_air_attack_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16, -20),
+"rot": 276.4999,
+"visible": true,
+"z_index": -2
+},
+"crossbow_air_attack_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-13, -22),
+"rot": 263.5,
+"visible": true,
+"z_index": -2
+},
+"crossbow_attack_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16, -23),
+"rot": 267.99997,
+"visible": true,
+"z_index": -2
+},
+"crossbow_attack_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-18, -22),
+"rot": 276.49994,
+"visible": true,
+"z_index": -2
+},
+"crossbow_attack_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16, -22),
+"rot": 263.5,
+"visible": true,
+"z_index": -2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
@@ -793,54 +841,6 @@ back_frames = {
 "flip_v": true,
 "pos": Vector2(4.000002, -30.999998),
 "rot": -85.99999,
-"visible": true,
-"z_index": -2
-},
-"crossbow_attack_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-16, -23),
-"rot": 267.99997,
-"visible": true,
-"z_index": -2
-},
-"crossbow_attack_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-18, -22),
-"rot": 276.49994,
-"visible": true,
-"z_index": -2
-},
-"crossbow_attack_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-16, -22),
-"rot": 263.5,
-"visible": true,
-"z_index": -2
-},
-"crossbow_air_attack_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-19, -22),
-"rot": 267.99994,
-"visible": true,
-"z_index": -2
-},
-"crossbow_air_attack_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-22, -20),
-"rot": 276.4999,
-"visible": true,
-"z_index": -2
-},
-"crossbow_air_attack_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-18, -22),
-"rot": 263.5,
 "visible": true,
 "z_index": -2
 }

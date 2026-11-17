@@ -544,6 +544,30 @@ back_frames = {
 "visible": true,
 "z_index": 2
 },
+"crossbow_air_attack_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-7, -20),
+"rot": -174.99994,
+"visible": true,
+"z_index": -2
+},
+"crossbow_air_attack_1": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-11, -18),
+"rot": -161.99998,
+"visible": true,
+"z_index": -2
+},
+"crossbow_air_attack_2": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-10, -18),
+"rot": -174.99994,
+"visible": true,
+"z_index": -2
+},
 "crossbow_attack_0": {
 "flip_h": true,
 "flip_v": true,
@@ -831,30 +855,6 @@ back_frames = {
 "rot": -198.2,
 "visible": true,
 "z_index": -2
-},
-"crossbow_air_attack_0": {
-"flip_h": true,
-"flip_v": true,
-"pos": Vector2(-10, -19),
-"rot": -174.99995,
-"visible": true,
-"z_index": -2
-},
-"crossbow_air_attack_1": {
-"flip_h": true,
-"flip_v": true,
-"pos": Vector2(-16, -18),
-"rot": -162.0,
-"visible": true,
-"z_index": -2
-},
-"crossbow_air_attack_2": {
-"flip_h": true,
-"flip_v": true,
-"pos": Vector2(-11, -18),
-"rot": -174.99995,
-"visible": true,
-"z_index": -2
 }
 }
 hand_frames = {
@@ -970,6 +970,30 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
+"crossbow_air_attack_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(8, -28),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
+"crossbow_air_attack_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(1, -29),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
+"crossbow_air_attack_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(4, -28),
+"rot": 0.0,
+"visible": true,
+"z_index": -1
+},
 "crossbow_attack_0": {
 "flip_h": false,
 "flip_v": false,
@@ -981,7 +1005,7 @@ hand_frames = {
 "crossbow_attack_1": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(4.5, -26.6),
+"pos": Vector2(1.5, -26.6),
 "rot": 0.0,
 "visible": true,
 "z_index": -1
@@ -989,10 +1013,10 @@ hand_frames = {
 "crossbow_attack_2": {
 "flip_h": false,
 "flip_v": false,
-"pos": Vector2(13.4, -22.9),
+"pos": Vector2(6.4, -22.9),
 "rot": 0.0,
 "visible": true,
-"z_index": 2
+"z_index": -1
 },
 "fall_0": {
 "flip_h": false,
@@ -1225,30 +1249,6 @@ hand_frames = {
 "flip_v": true,
 "pos": Vector2(-16.000002, -22.999998),
 "rot": 174.09999,
-"visible": true,
-"z_index": 2
-},
-"crossbow_air_attack_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(8, -27),
-"rot": 0.0,
-"visible": true,
-"z_index": 2
-},
-"crossbow_air_attack_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(5, -29),
-"rot": 0.0,
-"visible": true,
-"z_index": 2
-},
-"crossbow_air_attack_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(8, -28),
-"rot": 0.0,
 "visible": true,
 "z_index": 2
 }
