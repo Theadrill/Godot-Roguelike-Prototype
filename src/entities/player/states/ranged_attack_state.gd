@@ -26,7 +26,7 @@ func enter() -> void:
 		return
 
 	var is_spell: bool = player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_SPELL
-	if not is_spell and player._main_weapon_instance:
+	if not is_spell and player._main_weapon_instance and player.weapon.get_socket_profile() == null:
 		player._main_weapon_instance.position = player.weapon.attack_visual_offset
 		player._main_weapon_instance.rotation_degrees = player.weapon.attack_visual_rotation_degrees
 	_charge_base_weapon_scale = player._main_weapon_instance.scale if player._main_weapon_instance else Vector2.ONE
@@ -139,7 +139,7 @@ func physics_update(delta: float) -> void:
 						player.player_sprite.frame = draw_frame
 						player._update_weapon_socket_for_frame(_bow_anim_name, draw_frame)
 			else:
-				if player.main_hand_socket:
+				if player.main_hand_socket and player.weapon.get_socket_profile() == null:
 					player.main_hand_socket.rotation_degrees = jitter
 
 			# Energizing glow & particle FX controlled by WeaponData's EnergizeProfile
@@ -286,7 +286,7 @@ func _fire_projectile(advance_to_recovery: bool = true) -> void:
 
 	# Player ranged shots always fire straight horizontally
 	var shoot_dir := Vector2(float(player.facing_direction), 0.0)
-	if player.main_hand_socket and not is_spell and not is_bow:
+	if player.main_hand_socket and not is_spell and not is_bow and weapon.get_socket_profile() == null:
 		player.main_hand_socket.rotation_degrees = 0.0
 
 	# Calculate speed and damage scaled by charge ratio
