@@ -8,8 +8,6 @@
 ## 🔴 1. Estados que Ainda Caem no Placeholder Geométrico (`BodyPlaceholder` / Sem `play_animation`)
 Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o novo estado ainda não possui animação vinculada, o sprite do aventureiro some e aparece o retângulo colorido (`BodyPlaceholder`):
 
-- [ ] **`Stagger` / Tomar Stun ou Guard Break (`src/entities/player/states/stagger_state.gd`):**
-  - Chama apenas `player.set_crouched(true)` sem `play_animation()`, exibindo o retângulo placeholder achatado quando leva ataque vermelho ou quebra de guarda. Falta sprite de `hurt` / `stagger`.
 - [ ] **`RangedAttack` com Besta no Chão (`crossbow_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
   - Falta sprite e animação dedicada para o **disparo com Besta (`Crossbow`) no chão**.
 - [ ] **`RangedAttack` com Besta no Ar (`crossbow_air_attack`) (`src/entities/player/states/ranged_attack_state.gd`):**
@@ -49,6 +47,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`Attack` (Ar)** (`air_attack1` + `slash_air_sword_1`, `air_attack3` + `slash_air_sword_3` para plunge do Martelo)
 - [x] **Ataques a partir de `Crouch`, `Cima` ou `Baixo no ar` (sem plunge)** — levantam/normalizam automaticamente para o combo padrão (bloqueando ataque sob teto baixo via `ceiling_check`).
 - [x] **Ataque Carregado (`is_charge_attack`)** — segura o frame configurável (`charge_ready_animation` / `charge_ready_frame`) com sockets do Tool e `EnergizeProfile` elemental.
+- [x] **`Stagger` / Tomar Dano (`hurt`)** — 3 frames com *Last-Frame Hold* via `Hitbox.stagger_duration` (ou fallback `PERILOUS`), *post-hit i-frames* e *flinch* rápido no frame `0` para ataques leves.
 
 ---
 
