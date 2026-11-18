@@ -215,7 +215,7 @@ position = Vector2(1321, 287)
 position = Vector2(121, 288)
 
 [node name="Soldier" parent="." unique_id=53509489 instance=ExtResource("3_soldier")]
-position = Vector2(35, 288)
+position = Vector2(32, 287)
 max_health = 165.0
 normal_damage = 36.0
 heavy_damage = 77.0
@@ -225,13 +225,13 @@ tier_1_attacks = 3
 tier_2_behavior = 1
 
 [node name="Archer" parent="." unique_id=1638382328 instance=ExtResource("4_archer")]
-position = Vector2(472, 176)
+position = Vector2(-232, 286)
 
 [node name="PickupItem" parent="." unique_id=1498765433 instance=ExtResource("6_pickup_item")]
 position = Vector2(960, 289)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
-position = Vector2(-61, 288)
+position = Vector2(-336, 288)
 run_speed = 150.0
 wall_recovery_gravity_multiplier = 0.5
 slide_speed = 170.0

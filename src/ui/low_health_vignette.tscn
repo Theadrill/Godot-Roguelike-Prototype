@@ -17,6 +17,7 @@ layer = 5
 script = ExtResource("1_script")
 
 [node name="VignetteRect" type="ColorRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_vignette")
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,3 +26,4 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 1)
+metadata/_edit_lock_ = true
