@@ -72,12 +72,12 @@ func play_death_sequence() -> void:
 	_seq_tween = create_tween()
 	_seq_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 
-	# Fase 1: Vórtice Espiral se expande e engole a tela em 1.1s
+	# Fase 1: Vórtice Espiral se expande e engole a tela em 0.75s
 	if _material:
 		_material.set_shader_parameter("progress", 0.0)
 		_seq_tween.tween_method(
 			func(val: float) -> void: _material.set_shader_parameter("progress", val),
-			0.0, 1.0, 1.1
+			0.0, 1.0, 0.75
 		).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 	# Fase 2: Restaura velocidade normal do motor
@@ -85,16 +85,16 @@ func play_death_sequence() -> void:
 		Engine.time_scale = 1.0
 	)
 
-	# Fase 3: Fade in solene no título e subtítulo (0.6s)
+	# Fase 3: Fade in rápido no título e subtítulo (0.35s)
 	if content_container:
-		_seq_tween.tween_property(content_container, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+		_seq_tween.tween_property(content_container, "modulate:a", 1.0, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
 	# Pequena pausa dramática
-	_seq_tween.tween_interval(0.25)
+	_seq_tween.tween_interval(0.08)
 
-	# Fase 4: Fade in nos botões A e B com liberação de input
+	# Fase 4: Fade in nos botões A e B com liberação de input (0.25s)
 	if buttons_container:
-		_seq_tween.tween_property(buttons_container, "modulate:a", 1.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_seq_tween.tween_property(buttons_container, "modulate:a", 1.0, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	
 	_seq_tween.tween_callback(func() -> void:
 		can_accept_input = true

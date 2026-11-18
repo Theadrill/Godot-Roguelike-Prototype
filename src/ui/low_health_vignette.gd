@@ -28,6 +28,10 @@ extends CanvasLayer
 ## Multiplicador minimo da oscilacao do pulso (0.68 = oscila suavemente entre 68% e 100%).
 @export_range(0.1, 1.0, 0.02) var pulse_min_factor: float = 0.68
 
+@export_group("Death Takeover")
+@export_range(0.2, 1.0, 0.02) var death_target_alpha: float = 0.92
+@export_range(0.1, 1.5, 0.05) var default_outer_radius: float = 1.20
+
 @onready var vignette_rect: ColorRect = $VignetteRect
 
 var _target_player: Player = null
@@ -35,6 +39,11 @@ var _current_level: float = 0.0
 var _hit_spike: float = 0.0
 var _pulse_phase: float = 0.0
 var _shader_mat: ShaderMaterial = null
+var _is_death_takeover: bool = false
+var _death_timer: float = 0.0
+var _death_duration: float = 1.25
+var _death_start_alpha: float = 0.0
+var _death_start_inner: float = 0.88
 
 func _ready() -> void:
 	if vignette_rect:
@@ -58,8 +67,41 @@ func trigger_hit_spike() -> void:
 	if ratio < start_health_ratio and _target_player.current_health > 0.0:
 		_hit_spike = hit_spike_boost
 
+func play_death_takeover(duration: float = 1.25) -> void:
+	if not _shader_mat or not vignette_rect:
+		return
+	_is_death_takeover = true
+	_death_timer = 0.0
+	_death_duration = maxf(0.2, duration)
+	_death_start_alpha = clampf(_current_level * max_alpha + _hit_spike, 0.08, max_alpha + hit_spike_boost)
+	_death_start_inner = lerpf(max_inner_radius, min_inner_radius, clampf(_current_level, 0.0, 1.0))
+	vignette_rect.visible = true
+
+func reset_death_takeover() -> void:
+	_is_death_takeover = false
+	_death_timer = 0.0
+	_current_level = 0.0
+	_hit_spike = 0.0
+	_pulse_phase = 0.0
+	if _shader_mat:
+		_shader_mat.set_shader_parameter("alpha", 0.0)
+		_shader_mat.set_shader_parameter("inner_radius", max_inner_radius)
+		_shader_mat.set_shader_parameter("outer_radius", default_outer_radius)
+	if vignette_rect:
+		vignette_rect.visible = false
+
 func _process(delta: float) -> void:
 	if not _target_player or not _shader_mat or not vignette_rect:
+		return
+
+	if _is_death_takeover:
+		_death_timer += delta
+		var t: float = clampf(_death_timer / _death_duration, 0.0, 1.0)
+		var eased: float = t * t * (3.0 - 2.0 * t)
+		vignette_rect.visible = true
+		_shader_mat.set_shader_parameter("alpha", lerpf(_death_start_alpha, death_target_alpha, eased))
+		_shader_mat.set_shader_parameter("inner_radius", lerpf(_death_start_inner, -0.1, eased))
+		_shader_mat.set_shader_parameter("outer_radius", lerpf(default_outer_radius, 0.15, eased))
 		return
 
 	var target_level: float = 0.0
@@ -94,3 +136,4 @@ func _process(delta: float) -> void:
 	var radius_t: float = clampf((_current_level * pulse_factor) + _hit_spike * 0.5, 0.0, 1.0)
 	_shader_mat.set_shader_parameter("alpha", pulsed_alpha)
 	_shader_mat.set_shader_parameter("inner_radius", lerpf(max_inner_radius, min_inner_radius, radius_t))
+	_shader_mat.set_shader_parameter("outer_radius", default_outer_radius)

@@ -30,7 +30,7 @@ float bayer4x4(vec2 pos) {
 }
 
 void fragment() {
-	vec2 grid_pos = floor(UV * pixel_resolution);
+	vec2 grid_pos = floor(SCREEN_UV * pixel_resolution);
 	vec2 snapped_uv = (grid_pos + 0.5) / pixel_resolution;
 	vec2 centered = (snapped_uv - 0.5) * 2.0;
 	float dist = length(centered * vec2(1.0, 0.92));

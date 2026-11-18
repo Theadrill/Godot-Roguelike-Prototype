@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://oiwx4fdmqw6d" path="res://assets/player/adventurer/hurt/player_hurt_sheet.png" id="22_hurt_sheet"]
 [ext_resource type="Texture2D" uid="uid://dhm8pxlu678i8" path="res://assets/player/adventurer/crossbow/player_crossbow_sheet.png" id="23_crossbow_sheet"]
 [ext_resource type="Texture2D" uid="uid://d37w04ejnwrxi" path="res://assets/player/adventurer/crossbow/player_crossbow_air_sheet.png" id="24_crossbow_air_sheet"]
+[ext_resource type="Texture2D" path="res://assets/player/adventurer/death/player_death_sheet.png" id="25_death_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_1"]
 atlas = ExtResource("17_air_attack1_sheet")
@@ -295,6 +296,10 @@ region = Rect2(83, 62, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_roll_0"]
 atlas = ExtResource("7_roll_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_death_0"]
+atlas = ExtResource("25_death_sheet")
 region = Rect2(0, 0, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_roll_1"]
@@ -698,6 +703,14 @@ animations = [{
 "loop": 1,
 "name": &"crouch",
 "speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_death_0")
+}],
+"loop": 0,
+"name": &"death",
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,

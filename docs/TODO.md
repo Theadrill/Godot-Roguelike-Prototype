@@ -8,8 +8,7 @@
 ## 🔴 1. Estados que Ainda Caem no Placeholder Geométrico (`BodyPlaceholder` / Sem `play_animation`)
 Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o novo estado ainda não possui animação vinculada, o sprite do aventureiro some e aparece o retângulo colorido (`BodyPlaceholder`):
 
-- [ ] **`Death` / Morte (`src/entities/player/player.gd`):**
-  - Não possui animação de morte (`die` / `death`) antes de o vórtice espiral cobrir a tela.
+- *(Nenhum estado pendente — todos os estados atuais possuem sprites próprios ou reaproveitados.)*
 
 ---
 
@@ -46,6 +45,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **Ataques a partir de `Crouch`, `Cima` ou `Baixo no ar` (sem plunge)** — levantam/normalizam automaticamente para o combo padrão (bloqueando ataque sob teto baixo via `ceiling_check`).
 - [x] **Ataque Carregado (`is_charge_attack`)** — segura o frame configurável (`charge_ready_animation` / `charge_ready_frame`) com sockets do Tool e `EnergizeProfile` elemental.
 - [x] **`Stagger` / Tomar Dano (`hurt`)** — 3 frames com *Last-Frame Hold* via `Hitbox.stagger_duration` (ou fallback `PERILOUS`), *post-hit i-frames* e *flinch* rápido no frame `0` para ataques leves.
+- [x] **`Death` / Morte (`death`)** — `DeathState` com queda física dos equipamentos (`DroppedEquipmentPiece`, sem clipar em paredes) + takeover vermelho progressivo (`LowHealthVignette`) antes do vórtice espiral (`DeathScreen`).
 
 ---
 

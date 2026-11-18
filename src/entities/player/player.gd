@@ -167,6 +167,7 @@ var _item_pickup_profile: WeaponSocketProfile = null
 var _pickup_effect_profile: PickupEffectProfile = null
 var _item_pickup_base_scale: Vector2 = Vector2.ONE
 var _pickup_fx_tween: Tween = null
+var _dropped_death_items: Array[Node] = []
 var tea_bottle_frame_override: int = -1
 var is_shield_raised: bool = false
 var is_dead: bool = false
@@ -1002,13 +1003,75 @@ func die() -> void:
 	if hurtbox:
 		hurtbox.set_deferred("monitoring", false)
 		hurtbox.set_deferred("monitorable", false)
-	
+
+	if state_machine and state_machine.has_node("Death"):
+		state_machine.transition_to("death")
+	else:
+		trigger_death_screen()
+
+func trigger_death_screen() -> void:
 	if death_screen:
 		death_screen.play_death_sequence()
 	else:
 		_on_death_respawn()
 
+func spawn_death_dropped_equipment() -> void:
+	clear_death_dropped_equipment()
+	var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
+	if not spawn_parent:
+		return
+
+	var facing: float = -1.0 if facing_direction < 0 else 1.0
+	var pieces: Array[Dictionary] = [
+		{
+			"vis": _main_weapon_instance,
+			"socket": main_hand_socket,
+			"impulse": Vector2(facing * 48.0, -78.0),
+			"spin": facing * 5.2,
+		},
+		{
+			"vis": _secondary_weapon_instance,
+			"socket": back_socket_weapon,
+			"impulse": Vector2(-facing * 32.0, -64.0),
+			"spin": -facing * 4.0,
+		},
+		{
+			"vis": _shield_instance,
+			"socket": off_hand_socket if is_shield_raised else back_socket_shield,
+			"impulse": Vector2(-facing * 16.0, -54.0),
+			"spin": -facing * 3.0,
+		},
+	]
+
+	for entry in pieces:
+		var vis_node := entry.get("vis") as Node2D
+		var sock := entry.get("socket") as Node2D
+		if not vis_node or not is_instance_valid(vis_node) or not vis_node.visible:
+			continue
+		var pos: Vector2 = sock.global_position if (sock and is_instance_valid(sock)) else global_position + Vector2(0, -18)
+		var rot: float = sock.global_rotation if (sock and is_instance_valid(sock)) else 0.0
+		var dropped := DroppedEquipmentPiece.spawn_from_visual(
+			vis_node,
+			pos,
+			rot,
+			entry.get("impulse", Vector2.ZERO),
+			entry.get("spin", 0.0),
+			spawn_parent
+		)
+		if dropped:
+			_dropped_death_items.append(dropped)
+
+func clear_death_dropped_equipment() -> void:
+	for item in _dropped_death_items:
+		if item and is_instance_valid(item):
+			item.queue_free()
+	_dropped_death_items.clear()
+
 func _on_death_respawn() -> void:
+	clear_death_dropped_equipment()
+	are_weapons_hidden = false
+	if low_health_vignette:
+		low_health_vignette.reset_death_takeover()
 	ProgressionManager.reset_daily_run()
 	current_health = max_health
 	current_flask_charges = max_flask_charges
