@@ -160,13 +160,13 @@ Durante e após a modularização do `Player`, os contratos abaixo **NÃO podem 
 
 ---
 
-### 📜 FASE 6 — Guia Oficial de Criação de Scripts & Regra de Ouro em `REGRAS_DO_PROJETO.md`
-* **O que será feito:**
-  1. Criar o documento normativo [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) especificando **exatamente como todo novo script deve ser criado daqui para frente**:
-     * **Novos Inimigos:** Devem obrigatoriamente estender `BaseEnemy`, reutilizar `EnemyDeathState`, usar sensores do `BaseEnemy` (proibido criar nós `RayCast2D` soltos para borda/parede) e expor apenas estados específicos do seu arquétipo.
-     * **Novas Armas / Golpes:** Devem ser 100% Data-Driven via `WeaponData` + `AttackSetData` + `ComboStepData` ([`docs/ARQUITETURA_ATTACK_SETS_E_SLASHES.md`](ARQUITETURA_ATTACK_SETS_E_SLASHES.md)), sem `if/else` de nome de arma em código.
-     * **Novas Responsabilidades do Player:** Física/estados ficam em `src/entities/player/states/`; visuais de socket vão em `PlayerEquipmentRig`; efeitos de combate/partículas vão em `PlayerCombatVFX` (proibido inflar `player.gd`).
-     * **Novas Telas / Modais de UI:** Devem pertencer ao grupo `"modal_ui"`, consumir 100% dos textos de `translations.csv` via `tr()` e usar `GamepadPromptBar`.
-     * **Limite de Responsabilidade Única (SRP):** Scripts de entidade/controlador não devem ultrapassar ~350–400 linhas nem misturar física, UI e VFX no mesmo arquivo.
-  2. Atualizar [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md) incluindo [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) na **Leitura Obrigatória do Topo** e como **Regra de Ouro Arquitetural** para qualquer novo código.
+### 📜 FASE 6 — Guia Oficial de Criação de Scripts & Regra de Ouro em `REGRAS_DO_PROJETO.md` *(Concluída)*
+* **O que foi feito:**
+  1. Criado o documento normativo [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) especificando o padrão oficial para novos scripts no repositório:
+     * **Novos Inimigos:** Herança obrigatória de `BaseEnemy`, reutilização de `EnemyDeathState`, uso exclusivo dos sensores *stateless* de `BaseEnemy` (proibido criar nós `RayCast2D` soltos para borda/parede/visão) e separação de estados por arquétipo.
+     * **Novas Armas / Golpes:** Arquitetura 100% Data-Driven via `WeaponData` + `AttackSetData` + `ComboStepData` ([`docs/ARQUITETURA_ATTACK_SETS_E_SLASHES.md`](ARQUITETURA_ATTACK_SETS_E_SLASHES.md)), uso de `weapon.get_archetype_id()` / `weapon_category` e sorteio dinâmico Melee+Ranged nos pedestais da `FamilyHouse`.
+     * **Novas Responsabilidades do Player:** Física/estados em `src/entities/player/states/`, sockets/drop em `PlayerEquipmentRig`, efeitos em `PlayerCombatVFX`, e contrato de invariância com o `WeaponSocketCalibrator`.
+     * **Novas Telas / Modais de UI:** Registro no grupo `"modal_ui"`, auto-scroll em foco para listas em `ScrollContainer`, `GamepadPromptBar` e 100% dos textos em `translations.csv` via `tr()` / `LocalizationService`.
+     * **Limite de Responsabilidade Única (SRP) & Tuning:** Scripts enxutos (~350–400 linhas) e métricas expostas via `@export`.
+  2. Atualizado [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md) incluindo [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) e [`docs/ARQUITETURA_ATORES_E_BASE_ENEMY.md`](ARQUITETURA_ATORES_E_BASE_ENEMY.md) na **Leitura Obrigatória do Topo** e adicionando a **Regra 11 (Regra de Ouro Arquitetural)** na Seção 4.
 * **Critério de Teste (Fase 6):** Revisão da documentação pelo PO e validação headless final do repositório.

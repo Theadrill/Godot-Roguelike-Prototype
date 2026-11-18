@@ -5,7 +5,9 @@
 > Todo agente ou desenvolvedor que for atuar neste repositório **DEVE OBRIGATORIAMENTE LER PRIMEIRO**:
 > 1. [`docs/BRAINSTORMING.md`](BRAINSTORMING.md) — Contém todos os 3 Pilares oficiais do jogo: Lore/História, Metaprogressão da Casa Santuário, Sistema de Combate dos 3 Sinais, Física de Movimentação, Métricas de Saltos e Geração em 3 Camadas de Biomas.
 > 2. [`docs/REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md`](REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md) — Arquitetura mandatória de localização nativa (i18n), banco de textos em CSV, convenção de prefixos e motor de barks aleatórios.
-> 3. Este arquivo [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md).
+> 3. [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) — **Regra de Ouro Arquitetural** para criação e manutenção de scripts, inimigos (`BaseEnemy`), armas (`WeaponData`/`AttackSetData`), sub-controladores do `Player` (com paridade 1:1 com o `WeaponSocketCalibrator`), modais UI (`modal_ui`) e organização de cenas.
+> 4. [`docs/ARQUITETURA_ATORES_E_BASE_ENEMY.md`](ARQUITETURA_ATORES_E_BASE_ENEMY.md) — Mapa estrutural dos subsistemas, contrato de invariância do calibrador e histórico de refatoração em fases.
+> 5. Este arquivo [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md).
 > 
 > **Não inicie nenhuma tarefa sem carregar estes documentos no contexto.**
 
@@ -95,3 +97,11 @@ Todos os assets visuais (protagonista, inimigos, armas, cenários e NPCs) devem 
 * **Consumo Padronizado:** A recuperação textual em tempo de execução deve ocorrer estritamente através da função nativa `tr("CHAVE")` ou pelo `LocalizationService` (no caso de barks aleatórios com filtro anti-repetição).
 * **Tradução Contextualizada & Humanlike (Anti-Google Translate):** Toda tradução adicionada ao catálogo de localização deve ser gerada por IA com alta sensibilidade de contexto, tom narrativo e organicidade cultural (*transcreation*). É **terminantemente proibida a tradução literal, robótica ou palavra-por-palavra estilo Google Translate**. As linhas em inglês e futuros idiomas devem soar como falas naturais escritas por um roteirista nativo, respeitando a ambientação *Dark Fantasy Rústica* e o humor/frustração sutil dos personagens.
 * **Critério de Rejeição:** Qualquer entrega de código contendo strings soltas hardcoded ou traduções mecânicas/literais sem adequação de tom será sumariamente reprovada na checagem de qualidade técnica.
+
+### Regra 11: Padrão Arquitetural de Scripts & Paridade de Ferramentas (Regra de Ouro)
+* **Obediência Estrita ao Guia Normativo:** Todo novo script ou refatoração estrutural **DEVE** seguir integralmente as normas de [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md):
+  * **Inimigos:** Estendem obrigatoriamente `BaseEnemy`, utilizam `EnemyDeathState` e usam os sensores *stateless* do `BaseEnemy` (proibido criar `RayCast2D` soltos em `.tscn` para parede/borda/visão).
+  * **Armas & Golpes:** 100% Data-Driven (`WeaponData` + `AttackSetData` + `ComboStepData`), usando `weapon.get_archetype_id()` / `weapon_category` em vez de condicionais por caminho.
+  * **Player & Calibrador:** Manter física/FSM separadas de `PlayerEquipmentRig` e `PlayerCombatVFX`, preservando paridade matemática 1:1 e compatibilidade total com `WeaponSocketCalibrator`.
+  * **UI & Modais:** Registrar toda janela modal no grupo `"modal_ui"`, ativar `follow_focus` + `ensure_control_visible` em listas roláveis e respeitar 100% a Regra 10 (`translations.csv`).
+  * **Tuning & SRP:** Expor parâmetros de gameplay via `@export` no Inspector e manter controladores enxutos (~350–400 linhas máx.).
