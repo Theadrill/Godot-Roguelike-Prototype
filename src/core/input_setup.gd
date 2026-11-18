@@ -79,6 +79,10 @@ func _ready() -> void:
 		_create_key_event(KEY_3),
 		_create_joy_button_event(JOY_BUTTON_DPAD_LEFT)
 	])
+	# Tecla F2 (Teclado): TOGGLE OVERLAY DE PERFORMANCE (FPS / FRAMETIME)
+	_register_action("toggle_performance_overlay", [
+		_create_key_event(KEY_F2)
+	])
 	# Tecla F3 (Teclado): ATALHO DEV DIRETO PARA PAINEL DE MÉTRICAS
 	_register_action("toggle_debug_metrics", [
 		_create_key_event(KEY_F3)

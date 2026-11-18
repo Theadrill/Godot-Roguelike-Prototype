@@ -22,6 +22,13 @@ func _ready() -> void:
 		var panel = debug_panel_scene.instantiate()
 		add_child(panel)
 
+	# Instancia o overlay leve de FPS / Frametime apenas em builds de debug (F2)
+	if OS.is_debug_build():
+		var perf_overlay_scene := load("res://src/ui/debug/performance_overlay.tscn") as PackedScene
+		if perf_overlay_scene:
+			var perf_overlay = perf_overlay_scene.instantiate()
+			add_child(perf_overlay)
+
 	# Instancia o Menu de Pausa oficial globalmente
 	var pause_menu_scene := load("res://src/ui/pause/pause_menu_ui.tscn") as PackedScene
 	if pause_menu_scene:
