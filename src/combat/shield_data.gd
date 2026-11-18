@@ -32,10 +32,10 @@ func get_socket_profile() -> WeaponSocketProfile:
 @export_range(0.0, 1.0, 0.05) var guard_absorption: float = 0.85
 
 ## Parry window duration in seconds (active frame window for perfect parry)
-@export_range(0.05, 0.3, 0.01, "suffix:s") var parry_window: float = 0.12
+@export_range(0.05, 1.5, 0.01, "suffix:s") var parry_window: float = 0.24
 
 ## Penalty cooldown when missing a parry in the air or out of timing (seconds)
-@export_range(0.2, 2.0, 0.05, "suffix:s") var parry_fail_cooldown: float = 1.0
+@export_range(0.0, 2.0, 0.05, "suffix:s") var parry_fail_cooldown: float = 0.6
 
 ## Stun duration applied to the attacker on successful parry (seconds)
 @export_range(0.2, 2.0, 0.05, "suffix:s") var parry_stun_duration: float = 0.85

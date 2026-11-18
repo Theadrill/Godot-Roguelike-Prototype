@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("1_script")
 guard_absorption = 0.85
-parry_window = 0.12
-parry_fail_cooldown = 1.0
+parry_window = 0.24
+parry_fail_cooldown = 0.6
 parry_stun_duration = 0.85
 has_repulsion_modifier = false
 repulsion_radius = 120.0

@@ -45,7 +45,7 @@ func physics_update(delta: float) -> void:
 
 	if has_angle:
 		_no_angle_timer = 0.0
-		if dist >= archer.min_kite_distance * 1.3 or not archer.can_step_backward() or kite_timer >= max_kite_duration:
+		if dist >= archer.min_kite_distance * 1.3 or not archer.can_step_backward() or kite_timer >= archer.kite_max_duration:
 			state_machine.transition_to("aim")
 			return
 	else:

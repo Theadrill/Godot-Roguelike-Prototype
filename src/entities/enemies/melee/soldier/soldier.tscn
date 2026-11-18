@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://bjwu7uog85ney" path="res://src/entities/enemies/melee/soldier/states/chase_state.gd" id="6_chase"]
 [ext_resource type="Script" uid="uid://mr7nhijwabqu" path="res://src/entities/enemies/melee/soldier/states/attack_state.gd" id="7_attack"]
 [ext_resource type="Script" uid="uid://db5bg0rx7or7c" path="res://src/entities/enemies/melee/soldier/states/hurt_state.gd" id="8_hurt"]
-[ext_resource type="Script" uid="uid://of0itgap2fa3" path="res://src/entities/enemies/melee/soldier/states/death_state.gd" id="9_death"]
+[ext_resource type="Script" path="res://src/entities/enemies/states/enemy_death_state.gd" id="9_death"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 40)

@@ -70,6 +70,20 @@ var roll_duration: float:
 @export var secondary_weapon: WeaponData
 @export var shield: ShieldData
 
+@export_group("Shield & Parry Tuning")
+## Janela base de Parry Perfeito em segundos (se > 0.0, sobrescreve o valor do recurso ShieldData).
+@export_range(0.0, 1.5, 0.02, "suffix:s") var parry_window_override: float = 0.24
+## Bônus extra de janela de Parry especificamente contra ataques Vermelhos (PERILOUS).
+@export_range(0.0, 1.0, 0.02, "suffix:s") var perilous_parry_extra_window: float = 0.10
+## Cooldown de penalidade ao errar um clique seco de Parry (-1.0 usa o do escudo; 0.0 desativa a penalidade).
+@export_range(-1.0, 3.0, 0.05, "suffix:s") var parry_fail_cooldown_override: float = -1.0
+## Se false (padrão), soltar a guarda após segurar o escudo NÃO aplica penalidade de whiff (permite soltar e re-apertar para dar Parry no ataque vermelho!).
+@export var punish_guard_release_after_hold: bool = false
+## Tempo de escudo bloqueado quando um ataque Vermelho quebra a guarda contínua.
+@export_range(0.1, 3.0, 0.05, "suffix:s") var guard_break_cooldown: float = 1.5
+## Duração do stagger quando a guarda é quebrada por ataque Vermelho.
+@export_range(0.1, 2.0, 0.05, "suffix:s") var guard_break_stagger_duration: float = 0.55
+
 @export_group("Socket Profiles")
 ## Perfil global de ancoragem do tronco/costas (BackSocketWeapon e BackSocketShield).
 @export var back_socket_profile: BackSocketProfile
@@ -884,6 +898,16 @@ func is_ranged_weapon_equipped() -> bool:
 
 func can_defend() -> bool:
 	return shield != null and parry_cooldown_timer <= 0.0
+
+func get_effective_parry_window() -> float:
+	if parry_window_override > 0.0:
+		return parry_window_override
+	return shield.parry_window if shield else 0.24
+
+func get_effective_parry_fail_cooldown() -> float:
+	if parry_fail_cooldown_override >= 0.0:
+		return parry_fail_cooldown_override
+	return shield.parry_fail_cooldown if shield else 0.6
 
 func is_ground_slam_requested() -> bool:
 	var down_held: bool = Input.is_action_pressed("down") or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.get_joy_axis(0, JOY_AXIS_LEFT_Y) > 0.4

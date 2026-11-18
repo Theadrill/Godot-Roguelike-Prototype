@@ -51,17 +51,17 @@ func enter() -> void:
 			soldier.is_hyper_armored = false
 			soldier.show_white_telegraph()
 			soldier.set_slash_color(Color(1.0, 1.0, 1.0, 0.9))
-			phase_timer = soldier.telegraph_duration * 0.85 # ~0.38s
+			phase_timer = soldier.telegraph_duration * soldier.normal_telegraph_mult
 		AttackType.YELLOW:
 			soldier.is_hyper_armored = true
 			soldier.show_yellow_telegraph()
 			soldier.set_slash_color(Color(1.0, 0.85, 0.15, 0.95))
-			phase_timer = soldier.telegraph_duration * 1.05 # ~0.47s
+			phase_timer = soldier.telegraph_duration * soldier.heavy_telegraph_mult
 		AttackType.RED:
 			soldier.is_hyper_armored = true
 			soldier.show_red_telegraph()
 			soldier.set_slash_color(Color(1.0, 0.2, 0.2, 0.95))
-			phase_timer = soldier.telegraph_duration * 1.25 # ~0.56s
+			phase_timer = soldier.telegraph_duration * soldier.perilous_telegraph_mult
 
 	attack_phase = 0 # Windup
 	soldier.set_slash_active(false)
@@ -187,7 +187,7 @@ func _advance_phase() -> void:
 
 			# Determine damage, knockback, and category from 3-signal attack_type
 			var damage: float = soldier.normal_damage
-			var knockback: float = 140.0
+			var knockback: float = soldier.normal_knockback
 			var rumble_strong: float = 0.6
 			var category: Hitbox.AttackCategory = Hitbox.AttackCategory.NORMAL
 
@@ -195,23 +195,23 @@ func _advance_phase() -> void:
 				AttackType.YELLOW:
 					category = Hitbox.AttackCategory.HEAVY
 					damage = soldier.heavy_damage
-					knockback = 220.0
+					knockback = soldier.heavy_knockback
 					rumble_strong = 0.8
 				AttackType.RED:
 					category = Hitbox.AttackCategory.PERILOUS
 					damage = soldier.perilous_damage
-					knockback = 320.0
+					knockback = soldier.perilous_knockback
 					rumble_strong = 1.0
 				_:
 					category = Hitbox.AttackCategory.NORMAL
 					damage = soldier.normal_damage
-					knockback = 140.0
+					knockback = soldier.normal_knockback
 					rumble_strong = 0.6
 
 			damage *= soldier.active_damage_multiplier
 
 			if is_upward:
-				phase_timer = 0.16
+				phase_timer = soldier.vertical_attack_active_duration
 				soldier.set_slash_up_active(true)
 				if soldier.hitbox_up:
 					soldier.hitbox_up.attack_category = category
@@ -222,7 +222,7 @@ func _advance_phase() -> void:
 					soldier.hitbox_up.knockback_direction = Vector2(float(soldier.facing_direction) * 0.35, -1.0).normalized()
 					soldier.hitbox_up.set_active(true)
 			elif is_downward:
-				phase_timer = 0.16
+				phase_timer = soldier.vertical_attack_active_duration
 				soldier.set_slash_down_active(true)
 				if soldier.hitbox_down:
 					soldier.hitbox_down.attack_category = category
@@ -233,7 +233,7 @@ func _advance_phase() -> void:
 					soldier.hitbox_down.knockback_direction = Vector2(float(soldier.facing_direction) * 0.35, 1.0).normalized()
 					soldier.hitbox_down.set_active(true)
 			else:
-				phase_timer = 0.14
+				phase_timer = soldier.attack_active_duration
 				soldier.set_slash_active(true)
 				if soldier.hitbox:
 					soldier.hitbox.attack_category = category

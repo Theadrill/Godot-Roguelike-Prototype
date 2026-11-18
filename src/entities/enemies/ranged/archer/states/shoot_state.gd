@@ -126,11 +126,11 @@ func _loose_arrow() -> void:
 			tint_color = Color.WHITE
 		Hitbox.AttackCategory.HEAVY:
 			final_damage = archer.heavy_damage
-			final_speed = archer.arrow_speed * 1.2
+			final_speed = archer.arrow_speed * archer.heavy_arrow_speed_mult
 			tint_color = Color(1.0, 0.85, 0.2, 1.0) # Yellow telegraph tint
 		Hitbox.AttackCategory.PERILOUS:
 			final_damage = archer.perilous_damage
-			final_speed = archer.arrow_speed * 1.35
+			final_speed = archer.arrow_speed * archer.perilous_arrow_speed_mult
 			tint_color = Color(1.0, 0.25, 0.25, 1.0) # Red perilous tint
 
 	final_damage *= archer.active_damage_multiplier
@@ -146,6 +146,6 @@ func _loose_arrow() -> void:
 
 	# Bow recoil impulse on archer (only if mobile)
 	if archer.can_move:
-		archer.velocity.x = -float(archer.facing_direction) * 40.0
+		archer.velocity.x = -float(archer.facing_direction) * archer.bow_recoil_speed
 	else:
 		archer.velocity.x = 0.0

@@ -67,7 +67,7 @@ func physics_update(delta: float) -> void:
 
 	if not archer.can_step_forward():
 		is_waiting = true
-		wait_timer = 1.0
+		wait_timer = archer.patrol_wait_duration
 		archer.velocity.x = 0.0
 		archer.move_and_slide()
 		return

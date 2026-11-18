@@ -29,6 +29,9 @@
   4. Detecção de arquétipo de arma por inspeção de string (`_detect_weapon_type_string`: `if "dagger" in res_path...`) em vez de propriedade tipada no `WeaponData`.
   5. Atalhos de debug (`T`, `Y`, `2`, `3`) acoplados direto no `_unhandled_input` do herói.
 * **Código Morto (Dead Code — 347 linhas):** [`src/entities/player/weapon_socket_config.gd`](../src/entities/player/weapon_socket_config.gd) (`class_name WeaponSocketConfig`) não é referenciado em nenhum lugar do projeto (foi substituído por `WeaponSocketProfile` `.tres`), mas ainda é compilado globalmente.
+* **Ferramenta Crítica de Calibração ([`src/tools/weapon_socket_calibrator.gd`](../src/tools/weapon_socket_calibrator.gd) — 1.304 linhas):**
+  * O calibrador `@tool` lê e salva diretamente em `WeaponSocketProfile` (`.tres` em `socket_profiles/`), `WeaponData` (offsets/scales por step e por frame) e `AttackSetData` / `ComboStepData`.
+  * Embora não instancie `player.gd` diretamente, ele assume **paridade matemática 1:1** com a cena [`player.tscn`](../src/entities/player/player.tscn) e os cálculos de offset/flip/escala do jogador (descrito no contrato abaixo na Fase 4).
 
 ---
 
@@ -111,11 +114,11 @@ Cada fase será executada individualmente, validada via `Godot_v4.7.2-stable_win
 
 ---
 
-### ⚔️ FASE 3 — Migração do `Soldier` para `BaseEnemy` & Limpeza dos Estados Melee
-* **O que será feito:**
-  1. Refatorar [`soldier.gd`](../src/entities/enemies/melee/soldier/soldier.gd) para herdar de `BaseEnemy` (~425 $\rightarrow$ ~140 linhas).
-  2. Limpar [`soldier/states/patrol_state.gd`](../src/entities/enemies/melee/soldier/states/patrol_state.gd) e [`soldier/states/chase_state.gd`](../src/entities/enemies/melee/soldier/states/chase_state.gd) para usarem os sensores de `BaseEnemy` (eliminando `_is_at_ledge`, `_is_hitting_wall`, `_can_see_player`, `_get_player`, `_has_los_to_player` duplicados).
-  3. Apontar `StateMachine/Death` do `Soldier` para `EnemyDeathState` e remover os scripts `death_state.gd` duplicados de `soldier` e `archer`.
+### ⚔️ FASE 3 — Migração do `Soldier` para `BaseEnemy` & Limpeza dos Estados Melee *(Concluída)*
+* **O que foi feito:**
+  1. Refatorado [`soldier.gd`](../src/entities/enemies/melee/soldier/soldier.gd) para herdar de `BaseEnemy` (~425 $\rightarrow$ ~140 linhas).
+  2. Limpos [`soldier/states/patrol_state.gd`](../src/entities/enemies/melee/soldier/states/patrol_state.gd) e [`soldier/states/chase_state.gd`](../src/entities/enemies/melee/soldier/states/chase_state.gd) para usar os sensores de `BaseEnemy` (eliminando `_is_at_ledge`, `_is_hitting_wall`, `_can_see_player`, `_get_player`, `_has_los_to_player` duplicados).
+  3. Apontado `StateMachine/Death` do `Soldier` para `EnemyDeathState` e removidos os scripts `death_state.gd` duplicados de `soldier` e `archer`.
 * **Critério de Teste (Fase 3):** Combate completo contra `Soldier` e `Archer`, verificando que o `Soldier` Elite mantém a escala `1.15x` ao virar de lado, respeita stunlock vs. hyper-armor e contabiliza kills/almas.
 
 ---
@@ -126,7 +129,21 @@ Cada fase será executada individualmente, validada via `Godot_v4.7.2-stable_win
   2. Adicionar `get_archetype_id() -> String` diretamente em [`src/combat/weapon_data.gd`](../src/combat/weapon_data.gd).
   3. Extrair o gerenciamento de sockets e drop de equipamentos na morte para [`src/entities/player/player_equipment_rig.gd`](../src/entities/player/player_equipment_rig.gd) (`class_name PlayerEquipmentRig`).
   4. Extrair o gerenciamento de *Slash VFX*, *Energize* e *Pickup VFX* para [`src/entities/player/player_combat_vfx.gd`](../src/entities/player/player_combat_vfx.gd) (`class_name PlayerCombatVFX`), mantendo as assinaturas públicas em `player.gd` intactas para não quebrar nenhum estado ou o `WeaponSocketCalibrator`.
-* **Critério de Teste (Fase 4):** Testar troca de armas (`1`/`2`), ataques terrestres/aéreos, *Slash VFX*, carga *Energize*, escudo/parry, cura (`Q`), coleta (`E`), morte com drop físico e o `weapon_socket_calibrator.tscn`.
+
+#### Contrato de Invariância e Compatibilidade 100% com o `WeaponSocketCalibrator` (`src/tools/weapon_socket_calibrator.gd`)
+Durante e após a modularização do `Player`, os contratos abaixo **NÃO podem ser alterados** para garantir que futuras calibrações no [`weapon_socket_calibrator.tscn`](../src/tools/weapon_socket_calibrator.tscn) continuem refletindo exatamente o jogo:
+1. **Dependências de Recursos Compartilhados (Imutáveis):**
+   * `WeaponSocketProfile` (`get_frame_data`, `get_back_frame_data`, `set_hand_custom_data`, `set_back_frame_data`) nos perfis `res://src/entities/equipment/socket_profiles/*.tres`.
+   * `WeaponData` (`get_socket_profile`, `get_step_total_slash_offset`, `get_step_total_slash_scale`, `get_step_slash_flip_h`, `get_step_slash_flip_v`, `get_step_slash_animation`, `make_slash_frame_key`, `slash_offset`, `slash_scale`, `slash_step_offsets`, `slash_step_scales`, `slash_frame_offsets`, `slash_frame_scales`).
+   * `AttackSetData` e `ComboStepData` (`get_frame_slash_offset`, `get_frame_slash_scale`, `step_frame_slash_offsets`, `step_frame_air_slash_offsets`, `step_frame_slash_scales`, `step_frame_air_slash_scales`).
+2. **Paridade Matemática 1:1 entre `WeaponSocketCalibrator` e `PlayerEquipmentRig` / `PlayerCombatVFX`:**
+   * Manter a mesma hierarquia e nomes dos 6 sockets sob `Visual` em [`player.tscn`](../src/entities/player/player.tscn): `MainHandSocket`, `OffHandSocket`, `BackSocketWeapon`, `BackSocketShield`, `TeaBottleSocket`, `ItemPickupSocket`, além de `SlashEffect`.
+   * Manter a mesma âncora base do sprite (`Vector2(-2, -29)` geral e `Vector2(-6.5, 4.0)` para `corner_climb`).
+   * Manter a mesma regra de flip de instância (`_apply_visual_instance_flip`, preservando módulo da escala com fallback `0.8`), defaults de `pos`/`rot`/`z_index` por socket (incluindo `z_index = 2` em `corner_climb` quando `< 1`, e `z_index = 1` para `dagger` nas costas) e cálculo de `SlashEffect` (`base_pos + custom_offset`).
+3. **Fachada Pública Intacta em `player.gd`:**
+   * Manter em `Player` os métodos `_update_weapon_socket_for_frame(anim_name, frame_idx)`, `update_slash_frame_transform(frame_idx)`, `set_slash_visual(...)`, `equip_weapon(...)`, `equip_secondary_weapon(...)`, `equip_shield(...)` e `set_shield_raised(...)` como fachadas delegando para `PlayerEquipmentRig` e `PlayerCombatVFX`.
+
+* **Critério de Teste (Fase 4):** Testar troca de armas (`1`/`2`), ataques terrestres/aéreos, *Slash VFX*, carga *Energize*, escudo/parry, cura (`Q`), coleta (`E`), morte com drop físico e validar explicitamente o [`weapon_socket_calibrator.tscn`](../src/tools/weapon_socket_calibrator.tscn) (troca de arma/escudo/animação/frame, preview de slash e salvamento no `.tres`).
 
 ---
 

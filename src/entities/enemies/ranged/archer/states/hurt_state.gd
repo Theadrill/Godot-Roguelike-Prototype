@@ -12,7 +12,7 @@ var hitstop_time: float = 0.0
 
 func enter() -> void:
 	archer = character as Archer
-	stun_timer = custom_stun_duration if custom_stun_duration > 0.0 else 0.25
+	stun_timer = custom_stun_duration if custom_stun_duration > 0.0 else archer.hurt_stun_duration
 	custom_stun_duration = 0.0
 	archer.reaggro_cooldown = 0.0
 	archer.hide_telegraph()

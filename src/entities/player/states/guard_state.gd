@@ -23,7 +23,7 @@ func enter() -> void:
 	guard_held_time = 0.0
 	block_recoil_timer = 0.0
 
-	var parry_window: float = player.shield.parry_window if player.shield else 0.12
+	var parry_window: float = player.get_effective_parry_window()
 	parry_timer = parry_window
 	is_parry_active = true
 
@@ -31,10 +31,13 @@ func exit() -> void:
 	is_parry_active = false
 	player.set_shield_raised(false)
 
-	# Strict 1.0s whiff penalty: applied if player tapped/released guard without absorbing an attack
+	# Whiff penalty: applied only on quick parry tap whiffs (unless punish_guard_release_after_hold is true)
 	if not has_parried:
-		var penalty: float = player.shield.parry_fail_cooldown if player.shield else 1.0
-		player.parry_cooldown_timer = penalty
+		var active_window: float = player.get_effective_parry_window()
+		if player.punish_guard_release_after_hold or guard_held_time <= active_window + 0.05:
+			var penalty: float = player.get_effective_parry_fail_cooldown()
+			if penalty > 0.0:
+				player.parry_cooldown_timer = penalty
 
 func physics_update(delta: float) -> void:
 	guard_held_time += delta
@@ -100,8 +103,12 @@ func _exit_to_movement() -> void:
 func handle_incoming_hit(damage: float, knockback: Vector2, _hitstop: float, incoming_hitbox: Hitbox) -> bool:
 	var category: Hitbox.AttackCategory = incoming_hitbox.attack_category if incoming_hitbox else Hitbox.AttackCategory.NORMAL
 
-	# --- 1. PERFECT PARRY (Active 120ms Window) ---
-	if is_parry_active:
+	var effective_window: float = player.get_effective_parry_window()
+	if category == Hitbox.AttackCategory.PERILOUS:
+		effective_window += player.perilous_parry_extra_window
+
+	# --- 1. PERFECT PARRY (Active Window + Perilous Bonus) ---
+	if is_parry_active or guard_held_time <= effective_window:
 		has_parried = true
 		player.parry_cooldown_timer = 0.0 # Instant reset on success!
 		ProgressionManager.record_perfect_parry()
@@ -167,9 +174,12 @@ func handle_incoming_hit(damage: float, knockback: Vector2, _hitstop: float, inc
 			var absorption: float = player.shield.guard_absorption if player.shield else 0.85
 			var chip_damage: float = damage * (1.0 - absorption)
 			player.current_health = max(0.0, player.current_health - chip_damage)
-			if player.current_health > 0.0:
-				player.rally_recoverable_hp = minf(player.rally_recoverable_hp + chip_damage, player.max_health - player.current_health)
-				player.rally_timer = player.RALLY_DURATION
+			if player.current_health <= 0.0:
+				player.set_shield_raised(false)
+				player.die()
+				return true
+			player.rally_recoverable_hp = minf(player.rally_recoverable_hp + chip_damage, player.max_health - player.current_health)
+			player.rally_timer = player.RALLY_DURATION
 			block_recoil_timer = 0.18
 			player.velocity.x = -player.facing_direction * 150.0
 
@@ -182,11 +192,15 @@ func handle_incoming_hit(damage: float, knockback: Vector2, _hitstop: float, inc
 		Hitbox.AttackCategory.PERILOUS:
 			# GUARD BREAK! 100% damage, staggered, shield dropped and put on long cooldown
 			player.current_health = max(0.0, player.current_health - damage)
-			if player.current_health > 0.0:
-				player.rally_recoverable_hp = minf(player.rally_recoverable_hp + damage, player.max_health - player.current_health)
-				player.rally_timer = player.RALLY_DURATION
 			player.velocity = knockback
-			player.parry_cooldown_timer = 1.5 # Guard break penalty
+			if player.current_health <= 0.0:
+				CombatFeedback.apply_hit_feedback(0.15, 0.7, 1.0, 0.2)
+				player.set_shield_raised(false)
+				player.die()
+				return true
+			player.rally_recoverable_hp = minf(player.rally_recoverable_hp + damage, player.max_health - player.current_health)
+			player.rally_timer = player.RALLY_DURATION
+			player.parry_cooldown_timer = player.guard_break_cooldown # Guard break penalty
 
 			if player.flash_material:
 				player.flash_timer = 0.25
@@ -195,7 +209,7 @@ func handle_incoming_hit(damage: float, knockback: Vector2, _hitstop: float, inc
 
 			# Drop shield and enter long crouched stagger
 			player.set_shield_raised(false)
-			player.trigger_stagger(0.55)
+			player.trigger_stagger(player.guard_break_stagger_duration)
 			return true
 
 	return false

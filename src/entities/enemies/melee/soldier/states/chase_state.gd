@@ -51,12 +51,12 @@ func physics_update(delta: float) -> void:
 		if desired_dir != float(soldier.facing_direction):
 			if turn_cooldown_timer <= 0.0:
 				soldier.update_facing(desired_dir)
-				turn_cooldown_timer = 0.25 # Minimum 250ms between 180-degree turns
+				turn_cooldown_timer = soldier.chase_turn_cooldown
 
 	# Check Line of Sight
-	if not _has_los_to_player():
+	if not soldier.has_line_of_sight_to(player):
 		los_lost_timer += delta
-		if los_lost_timer > 1.2:
+		if los_lost_timer > soldier.chase_los_grace_time:
 			soldier.target_player = null
 			state_machine.transition_to("patrol")
 			return
@@ -66,7 +66,7 @@ func physics_update(delta: float) -> void:
 	# 1. Check Anti-Air / Overhead Attack (Player on elevated platform or jumping overhead)
 	# dy is negative when player is above. Soldier height is 40px (-40 to 0).
 	if anti_air_cooldown_timer <= 0.0 and dist <= 24.0 and dy >= -58.0 and dy <= -16.0:
-		anti_air_cooldown_timer = 0.9
+		anti_air_cooldown_timer = soldier.anti_air_cooldown
 		soldier.velocity.x = 0.0
 		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState
 		if attack_state:
@@ -78,7 +78,7 @@ func physics_update(delta: float) -> void:
 	# 2. Check Downward Attack (Player is below soldier, e.g. on lower platform)
 	# dy is positive when player is below.
 	if anti_air_cooldown_timer <= 0.0 and dist <= 24.0 and dy >= 16.0 and dy <= 58.0:
-		anti_air_cooldown_timer = 0.9
+		anti_air_cooldown_timer = soldier.anti_air_cooldown
 		soldier.velocity.x = 0.0
 		var attack_state: SoldierAttackState = state_machine.get_node("Attack") as SoldierAttackState
 		if attack_state:
@@ -98,7 +98,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Stop at ledge rather than jumping off cliff
-	if _is_at_ledge():
+	if soldier.is_at_ledge(soldier.facing_direction, 12.0):
 		soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
 		soldier.move_and_slide()
 		return
@@ -110,29 +110,3 @@ func physics_update(delta: float) -> void:
 	else:
 		soldier.velocity.x = move_toward(soldier.velocity.x, 0.0, soldier.friction * delta)
 	soldier.move_and_slide()
-
-## Raycast: Ledge check
-func _is_at_ledge() -> bool:
-	var space := soldier.get_world_2d().direct_space_state
-	var check_x: float = soldier.global_position.x + (soldier.facing_direction * 12.0)
-	var query := PhysicsRayQueryParameters2D.create(
-		Vector2(check_x, soldier.global_position.y - 2.0),
-		Vector2(check_x, soldier.global_position.y + 16.0),
-		1 # Layer 1: Environment
-	)
-	var hit := space.intersect_ray(query)
-	return hit.is_empty()
-
-## Raycast: Line of sight check
-func _has_los_to_player() -> bool:
-	var player := soldier.target_player
-	if not player:
-		return false
-	var space := soldier.get_world_2d().direct_space_state
-	var query := PhysicsRayQueryParameters2D.create(
-		soldier.global_position + Vector2(0.0, -20.0),
-		player.global_position + Vector2(0.0, -20.0),
-		1 # Layer 1: Environment
-	)
-	var hit := space.intersect_ray(query)
-	return hit.is_empty()

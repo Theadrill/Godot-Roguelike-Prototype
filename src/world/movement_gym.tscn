@@ -52,103 +52,119 @@ collision_mask = 0
 [node name="Ground1_Col" type="CollisionShape2D" parent="Environment" unique_id=677030247]
 position = Vector2(0, 324)
 shape = SubResource("RectangleShape2D_ground1")
+metadata/_edit_group_ = true
 
-[node name="Ground1_Vis" type="Polygon2D" parent="Environment" unique_id=1361034921]
+[node name="Ground1_Vis" type="Polygon2D" parent="Environment/Ground1_Col" unique_id=1361034921]
 color = Color(0.15, 0.17, 0.22, 1)
-polygon = PackedVector2Array(-350, 288, 350, 288, 350, 360, -350, 360)
+polygon = PackedVector2Array(-350, -36, 350, -36, 350, 36, -350, 36)
 
 [node name="WallLeftBoundary_Col" type="CollisionShape2D" parent="Environment" unique_id=643261727]
 position = Vector2(-370, 150)
 shape = SubResource("RectangleShape2D_wall_left_boundary")
+metadata/_edit_group_ = true
 
-[node name="WallLeftBoundary_Vis" type="Polygon2D" parent="Environment" unique_id=254504624]
+[node name="WallLeftBoundary_Vis" type="Polygon2D" parent="Environment/WallLeftBoundary_Col" unique_id=254504624]
 color = Color(0.12, 0.14, 0.18, 1)
-polygon = PackedVector2Array(-390, -50, -350, -50, -350, 360, -390, 360)
+polygon = PackedVector2Array(-20, -200, 20, -200, 20, 210, -20, 210)
 
 [node name="JumpWall_Col" type="CollisionShape2D" parent="Environment" unique_id=1849102481]
+position = Vector2(-208, 264)
+shape = SubResource("RectangleShape2D_jump_wall")
+metadata/_edit_group_ = true
+
+[node name="JumpWall_Vis" type="Polygon2D" parent="Environment/JumpWall_Col" unique_id=958102374]
+color = Color(0.24, 0.27, 0.35, 1)
+polygon = PackedVector2Array(-8, -24, 8, -24, 8, 24, -8, 24)
+
+[node name="JumpWall_Col2" type="CollisionShape2D" parent="Environment" unique_id=1337399740]
 position = Vector2(-12, 264)
 shape = SubResource("RectangleShape2D_jump_wall")
+metadata/_edit_group_ = true
 
-[node name="JumpWall_Vis" type="Polygon2D" parent="Environment" unique_id=958102374]
+[node name="JumpWall_Vis2" type="Polygon2D" parent="Environment/JumpWall_Col2" unique_id=814585857]
 color = Color(0.24, 0.27, 0.35, 1)
-polygon = PackedVector2Array(-20, 240, -4, 240, -4, 288, -20, 288)
+polygon = PackedVector2Array(-8, -24, 8, -24, 8, 24, -8, 24)
 
 [node name="Step4_Col" type="CollisionShape2D" parent="Environment" unique_id=1270975954]
 position = Vector2(400, 256)
 shape = SubResource("RectangleShape2D_step_4tiles")
+metadata/_edit_group_ = true
 
-[node name="Step4_Vis" type="Polygon2D" parent="Environment" unique_id=876480704]
+[node name="Step4_Vis" type="Polygon2D" parent="Environment/Step4_Col" unique_id=876480704]
 color = Color(0.22, 0.25, 0.32, 1)
-polygon = PackedVector2Array(350, 224, 450, 224, 450, 288, 350, 288)
+polygon = PackedVector2Array(-50, -32, 50, -32, 50, 32, -50, 32)
 
 [node name="Step7_Col" type="CollisionShape2D" parent="Environment" unique_id=2136897261]
 position = Vector2(500, 232)
 shape = SubResource("RectangleShape2D_step_7tiles")
+metadata/_edit_group_ = true
 
-[node name="Step7_Vis" type="Polygon2D" parent="Environment" unique_id=1976320532]
+[node name="Step7_Vis" type="Polygon2D" parent="Environment/Step7_Col" unique_id=1976320532]
 color = Color(0.28, 0.32, 0.4, 1)
-polygon = PackedVector2Array(450, 176, 550, 176, 550, 288, 450, 288)
+polygon = PackedVector2Array(-50, -56, 50, -56, 50, 56, -50, 56)
 
 [node name="Ground2_Col" type="CollisionShape2D" parent="Environment" unique_id=28844364]
 position = Vector2(725, 324)
 shape = SubResource("RectangleShape2D_ground2")
+metadata/_edit_group_ = true
 
-[node name="Ground2_Vis" type="Polygon2D" parent="Environment" unique_id=196877385]
+[node name="Ground2_Vis" type="Polygon2D" parent="Environment/Ground2_Col" unique_id=196877385]
 color = Color(0.15, 0.17, 0.22, 1)
-polygon = PackedVector2Array(600, 288, 850, 288, 850, 360, 600, 360)
+polygon = PackedVector2Array(-125, -36, 125, -36, 125, 36, -125, 36)
 
 [node name="LowCeiling_Col" type="CollisionShape2D" parent="Environment" unique_id=1433940830]
 position = Vector2(725, 224)
 shape = SubResource("RectangleShape2D_ceiling")
+metadata/_edit_group_ = true
 
-[node name="LowCeiling_Vis" type="Polygon2D" parent="Environment" unique_id=1564603603]
+[node name="LowCeiling_Vis" type="Polygon2D" parent="Environment/LowCeiling_Col" unique_id=1564603603]
 color = Color(0.2, 0.23, 0.3, 1)
-polygon = PackedVector2Array(655, 192, 795, 192, 795, 256, 655, 256)
+polygon = PackedVector2Array(-70, -32, 70, -32, 70, 32, -70, 32)
 
 [node name="Ground3_Col" type="CollisionShape2D" parent="Environment" unique_id=705596450]
 position = Vector2(1500.5, 324)
 shape = SubResource("RectangleShape2D_ground3")
+metadata/_edit_group_ = true
 
-[node name="Ground3_Vis" type="Polygon2D" parent="Environment" unique_id=1147777208]
-position = Vector2(-1802.2504, 0)
-scale = Vector2(3.0025003, 1)
+[node name="Ground3_Vis" type="Polygon2D" parent="Environment/Ground3_Col" unique_id=1147777208]
 color = Color(0.15, 0.17, 0.22, 1)
-polygon = PackedVector2Array(900, 288, 1300, 288, 1300, 309.23602, 1299.9999, 323.0991, 1300, 360, 900, 360)
+polygon = PackedVector2Array(-600.5, -36, 600.5, -36, 600.5, 36, -600.5, 36)
 
 [node name="MidPlatform_Col" type="CollisionShape2D" parent="Environment" unique_id=135090848]
 position = Vector2(908, 158)
 shape = SubResource("RectangleShape2D_mid_platform")
+metadata/_edit_group_ = true
 
-[node name="MidPlatform_Vis" type="Polygon2D" parent="Environment" unique_id=2047186042]
-position = Vector2(13, -43)
+[node name="MidPlatform_Vis" type="Polygon2D" parent="Environment/MidPlatform_Col" unique_id=2047186042]
 color = Color(0.2, 0.45, 0.55, 1)
-polygon = PackedVector2Array(835, 191, 955, 191, 955, 211, 835, 211)
+polygon = PackedVector2Array(-60, -10, 60, -10, 60, 10, -60, 10)
 
 [node name="WallLeft_Col" type="CollisionShape2D" parent="Environment" unique_id=1651596590]
 position = Vector2(1016, 124)
 shape = SubResource("RectangleShape2D_wall_left")
+metadata/_edit_group_ = true
 
-[node name="WallLeft_Vis" type="Polygon2D" parent="Environment" unique_id=1514652002]
+[node name="WallLeft_Vis" type="Polygon2D" parent="Environment/WallLeft_Col" unique_id=1514652002]
 color = Color(0.2, 0.23, 0.3, 1)
-polygon = PackedVector2Array(1000, 20, 1032, 20, 1032, 228, 1000, 228)
+polygon = PackedVector2Array(-16, -104, 16, -104, 16, 104, -16, 104)
 
 [node name="WallRight_Col" type="CollisionShape2D" parent="Environment" unique_id=113246179]
 position = Vector2(1096, 147.5)
 shape = SubResource("RectangleShape2D_wall_right")
+metadata/_edit_group_ = true
 
-[node name="WallRight_Vis" type="Polygon2D" parent="Environment" unique_id=77798678]
-position = Vector2(0, 18.854546)
-scale = Vector2(1, 0.7227273)
+[node name="WallRight_Vis" type="Polygon2D" parent="Environment/WallRight_Col" unique_id=77798678]
 color = Color(0.2, 0.23, 0.3, 1)
-polygon = PackedVector2Array(1080, 68, 1112, 68, 1112, 288, 1095.2529, 288, 1080, 288)
+polygon = PackedVector2Array(-16, -79.5, 16, -79.5, 16, 79.5, -16, 79.5)
 
 [node name="Balcony_Col" type="CollisionShape2D" parent="Environment" unique_id=873059603]
 position = Vector2(1172, 78)
 shape = SubResource("RectangleShape2D_balcony")
+metadata/_edit_group_ = true
 
-[node name="Balcony_Vis" type="Polygon2D" parent="Environment" unique_id=289382288]
+[node name="Balcony_Vis" type="Polygon2D" parent="Environment/Balcony_Col" unique_id=289382288]
 color = Color(0.35, 0.4, 0.52, 1)
-polygon = PackedVector2Array(1112, 68, 1232, 68, 1232, 88, 1112, 88)
+polygon = PackedVector2Array(-60, -10, 60, -10, 60, 10, -60, 10)
 
 [node name="UI_Hints" type="Node2D" parent="." unique_id=1120056627]
 
@@ -216,6 +232,16 @@ position = Vector2(121, 288)
 
 [node name="Soldier" parent="." unique_id=53509489 instance=ExtResource("3_soldier")]
 position = Vector2(32, 287)
+max_health = 165.0
+normal_damage = 36.0
+heavy_damage = 77.0
+perilous_damage = 138.0
+attack_cooldown = 1.0
+tier_1_attacks = 3
+tier_2_behavior = 1
+
+[node name="Soldier2" parent="." unique_id=397488660 instance=ExtResource("3_soldier")]
+position = Vector2(-56, 288)
 max_health = 165.0
 normal_damage = 36.0
 heavy_damage = 77.0

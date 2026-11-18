@@ -8,6 +8,10 @@ extends BaseEnemy
 @export_range(30.0, 300.0, 5.0, "suffix:px/s") var kite_speed: float = 75.0
 @export_range(200.0, 1200.0, 50.0, "suffix:px/s") var arrow_speed: float = 520.0
 @export_range(5.0, 45.0, 1.0, "suffix:deg") var max_aim_angle_deg: float = 25.0
+@export_range(0.2, 4.0, 0.1, "suffix:s") var kite_max_duration: float = 1.2
+@export_range(1.0, 2.5, 0.05) var heavy_arrow_speed_mult: float = 1.2
+@export_range(1.0, 2.5, 0.05) var perilous_arrow_speed_mult: float = 1.35
+@export_range(0.0, 200.0, 5.0, "suffix:px/s") var bow_recoil_speed: float = 40.0
 
 var min_kite_distance: float:
 	get: return attack_range
@@ -32,6 +36,8 @@ func _init() -> void:
 	heavy_damage = 24.0
 	perilous_damage = 35.0
 	telegraph_duration = 0.50
+	hurt_stun_duration = 0.25
+	patrol_wait_duration = 1.0
 	cooldown_speed_mult = 0.50
 	tier_1_behavior = CooldownBehavior.DEFENSIVE_RETREAT
 	tier_2_behavior = CooldownBehavior.DEFENSIVE_RETREAT

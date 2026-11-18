@@ -36,6 +36,16 @@ enum CooldownBehavior {
 @export_range(10.0, 150.0, 1.0) var heavy_damage: float = 22.0
 @export_range(15.0, 200.0, 1.0) var perilous_damage: float = 34.0
 @export_range(0.1, 1.5, 0.05, "suffix:s") var telegraph_duration: float = 0.45
+## Multiplicador da duração do telegraph no ataque Branco (Normal).
+@export_range(0.2, 3.0, 0.05) var normal_telegraph_mult: float = 0.85
+## Multiplicador da duração do telegraph no ataque Amarelo (Pesado).
+@export_range(0.2, 3.0, 0.05) var heavy_telegraph_mult: float = 1.00
+## Multiplicador da duração do telegraph no ataque Vermelho (Perilous).
+@export_range(0.2, 3.0, 0.05) var perilous_telegraph_mult: float = 1.05
+## Tempo padrão de stagger deste inimigo ao receber um golpe normal.
+@export_range(0.05, 1.5, 0.02, "suffix:s") var hurt_stun_duration: float = 0.22
+## Tempo de espera na borda/parede antes de inverter a direção na patrulha.
+@export_range(0.1, 3.0, 0.05, "suffix:s") var patrol_wait_duration: float = 0.5
 @export_range(0.0, 20.0, 0.05, "suffix:s") var attack_cooldown: float = 2.0
 @export_range(0.1, 1.0, 0.05) var cooldown_speed_mult: float = 0.48
 @export_range(0.5, 8.0, 0.25, "suffix:s") var lose_aggro_time: float = 2.5
