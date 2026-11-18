@@ -24,6 +24,7 @@ extends CanvasLayer
 
 func _ready() -> void:
 	visible = false
+	add_to_group("modal_ui")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_buttons()
 	ProgressionManager.metrics_updated.connect(_refresh_metrics)

@@ -11,6 +11,7 @@ signal closed
 
 func _ready() -> void:
 	visible = false
+	add_to_group("modal_ui")
 	btn_choose_1.pressed.connect(func() -> void: _on_chosen("onda_espectral"))
 	btn_choose_2.pressed.connect(func() -> void: _on_chosen("olhar_da_ruina"))
 	btn_skip.pressed.connect(func() -> void: _on_chosen(""))

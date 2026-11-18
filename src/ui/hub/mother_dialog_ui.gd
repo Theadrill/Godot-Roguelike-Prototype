@@ -37,6 +37,7 @@ var did_take_tea_or_elixir: bool = false
 
 func _ready() -> void:
 	visible = false
+	add_to_group("modal_ui")
 	_setup_buttons()
 
 func _setup_buttons() -> void:
@@ -149,13 +150,13 @@ func _refresh_display() -> void:
 
 	# Chás Permanentes
 	var hp_bonus: int = (ProgressionManager.tea_stone_root_level - 1) * 15
-	tea_1_level_label.text = "Nível " + str(ProgressionManager.tea_stone_root_level) + " (+" + str(hp_bonus) + " HP)"
-	tea_1_req_label.text = "Feixes: " + str(ProgressionManager.tea_stone_root_duplicates) + "/2"
+	tea_1_level_label.text = tr("UI_TEA_HP_LEVEL_FMT") % [ProgressionManager.tea_stone_root_level, hp_bonus]
+	tea_1_req_label.text = tr("UI_TEA_BUNDLES_REQ_FMT") % ProgressionManager.tea_stone_root_duplicates
 	btn_upgrade_tea_1.disabled = (ProgressionManager.tea_stone_root_duplicates < 2)
 	
 	var heal_bonus: int = (ProgressionManager.tea_mountain_chamomile_level - 1) * 5
-	tea_2_level_label.text = "Nível " + str(ProgressionManager.tea_mountain_chamomile_level) + " (+" + str(heal_bonus) + "% Cura)"
-	tea_2_req_label.text = "Feixes: " + str(ProgressionManager.tea_mountain_chamomile_duplicates) + "/2"
+	tea_2_level_label.text = tr("UI_TEA_HEAL_LEVEL_FMT") % [ProgressionManager.tea_mountain_chamomile_level, heal_bonus]
+	tea_2_req_label.text = tr("UI_TEA_BUNDLES_REQ_FMT") % ProgressionManager.tea_mountain_chamomile_duplicates
 	btn_upgrade_tea_2.disabled = (ProgressionManager.tea_mountain_chamomile_duplicates < 2)
 
 	# Roupas

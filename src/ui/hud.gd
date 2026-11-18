@@ -28,7 +28,7 @@ func _ready() -> void:
 
 func show_tier_toast(tier_num: int, tier_name: String, player_level: int) -> void:
 	if tier_label:
-		tier_label.text = "⚔️ INIMIGOS: TIER %d [%s] - LV %d (Tecla T)" % [tier_num, tier_name, player_level]
+		tier_label.text = tr("UI_HUD_TIER_TOAST") % [tier_num, tier_name, player_level]
 		match tier_num:
 			1:
 				tier_label.modulate = Color(0.8, 0.85, 0.95, 0.85)
@@ -73,17 +73,17 @@ func _process(delta: float) -> void:
 
 	# Shield & Revive status indicator
 	if player.current_health <= 0.0:
-		status_label.text = "● O SANGUE CESSA..."
+		status_label.text = tr("UI_SHIELD_DEAD")
 		status_label.modulate = Color(0.55, 0.72, 0.65, 0.9)
 	elif player.parry_cooldown_timer > 0.0:
-		status_label.text = "● ESCUDO BLOQUEADO: %.1fs" % player.parry_cooldown_timer
+		status_label.text = tr("UI_SHIELD_LOCKED") % player.parry_cooldown_timer
 		status_label.modulate = Color(1.0, 0.45, 0.4, 0.95)
 	elif player.is_shield_raised:
-		status_label.text = "● ESCUDO EM GUARDA"
+		status_label.text = tr("UI_SHIELD_GUARD")
 		status_label.modulate = Color(0.35, 0.8, 1.0, 0.95)
 	else:
-		var rep_text := " [REPULSÃO ATIVA]" if (player.shield and player.shield.has_repulsion_modifier) else ""
-		status_label.text = "● ESCUDO PRONTO%s" % rep_text
+		var rep_text: String = tr("UI_SHIELD_REPULSION_TAG") if (player.shield and player.shield.has_repulsion_modifier) else ""
+		status_label.text = tr("UI_SHIELD_READY") % rep_text
 		status_label.modulate = Color(0.7, 0.75, 0.85, 0.75)
 
 	# Health Flask (Mother's Tea) indicator using i18n

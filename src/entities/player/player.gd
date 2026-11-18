@@ -538,13 +538,13 @@ func cycle_enemy_tier_live() -> void:
 			player_level = 1 # Tier 1 (Recruta)
 
 	var tier_num: int = 1
-	var tier_name: String = "RECRUTA"
+	var tier_name: String = tr("UI_TIER_RECRUIT")
 	if player_level >= 8:
 		tier_num = 3
-		tier_name = "ELITE"
+		tier_name = tr("UI_TIER_ELITE")
 	elif player_level >= 4:
 		tier_num = 2
-		tier_name = "VETERANO"
+		tier_name = tr("UI_TIER_VETERAN")
 
 	var enemies := get_tree().get_nodes_in_group("enemies")
 	for enemy in enemies:

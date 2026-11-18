@@ -17,6 +17,7 @@ var did_upgrade_weapon: bool = false
 
 func _ready() -> void:
 	visible = false
+	add_to_group("modal_ui")
 	_setup_buttons()
 
 func _setup_buttons() -> void:
@@ -66,12 +67,12 @@ func _refresh_display() -> void:
 
 	# 1. Espada Rústica
 	var sword_dmg: float = ProgressionManager.get_sword_base_damage()
-	weapon_1_level_label.text = "Nível " + str(ProgressionManager.weapon_sword_level) + " (Dano: " + str(sword_dmg) + ")"
-	weapon_1_req_label.text = "Receitas Repetidas: " + str(ProgressionManager.weapon_sword_duplicates) + "/2"
+	weapon_1_level_label.text = tr("UI_FORGE_LEVEL_DMG_FMT") % [ProgressionManager.weapon_sword_level, str(sword_dmg)]
+	weapon_1_req_label.text = tr("UI_FORGE_RECIPES_REQ_FMT") % ProgressionManager.weapon_sword_duplicates
 	btn_upgrade_weapon_1.disabled = (ProgressionManager.weapon_sword_duplicates < 2)
 
 	# 2. Arco de Caça
 	var bow_dmg: float = ProgressionManager.get_bow_base_damage()
-	weapon_2_level_label.text = "Nível " + str(ProgressionManager.weapon_bow_level) + " (Dano: " + str(bow_dmg) + ")"
-	weapon_2_req_label.text = "Receitas Repetidas: " + str(ProgressionManager.weapon_bow_duplicates) + "/2"
+	weapon_2_level_label.text = tr("UI_FORGE_LEVEL_DMG_FMT") % [ProgressionManager.weapon_bow_level, str(bow_dmg)]
+	weapon_2_req_label.text = tr("UI_FORGE_RECIPES_REQ_FMT") % ProgressionManager.weapon_bow_duplicates
 	btn_upgrade_weapon_2.disabled = (ProgressionManager.weapon_bow_duplicates < 2)

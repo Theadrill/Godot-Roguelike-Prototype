@@ -122,7 +122,7 @@ func interact() -> void:
 	var is_unlocked: bool = _check_is_unlocked()
 	if not is_unlocked:
 		var condition_text: String = _get_condition_text()
-		_player_ref.show_bark("[Trancado] " + condition_text)
+		_player_ref.show_bark(tr("BARK_PEDESTAL_LOCKED_FMT") % condition_text)
 		return
 
 	# --- PEDESTAL DE ESCUDOS ---
@@ -141,9 +141,9 @@ func interact() -> void:
 			_show_hint(true)
 
 			if old_shield:
-				_player_ref.show_bark("Trocou escudo: " + new_shield.equipment_name)
+				_player_ref.show_bark(tr("BARK_PEDESTAL_SHIELD_SWAPPED") % new_shield.equipment_name)
 			else:
-				_player_ref.show_bark("Escudo Equipado: " + new_shield.equipment_name)
+				_player_ref.show_bark(tr("BARK_PEDESTAL_SHIELD_EQUIPPED") % new_shield.equipment_name)
 		else:
 			# O pedestal está vazio: guarda o escudo do guerreiro nele
 			if _player_ref.shield != null:
@@ -151,9 +151,9 @@ func interact() -> void:
 				_player_ref.equip_shield(null)
 				_refresh_pedestal_state()
 				_show_hint(true)
-				_player_ref.show_bark("Escudo guardado no pedestal.")
+				_player_ref.show_bark(tr("BARK_PEDESTAL_SHIELD_STORED"))
 			else:
-				_player_ref.show_bark("Pedestal Vazio.")
+				_player_ref.show_bark(tr("BARK_PEDESTAL_EMPTY"))
 		return
 
 	# --- PEDESTAL DE ARMAS ---
@@ -168,7 +168,7 @@ func interact() -> void:
 			_refresh_pedestal_state()
 			_show_hint(true)
 			_player_ref.show_equipment_visuals()
-			_player_ref.show_bark("Equipado na mão: " + new_wp.equipment_name)
+			_player_ref.show_bark(tr("BARK_PEDESTAL_WEAPON_MAIN") % new_wp.equipment_name)
 		# Caso 2: Já tem na mão, mas não tem nas costas -> Equipa nas costas
 		elif not _player_ref.secondary_weapon:
 			_player_ref.equip_secondary_weapon(new_wp)
@@ -176,7 +176,7 @@ func interact() -> void:
 			_refresh_pedestal_state()
 			_show_hint(true)
 			_player_ref.show_equipment_visuals()
-			_player_ref.show_bark("Equipado nas costas: " + new_wp.equipment_name)
+			_player_ref.show_bark(tr("BARK_PEDESTAL_WEAPON_BACK") % new_wp.equipment_name)
 		# Caso 3: Já tem ambas -> Troca a arma atual da mão com a do pedestal
 		else:
 			var old_wp: WeaponData = _player_ref.weapon
@@ -185,7 +185,7 @@ func interact() -> void:
 			_refresh_pedestal_state()
 			_show_hint(true)
 			_player_ref.show_equipment_visuals()
-			_player_ref.show_bark("Trocou de arma: " + new_wp.equipment_name)
+			_player_ref.show_bark(tr("BARK_PEDESTAL_WEAPON_SWAPPED") % new_wp.equipment_name)
 	else:
 		# Pedestal de arma vazio: guarda a arma da mão nele
 		if _player_ref.weapon != null:
@@ -198,9 +198,9 @@ func interact() -> void:
 				_player_ref.equip_weapon(null)
 			_refresh_pedestal_state()
 			_show_hint(true)
-			_player_ref.show_bark("Arma guardada no pedestal.")
+			_player_ref.show_bark(tr("BARK_PEDESTAL_WEAPON_STORED"))
 		else:
-			_player_ref.show_bark("Pedestal Vazio.")
+			_player_ref.show_bark(tr("BARK_PEDESTAL_EMPTY"))
 
 func _check_is_unlocked() -> bool:
 	if is_shield_pedestal:
@@ -289,20 +289,20 @@ func _show_hint(show: bool) -> void:
 		else:
 			if is_shield_pedestal:
 				if _player_ref and _player_ref.shield:
-					info_label.text = "[RB] Guardar Escudo"
+					info_label.text = tr("UI_PEDESTAL_STORE_SHIELD")
 					info_label.modulate = Color(0.8, 0.9, 1.0, 1.0)
 				else:
-					info_label.text = "Pedestal Vazio"
+					info_label.text = tr("UI_PEDESTAL_EMPTY_LABEL")
 					info_label.modulate = Color(0.65, 0.65, 0.65, 1.0)
 			else:
 				if _player_ref and _player_ref.weapon:
-					info_label.text = "[RB] Guardar Arma"
+					info_label.text = tr("UI_PEDESTAL_STORE_WEAPON")
 					info_label.modulate = Color(0.8, 0.9, 1.0, 1.0)
 				else:
-					info_label.text = "Pedestal Vazio"
+					info_label.text = tr("UI_PEDESTAL_EMPTY_LABEL")
 					info_label.modulate = Color(0.65, 0.65, 0.65, 1.0)
 	else:
-		info_label.text = "[Trancado]\n" + _get_condition_text()
+		info_label.text = tr("UI_PEDESTAL_LOCKED_HINT_FMT") % _get_condition_text()
 		info_label.modulate = Color(1.0, 0.7, 0.5, 1.0)
 
 	info_label.visible = true

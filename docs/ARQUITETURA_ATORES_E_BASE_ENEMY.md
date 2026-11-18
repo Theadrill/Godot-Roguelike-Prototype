@@ -147,15 +147,15 @@ Durante e após a modularização do `Player`, os contratos abaixo **NÃO podem 
 
 ---
 
-### 🌐 FASE 5 — Conformidade Total de i18n (Regra 10) & Desacoplamento de Modais UI
-* **O que será feito:**
-  1. Cadastrar em [`src/core/localization/translations.csv`](../src/core/localization/translations.csv) (com tradução *humanlike* `pt_BR` e `en_US`) todas as strings hoje hardcoded em:
+### 🌐 FASE 5 — Conformidade Total de i18n (Regra 10) & Desacoplamento de Modais UI *(Concluída)*
+* **O que foi feito:**
+  1. Cadastradas em [`src/core/localization/translations.csv`](../src/core/localization/translations.csv) (com tradução contextual *humanlike* `pt_BR` e `en_US`) todas as strings que estavam hardcoded em:
      * `src/ui/hud.gd` (status de escudo, morte, repulsão e toast de Tier)
      * `src/entities/player/player.gd` (nomes de Tier)
      * `src/world/hub/weapon_pedestal.gd` (barks e avisos de pedestal)
      * `src/core/progression_manager.gd` (nomes de armas e metas de desbloqueio dos pedestais)
      * `src/ui/hub/mother_dialog_ui.gd` e `src/ui/hub/brother_forge_ui.gd` (labels de nível, dano e requisitos)
-  2. Adicionar os modais (`MotherDialogUI`, `BrotherForgeUI`, `TouchOfDeathUI`, `DebugMetricsPanel`) ao grupo `"modal_ui"` e simplificar `PauseMenuUI._try_open_pause_menu()` para checar o grupo em vez de `find_child()` nominal.
+  2. Adicionados os modais (`MotherDialogUI`, `BrotherForgeUI`, `TouchOfDeathUI`, `DebugMetricsPanel`) ao grupo `"modal_ui"` e simplificado `PauseMenuUI._try_open_pause_menu()` para checar `_is_any_modal_open()` via grupo em vez de `find_child()` nominal.
 * **Critério de Teste (Fase 5):** Testar HUD, pedestais da Casa Familiar, diálogos da Mãe/Irmão/Morte e Menu de Pausa sem nenhuma string hardcoded restante.
 
 ---

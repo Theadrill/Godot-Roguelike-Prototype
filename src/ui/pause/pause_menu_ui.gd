@@ -22,8 +22,7 @@ func _setup_buttons() -> void:
 	btn_restart.pressed.connect(_on_restart_pressed)
 
 func _unhandled_input(event: InputEvent) -> void:
-	var debug_panel = get_tree().root.find_child("DebugMetricsPanel", true, false)
-	if debug_panel and debug_panel.visible:
+	if not visible and _is_any_modal_open():
 		return
 
 	if event.is_action_pressed("pause_game"):
@@ -36,22 +35,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		close_pause_menu()
 
+func _is_any_modal_open() -> bool:
+	for node in get_tree().get_nodes_in_group("modal_ui"):
+		if "visible" in node and node.visible:
+			return true
+	return false
+
 func _try_open_pause_menu() -> void:
-	# Não abre se o painel de debug ou diálogos modais estiverem abertos
-	var debug_panel = get_tree().root.find_child("DebugMetricsPanel", true, false)
-	if debug_panel and debug_panel.visible:
-		return
-		
-	var mother_ui = get_tree().root.find_child("MotherDialogUI", true, false)
-	if mother_ui and mother_ui.visible:
-		return
-		
-	var brother_ui = get_tree().root.find_child("BrotherForgeUI", true, false)
-	if brother_ui and brother_ui.visible:
-		return
-		
-	var death_ui = get_tree().root.find_child("TouchOfDeathUI", true, false)
-	if death_ui and death_ui.visible:
+	# Não abre se qualquer janela modal estiver aberta
+	if _is_any_modal_open():
 		return
 
 	open_pause_menu()

@@ -142,26 +142,28 @@ func record_shield_upgrade() -> void:
 	metrics_updated.emit()
 
 const WEAPON_DISPLAY_NAMES: Dictionary = {
-	"sword_base": "Espada do Viajante",
-	"weapon_sword_base": "Espada do Viajante",
-	"shield_base": "Broquel de Ferro",
-	"shield_buckler_base": "Broquel de Ferro",
-	"bow_base": "Arco de Caça",
-	"weapon_bow_base": "Arco de Caça",
-	"dagger_base": "Adagas Gêmeas",
-	"weapon_dagger_base": "Adagas Gêmeas",
-	"hammer_base": "Martelo de Guerra",
-	"weapon_hammer_base": "Martelo de Guerra",
-	"staff_base": "Cajado do Vazio",
-	"weapon_staff_base": "Cajado do Vazio",
-	"crossbow_base": "Besta de Repetição",
-	"weapon_crossbow_base": "Besta de Repetição"
+	"sword_base": "ITEM_SWORD_BASE_NAME",
+	"weapon_sword_base": "ITEM_SWORD_BASE_NAME",
+	"shield_base": "ITEM_SHIELD_BASE_NAME",
+	"shield_buckler_base": "ITEM_SHIELD_BASE_NAME",
+	"bow_base": "ITEM_BOW_BASE_NAME",
+	"weapon_bow_base": "ITEM_BOW_BASE_NAME",
+	"dagger_base": "ITEM_DAGGER_BASE_NAME",
+	"weapon_dagger_base": "ITEM_DAGGER_BASE_NAME",
+	"hammer_base": "ITEM_HAMMER_BASE_NAME",
+	"weapon_hammer_base": "ITEM_HAMMER_BASE_NAME",
+	"staff_base": "ITEM_STAFF_BASE_NAME",
+	"weapon_staff_base": "ITEM_STAFF_BASE_NAME",
+	"crossbow_base": "ITEM_CROSSBOW_BASE_NAME",
+	"weapon_crossbow_base": "ITEM_CROSSBOW_BASE_NAME",
+	"axe_base": "ITEM_AXE_BASE_NAME",
+	"weapon_axe_base": "ITEM_AXE_BASE_NAME"
 }
 
 func get_weapon_display_name(weapon_id: String) -> String:
 	var clean_id := weapon_id.to_lower().strip_edges()
 	if WEAPON_DISPLAY_NAMES.has(clean_id):
-		return WEAPON_DISPLAY_NAMES[clean_id]
+		return tr(WEAPON_DISPLAY_NAMES[clean_id])
 	if clean_id.begins_with("weapon_test_"):
 		return "Arma de Teste " + clean_id.trim_prefix("weapon_test_")
 	return clean_id.replace("_", " ").capitalize()
@@ -201,17 +203,17 @@ func is_weapon_pedestal_unlocked(index: int) -> bool:
 
 func get_weapon_pedestal_condition_text(index: int) -> String:
 	match index:
-		0: return "Liberado (Espada Rústica)"
-		1: 
+		0: return tr("UI_PEDESTAL_COND_WP_0")
+		1:
 			var count: int = weapons_discovered_list.size()
-			return "Descobrir 4 armas (%d/4)" % count
-		2: 
+			return tr("UI_PEDESTAL_COND_WP_1") % count
+		2:
 			var count: int = bosses_defeated_list.size()
-			return "Derrotar 3 chefões diferentes (%d/3)" % count
-		3: return "Derrotar 10 guardas de elite (%d/10)" % elite_kills_count
-		4: return "Sugar 500 essências de monstros (%d/500)" % total_souls_collected
-		5: return "Derrotar 50 abominações do Caos (%d/50)" % kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0)
-		_: return "Condição Desconhecida"
+			return tr("UI_PEDESTAL_COND_WP_2") % count
+		3: return tr("UI_PEDESTAL_COND_WP_3") % elite_kills_count
+		4: return tr("UI_PEDESTAL_COND_WP_4") % total_souls_collected
+		5: return tr("UI_PEDESTAL_COND_WP_5") % kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0)
+		_: return tr("UI_PEDESTAL_COND_UNKNOWN")
 
 # --- Condições de Desbloqueio dos 3 Pedestais de Escudos ---
 func is_shield_pedestal_unlocked(index: int) -> bool:
@@ -225,10 +227,10 @@ func is_shield_pedestal_unlocked(index: int) -> bool:
 
 func get_shield_pedestal_condition_text(index: int) -> String:
 	match index:
-		0: return "Liberado (Broquel de Ferro)"
-		1: return "Realizar 3 aprimoramentos de escudo (%d/3)" % shield_upgrades_performed
-		2: return "Executar 25 parries perfeitos (%d/25)" % perfect_parries_count
-		_: return "Condição Desconhecida"
+		0: return tr("UI_PEDESTAL_COND_SH_0")
+		1: return tr("UI_PEDESTAL_COND_SH_1") % shield_upgrades_performed
+		2: return tr("UI_PEDESTAL_COND_SH_2") % perfect_parries_count
+		_: return tr("UI_PEDESTAL_COND_UNKNOWN")
 
 # --- PERSISTÊNCIA CRIPTOGRAFADA AES-256 ---
 func save_profile() -> void:
