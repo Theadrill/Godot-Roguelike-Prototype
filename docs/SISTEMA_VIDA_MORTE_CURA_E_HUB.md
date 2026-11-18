@@ -20,7 +20,7 @@
 
 ---
 
-> **Status:** OFICIALIZADO E APROVADO  
+> **Status:** CANÔNICO / ATUALIZADO (Cabana, Pedestais Dinâmicos & Loop de Vida)  
 > **Data:** Novembro de 2026  
 > **Projeto:** Severed Dawn (Godot 4.7 Roguevania Prototype)  
 > **Pilares Envolvidos:** Pilar 2 (Combate & Risco) e Pilar 4 (Meta-Progressão & Narrativa da Família)
@@ -88,7 +88,7 @@ Ao atingir `0` de HP:
 
 2. **Perdas na Morte:**
    * **Nível da Run:** Reseta para o **Nível 1**.
-   * **Armas Empunhadas:** Perdidas; o guerreiro renasce com o equipamento inicial escolhido no baú da Casa.
+   * **Armas Empunhadas:** Perdidas; o guerreiro desperta desarmado na Casa e escolhe seu loadout entre os armamentos sorteados nos **Pedestais de Armamento** para aquela run.
    * **Inventário da Run:** Todas as Receitas e Ingredientes que estavam na sacola e não foram descarregados no Baú Transtemporal se perdem na anomalia temporal.
 
 3. **O Baú Transtemporal (Salas de Transição entre Biomas):**
@@ -150,25 +150,29 @@ O espaço é estruturado de forma linear e contínua em setores greybox com prog
      * *"Cobra menos e ajuda mais no fole da forja na próxima!"*
      * *"Volta inteiro, tá me ouvindo?"*
 
-4. **A Galeria de Pedestais de Armamento (Substituindo o Armário/Baú):**
-   * Em vez de um armário abstrato ou baú de menu, o arsenal fica **exposto fisicamente no cenário sobre 9 Pedestais de Pedra** organizados à direita da bigorna:
-     * **6 Pedestais de Armas (Principais e Secundárias):**
-       - *Pedestal 1:* **Espada Rústica** (Desbloqueado desde o início).
-       - *Pedestal 2:* **Trancado** — *Requer descobrir 4 armas nas expedições (1/4).*
-       - *Pedestal 3:* **Trancado** — *Requer derrotar 3 chefões diferentes (0/3).*
-       - *Pedestal 4:* **Trancado** — *Requer derrotar 10 guardas de elite (0/10).*
-       - *Pedestal 5:* **Trancado** — *Requer sugar 500 almas / essências de monstros (0/500).*
-       - *Pedestal 6:* **Trancado** — *Requer derrotar 50 abominações do Caos (0/50).*
-     * **3 Pedestais de Escudos (Slots de Defesa & Parry):**
-       - *Pedestal 1:* **Broquel de Ferro** (Desbloqueado desde o início).
-       - *Pedestal 2:* **Trancado** — *Requer realizar 3 aprimoramentos em escudos na Forja (0/3).*
-       - *Pedestal 3:* **Trancado** — *Requer executar 25 parries perfeitos contra elites (0/25).*
+4. **A Galeria de Pedestais de Armamento (Draft Dinâmico por Run):**
+   * O antigo baú de armas próximo à lareira foi substituído definitivamente pela galeria física de **9 Pedestais de Pedra** à direita da bigorna (`6` de armas e `3` de escudos).
+   * **Regra de Sorteio por Run (Hybrid Draft):** Os pedestais de armas **não têm armas fixas**. A cada despertar na Cabana (`FamilyHouse`), o arsenal disponível (`melee_weapon_pool`: Espada, Adagas, Machado, Martelo; `ranged_weapon_pool`: Arco, Besta, Cajado) é sorteado dinamicamente apenas nos pedestais **desbloqueados**:
+     - **1 pedestal desbloqueado:** sorteia `1` arma 100% aleatória entre todo o arsenal.
+     - **2 ou mais pedestais desbloqueados:** garante obrigatoriamente pelo menos **1 arma Melee** e **1 arma Ranged/Magia**, preenchendo os restantes sem repetição e embaralhando as posições.
+   * **Condições de Desbloqueio dos 6 Pedestais de Armas:**
+     - *Pedestal 1:* **Sempre Desbloqueado** (armamento aleatório a cada run).
+     - *Pedestal 2:* **Trancado** — *Requer descobrir 4 armas nas expedições (X/4).*
+     - *Pedestal 3:* **Trancado** — *Requer derrotar 3 chefões diferentes (X/3).*
+     - *Pedestal 4:* **Trancado** — *Requer derrotar 10 guardas de elite (X/10).*
+     - *Pedestal 5:* **Trancado** — *Requer sugar 500 almas / essências de monstros (X/500).*
+     - *Pedestal 6:* **Trancado** — *Requer derrotar 50 abominações do Caos (X/50).*
+   * **Condições de Desbloqueio dos 3 Pedestais de Escudos (`shield_pool`):**
+     - *Pedestal 1:* **Sempre Desbloqueado** (`Broquel de Ferro` / escudo sorteado da pool).
+     - *Pedestal 2:* **Trancado** — *Requer realizar 3 aprimoramentos em escudos na Forja (X/3).*
+     - *Pedestal 3:* **Trancado** — *Requer executar 25 parries perfeitos contra elites/ataques (X/25).*
    * **Fluxo Diegético de Equipar:**
-     * O guerreiro caminha até o pedestal ativo e aperta `RB`:
+     * O guerreiro caminha até o pedestal ativo e aperta `E` / `RB` (ou clique esquerdo):
        - 1ª Arma escolhida: equipa na **Mão Principal**.
        - 2ª Arma escolhida: equipa nas **Costas (Secundária)**.
-       - Pedestal de Escudo: equipa no **Braço de Bloqueio/Parry**.
-     * Pedestais trancados exibem silhueta escura e placa inscrita com o objetivo e progresso ao se aproximar.
+       - 3ª Interação com ambas ocupadas: **troca** a arma da mão com a do pedestal (ou guarda em pedestal vazio).
+       - Pedestal de Escudo: equipa/troca no **Braço de Bloqueio/Parry**.
+     * Pedestais trancados exibem selo vermelho escuro (`LockVisual`) e mostram `[Selado]` + condição ao se aproximar.
 
 5. **Sistema de Rastreio Global (Metaprogressão & Estatísticas da Linhagem):**
    * Centralizado no autoload `ProgressionManager`, gravando dados persistentes entre runs:

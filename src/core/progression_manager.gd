@@ -392,16 +392,33 @@ func apply_to_player(player: CharacterBody2D) -> void:
 	player.set_meta("mod_onda_espectral", active_death_blessing == "onda_espectral")
 	player.set_meta("mod_olhar_da_ruina", active_death_blessing == "olhar_da_ruina")
 
-	# 4. Escala de dano das armas caso equipadas
+	# 4. Escala de dano das armas caso equipadas (clonando recursos de disco para preservar imutabilidade dos .tres)
 	if player.weapon:
-		if player.weapon.equipment_name == "Espada Rústica" or player.weapon.equipment_name.contains("Espada"):
-			player.weapon.base_damage = get_sword_base_damage()
+		player.weapon = _scale_runtime_weapon(player.weapon)
 	if player.secondary_weapon:
-		if player.secondary_weapon.equipment_name == "Arco de Caça" or player.secondary_weapon.equipment_name.contains("Arco"):
-			player.secondary_weapon.base_damage = get_bow_base_damage()
+		player.secondary_weapon = _scale_runtime_weapon(player.secondary_weapon)
 
 	# 5. Aplicação cosmética da Skin/Túnica
 	apply_skin_to_player(player)
+
+func _scale_runtime_weapon(weapon_res: WeaponData) -> WeaponData:
+	if not weapon_res:
+		return null
+	var runtime_weapon: WeaponData = weapon_res
+	var archetype: String = weapon_res.get_archetype_id()
+	var is_sword: bool = archetype == "sword" or weapon_res.equipment_name.contains("Espada")
+	var is_bow: bool = archetype == "bow" or weapon_res.equipment_name.contains("Arco")
+
+	if is_sword and weapon_sword_level > 1:
+		if not runtime_weapon.resource_path.is_empty():
+			runtime_weapon = runtime_weapon.duplicate() as WeaponData
+		runtime_weapon.base_damage = maxf(runtime_weapon.base_damage + float(weapon_sword_level - 1) * 3.0, get_sword_base_damage())
+	elif is_bow and weapon_bow_level > 1:
+		if not runtime_weapon.resource_path.is_empty():
+			runtime_weapon = runtime_weapon.duplicate() as WeaponData
+		runtime_weapon.base_damage = maxf(runtime_weapon.base_damage + float(weapon_bow_level - 1) * 2.5, get_bow_base_damage())
+
+	return runtime_weapon
 
 func apply_skin_to_player(player: CharacterBody2D) -> void:
 	if not player or not player.body_polygon:

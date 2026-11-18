@@ -173,6 +173,8 @@ const default_slash_frames = preload("res://assets/effects/slashes/slash_frames.
 
 var equipment_rig: PlayerEquipmentRig = PlayerEquipmentRig.new()
 var combat_vfx: PlayerCombatVFX = PlayerCombatVFX.new()
+var sensors: PlayerSensors = PlayerSensors.new()
+var debug_actions: PlayerDebugActions = PlayerDebugActions.new()
 
 var _main_weapon_instance: Node2D = null
 var _secondary_weapon_instance: Node2D = null
@@ -218,6 +220,8 @@ func _ready() -> void:
 
 	equipment_rig.setup(self)
 	combat_vfx.setup(self)
+	sensors.setup(self)
+	debug_actions.setup(self)
 
 	if player_sprite:
 		player_sprite.animation_finished.connect(_on_player_sprite_animation_finished)
@@ -484,81 +488,23 @@ func swap_weapons() -> void:
 	_update_secondary_weapon_visual()
 
 func cycle_reserve_weapon() -> void:
-	var weapon_paths: Array[String] = [
-		"res://src/entities/equipment/bows/weapon_bow_base.tres",
-		"res://src/entities/equipment/crossbows/weapon_crossbow_base.tres",
-		"res://src/entities/equipment/swords/weapon_sword_base.tres",
-		"res://src/entities/equipment/axes/weapon_axe_base.tres",
-		"res://src/entities/equipment/hammers/weapon_hammer_base.tres",
-		"res://src/entities/equipment/staffs/weapon_staff_base.tres",
-		"res://src/entities/equipment/daggers/weapon_dagger_base.tres"
-	]
-	var current_idx: int = -1
-	if secondary_weapon:
-		for i in range(weapon_paths.size()):
-			if weapon_paths[i].get_file().get_basename() in secondary_weapon.resource_path:
-				current_idx = i
-				break
-
-	var next_idx: int = (current_idx + 1) % weapon_paths.size()
-	var next_res := load(weapon_paths[next_idx]) as WeaponData
-	if weapon and next_res and next_res.equipment_name == weapon.equipment_name:
-		next_idx = (next_idx + 1) % weapon_paths.size()
-		next_res = load(weapon_paths[next_idx]) as WeaponData
-
-	equip_secondary_weapon(next_res)
+	debug_actions.cycle_reserve_weapon()
 
 func toggle_shield_repulsion() -> void:
-	if shield:
-		shield.has_repulsion_modifier = not shield.has_repulsion_modifier
+	debug_actions.toggle_shield_repulsion()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_input_locked:
 		return
 	if event.is_action_pressed("swap_weapon") and not event.is_echo():
 		swap_weapons()
-	elif event.is_action_pressed("cycle_weapon_debug") and not event.is_echo():
-		cycle_reserve_weapon()
-	elif event.is_action_pressed("toggle_shield_repulsion_debug") and not event.is_echo():
-		toggle_shield_repulsion()
-	elif event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_T:
-		cycle_enemy_tier_live()
-	elif event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_Y:
-		cycle_axe_energize_profile_debug()
+	elif debug_actions.handle_debug_input(event):
+		return
 
 var player_level: int = 1
 
 func cycle_enemy_tier_live() -> void:
-	match player_level:
-		1:
-			player_level = 4 # Tier 2 (Veterano)
-		4:
-			player_level = 8 # Tier 3 (Elite)
-		_:
-			player_level = 1 # Tier 1 (Recruta)
-
-	var tier_num: int = 1
-	var tier_name: String = tr("UI_TIER_RECRUIT")
-	if player_level >= 8:
-		tier_num = 3
-		tier_name = tr("UI_TIER_ELITE")
-	elif player_level >= 4:
-		tier_num = 2
-		tier_name = tr("UI_TIER_VETERAN")
-
-	var enemies := get_tree().get_nodes_in_group("enemies")
-	for enemy in enemies:
-		if enemy.has_method("apply_tier_by_level"):
-			enemy.apply_tier_by_level(player_level)
-		if enemy.has_method("respawn") and enemy.respawn_enabled:
-			enemy.respawn()
-
-	# Display on HUD
-	var hud := get_node_or_null("HUD") as PlayerHUD
-	if not hud and get_tree() and get_tree().current_scene:
-		hud = get_tree().current_scene.find_child("HUD", true, false) as PlayerHUD
-	if hud and hud.has_method("show_tier_toast"):
-		hud.show_tier_toast(tier_num, tier_name, player_level)
+	debug_actions.cycle_enemy_tier_live()
 
 func can_attack() -> bool:
 	return weapon != null and attack_cooldown_timer <= 0.0
@@ -582,8 +528,7 @@ func get_effective_parry_fail_cooldown() -> float:
 	return shield.parry_fail_cooldown if shield else 0.6
 
 func is_ground_slam_requested() -> bool:
-	var down_held: bool = Input.is_action_pressed("down") or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.get_joy_axis(0, JOY_AXIS_LEFT_Y) > 0.4
-	return down_held and Input.is_action_just_pressed("jump")
+	return sensors.is_ground_slam_requested()
 
 func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void:
 	if is_dead:
@@ -769,18 +714,7 @@ func set_crouched(crouched: bool) -> void:
 ## Soft body collision detection:
 ## Returns true if the player is actively pressing into an enemy body horizontally.
 func is_pushing_against_enemy(move_direction: float) -> bool:
-	if not enemy_overlap_detector or move_direction == 0.0:
-		return false
-	var overlapping := enemy_overlap_detector.get_overlapping_bodies()
-	for body in overlapping:
-		if body is CharacterBody2D and body != self:
-			var dx: float = body.global_position.x - global_position.x
-			# If moving towards the enemy center or currently deep inside them
-			if move_direction > 0.0 and dx > -8.0:
-				return true
-			elif move_direction < 0.0 and dx < 8.0:
-				return true
-	return false
+	return sensors.is_pushing_against_enemy(move_direction)
 
 func update_facing(direction: float) -> void:
 	var new_facing: int = 0
@@ -800,52 +734,12 @@ func _update_equipment_depth() -> void:
 	equipment_rig.update_equipment_depth()
 
 ## Intent-filtered check for crouching.
-## Prevents accidental crouches when tilting the analog stick diagonally while running.
 func is_crouch_requested() -> bool:
-	if not Input.is_action_pressed("down"):
-		return false
-
-	# Digital keys (Keyboard S / Arrow Down)
-	if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN):
-		return true
-
-	# Left Analog Stick:
-	var joy_y := Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
-	var joy_x := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
-
-	# Must reach minimum vertical threshold (positive Y is down)
-	if joy_y < vertical_input_threshold:
-		return false
-
-	# If also running/holding horizontal direction, require dominant downward intent
-	if absf(joy_x) > 0.35:
-		return joy_y > absf(joy_x) * 0.85
-
-	return true
+	return sensors.is_crouch_requested()
 
 ## Intent-filtered check for upward aiming / attacking.
-## Prevents accidental upward slashes when tilting the analog stick diagonally while attacking.
 func is_upward_attack_requested() -> bool:
-	if not Input.is_action_pressed("up"):
-		return false
-
-	# Digital keys (Keyboard W / Arrow Up)
-	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
-		return true
-
-	# Left Analog Stick (negative Y is up):
-	var joy_y := Input.get_joy_axis(0, JOY_AXIS_LEFT_Y)
-	var joy_x := Input.get_joy_axis(0, JOY_AXIS_LEFT_X)
-
-	# Must reach minimum upward threshold
-	if joy_y > -vertical_input_threshold:
-		return false
-
-	# If holding horizontal direction, require dominant upward intent
-	if absf(joy_x) > 0.35:
-		return absf(joy_y) > absf(joy_x) * 0.85
-
-	return true
+	return sensors.is_upward_attack_requested()
 
 func set_ledge_climb_visual(active: bool) -> void:
 	if ledge_climb_visual:
@@ -857,90 +751,9 @@ func set_ledge_climb_visual(active: bool) -> void:
 	if visual.has_node("HeadbandPlaceholder"):
 		(visual.get_node("HeadbandPlaceholder") as CanvasItem).visible = not active
 
-## Ledge detection (Dead Cells mantle check):
-## Detects when any part of the player (feet, knees, waist, or chest) hits a wall edge
-## while open air is above, finding the exact floor surface to vault onto.
+## Ledge detection (Dead Cells mantle check).
 func check_ledge() -> bool:
-	if is_crouch_requested():
-		return false
-
-	var space := get_world_2d().direct_space_state
-	if not space:
-		return false
-
-	var face: float = float(facing_direction)
-	var ray_dist: float = 18.0
-
-	# 1. Wall Contact: Check lowest contact point at the very bottom of the feet (y = -1.0),
-	# knee height (y = -12.0), and chest height (y = -24.0) so even a 1-pixel contact with a ledge is caught.
-	var wall_hit: Dictionary = {}
-	var low_query := PhysicsRayQueryParameters2D.create(
-		global_position + Vector2(0.0, -1.0),
-		global_position + Vector2(face * ray_dist, -1.0),
-		1
-	)
-	low_query.exclude = [get_rid()]
-	wall_hit = space.intersect_ray(low_query)
-
-	if wall_hit.is_empty():
-		var knee_query := PhysicsRayQueryParameters2D.create(
-			global_position + Vector2(0.0, -12.0),
-			global_position + Vector2(face * ray_dist, -12.0),
-			1
-		)
-		knee_query.exclude = [get_rid()]
-		wall_hit = space.intersect_ray(knee_query)
-
-	if wall_hit.is_empty():
-		var chest_query := PhysicsRayQueryParameters2D.create(
-			global_position + Vector2(0.0, -24.0),
-			global_position + Vector2(face * ray_dist, -24.0),
-			1
-		)
-		chest_query.exclude = [get_rid()]
-		wall_hit = space.intersect_ray(chest_query)
-
-	if wall_hit.is_empty():
-		return false
-
-	var wall_x: float = wall_hit.position.x
-
-	# 2. Head Clearance: Upper body / head must have clear space (no wall above the platform edge)
-	var head_from := global_position + Vector2(0.0, -42.0)
-	var head_to := head_from + Vector2(face * (ray_dist + 4.0), 0.0)
-	var head_query := PhysicsRayQueryParameters2D.create(head_from, head_to, 1)
-	head_query.exclude = [get_rid()]
-	var head_hit := space.intersect_ray(head_query)
-	if not head_hit.is_empty():
-		return false
-
-	# 3. Floor Surface Finder: Cast downwards onto the platform top (from above head down to beneath feet)
-	var floor_from := Vector2(wall_x + (face * 6.0), global_position.y - 50.0)
-	var floor_to := Vector2(wall_x + (face * 6.0), global_position.y + 6.0)
-	var floor_query := PhysicsRayQueryParameters2D.create(floor_from, floor_to, 1)
-	floor_query.exclude = [get_rid()]
-	var floor_hit := space.intersect_ray(floor_query)
-	if floor_hit.is_empty():
-		return false
-
-	# Surface must be a walkable floor (normal pointing upwards)
-	if floor_hit.normal.y > -0.7:
-		return false
-
-	var floor_y: float = floor_hit.position.y
-
-	# 4. Headroom Clearance: Verify 40px standing room above the floor surface
-	var target_x: float = wall_x + (face * 10.0)
-	var ceiling_from := Vector2(target_x, floor_y - 2.0)
-	var ceiling_to := Vector2(target_x, floor_y - 42.0)
-	var ceiling_query := PhysicsRayQueryParameters2D.create(ceiling_from, ceiling_to, 1)
-	ceiling_query.exclude = [get_rid()]
-	var ceiling_hit := space.intersect_ray(ceiling_query)
-	if not ceiling_hit.is_empty():
-		return false
-
-	ledge_target_position = Vector2(target_x, floor_y)
-	return true
+	return sensors.check_ledge()
 
 func _apply_slash_energize_shader(charge_ratio: float) -> void:
 	combat_vfx.apply_slash_energize_shader(charge_ratio)

@@ -92,16 +92,37 @@ Todos os assets visuais (protagonista, inimigos, armas, cenários e NPCs) devem 
 * **Regra de Ouro da Parametrização:** Se duas ou mais mecânicas compartilham a mesma essência física (como a onda de choque do *Ground Slam* e a repulsão de multidão do *Parry de Escudo*), deve ser criado **um único componente modular genérico** que aceita parâmetros de variação (raio, força, dano e alvos ignorados).
 
 ### Regra 10: Proibição Estrita de Textos Hardcoded & Uso Mandatório de i18n
-* **Zero Strings Literais:** É terminantemente proibido escrever textos visíveis ao jogador (labels de interface, barks diegéticos, alertas de sistema, diálogos de NPCs e descrições de itens) diretamente como strings literais (*hardcoded*) em scripts `.gd` ou propriedades de cenas `.tscn`.
-* **Centralização no Banco de Localização:** Todo texto deve ser cadastrado obrigatoriamente no catálogo mestre `res://src/core/localization/translations.csv` seguindo a taxonomia de prefixos oficiais (`UI_*`, `BARK_*`, `ITEM_*`, `LORE_*`, `MSG_*`).
+* **Zero Strings Literais ao Jogador:** É terminantemente proibido escrever textos visíveis ao jogador (HUD, menus, pause, barks diegéticos, alertas de sistema, diálogos de NPCs, pedestais e descrições de itens) diretamente como strings literais (*hardcoded*) em scripts `.gd` ou propriedades de cenas `.tscn`.
+* **Escopo de Ferramentas Internas (`DEV / @tool`):** Overlays internos de perfilamento e debug (`PerformanceOverlay`, `DebugMetricsPanel`, `WeaponSocketCalibrator`) destinam-se exclusivamente ao time de desenvolvimento em ambiente editor/debug e não integram a superfície localizada ao jogador final.
+* **Centralização no Banco de Localização:** Todo texto do jogador deve ser cadastrado obrigatoriamente no catálogo mestre `res://src/core/localization/translations.csv` seguindo a taxonomia de prefixos oficiais (`UI_*`, `BARK_*`, `ITEM_*`, `LORE_*`, `MSG_*`).
 * **Consumo Padronizado:** A recuperação textual em tempo de execução deve ocorrer estritamente através da função nativa `tr("CHAVE")` ou pelo `LocalizationService` (no caso de barks aleatórios com filtro anti-repetição).
 * **Tradução Contextualizada & Humanlike (Anti-Google Translate):** Toda tradução adicionada ao catálogo de localização deve ser gerada por IA com alta sensibilidade de contexto, tom narrativo e organicidade cultural (*transcreation*). É **terminantemente proibida a tradução literal, robótica ou palavra-por-palavra estilo Google Translate**. As linhas em inglês e futuros idiomas devem soar como falas naturais escritas por um roteirista nativo, respeitando a ambientação *Dark Fantasy Rústica* e o humor/frustração sutil dos personagens.
-* **Critério de Rejeição:** Qualquer entrega de código contendo strings soltas hardcoded ou traduções mecânicas/literais sem adequação de tom será sumariamente reprovada na checagem de qualidade técnica.
+* **Critério de Rejeição:** Qualquer entrega de código contendo strings soltas hardcoded voltadas ao jogador ou traduções mecânicas/literais sem adequação de tom será sumariamente reprovada na checagem de qualidade técnica.
 
 ### Regra 11: Padrão Arquitetural de Scripts & Paridade de Ferramentas (Regra de Ouro)
 * **Obediência Estrita ao Guia Normativo:** Todo novo script ou refatoração estrutural **DEVE** seguir integralmente as normas de [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md):
-  * **Inimigos:** Estendem obrigatoriamente `BaseEnemy`, utilizam `EnemyDeathState` e usam os sensores *stateless* do `BaseEnemy` (proibido criar `RayCast2D` soltos em `.tscn` para parede/borda/visão).
-  * **Armas & Golpes:** 100% Data-Driven (`WeaponData` + `AttackSetData` + `ComboStepData`), usando `weapon.get_archetype_id()` / `weapon_category` em vez de condicionais por caminho.
-  * **Player & Calibrador:** Manter física/FSM separadas de `PlayerEquipmentRig` e `PlayerCombatVFX`, preservando paridade matemática 1:1 e compatibilidade total com `WeaponSocketCalibrator`.
+  * **Inimigos:** Seguem o Blueprint canônico da árvore `.tscn`, estendem obrigatoriamente `BaseEnemy`, utilizam `EnemyDeathState` e usam os sensores *stateless* do `BaseEnemy` (proibido criar `RayCast2D` soltos para parede/borda/visão).
+  * **Armas, Golpes & Imutabilidade `.tres`:** 100% Data-Driven (`WeaponData` + `AttackSetData` + `ComboStepData`), usando `weapon.get_archetype_id()` / `weapon_category` e `.duplicate()` antes de mutar qualquer dado em runtime.
+  * **Player & Calibrador:** Manter física/FSM separadas dos sub-controladores (`PlayerEquipmentRig`, `PlayerCombatVFX`, `PlayerSensors`, `PlayerDebugActions`), preservando paridade matemática 1:1 e compatibilidade total com `WeaponSocketCalibrator`.
+  * **Mundo & Interações:** Utilizar `InteractableArea` / `InteractableArea.bind_area(...)` e manter `_Vis` filho de `_Col` em `(0, 0)`.
   * **UI & Modais:** Registrar toda janela modal no grupo `"modal_ui"`, ativar `follow_focus` + `ensure_control_visible` em listas roláveis e respeitar 100% a Regra 10 (`translations.csv`).
-  * **Tuning & SRP:** Expor parâmetros de gameplay via `@export` no Inspector e manter controladores enxutos (~350–400 linhas máx.).
+  * **Physics Layers, Call Down / Signal Up & Tuning:** Seguir a Tabela Oficial de Layers (`project.godot`), evitar `find_child()` por frame, expor métricas via `@export` e respeitar os orçamentos de tamanho definidos no guia.
+
+---
+
+## 5. Índice Mestre da Documentação (`docs/`)
+
+| Documento | Status | Escopo Principal |
+| :--- | :--- | :--- |
+| [`REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md) | `CANÔNICO` | Regras de governança (Push sob demanda, Tech Leader, Skills, Arte, CLI e i18n) |
+| [`PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) | `CANÔNICO` | Norma oficial de scripts, Physics Layers, Blueprints `.tscn`, SRP e contratos |
+| [`BRAINSTORMING.md`](BRAINSTORMING.md) | `CANÔNICO` | Game Design Document base (Lore, Hub, Combate 3 Sinais, Física e Geração Procedural) |
+| [`ARQUITETURA_ATORES_E_BASE_ENEMY.md`](ARQUITETURA_ATORES_E_BASE_ENEMY.md) | `CANÔNICO` | Mapa arquitetural macro de `BaseEnemy`, `Player` e auditoria/histórico das 6 fases |
+| [`ARQUITETURA_ATTACK_SETS_E_SLASHES.md`](ARQUITETURA_ATTACK_SETS_E_SLASHES.md) | `CANÔNICO` | Arquitetura Data-Driven de armas, combos (`AttackSetData` / `ComboStepData`) e slashes |
+| [`GUIA_CALIBRACAO_SOCKETS_E_SPRITES.md`](GUIA_CALIBRACAO_SOCKETS_E_SPRITES.md) | `CANÔNICO` | Fluxo oficial de calibração de sprites e sockets com `WeaponSocketCalibrator` |
+| [`REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md`](REFERENCIA_DO_SISTEMA_DE_LINGUAGEM.md) | `CANÔNICO` | Arquitetura de internacionalização (`translations.csv`), prefixos e `LocalizationService` |
+| [`SISTEMA_VIDA_MORTE_CURA_E_HUB.md`](SISTEMA_VIDA_MORTE_CURA_E_HUB.md) | `CANÔNICO` | Frasco de Chá, Rally Tático, Morte, Hub Familiar e Draft Híbrido nos Pedestais |
+| [`ARQUITETURA_PROGRESSAO_INIMIGOS_E_TIERS.md`](ARQUITETURA_PROGRESSAO_INIMIGOS_E_TIERS.md) | `CANÔNICO` | Escalonamento de Níveis, Tiers 1/2/3 em cascata, Elite e IA adaptativa |
+| [`SISTEMA_DE_SAVE.md`](SISTEMA_DE_SAVE.md) | `CANÔNICO` | Persistência criptografada AES-256 (`ProgressionManager`) e metas persistentes |
+| [`TODO.md`](TODO.md) | `CANÔNICO` | Backlog ativo e próximos marcos de desenvolvimento do protótipo |
+| [`PLANO_DE_IMPLEMENTACAO_INICIO_DO_PROJETO.md`](PLANO_DE_IMPLEMENTACAO_INICIO_DO_PROJETO.md) | `HISTÓRICO` | Roteiro inicial de implantação do protótipo (referência histórica de origem) |

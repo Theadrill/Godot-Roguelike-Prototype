@@ -140,21 +140,11 @@ func _process(delta: float) -> void:
 			mat.set_shader_parameter("vortex_time", _vortex_time)
 
 func _setup_npc_interactions() -> void:
-	if mother_area:
-		mother_area.body_entered.connect(func(b: Node2D) -> void: if b == player: _player_near_mother = true)
-		mother_area.body_exited.connect(func(b: Node2D) -> void: if b == player: _player_near_mother = false)
-		mother_area.input_event.connect(_on_mother_input_event)
-
-	if brother_area:
-		brother_area.body_entered.connect(func(b: Node2D) -> void: if b == player: _player_near_brother = true)
-		brother_area.body_exited.connect(func(b: Node2D) -> void: if b == player: _player_near_brother = false)
-		brother_area.input_event.connect(_on_brother_input_event)
+	InteractableArea.bind_area(mother_area, player, _open_mother_menu, func(near: bool) -> void: _player_near_mother = near)
+	InteractableArea.bind_area(brother_area, player, _open_brother_menu, func(near: bool) -> void: _player_near_brother = near)
 
 func _setup_portal_and_uis() -> void:
-	if exit_portal_area:
-		exit_portal_area.body_entered.connect(_on_exit_portal_entered)
-		exit_portal_area.body_exited.connect(func(b: Node2D) -> void: if b == player: _player_near_death = false)
-		exit_portal_area.input_event.connect(_on_exit_portal_input_event)
+	InteractableArea.bind_area(exit_portal_area, player, _open_death_menu, _on_exit_portal_proximity_changed)
 
 	if mother_ui:
 		mother_ui.closed.connect(_on_mother_ui_closed)
@@ -181,12 +171,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			_open_death_menu()
 
 # --- Interação com a Mãe ---
-func _on_mother_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if player and player.is_input_locked:
-		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_open_mother_menu()
-
 func _open_mother_menu() -> void:
 	if mother_ui and not mother_ui.visible and not _is_transitioning:
 		if player:
@@ -231,12 +215,6 @@ func _on_mother_ui_closed(did_take_tea: bool = false) -> void:
 		)
 
 # --- Interação com o Irmão ---
-func _on_brother_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if player and player.is_input_locked:
-		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_open_brother_menu()
-
 func _open_brother_menu() -> void:
 	if brother_ui and not brother_ui.visible and not _is_transitioning:
 		if player:
@@ -465,16 +443,9 @@ func _pick_unique_weapon(candidates: Array[WeaponData], used_names: Array[String
 	return candidates[0] if not candidates.is_empty() else null
 
 # --- Interação com a Morte & Sequência do Portal ---
-func _on_exit_portal_entered(body: Node2D) -> void:
-	if _is_transitioning or body != player or (player and player.is_input_locked):
-		return
-	_player_near_death = true
-	_open_death_menu()
-
-func _on_exit_portal_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if player and player.is_input_locked:
-		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+func _on_exit_portal_proximity_changed(is_near: bool) -> void:
+	_player_near_death = is_near
+	if is_near and not _is_transitioning and (not player or not player.is_input_locked):
 		_open_death_menu()
 
 func _open_death_menu() -> void:

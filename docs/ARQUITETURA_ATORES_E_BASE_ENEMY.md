@@ -35,9 +35,8 @@
 
 ---
 
-### 1.3. Subsistema de Mundo & Interações (`src/world/`)
-* **Falta de Componente Único de Interação (Violação da Regra 9):**
-  * [`family_house.gd`](../src/world/hub/family_house.gd) (Baú, Rack, Mãe, Irmão, Portal), [`weapon_pedestal.gd`](../src/world/hub/weapon_pedestal.gd) e [`pickup_item.gd`](../src/world/items/pickup_item.gd) reimplementam manualmente a detecção de proximidade (`body_entered` / `body_exited`), clique de mouse (`input_event`) e tecla `interact`.
+### 1.3. Subsistema de Mundo & Interações (`src/world/`) *(Resolvido)*
+* O boilerplate repetido de `body_entered` / `body_exited` e clique de mouse entre NPCs e o portal em [`family_house.gd`](../src/world/hub/family_house.gd) foi consolidado no componente reutilizável [`InteractableArea`](../src/world/components/interactable_area.gd) (com suporte a nó direto na árvore e `InteractableArea.bind_area(...)`). O antigo Baú de Armas estático também foi removido em favor do sorteio dinâmico Melee+Ranged por run nos [`WeaponPedestal`](../src/world/hub/weapon_pedestal.gd).
 
 ---
 
@@ -70,11 +69,14 @@ flowchart TB
         EnemyDeath["EnemyDeathState (Compartilhado)"]
 
         Player["Player (CharacterBody2D)\n- Física, Movimento, FSM & Sobrevivência"]
-        PlayerRig["PlayerEquipmentRig (Sub-controlador de Sockets & Drop)"]
-        PlayerVFX["PlayerCombatVFX (Sub-controlador de Slash, Energize & Pickup)"]
+        PlayerRig["PlayerEquipmentRig (Sockets & Drop)"]
+        PlayerVFX["PlayerCombatVFX (Slash, Energize & Pickup)"]
+        PlayerSens["PlayerSensors (Ledge, Overlap & Analog Intent)"]
+        PlayerDbg["PlayerDebugActions (Runtime Cheats Isolados)"]
     end
 
     subgraph UIWorld["Camada 3: Mundo & UI Desacoplados"]
+        InteractComp["InteractableArea (Proximidade + Clique + Interact)"]
         ModalGroup["Grupo 'modal_ui' (Mother, Brother, Death, DebugMetrics)"]
         PauseUI["PauseMenuUI (Consulta grupo 'modal_ui' sem acoplamento)"]
     end
@@ -85,9 +87,12 @@ flowchart TB
     EnemyDeath -.-> Archer
     Player --> PlayerRig
     Player --> PlayerVFX
+    Player --> PlayerSens
+    Player --> PlayerDbg
     Data --> PlayerRig
     CSV --> UIWorld
     CSV --> Actors
+    InteractComp --> UIWorld
     ModalGroup --> PauseUI
 ```
 
@@ -160,13 +165,11 @@ Durante e após a modularização do `Player`, os contratos abaixo **NÃO podem 
 
 ---
 
-### 📜 FASE 6 — Guia Oficial de Criação de Scripts & Regra de Ouro em `REGRAS_DO_PROJETO.md` *(Concluída)*
+### 📜 FASE 6 — Guia Oficial de Criação de Scripts, Hardening AA/Big Tech & Regra de Ouro *(Concluída)*
 * **O que foi feito:**
-  1. Criado o documento normativo [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) especificando o padrão oficial para novos scripts no repositório:
-     * **Novos Inimigos:** Herança obrigatória de `BaseEnemy`, reutilização de `EnemyDeathState`, uso exclusivo dos sensores *stateless* de `BaseEnemy` (proibido criar nós `RayCast2D` soltos para borda/parede/visão) e separação de estados por arquétipo.
-     * **Novas Armas / Golpes:** Arquitetura 100% Data-Driven via `WeaponData` + `AttackSetData` + `ComboStepData` ([`docs/ARQUITETURA_ATTACK_SETS_E_SLASHES.md`](ARQUITETURA_ATTACK_SETS_E_SLASHES.md)), uso de `weapon.get_archetype_id()` / `weapon_category` e sorteio dinâmico Melee+Ranged nos pedestais da `FamilyHouse`.
-     * **Novas Responsabilidades do Player:** Física/estados em `src/entities/player/states/`, sockets/drop em `PlayerEquipmentRig`, efeitos em `PlayerCombatVFX`, e contrato de invariância com o `WeaponSocketCalibrator`.
-     * **Novas Telas / Modais de UI:** Registro no grupo `"modal_ui"`, auto-scroll em foco para listas em `ScrollContainer`, `GamepadPromptBar` e 100% dos textos em `translations.csv` via `tr()` / `LocalizationService`.
-     * **Limite de Responsabilidade Única (SRP) & Tuning:** Scripts enxutos (~350–400 linhas) e métricas expostas via `@export`.
-  2. Atualizado [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md) incluindo [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) e [`docs/ARQUITETURA_ATORES_E_BASE_ENEMY.md`](ARQUITETURA_ATORES_E_BASE_ENEMY.md) na **Leitura Obrigatória do Topo** e adicionando a **Regra 11 (Regra de Ouro Arquitetural)** na Seção 4.
-* **Critério de Teste (Fase 6):** Revisão da documentação pelo PO e validação headless final do repositório.
+  1. Criado e consolidado o documento normativo [`docs/PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md) com padrão completo de engenharia de estúdio: orçamento de linhas por categoria, Tabela Oficial de Physics Layers/Masks, Blueprint de árvore `.tscn` para `BaseEnemy` e Modais UI, imutabilidade de `.tres` em runtime, padrão *Call Down / Signal Up* e escopo claro entre UI do jogador vs. ferramentas DEV.
+  2. Extraídos [`PlayerSensors`](../src/entities/player/player_sensors.gd) (sensores espaciais, *ledge climb* e deadzone analógica) e [`PlayerDebugActions`](../src/entities/player/player_debug_actions.gd) (atalhos de debug isolados em `OS.is_debug_build()`) de `player.gd` (~978 $\rightarrow$ 791 linhas).
+  3. Criado [`InteractableArea`](../src/world/components/interactable_area.gd) (`src/world/components/interactable_area.gd`) e aplicado em [`family_house.gd`](../src/world/hub/family_house.gd).
+  4. Protegida a imutabilidade de `.tres` em [`progression_manager.gd`](../src/core/progression_manager.gd) via `.duplicate()` antes do escalonamento de dano em runtime.
+  5. Atualizado [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md) (Leitura Obrigatória, Regra 11 e Índice Mestre dos 12 documentos em `docs/`) e [`docs/SISTEMA_VIDA_MORTE_CURA_E_HUB.md`](SISTEMA_VIDA_MORTE_CURA_E_HUB.md) (remoção do Baú de Armas + Draft Dinâmico Melee/Ranged nos pedestais).
+* **Critério de Teste (Fase 6):** Revisão da documentação pelo PO e validação headless final do repositório (`player.gd`, `family_house.tscn` e `movement_gym.tscn`).
