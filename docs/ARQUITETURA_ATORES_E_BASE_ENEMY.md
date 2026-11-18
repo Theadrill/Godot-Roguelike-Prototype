@@ -1,37 +1,32 @@
 # Levantamento Arquitetural Completo do Projeto & Plano de Padronização (Industry Standard)
 
+> **Status Geral do Plano:** ✅ **CONCLUÍDO** (6/6 Fases Finalizadas, Validadas e em Produção)
+
 > [!IMPORTANT]
 > ## OBJETIVO DESTE DOCUMENTO
-> Este documento consolida a **Auditoria Técnica Completa** de todos os subsistemas de **Severed Dawn** (`entities`, `combat`, `world`, `ui`, `core` e `tools`) e estabelece o roteiro em **Fases Testáveis** para elevar o repositório ao padrão de engenharia da indústria (*Dead Cells / Motion Twin*, *Hollow Knight*, *Nine Sols*), culminando no guia definitivo de criação de novos scripts referenciado como **Regra de Ouro** em [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md).
+> Este documento consolida a **Auditoria Técnica Completa** de todos os subsistemas de **Severed Dawn** (`entities`, `combat`, `world`, `ui`, `core` e `tools`) e registra o roteiro em **Fases Testáveis** concluído para elevar o repositório ao padrão de engenharia da indústria (*Dead Cells / Motion Twin*, *Hollow Knight*, *Nine Sols*), culminando no guia definitivo de criação de novos scripts referenciado como **Regra de Ouro** em [`docs/REGRAS_DO_PROJETO.md`](REGRAS_DO_PROJETO.md).
 
 ---
 
-## 1. Auditoria Global do Projeto (Por Subsistema)
+## 1. Auditoria Global do Projeto (Por Subsistema — Diagnóstico Original & Resolução)
 
-### 1.1. Subsistema de Inimigos (`src/entities/enemies/`)
-* **Duplicação Massiva (~70%):** [`soldier.gd`](../src/entities/enemies/melee/soldier/soldier.gd) (425 linhas) e [`archer.gd`](../src/entities/enemies/ranged/archer/archer.gd) (366 linhas) duplicam `enum CooldownBehavior`, todos os `@export` de Stats/Percepção/Tiers/Respawn, `apply_tier_by_level()`, `can_step_forward()`, `can_step_backward()`, `has_line_of_sight_to()`, `show/hide_telegraph()`, `on_attack_blocked()`, shader de `hit_flash` e `respawn()`.
-* **Sensores Espalhados em 4 Lugares:**
-  * `Archer` usa 5 nós `RayCast2D` na cena [`archer.tscn`](../src/entities/enemies/ranged/archer/archer.tscn) sincronizados manualmente no flip.
-  * `Soldier` usa `PhysicsRayQueryParameters2D` em `soldier.gd`, mas [`soldier/states/patrol_state.gd`](../src/entities/enemies/melee/soldier/states/patrol_state.gd) e [`soldier/states/chase_state.gd`](../src/entities/enemies/melee/soldier/states/chase_state.gd) reescrevem `_is_at_ledge()`, `_is_hitting_wall()` e `_has_los_to_player()` por conta própria.
-* **Estados Idênticos Duplicados:** [`soldier/states/death_state.gd`](../src/entities/enemies/melee/soldier/states/death_state.gd) e [`archer/states/death_state.gd`](../src/entities/enemies/ranged/archer/states/death_state.gd) são 98% idênticos.
-* **3 Bugs Silenciosos Encontrados:**
-  1. `Archer.apply_tier_by_level()` não possui o bloco `if active_tier >= 3:` (Archers Tier 3 usam atributos de Tier 2).
-  2. `Soldier.update_facing()` reseta `visual.scale.x = ±1.0`, apagando a escala `1.15x` de Elite no primeiro giro de patrulha.
-  3. `Archer` não implementa `apply_parry_stun()`.
+### 1.1. Subsistema de Inimigos (`src/entities/enemies/`) *(Resolvido)*
+* **Duplicação Massiva (~70% — Resolvido nas Fases 1–3):** [`soldier.gd`](../src/entities/enemies/melee/soldier/soldier.gd) (425 $\rightarrow$ 157 linhas) e [`archer.gd`](../src/entities/enemies/ranged/archer/archer.gd) (366 $\rightarrow$ 112 linhas) passaram a estender [`BaseEnemy`](../src/entities/enemies/base_enemy.gd), eliminando a duplicação de Tiers, telegraphs, flash, respawn e lógica de cooldown.
+* **Sensores Espalhados (Resolvido):** Removidos os 5 nós `RayCast2D` de [`archer.tscn`](../src/entities/enemies/ranged/archer/archer.tscn) e os raycasts manuais nos estados do `Soldier`; todos os inimigos usam os sensores *stateless* (`PhysicsRayQueryParameters2D`) de `BaseEnemy`.
+* **Estados Idênticos Duplicados (Resolvido):** Removidos `soldier/states/death_state.gd` e `archer/states/death_state.gd`; ambos agora apontam `StateMachine/Death` para o script único [`EnemyDeathState`](../src/entities/enemies/states/enemy_death_state.gd).
+* **3 Bugs Silenciosos (Corrigidos em `BaseEnemy`):** Tier 3 funcional no `Archer`, preservação da escala `1.15x` de Elite no flip e suporte unificado a `apply_parry_stun()`.
 
 ---
 
-### 1.2. Subsistema do Jogador & Equipamentos (`src/entities/player/` & `src/combat/`)
-* **`Player` como *God Object* (1.502 linhas):** [`player.gd`](../src/entities/player/player.gd) mistura 5 domínios distintos no mesmo arquivo:
-  1. Física de movimentação, *coyote/buffer*, *ledge climb*, *Life Rally* e saúde.
-  2. Rig visual de equipamentos e sincronização frame a frame de 6 sockets (~350 linhas).
-  3. Controlador de VFX de combate (*Slash VFX*, shader/partículas de *Energize*, impacto de chão e *Pickup Burst* — ~220 linhas).
-  4. Detecção de arquétipo de arma por inspeção de string (`_detect_weapon_type_string`: `if "dagger" in res_path...`) em vez de propriedade tipada no `WeaponData`.
-  5. Atalhos de debug (`T`, `Y`, `2`, `3`) acoplados direto no `_unhandled_input` do herói.
-* **Código Morto (Dead Code — 347 linhas):** [`src/entities/player/weapon_socket_config.gd`](../src/entities/player/weapon_socket_config.gd) (`class_name WeaponSocketConfig`) não é referenciado em nenhum lugar do projeto (foi substituído por `WeaponSocketProfile` `.tres`), mas ainda é compilado globalmente.
-* **Ferramenta Crítica de Calibração ([`src/tools/weapon_socket_calibrator.gd`](../src/tools/weapon_socket_calibrator.gd) — 1.304 linhas):**
-  * O calibrador `@tool` lê e salva diretamente em `WeaponSocketProfile` (`.tres` em `socket_profiles/`), `WeaponData` (offsets/scales por step e por frame) e `AttackSetData` / `ComboStepData`.
-  * Embora não instancie `player.gd` diretamente, ele assume **paridade matemática 1:1** com a cena [`player.tscn`](../src/entities/player/player.tscn) e os cálculos de offset/flip/escala do jogador (descrito no contrato abaixo na Fase 4).
+### 1.2. Subsistema do Jogador & Equipamentos (`src/entities/player/` & `src/combat/`) *(Resolvido)*
+* **`Player` como *God Object* (1.502 $\rightarrow$ 791 linhas — Resolvido nas Fases 4 e 6):** [`player.gd`](../src/entities/player/player.gd) foi modularizado em sub-controladores especializados mantendo as fachadas públicas intactas:
+  1. [`PlayerEquipmentRig`](../src/entities/player/player_equipment_rig.gd) (sockets frame a frame e drop físico na morte).
+  2. [`PlayerCombatVFX`](../src/entities/player/player_combat_vfx.gd) (*Slash VFX*, *Energize* e *Pickup Burst*).
+  3. [`PlayerSensors`](../src/entities/player/player_sensors.gd) (*ledge climb* em 4 estágios, colisão suave e deadzone analógica).
+  4. [`PlayerDebugActions`](../src/entities/player/player_debug_actions.gd) (atalhos de teste isolados em `OS.is_debug_build()`).
+  5. [`WeaponData.get_archetype_id()`](../src/combat/weapon_data.gd) (tipagem direta substituindo inspeção solta de string).
+* **Código Morto (Resolvido):** Removido [`weapon_socket_config.gd`](../src/entities/player/weapon_socket_config.gd) (347 linhas obsoletas).
+* **Ferramenta Crítica de Calibração ([`src/tools/weapon_socket_calibrator.gd`](../src/tools/weapon_socket_calibrator.gd) — 1.304 linhas):** Paridade matemática 1:1 preservada e formalizada em contrato na Fase 4 e em [`PADRAO_ARQUITETURAL_DE_SCRIPTS.md`](PADRAO_ARQUITETURAL_DE_SCRIPTS.md).
 
 ---
 
@@ -40,15 +35,9 @@
 
 ---
 
-### 1.4. Subsistema de UI, Hub & Localização (`src/ui/` & `src/core/`)
-* **Violações da Regra 10 (Strings Hardcoded em Português fora do `translations.csv`):**
-  1. [`src/ui/hud.gd`](../src/ui/hud.gd): `"⚔️ INIMIGOS: TIER %d [%s] - LV %d (Tecla T)"`, `"● O SANGUE CESSA..."`, `"● ESCUDO BLOQUEADO: %.1fs"`, `"● ESCUDO EM GUARDA"`, `"● ESCUDO PRONTO"`, `" [REPULSÃO ATIVA]"`.
-  2. [`src/world/hub/weapon_pedestal.gd`](../src/world/hub/weapon_pedestal.gd): `"Trocou escudo: "`, `"Escudo Equipado: "`, `"Escudo guardado no pedestal."`, `"Pedestal Vazio."`, `"Equipado na mão: "`, `"Equipado nas costas: "`, `"Trocou de arma: "`, `"Arma guardada no pedestal."`, `"[Trancado] "`.
-  3. [`src/core/progression_manager.gd`](../src/core/progression_manager.gd): Dicionário `WEAPON_DISPLAY_NAMES` e todas as strings de `get_weapon_pedestal_condition_text()` / `get_shield_pedestal_condition_text()`.
-  4. [`src/ui/hub/mother_dialog_ui.gd`](../src/ui/hub/mother_dialog_ui.gd) e [`src/ui/hub/brother_forge_ui.gd`](../src/ui/hub/brother_forge_ui.gd): `"Nível "`, `"Feixes: "`, `"Dano: "`, `"Receitas Repetidas: "`.
-  5. [`src/entities/player/player.gd`](../src/entities/player/player.gd): `"RECRUTA"`, `"VETERANO"`, `"ELITE"`.
-* **Acoplamento de Modais no `PauseMenuUI`:**
-  * [`pause_menu_ui.gd`](../src/ui/pause/pause_menu_ui.gd) faz `find_child("MotherDialogUI")`, `find_child("BrotherForgeUI")`, `find_child("TouchOfDeathUI")` e `find_child("DebugMetricsPanel")` nominalmente. Usar o grupo `"modal_ui"` desacopla o menu de pausa de qualquer nova janela futura.
+### 1.4. Subsistema de UI, Hub & Localização (`src/ui/` & `src/core/`) *(Resolvido)*
+* **Conformidade com a Regra 10 (Resolvido na Fase 5):** Todas as strings do jogador que estavam hardcoded em [`hud.gd`](../src/ui/hud.gd), [`weapon_pedestal.gd`](../src/world/hub/weapon_pedestal.gd), [`progression_manager.gd`](../src/core/progression_manager.gd), [`mother_dialog_ui.gd`](../src/ui/hub/mother_dialog_ui.gd), [`brother_forge_ui.gd`](../src/ui/hub/brother_forge_ui.gd) e [`player.gd`](../src/entities/player/player.gd) foram migradas para [`translations.csv`](../src/core/localization/translations.csv) com tradução contextualizada *humanlike* (`pt_BR` e `en_US`).
+* **Desacoplamento de Modais (Resolvido na Fase 5):** `MotherDialogUI`, `BrotherForgeUI`, `TouchOfDeathUI` e `DebugMetricsPanel` agora usam o grupo `"modal_ui"`, permitindo que [`pause_menu_ui.gd`](../src/ui/pause/pause_menu_ui.gd) verifique `_is_any_modal_open()` sem `find_child()` nominal.
 
 ---
 
@@ -98,9 +87,9 @@ flowchart TB
 
 ---
 
-## 3. Plano de Execução Passo a Passo (6 Fases Testáveis)
+## 3. Plano de Execução Passo a Passo (6 Fases Testáveis — Todas Concluídas)
 
-Cada fase será executada individualmente, validada via `Godot_v4.7.2-stable_win64_console.exe --headless --editor --quit --path . 2>&1` e testada pelo PO antes de avançar.
+Cada fase foi executada individualmente, validada via `Godot_v4.7.2-stable_win64_console.exe --headless --editor --quit --path . 2>&1` e testada pelo PO antes de avançar.
 
 ### 📦 FASE 1 — Fundação `BaseEnemy` & Estado Compartilhado `EnemyDeathState` *(Concluída)*
 * **O que foi feito:**
