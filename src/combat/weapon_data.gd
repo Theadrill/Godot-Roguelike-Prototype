@@ -312,7 +312,7 @@ func _validate_property(property: Dictionary) -> void:
 @export var slash_enabled: bool = true
 
 ## [Fallback] Nome da animação de corte padrão caso o Attack Set não especifique uma.
-@export var slash_animation: StringName = &"slash_sword"
+@export var slash_animation: StringName = &"slash_attack1"
 
 ## [Opcional] Recurso SpriteFrames customizado exclusivo desta arma.
 ## Deixe vazio para usar a biblioteca global padrão ('res://assets/effects/slashes/slash_frames.tres').
@@ -461,13 +461,13 @@ func get_step_slash_animation(step_index: int, is_airborne: bool = false) -> Str
 				return step_data.air_slash_animation
 			if step_data.slash_animation != &"":
 				return step_data.slash_animation
-	if is_airborne and step_index == 0 and (slash_animation == &"" or slash_animation == &"slash_sword"):
-		return &"slash_air_sword_1"
-	if step_index == 1 and (slash_animation == &"" or slash_animation == &"slash_sword"):
-		return &"slash_sword_2"
-	elif step_index >= 2 and (slash_animation == &"" or slash_animation == &"slash_sword"):
-		return &"slash_sword_3"
-	return slash_animation if slash_animation != &"" else &"slash_sword"
+	if is_airborne and step_index == 0 and (slash_animation == &"" or slash_animation == &"slash_attack1"):
+		return &"slash_air_attack1"
+	if step_index == 1 and (slash_animation == &"" or slash_animation == &"slash_attack1"):
+		return &"slash_attack2"
+	elif step_index >= 2 and (slash_animation == &"" or slash_animation == &"slash_attack1"):
+		return &"slash_attack3"
+	return slash_animation if slash_animation != &"" else &"slash_attack1"
 
 ## Ajustes individuais de offset de slash por frame nesta arma.
 ## Chave String: "<step>_<ground|air>_<frame>" -> Vector2.

@@ -66,4 +66,4 @@ visible = false
 z_index = 4
 position = Vector2(-3, -29)
 sprite_frames = ExtResource("3_slash_frames")
-animation = &"slash_sword"
+animation = &"slash_attack1"

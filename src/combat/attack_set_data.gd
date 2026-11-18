@@ -25,7 +25,7 @@ const DEFAULT_GUIDE_TEXT: String = (
 	+ "1. Na lista 'Steps' abaixo, cada item é um golpe da sequência (Golpe 1, Golpe 2, etc.).\n"
 	+ "2. Clique em um item de 'Steps' para expandir e escolher:\n"
 	+ "   - 'body_animation': pose do aventureiro (ex: attack1, attack2, attack3).\n"
-	+ "   - 'slash_animation': animação de corte daquele golpe (ex: slash_sword).\n"
+	+ "   - 'slash_animation': animação de corte daquele golpe (ex: slash_attack1).\n"
 	+ "   - 'duration' e 'forward_impulse': velocidade e avanço físico do golpe.\n"
 	+ "3. Para usar este Set em qualquer arma, basta arrastar este arquivo .tres para o campo 'Attack Set' dentro da arma!\n"
 	+ "4. Se uma arma for mais comprida (ex: +3px), você NÃO precisa duplicar este Set: ajuste apenas o 'slash_offset' direto na arma!"

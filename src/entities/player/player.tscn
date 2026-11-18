@@ -153,7 +153,7 @@ visible = false
 z_index = 4
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("25_slash_frames")
-animation = &"slash_sword"
+animation = &"slash_attack1"
 
 [node name="Hitbox" type="Area2D" parent="Visual" unique_id=1078179530]
 collision_layer = 8

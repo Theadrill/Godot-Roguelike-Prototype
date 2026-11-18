@@ -61,12 +61,12 @@ extends Resource
 @export_group("Efeito Visual de Corte (Slash Padrão do Golpe)")
 
 ## Nome da animação de corte em 'slash_frames.tres' que acompanha este golpe específico
-## (ex: 'slash_sword', 'slash_sword_2', 'slash_hammer_1').
+## (ex: 'slash_attack1', 'slash_attack2', 'slash_hammer_1').
 ## Nota: A arma pode sobrescrever isso em 'slash_step_animations' caso tenha um corte exclusivo.
-@export var slash_animation: StringName = &"slash_sword"
+@export var slash_animation: StringName = &"slash_attack1"
 
 ## [Opcional] Nome da animação de corte em 'slash_frames.tres' usada quando este golpe é executado no AR
-## (ex: 'slash_air_sword_1'). Se deixado vazio, usa 'slash_animation' padrão do passo.
+## (ex: 'slash_air_attack1'). Se deixado vazio, usa 'slash_animation' padrão do passo.
 @export var air_slash_animation: StringName = &""
 
 ## Deslocamento base (em pixels) do efeito de corte para a pose deste golpe no chão.

@@ -134,7 +134,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_air_slash1_1")
 }],
 "loop": 0,
-"name": &"slash_air_sword_1",
+"name": &"slash_air_attack1",
 "speed": 10.0
 }, {
 "frames": [{
@@ -160,7 +160,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_air_slash3_6")
 }],
 "loop": 0,
-"name": &"slash_air_sword_3",
+"name": &"slash_air_attack3",
 "speed": 10.0
 }, {
 "frames": [{
@@ -180,7 +180,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_slash1_4")
 }],
 "loop": 0,
-"name": &"slash_sword",
+"name": &"slash_attack1",
 "speed": 10.0
 }, {
 "frames": [{
@@ -203,7 +203,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_slash2_5")
 }],
 "loop": 0,
-"name": &"slash_sword_2",
+"name": &"slash_attack2",
 "speed": 10.0
 }, {
 "frames": [{
@@ -226,6 +226,6 @@ animations = [{
 "texture": SubResource("AtlasTexture_slash3_5")
 }],
 "loop": 0,
-"name": &"slash_sword_3",
+"name": &"slash_attack3",
 "speed": 10.0
 }]

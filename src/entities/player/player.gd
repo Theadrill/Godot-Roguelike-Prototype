@@ -389,11 +389,11 @@ func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = fa
 		if target_frames and slash_effect.sprite_frames != target_frames:
 			slash_effect.sprite_frames = target_frames
 
-		var anim_name: StringName = weapon.get_step_slash_animation(combo_step, is_airborne) if weapon else &"slash_sword"
+		var anim_name: StringName = weapon.get_step_slash_animation(combo_step, is_airborne) if weapon else &"slash_attack1"
 		if slash_effect.sprite_frames and not slash_effect.sprite_frames.has_animation(anim_name):
-			anim_name = weapon.get_step_slash_animation(combo_step, false) if weapon else &"slash_sword"
+			anim_name = weapon.get_step_slash_animation(combo_step, false) if weapon else &"slash_attack1"
 		if slash_effect.sprite_frames and not slash_effect.sprite_frames.has_animation(anim_name):
-			anim_name = weapon.slash_animation if (weapon and weapon.slash_animation) else &"slash_sword"
+			anim_name = weapon.slash_animation if (weapon and weapon.slash_animation) else &"slash_attack1"
 		if slash_effect.sprite_frames and slash_effect.sprite_frames.has_animation(anim_name):
 			slash_effect.animation = anim_name
 			slash_effect.frame = 0

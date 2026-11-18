@@ -46,8 +46,8 @@ O sistema é dividido em **3 níveis modulares de Custom Resources (`.tres`)**, 
 ```mermaid
 flowchart TD
     subgraph Camada1["Camada 1: O Golpe Individual (ComboStepData)"]
-        Step1["Passo 0 (ComboStepData)\n- body_animation: 'attack1'\n- slash_animation: 'slash_sword_1'\n- duration: 0.36s | impulse: 80\n- step_slash_offset: (0, 0)"]
-        Step2["Passo 1 (ComboStepData)\n- body_animation: 'attack2'\n- slash_animation: 'slash_sword_2'\n- duration: 0.36s | impulse: 100\n- step_slash_offset: (0, 0)"]
+        Step1["Passo 0 (ComboStepData)\n- body_animation: 'attack1'\n- slash_animation: 'slash_attack1'\n- duration: 0.36s | impulse: 80\n- step_slash_offset: (0, 0)"]
+        Step2["Passo 1 (ComboStepData)\n- body_animation: 'attack2'\n- slash_animation: 'slash_attack2'\n- duration: 0.36s | impulse: 100\n- step_slash_offset: (0, 0)"]
     end
 
     subgraph Camada2["Camada 2: O Conjunto de Ataques (AttackSetData .tres)"]
@@ -77,7 +77,7 @@ Quando o jogador executa o golpe de índice `i` no combo, o motor calcula a anim
 
 2. **Qual Animação de Slash tocar?**
    * **Prioridade 1 (Override por Passo na Arma):** Se a arma preencheu `slash_step_animations[i]`, usa a animação específica da arma para aquele passo.
-   * **Prioridade 2 (Padrão do Passo no Set):** Caso contrário, usa `step.slash_animation` definido no `AttackSetData` (ex: `slash_sword_1` para o ataque 1, `slash_sword_2` para o ataque 2).
+   * **Prioridade 2 (Padrão do Passo no Set):** Caso contrário, usa `step.slash_animation` definido no `AttackSetData` (ex: `slash_attack1` para o ataque 1, `slash_attack2` para o ataque 2).
    * **Prioridade 3 (Fallback Global da Arma):** Se o passo do Set estiver vazio, usa `weapon.slash_animation`.
 
 3. **Qual a Posição Final do Slash? (Soma Aditiva):**
@@ -97,7 +97,7 @@ Quando o jogador executa o golpe de índice `i` no combo, o motor calcula a anim
    * Sempre que um agente criar ou atualizar um ataque/slash, **É OBRIGATÓRIO**:
      1. **Manter a grade completa de frames no `slash_frames.tres`:** Se a animação do corpo tem `N` frames (ex: 5 frames no `attack1` ou 6 frames no `attack2` e `attack3`), a animação de slash correspondente **DEVE ter exatamente os mesmos `N` frames** (incluindo os frames iniciais vazios de *Windup* e o frame final vazio de *Recovery*), além de remover os pixels amarelos marcadores do pé de todas as células.
      2. **Configurar `active_start_frame` e `active_end_frame` no `ComboStepData` (`src/combat/sets/*.tres`):**
-        * **`active_start_frame`**: Deve ser o **exato índice do frame (base 0) em que o desenho da meia-lua do slash surge na tela** (ex: Frame `2` no `attack1` / `slash_sword`, Frame `3` no `attack2` / `slash_sword_2`, Frame `2` no `attack3` / `slash_sword_3`). É neste milissegundo exato que o `AttackState` liga a `Hitbox` e libera `100%` do impulso frontal (`forward_impulse`).
+        * **`active_start_frame`**: Deve ser o **exato índice do frame (base 0) em que o desenho da meia-lua do slash surge na tela** (ex: Frame `2` no `attack1` / `slash_attack1`, Frame `3` no `attack2` / `slash_attack2`, Frame `2` no `attack3` / `slash_attack3`). É neste milissegundo exato que o `AttackState` liga a `Hitbox` e libera `100%` do impulso frontal (`forward_impulse`).
         * **`active_end_frame`**: Deve ser o último frame em que o rastro do slash ainda causa dano antes de entrar em *Recovery* (ex: Frame `3` no `attack1`, Frame `4` no `attack2`, Frame `3` no `attack3`). Após este frame, a `Hitbox` é desligada imediatamente.
      3. **Ajustar `hitbox_size` e `hitbox_position` conforme a anatomia do golpe/categoria:** Armas curtas (Adaga: `28x24`), médias (Espada: `32x28`), pesadas (Martelo: `34x30`) ou estocadas longas (Lança: ex. `52x12` em `X=30`) devem ter sua caixa base calibrada no `ComboStepData` do seu respectivo Set.
 
@@ -120,8 +120,8 @@ Representa **1 golpe individual** dentro de um Set de Ataque.
 | **`damage_multiplier`** | `float` | `1.0` | Multiplicador de dano específico deste golpe (ex: `1.0` no golpe 1, `1.25` no golpe 2, `1.5` num golpe final pesado). Multiplica o `base_damage` da arma. |
 | **`next_step_window`** | `float` | `0.0` | Janela máxima de oportunidade (em segundos) após terminar este golpe para engatar o próximo passo do combo antes de resetar para o Golpe 1 (`1.35s` do Golpe 1 -> 2; `0.675s` do Golpe 2 -> 3 para exigir compromisso imediato no finalizador). Se `0.0`, usa o `combo_window` do Set. |
 | **`lock_dodge_after_windup`** | `bool` | `false` | Se `true` (padrão no Golpe 3), bloqueia o cancelamento por Slide/Roll **apenas durante os frames do Slash** (`frames 2..4`), permitindo esquivar durante o giro inicial (`frames 0..1`) e na pausa final (`frame 5`). |
-| **`slash_animation`** | `StringName` | `&"slash_sword"` | Nome da animação de efeito de corte (em `slash_frames.tres`) que acompanha este golpe específico (ex: `slash_sword` no ataque 1, `slash_sword_2` no ataque 2). |
-| **`air_slash_animation`** | `StringName` | `&""` | Opcional: nome da animação de corte em `slash_frames.tres` usada quando o golpe é feito no AR (ex: `slash_air_sword_1` de 4 frames para sincronizar 1:1 com `air_attack1`). |
+| **`slash_animation`** | `StringName` | `&"slash_attack1"` | Nome da animação de efeito de corte (em `slash_frames.tres`) que acompanha este golpe específico (ex: `slash_attack1` no ataque 1, `slash_attack2` no ataque 2). |
+| **`air_slash_animation`** | `StringName` | `&""` | Opcional: nome da animação de corte em `slash_frames.tres` usada quando o golpe é feito no AR (ex: `slash_air_attack1` de 4 frames para sincronizar 1:1 com `air_attack1`). |
 | **`step_slash_offset`** | `Vector2` | `Vector2(0, 0)` | Deslocamento base (em pixels) do efeito de corte para esta pose de ataque. `X+` move para frente do golpe; `Y-` move para cima; `Y+` move para baixo. |
 | **`step_air_slash_offset`** | `Vector2` | `Vector2(0, 0)` | Deslocamento adicional (em pixels) somado ao slash quando este golpe é executado no AR. |
 | **`step_slash_scale`** | `Vector2` | `Vector2(1, 1)` | Escala base do efeito de corte para este passo (ex: `(1.2, 1.2)` se este golpe específico tiver um arco mais amplo). |
@@ -196,7 +196,7 @@ Na arma (`.tres`), além dos atributos de identidade e dano, ficam o vínculo co
    * Abra a lista **Steps** (`Array[ComboStepData]`):
      * Clique no **Elemento 0 (Golpe 1)**:
        * Escolha `body_animation = &"attack2"` (ou `&"attack4"` quando criarmos).
-       * Escolha `slash_animation = &"slash_hammer_1"` (ou `&"slash_sword"`).
+       * Escolha `slash_animation = &"slash_hammer_1"` (ou `&"slash_attack1"`).
        * Ajuste `duration` (ex: `0.52`), `forward_impulse` (ex: `50.0`) e `step_slash_offset`.
      * Clique no **Elemento 1 (Golpe 2)**:
        * Escolha `body_animation = &"attack3"` (ou outra pose).
