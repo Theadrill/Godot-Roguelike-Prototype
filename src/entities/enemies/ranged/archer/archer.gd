@@ -122,7 +122,8 @@ func _ready() -> void:
 	base_max_health = max_health
 	apply_tier_by_level(1)
 	if initial_facing != 0:
-		update_facing(float(initial_facing))
+		facing_direction = initial_facing
+	update_facing(float(facing_direction), true)
 	hurtbox.hit_received.connect(_on_hit_received)
 	hide_telegraph()
 
@@ -197,16 +198,17 @@ func on_attack_blocked(is_parry: bool) -> void:
 		is_adaptive_evading = true
 		adaptive_evade_timer = 1.2 if is_parry else 0.8
 
-func update_facing(direction: float) -> void:
+func update_facing(direction: float, force_sync: bool = false) -> void:
 	var new_facing: int = 0
 	if direction > 0.0:
 		new_facing = 1
 	elif direction < 0.0:
 		new_facing = -1
 
-	if new_facing != 0 and (new_facing != facing_direction or visual.scale.x != float(new_facing)):
+	var scale_mag: float = 1.15 if is_elite_active else 1.0
+	if new_facing != 0 and (force_sync or new_facing != facing_direction or visual.scale.x != float(new_facing) * scale_mag):
 		facing_direction = new_facing
-		visual.scale.x = float(facing_direction)
+		visual.scale.x = float(facing_direction) * scale_mag
 
 		# Sync raycasts direction and refresh immediately so same-frame checks don't read stale edges
 		wall_check.target_position.x = absf(wall_check.target_position.x) * float(facing_direction)
@@ -330,7 +332,7 @@ func respawn() -> void:
 		if hurtbox.has_node("CollisionShape2D"):
 			hurtbox.get_node("CollisionShape2D").set_deferred("disabled", false)
 
-	update_facing(float(initial_facing))
+	update_facing(float(initial_facing), true)
 	state_machine.transition_to("patrol")
 
 func get_arrow_spawn_pos() -> Vector2:
