@@ -226,6 +226,10 @@ tier_2_behavior = 1
 
 [node name="Archer" parent="." unique_id=1638382328 instance=ExtResource("4_archer")]
 position = Vector2(-232, 286)
+tier_2_damage_mult = 1.75
+tier_2_health_mult = 1.7
+tier_3_damage_mult = 2.5
+tier_3_health_mult = 2.0
 
 [node name="PickupItem" parent="." unique_id=1498765433 instance=ExtResource("6_pickup_item")]
 position = Vector2(960, 289)

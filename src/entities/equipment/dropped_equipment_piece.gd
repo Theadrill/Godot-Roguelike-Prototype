@@ -1,22 +1,48 @@
 class_name DroppedEquipmentPiece
-extends RigidBody2D
+extends CharacterBody2D
 
-## Peca fisica temporaria gerada ao morrer (Dead Cells style) para que armas/escudos
-## caiam no chao colidindo naturalmente com paredes e plataformas sem clipar.
+## Peca fisica leve gerada ao morrer (Dead Cells style) para que armas/escudos
+## caiam e quiquem no chao/paredes via move_and_collide sem nunca clipar
+## e sem risco de NaN no solver do RigidBody2D quando time_scale = 0.
 
 var _pending_global_pos: Vector2 = Vector2.ZERO
 var _pending_rotation: float = 0.0
 var _pending_impulse: Vector2 = Vector2.ZERO
 var _pending_spin: float = 0.0
 var _has_pending_transform: bool = false
+var _spin_speed: float = 0.0
+var _is_settled: bool = false
+var _gravity: float = 820.0
 
 func _ready() -> void:
+	_gravity = float(ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)) * 0.85
 	if _has_pending_transform:
 		global_position = _pending_global_pos
 		rotation = _pending_rotation
-		linear_velocity = _pending_impulse
-		angular_velocity = _pending_spin
+		velocity = _pending_impulse
+		_spin_speed = _pending_spin
 		_has_pending_transform = false
+
+func _physics_process(delta: float) -> void:
+	if _is_settled or delta <= 0.0001:
+		return
+
+	velocity.y += _gravity * delta
+	velocity.x = move_toward(velocity.x, 0.0, 35.0 * delta)
+	rotation += _spin_speed * delta
+
+	var collision := move_and_collide(velocity * delta)
+	if collision:
+		var normal: Vector2 = collision.get_normal()
+		if normal.is_finite() and normal.length_squared() > 0.001:
+			velocity = velocity.bounce(normal) * 0.32
+		else:
+			velocity = Vector2.ZERO
+		_spin_speed *= 0.45
+		if normal.y < -0.5 and velocity.length_squared() < 140.0:
+			velocity = Vector2.ZERO
+			_spin_speed = 0.0
+			_is_settled = true
 
 static func spawn_from_visual(
 	source_visual: Node2D,
@@ -32,15 +58,7 @@ static func spawn_from_visual(
 	var piece := DroppedEquipmentPiece.new()
 	piece.collision_layer = 0
 	piece.collision_mask = 1
-	piece.gravity_scale = 0.85
-	piece.linear_damp = 0.45
-	piece.angular_damp = 1.4
 	piece.z_index = 3
-
-	var mat := PhysicsMaterial.new()
-	mat.bounce = 0.28
-	mat.friction = 0.85
-	piece.physics_material_override = mat
 
 	var col := CollisionShape2D.new()
 	var circle := CircleShape2D.new()

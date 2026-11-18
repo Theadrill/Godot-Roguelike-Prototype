@@ -685,12 +685,6 @@ func stop_animation() -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
-		velocity.x = move_toward(velocity.x, 0.0, 900.0 * delta)
-		if not is_on_floor():
-			velocity.y += gravity * delta
-		else:
-			velocity.y = 0.0
-		move_and_slide()
 		return
 
 	# Decrement timers
@@ -1043,16 +1037,16 @@ func spawn_death_dropped_equipment() -> void:
 		},
 	]
 
+	var safe_origin: Vector2 = global_position + Vector2(0.0, -18.0)
 	for entry in pieces:
 		var vis_node := entry.get("vis") as Node2D
 		var sock := entry.get("socket") as Node2D
 		if not vis_node or not is_instance_valid(vis_node) or not vis_node.visible:
 			continue
-		var pos: Vector2 = sock.global_position if (sock and is_instance_valid(sock)) else global_position + Vector2(0, -18)
 		var rot: float = sock.global_rotation if (sock and is_instance_valid(sock)) else 0.0
 		var dropped := DroppedEquipmentPiece.spawn_from_visual(
 			vis_node,
-			pos,
+			safe_origin,
 			rot,
 			entry.get("impulse", Vector2.ZERO),
 			entry.get("spin", 0.0),
