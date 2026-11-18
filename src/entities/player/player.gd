@@ -13,13 +13,13 @@ var current_flask_charges: int = 1
 var _bark_tween: Tween = null
 
 @export_group("Attributes & Stats")
-@export_range(1.0, 1000.0, 1.0, "or_greater") var max_health: float = 250.0
+@export_range(1.0, 1000.0, 1.0, "or_greater") var max_health: float = 200.0
 @export_range(0.0, 500.0, 1.0, "or_greater") var max_mana: float = 100.0
-var current_health: float = 250.0
+var current_health: float = 200.0
 var current_mana: float = 100.0
 
 @export_group("Debug")
-@export var debug_start_at_90_health: bool = true
+@export var debug_start_at_90_health: bool = false
 @export var debug_infinite_heal: bool = false
 
 @export_group("Tactical Life Rally")
@@ -155,6 +155,7 @@ const default_slash_frames = preload("res://assets/effects/slashes/slash_frames.
 @onready var item_pickup_socket: Marker2D = $Visual.get_node_or_null("ItemPickupSocket") as Marker2D
 @onready var bark_label: Label = get_node_or_null("BarkLabel") as Label
 @onready var death_screen: DeathScreen = get_node_or_null("DeathScreen") as DeathScreen
+@onready var low_health_vignette: LowHealthVignette = get_node_or_null("LowHealthVignette") as LowHealthVignette
 
 var _main_weapon_instance: Node2D = null
 var _secondary_weapon_instance: Node2D = null
@@ -909,6 +910,9 @@ func _on_hit_received(damage: float, knockback: Vector2, hitstop: float) -> void
 	if current_health <= 0.0:
 		die()
 		return
+
+	if low_health_vignette:
+		low_health_vignette.trigger_hit_spike()
 
 	# Tactical Life Rally: Stores ONLY the damage of the most recent hit for 2.0s (resets on each hit)
 	rally_recoverable_hp = minf(damage, max_health - current_health)

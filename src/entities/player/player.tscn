@@ -26,6 +26,7 @@
 [ext_resource type="SpriteFrames" uid="uid://b3mi8waob4tc5" path="res://assets/player/adventurer/player_frames.tres" id="24_player_frames"]
 [ext_resource type="SpriteFrames" uid="uid://chow11bdony5b" path="res://assets/effects/slashes/slash_frames.tres" id="25_slash_frames"]
 [ext_resource type="Script" path="res://src/entities/player/states/pickup_state.gd" id="26_pickup"]
+[ext_resource type="PackedScene" path="res://src/ui/low_health_vignette.tscn" id="27_low_hp_vignette"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -223,3 +224,5 @@ script = ExtResource("22_heal")
 
 [node name="Pickup" type="Node" parent="StateMachine" unique_id=1498765432]
 script = ExtResource("26_pickup")
+
+[node name="LowHealthVignette" parent="." unique_id=1798765433 instance=ExtResource("27_low_hp_vignette")]

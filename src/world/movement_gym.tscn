@@ -232,7 +232,6 @@ position = Vector2(960, 289)
 
 [node name="Player" parent="." unique_id=794960122 instance=ExtResource("1_player")]
 position = Vector2(-61, 288)
-max_health = 99999.0
 run_speed = 150.0
 wall_recovery_gravity_multiplier = 0.5
 slide_speed = 170.0
