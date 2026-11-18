@@ -25,7 +25,7 @@ func physics_update(delta: float) -> void:
 		archer.reaggro_cooldown = maxf(0.0, archer.reaggro_cooldown - delta)
 
 	# Scan for Player (skipped while cooling down after losing aggro)
-	var player := _find_player() if archer.reaggro_cooldown <= 0.0 else null
+	var player := archer.find_player() if archer.reaggro_cooldown <= 0.0 else null
 	if player:
 		var to_player := player.global_position - archer.global_position
 		var dist := to_player.length()
@@ -74,18 +74,3 @@ func physics_update(delta: float) -> void:
 
 	archer.velocity.x = float(archer.facing_direction) * archer.patrol_speed
 	archer.move_and_slide()
-
-func _find_player() -> Player:
-	if archer.target_player and is_instance_valid(archer.target_player):
-		return archer.target_player
-	var tree := archer.get_tree()
-	if not tree:
-		return null
-	var nodes := tree.get_nodes_in_group("player")
-	if nodes.size() > 0 and nodes[0] is Player:
-		return nodes[0] as Player
-	if tree.current_scene:
-		var p := tree.current_scene.find_child("Player", true, false)
-		if p is Player:
-			return p as Player
-	return null

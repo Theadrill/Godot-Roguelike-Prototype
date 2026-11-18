@@ -6,12 +6,14 @@ extends State
 
 var archer: Archer
 var stun_timer: float = 0.0
+var custom_stun_duration: float = 0.0
 var incoming_knockback: Vector2 = Vector2.ZERO
 var hitstop_time: float = 0.0
 
 func enter() -> void:
 	archer = character as Archer
-	stun_timer = 0.25
+	stun_timer = custom_stun_duration if custom_stun_duration > 0.0 else 0.25
+	custom_stun_duration = 0.0
 	archer.reaggro_cooldown = 0.0
 	archer.hide_telegraph()
 	if archer.bow_node:
@@ -33,19 +35,9 @@ func physics_update(delta: float) -> void:
 
 	stun_timer -= delta
 	if stun_timer <= 0.0:
-		var player := archer.target_player
-		if not is_instance_valid(player):
-			var tree := archer.get_tree()
-			if tree:
-				var nodes := tree.get_nodes_in_group("player")
-				if nodes.size() > 0 and nodes[0] is Player:
-					player = nodes[0] as Player
-					archer.target_player = player
-				elif tree.current_scene:
-					var p := tree.current_scene.find_child("Player", true, false)
-					if p is Player:
-						player = p as Player
-						archer.target_player = player
+		var player := archer.find_player()
+		if is_instance_valid(player):
+			archer.target_player = player
 
 		if is_instance_valid(player) and archer.has_line_of_sight_to(player):
 			var dist := archer.global_position.distance_to(player.global_position)

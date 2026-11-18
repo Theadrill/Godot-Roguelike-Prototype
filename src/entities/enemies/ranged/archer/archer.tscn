@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://u2tkojal00fn" path="res://src/entities/enemies/ranged/archer/states/aim_state.gd" id="6_aim"]
 [ext_resource type="Script" uid="uid://cs6x7i5w3i1en" path="res://src/entities/enemies/ranged/archer/states/shoot_state.gd" id="7_shoot"]
 [ext_resource type="Script" uid="uid://dl2acnhtnkcot" path="res://src/entities/enemies/ranged/archer/states/hurt_state.gd" id="8_hurt"]
-[ext_resource type="Script" uid="uid://ckjxgt3iicnui" path="res://src/entities/enemies/ranged/archer/states/death_state.gd" id="9_death"]
+[ext_resource type="Script" path="res://src/entities/enemies/states/enemy_death_state.gd" id="9_death"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 40)
@@ -81,26 +81,6 @@ polygon = PackedVector2Array(-3, -10, 3, -10, 2, -2, -2, -2, -2, 2, 2, 2, 2, 6, 
 visible = false
 color = Color(1, 0.15, 0.15, 1)
 polygon = PackedVector2Array(-3, -10, 3, -10, 2, -2, -2, -2, -2, 2, 2, 2, 2, 6, -2, 6)
-
-[node name="WallCheck" type="RayCast2D" parent="." unique_id=1419408698]
-position = Vector2(0, -16)
-target_position = Vector2(14, 0)
-
-[node name="LedgeCheck" type="RayCast2D" parent="." unique_id=154651331]
-position = Vector2(14, -4)
-target_position = Vector2(0, 16)
-
-[node name="BackWallCheck" type="RayCast2D" parent="." unique_id=2109402834]
-position = Vector2(0, -16)
-target_position = Vector2(-14, 0)
-
-[node name="BackLedgeCheck" type="RayCast2D" parent="." unique_id=1882452810]
-position = Vector2(-14, -4)
-target_position = Vector2(0, 16)
-
-[node name="SightRay" type="RayCast2D" parent="." unique_id=956198515]
-position = Vector2(0, -20)
-target_position = Vector2(250, 0)
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=530014484]
 collision_layer = 64
