@@ -92,6 +92,25 @@ func get_socket_profile() -> WeaponSocketProfile:
 	_cached_socket_profile_name = socket_profile
 	return _cached_socket_profile
 
+## Retorna o identificador canônico da família/arquétipo desta arma ("sword", "dagger", "axe", "hammer", "staff", "bow", "crossbow").
+func get_archetype_id() -> String:
+	var s_prof: String = socket_profile.to_lower()
+	var res_path: String = resource_path.to_lower()
+	var w_name: String = equipment_name.to_lower() if equipment_name else ""
+	if "dagger" in s_prof or "dagger" in res_path or "dagger" in w_name:
+		return "dagger"
+	if "axe" in s_prof or "axe" in res_path or "axe" in w_name or "machado" in w_name:
+		return "axe"
+	if "hammer" in s_prof or "hammer" in res_path or "hammer" in w_name:
+		return "hammer"
+	if "staff" in s_prof or "staff" in res_path or "staff" in w_name or "cajado" in w_name:
+		return "staff"
+	if "crossbow" in s_prof or "crossbow" in res_path or "crossbow" in w_name or "besta" in w_name:
+		return "crossbow"
+	if "bow" in s_prof or "bow" in res_path or "bow" in w_name or "arco" in w_name:
+		return "bow"
+	return "sword"
+
 @export_group("Combo & Attack Set (Moveset)")
 
 ## O Conjunto de Ataques (AttackSetData) que esta arma utiliza!

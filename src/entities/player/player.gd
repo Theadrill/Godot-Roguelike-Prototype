@@ -171,16 +171,14 @@ const default_slash_frames = preload("res://assets/effects/slashes/slash_frames.
 @onready var death_screen: DeathScreen = get_node_or_null("DeathScreen") as DeathScreen
 @onready var low_health_vignette: LowHealthVignette = get_node_or_null("LowHealthVignette") as LowHealthVignette
 
+var equipment_rig: PlayerEquipmentRig = PlayerEquipmentRig.new()
+var combat_vfx: PlayerCombatVFX = PlayerCombatVFX.new()
+
 var _main_weapon_instance: Node2D = null
 var _secondary_weapon_instance: Node2D = null
 var _shield_instance: Node2D = null
 var _tea_bottle_instance: Node2D = null
-var _tea_bottle_profile: WeaponSocketProfile = null
 var _item_pickup_instance: Node2D = null
-var _item_pickup_profile: WeaponSocketProfile = null
-var _pickup_effect_profile: PickupEffectProfile = null
-var _item_pickup_base_scale: Vector2 = Vector2.ONE
-var _pickup_fx_tween: Tween = null
 var _dropped_death_items: Array[Node] = []
 var tea_bottle_frame_override: int = -1
 var is_shield_raised: bool = false
@@ -218,19 +216,8 @@ func _ready() -> void:
 		if default_back:
 			back_socket_profile = default_back
 
-	if ResourceLoader.exists("res://src/entities/equipment/socket_profiles/tea_bottle.tres"):
-		_tea_bottle_profile = load("res://src/entities/equipment/socket_profiles/tea_bottle.tres") as WeaponSocketProfile
-	if tea_bottle_socket and ResourceLoader.exists("res://src/entities/equipment/items/tea_bottle_visual.tscn"):
-		var tb_scene := load("res://src/entities/equipment/items/tea_bottle_visual.tscn") as PackedScene
-		if tb_scene:
-			_tea_bottle_instance = tb_scene.instantiate() as Node2D
-			tea_bottle_socket.add_child(_tea_bottle_instance)
-			_tea_bottle_instance.position = Vector2.ZERO
-			_tea_bottle_instance.rotation_degrees = 0.0
-			_tea_bottle_instance.visible = false
-
-	if ResourceLoader.exists("res://src/entities/equipment/socket_profiles/item_pickup.tres"):
-		_item_pickup_profile = load("res://src/entities/equipment/socket_profiles/item_pickup.tres") as WeaponSocketProfile
+	equipment_rig.setup(self)
+	combat_vfx.setup(self)
 
 	if player_sprite:
 		player_sprite.animation_finished.connect(_on_player_sprite_animation_finished)
@@ -261,192 +248,45 @@ func _ready() -> void:
 
 func equip_weapon(new_weapon: WeaponData) -> void:
 	weapon = new_weapon
-	_update_main_weapon_visual()
+	equipment_rig.update_main_weapon_visual()
 
 func equip_secondary_weapon(new_secondary: WeaponData) -> void:
 	secondary_weapon = new_secondary
-	_update_secondary_weapon_visual()
+	equipment_rig.update_secondary_weapon_visual()
 
 func equip_shield(new_shield: ShieldData) -> void:
 	shield = new_shield
-	_update_shield_visual()
+	equipment_rig.update_shield_visual()
 
 func set_shield_raised(raised: bool) -> void:
-	if is_shield_raised == raised:
-		return
-	is_shield_raised = raised
-	if not _shield_instance or not is_instance_valid(_shield_instance):
-		return
-
-	var target_socket: Marker2D = off_hand_socket if is_shield_raised else back_socket_shield
-	if _shield_instance.get_parent() != target_socket:
-		_shield_instance.reparent(target_socket, false)
-	_shield_instance.position = Vector2.ZERO
-	_shield_instance.rotation_degrees = 0.0
-	_shield_instance.z_index = 0
-	_on_player_sprite_frame_changed()
+	equipment_rig.set_shield_raised(raised)
 
 func _refresh_equipped_visuals() -> void:
-	_update_main_weapon_visual()
-	_update_secondary_weapon_visual()
-	_update_shield_visual()
+	equipment_rig.refresh_equipped_visuals()
 
 ## Oculta os visuais de armamento (personagem desarmado no refúgio)
 func hide_equipment_visuals() -> void:
-	are_weapons_hidden = true
-	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-		_main_weapon_instance.visible = false
-	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
-		_secondary_weapon_instance.visible = false
-	if _shield_instance and is_instance_valid(_shield_instance):
-		_shield_instance.visible = false
+	equipment_rig.hide_equipment_visuals()
 
 ## Limpa todo o equipamento (usado no despertar na casa familiar)
 func clear_all_equipment() -> void:
-	weapon = null
-	secondary_weapon = null
-	shield = null
-	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-		_main_weapon_instance.queue_free()
-		_main_weapon_instance = null
-	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
-		_secondary_weapon_instance.queue_free()
-		_secondary_weapon_instance = null
-	if _shield_instance and is_instance_valid(_shield_instance):
-		_shield_instance.queue_free()
-		_shield_instance = null
-	are_weapons_hidden = true
+	equipment_rig.clear_all_equipment()
 
 ## Restaura e exibe os visuais de armamento ao se preparar no baú
 func show_equipment_visuals() -> void:
-	are_weapons_hidden = false
-	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-		_main_weapon_instance.visible = true
-	else:
-		_update_main_weapon_visual()
-
-	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
-		_secondary_weapon_instance.visible = true
-	else:
-		_update_secondary_weapon_visual()
-
-	if _shield_instance and is_instance_valid(_shield_instance):
-		_shield_instance.visible = true
-	else:
-		_update_shield_visual()
+	equipment_rig.show_equipment_visuals()
 
 func _update_main_weapon_visual() -> void:
-	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-		_main_weapon_instance.queue_free()
-		_main_weapon_instance = null
-
-	# Remove any editor preview instances in MainHandSocket
-	if main_hand_socket:
-		for child in main_hand_socket.get_children():
-			child.queue_free()
-
-	if weapon and weapon.visual_scene and main_hand_socket:
-		_main_weapon_instance = weapon.visual_scene.instantiate() as Node2D
-		if _main_weapon_instance:
-			main_hand_socket.add_child(_main_weapon_instance)
-			var has_socket_profile: bool = weapon.get_socket_profile() != null
-			_main_weapon_instance.position = Vector2.ZERO if has_socket_profile else weapon.visual_offset
-			_main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else weapon.visual_rotation_degrees
-			_main_weapon_instance.z_index = 0
-			_main_weapon_instance.visible = not are_weapons_hidden
-			if player_sprite and player_sprite.visible:
-				_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
+	equipment_rig.update_main_weapon_visual()
 
 func _update_secondary_weapon_visual() -> void:
-	if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
-		_secondary_weapon_instance.queue_free()
-		_secondary_weapon_instance = null
-
-	if secondary_weapon and secondary_weapon.visual_scene and back_socket_weapon:
-		_secondary_weapon_instance = secondary_weapon.visual_scene.instantiate() as Node2D
-		if _secondary_weapon_instance:
-			back_socket_weapon.add_child(_secondary_weapon_instance)
-			_secondary_weapon_instance.position = Vector2.ZERO
-			_secondary_weapon_instance.rotation_degrees = 0.0
-			_secondary_weapon_instance.z_index = 0
-			_secondary_weapon_instance.visible = not are_weapons_hidden
+	equipment_rig.update_secondary_weapon_visual()
 
 func _update_shield_visual() -> void:
-	if _shield_instance and is_instance_valid(_shield_instance):
-		_shield_instance.queue_free()
-		_shield_instance = null
-
-	if shield and shield.visual_scene:
-		_shield_instance = shield.visual_scene.instantiate() as Node2D
-		if _shield_instance:
-			var target_socket: Marker2D = off_hand_socket if is_shield_raised else back_socket_shield
-			target_socket.add_child(_shield_instance)
-			_shield_instance.position = Vector2.ZERO
-			_shield_instance.rotation_degrees = 0.0
-			_shield_instance.z_index = 0
-			_shield_instance.visible = not are_weapons_hidden
+	equipment_rig.update_shield_visual()
 
 func set_slash_visual(is_active: bool, combo_step: int = 0, is_upward: bool = false, is_downward: bool = false, charge_ratio: float = 0.0) -> void:
-	if not slash_effect:
-		return
-
-	if not is_active or not weapon or not weapon.slash_enabled:
-		slash_effect.visible = false
-		if slash_effect is AnimatedSprite2D and slash_effect.is_playing():
-			slash_effect.stop()
-		_apply_slash_energize_shader(0.0)
-		return
-
-	var is_airborne: bool = not is_on_floor()
-
-	# Configurar animação no AnimatedSprite2D
-	if slash_effect is AnimatedSprite2D:
-		var target_frames := weapon.slash_custom_frames if weapon.slash_custom_frames else default_slash_frames
-		if target_frames and slash_effect.sprite_frames != target_frames:
-			slash_effect.sprite_frames = target_frames
-
-		var anim_name: StringName = weapon.get_step_slash_animation(combo_step, is_airborne) if weapon else &"slash_attack1"
-		if slash_effect.sprite_frames and not slash_effect.sprite_frames.has_animation(anim_name):
-			anim_name = weapon.get_step_slash_animation(combo_step, false) if weapon else &"slash_attack1"
-		if slash_effect.sprite_frames and not slash_effect.sprite_frames.has_animation(anim_name):
-			anim_name = weapon.slash_animation if (weapon and weapon.slash_animation) else &"slash_attack1"
-		if slash_effect.sprite_frames and slash_effect.sprite_frames.has_animation(anim_name):
-			slash_effect.animation = anim_name
-			slash_effect.frame = 0
-			var step_dur: float = weapon.get_step_duration(combo_step) if weapon else 0.36
-			var slash_frame_count: int = maxi(1, slash_effect.sprite_frames.get_frame_count(anim_name))
-			var slash_fps: float = maxf(1.0, slash_effect.sprite_frames.get_animation_speed(anim_name))
-			var total_slash_units: float = 0.0
-			for i in range(slash_frame_count):
-				total_slash_units += slash_effect.sprite_frames.get_frame_duration(anim_name, i)
-			var base_slash_dur: float = total_slash_units / slash_fps
-			slash_effect.speed_scale = base_slash_dur / maxf(0.05, step_dur)
-			slash_effect.play(anim_name)
-
-		slash_effect.flip_h = weapon.get_step_slash_flip_h(combo_step) if weapon else false
-		slash_effect.flip_v = weapon.get_step_slash_flip_v(combo_step) if weapon else false
-
-	_slash_combo_step = combo_step
-	_slash_is_upward = is_upward
-	_slash_is_downward = is_downward
-	_slash_is_airborne = is_airborne
-	var custom_mod: Color = weapon.slash_modulate if weapon else Color.WHITE
-	var custom_z: int = weapon.slash_z_index if weapon else 4
-	update_slash_frame_transform(0)
-
-	slash_effect.modulate = custom_mod
-	slash_effect.z_index = custom_z
-	_apply_slash_energize_shader(charge_ratio)
-	slash_effect.visible = true
-
-	if main_hand_socket:
-		if is_active:
-			if is_upward:
-				main_hand_socket.rotation_degrees = -90.0
-			elif is_downward:
-				main_hand_socket.rotation_degrees = 90.0
-		else:
-			main_hand_socket.rotation_degrees = -35.0
+	combat_vfx.set_slash_visual(is_active, combo_step, is_upward, is_downward, charge_ratio)
 
 func play_animation(anim_name: StringName) -> void:
 	if not player_sprite:
@@ -479,37 +319,11 @@ func play_animation(anim_name: StringName) -> void:
 			player_sprite.play(anim_name)
 			_update_weapon_socket_for_frame(anim_name, player_sprite.frame)
 
-var _slash_combo_step: int = 0
-var _slash_is_upward: bool = false
-var _slash_is_downward: bool = false
-var _slash_is_airborne: bool = false
-
-
 func _on_slash_effect_frame_changed() -> void:
-	if slash_effect and slash_effect.visible:
-		update_slash_frame_transform(slash_effect.frame)
-
+	combat_vfx.on_slash_effect_frame_changed()
 
 func update_slash_frame_transform(frame_idx: int) -> void:
-	if not slash_effect or not is_instance_valid(slash_effect):
-		return
-	var base_pos: Vector2 = player_sprite.position if player_sprite else Vector2(-2, -29)
-	var custom_offset: Vector2 = weapon.get_step_total_slash_offset(_slash_combo_step, _slash_is_airborne, frame_idx) if weapon else Vector2.ZERO
-	var custom_scale: Vector2 = weapon.get_step_total_slash_scale(_slash_combo_step, _slash_is_airborne, frame_idx) if weapon else Vector2.ONE
-
-	if _slash_is_upward:
-		slash_effect.position = base_pos + Vector2(0.0, -8.0) + custom_offset
-		slash_effect.rotation_degrees = -90.0
-		slash_effect.scale = custom_scale * 1.1
-	elif _slash_is_downward:
-		slash_effect.position = base_pos + Vector2(4.0, 10.0) + custom_offset
-		slash_effect.rotation_degrees = 90.0
-		slash_effect.scale = custom_scale * 1.1
-	else:
-		slash_effect.position = base_pos + custom_offset
-		slash_effect.rotation_degrees = 0.0
-		slash_effect.scale = custom_scale
-
+	combat_vfx.update_slash_frame_transform(frame_idx)
 
 func _on_player_sprite_animation_finished() -> void:
 	# Transição suave: após a ponte de desenrolar do pulo, mantém o loop de queda fluida
@@ -519,26 +333,7 @@ func _on_player_sprite_animation_finished() -> void:
 		play_animation(&"block_loop")
 
 func _detect_weapon_type_string(w: WeaponData) -> String:
-	if not w:
-		return "sword"
-	var res_path: String = w.resource_path.to_lower()
-	var w_name: String = w.equipment_name.to_lower() if ("equipment_name" in w and w.equipment_name) else ""
-	var s_prof: String = w.socket_profile.to_lower() if ("socket_profile" in w and w.socket_profile) else ""
-	if "dagger" in res_path or "dagger" in w_name or "dagger" in s_prof:
-		return "dagger"
-	elif "axe" in res_path or "axe" in w_name or "axe" in s_prof or "machado" in w_name:
-		return "axe"
-	elif "hammer" in res_path or "hammer" in w_name or "hammer" in s_prof:
-		return "hammer"
-	elif "staff" in res_path or "staff" in w_name or "cajado" in w_name or "staff" in s_prof:
-		return "staff"
-	elif "crossbow" in res_path or "crossbow" in w_name or "besta" in w_name or "crossbow" in s_prof:
-		return "crossbow"
-	elif "bow" in res_path or "bow" in w_name or "arco" in w_name or "bow" in s_prof:
-		return "bow"
-	elif "sword" in res_path or "sword" in w_name or "espada" in w_name or "sword" in s_prof:
-		return "sword"
-	return "sword"
+	return w.get_archetype_id() if w else "sword"
 
 func _is_dagger(w: WeaponData) -> bool:
 	return _detect_weapon_type_string(w) == "dagger"
@@ -555,133 +350,10 @@ func _on_animation_frame_changed() -> void:
 	_on_player_sprite_frame_changed()
 
 func _apply_visual_instance_flip(instance: Node2D, flip_h: bool, flip_v: bool) -> void:
-	if not instance or not is_instance_valid(instance):
-		return
-	var sx := absf(instance.scale.x)
-	if sx < 0.001: sx = 0.8
-	var sy := absf(instance.scale.y)
-	if sy < 0.001: sy = 0.8
-	instance.scale.x = -sx if flip_h else sx
-	instance.scale.y = -sy if flip_v else sy
+	equipment_rig.apply_visual_instance_flip(instance, flip_h, flip_v)
 
 func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> void:
-	if not player_sprite or not player_sprite.visible:
-		return
-
-	# 1. Main Hand Weapon (atualiza apenas se não estiver executando ataque ou defesa procedural)
-	var is_in_manual_socket_state: bool = false
-	if state_machine and state_machine.current_state:
-		var current_state_name: String = state_machine.current_state.name.to_lower()
-		if current_state_name == "attack":
-			is_in_manual_socket_state = not (anim_name in [&"attack1", &"attack2", &"attack3", &"air_attack1", &"air_attack2", &"air_attack3", &"air_attack"])
-		elif current_state_name == "rangedattack":
-			is_in_manual_socket_state = not (anim_name in [&"cast", &"channeling", &"bow_attack", &"bow_air_attack", &"crossbow_attack", &"crossbow_air_attack"])
-		elif current_state_name == "guard":
-			is_in_manual_socket_state = not (anim_name in [&"block", &"block_loop"])
-
-	if not is_in_manual_socket_state and main_hand_socket and weapon:
-		var profile: WeaponSocketProfile = weapon.get_socket_profile()
-		if profile:
-			var data: Dictionary = profile.get_frame_data(anim_name, frame_idx)
-			main_hand_socket.position = data.get("pos", Vector2(6, -20))
-			main_hand_socket.rotation_degrees = data.get("rot", -35.0)
-			var hand_z: int = data.get("z_index", 2)
-			if anim_name == &"corner_climb" and hand_z < 1:
-				hand_z = 2
-			main_hand_socket.z_index = hand_z
-			if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-				var should_be_visible: bool = data.get("visible", true)
-				_main_weapon_instance.visible = should_be_visible and not are_weapons_hidden
-				_apply_visual_instance_flip(_main_weapon_instance, data.get("flip_h", false), data.get("flip_v", false))
-
-	# 2. Back Sockets (Arma e Escudo nas costas usam o perfil da arma ou fallback)
-	if secondary_weapon:
-		var sec_profile: WeaponSocketProfile = secondary_weapon.get_socket_profile()
-		if sec_profile and sec_profile.has_method("get_back_frame_data"):
-			var back_data: Dictionary = sec_profile.get_back_frame_data(anim_name, frame_idx)
-			if back_socket_weapon:
-				back_socket_weapon.position = back_data.get("pos", Vector2(-6, -24))
-				back_socket_weapon.rotation_degrees = back_data.get("rot", 0.0)
-				var default_back_z: int = 1 if _detect_weapon_type_string(secondary_weapon) == "dagger" else -2
-				back_socket_weapon.z_index = back_data.get("z_index", default_back_z)
-			if _secondary_weapon_instance and is_instance_valid(_secondary_weapon_instance):
-				_secondary_weapon_instance.position = Vector2.ZERO
-				_secondary_weapon_instance.rotation_degrees = 0.0
-				_secondary_weapon_instance.visible = back_data.get("visible", true) and not are_weapons_hidden
-				_apply_visual_instance_flip(_secondary_weapon_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
-	elif back_socket_profile and back_socket_weapon:
-		var torso_pos: Vector2 = back_socket_profile.get_frame_pos(anim_name, frame_idx)
-		back_socket_weapon.position = torso_pos
-		back_socket_weapon.rotation_degrees = 0.0
-		back_socket_weapon.z_index = -2
-
-	# 3. Escudo (na Mão/Guarda ou nas Costas)
-	if shield:
-		var sh_profile: WeaponSocketProfile = shield.get_socket_profile()
-		if sh_profile:
-			if is_shield_raised:
-				if sh_profile.has_method("get_frame_data"):
-					var hand_data := sh_profile.get_frame_data(anim_name, frame_idx)
-					if off_hand_socket:
-						off_hand_socket.position = hand_data.get("pos", Vector2(7, -19))
-						off_hand_socket.rotation_degrees = hand_data.get("rot", 0.0)
-						off_hand_socket.z_index = hand_data.get("z_index", 2)
-					if _shield_instance and is_instance_valid(_shield_instance):
-						_shield_instance.position = Vector2.ZERO
-						_shield_instance.rotation_degrees = 0.0
-						_shield_instance.visible = hand_data.get("visible", true) and not are_weapons_hidden
-						_apply_visual_instance_flip(_shield_instance, hand_data.get("flip_h", false), hand_data.get("flip_v", false))
-			else:
-				if sh_profile.has_method("get_back_frame_data"):
-					var back_data := sh_profile.get_back_frame_data(anim_name, frame_idx)
-					if back_socket_shield:
-						back_socket_shield.position = back_data.get("pos", Vector2(-9, -24))
-						back_socket_shield.rotation_degrees = back_data.get("rot", 0.0)
-						back_socket_shield.z_index = back_data.get("z_index", -1)
-					if _shield_instance and is_instance_valid(_shield_instance):
-						_shield_instance.position = Vector2.ZERO
-						_shield_instance.rotation_degrees = 0.0
-						_shield_instance.visible = back_data.get("visible", true) and not are_weapons_hidden
-						_apply_visual_instance_flip(_shield_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
-	elif back_socket_shield:
-		if back_socket_weapon:
-			back_socket_shield.position = back_socket_weapon.position + Vector2(-3.0, 0.0)
-			back_socket_shield.z_index = -1
-		elif back_socket_profile:
-			back_socket_shield.position = back_socket_profile.get_frame_pos(anim_name, frame_idx) + Vector2(-3.0, 0.0)
-			back_socket_shield.z_index = -1
-
-	# 4. Garrafa de Chá (exibida apenas durante a animação "heal")
-	if _tea_bottle_instance and is_instance_valid(_tea_bottle_instance):
-		if anim_name == &"heal" and tea_bottle_socket:
-			var tb_data: Dictionary = _tea_bottle_profile.get_frame_data(anim_name, frame_idx) if _tea_bottle_profile else {}
-			tea_bottle_socket.position = tb_data.get("pos", Vector2(10, -24))
-			tea_bottle_socket.rotation_degrees = tb_data.get("rot", 0.0)
-			tea_bottle_socket.z_index = tb_data.get("z_index", 3)
-			_tea_bottle_instance.position = Vector2.ZERO
-			_tea_bottle_instance.rotation_degrees = 0.0
-			_tea_bottle_instance.visible = tb_data.get("visible", true) and not are_weapons_hidden
-			_apply_visual_instance_flip(_tea_bottle_instance, tb_data.get("flip_h", false), tb_data.get("flip_v", false))
-			var tb_sprite := _tea_bottle_instance.get_node_or_null("Sprite2D") as Sprite2D
-			if tb_sprite:
-				var tb_frame: int = tea_bottle_frame_override if tea_bottle_frame_override >= 0 else frame_idx
-				tb_sprite.frame = clampi(tb_frame, 0, 2)
-		else:
-			_tea_bottle_instance.visible = false
-
-	# 5. Item sendo Pego (exibido durante a animação "pickup" usando o visual do item coletado)
-	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
-		if anim_name == &"pickup" and item_pickup_socket:
-			var ip_data: Dictionary = _item_pickup_profile.get_frame_data(anim_name, frame_idx) if _item_pickup_profile else {}
-			item_pickup_socket.position = ip_data.get("pos", Vector2(13, -10))
-			item_pickup_socket.rotation_degrees = ip_data.get("rot", 0.0)
-			item_pickup_socket.z_index = ip_data.get("z_index", 3)
-			_item_pickup_instance.position = Vector2.ZERO
-			_item_pickup_instance.rotation_degrees = 0.0
-			_item_pickup_instance.visible = ip_data.get("visible", frame_idx > 0) and not are_weapons_hidden
-			_apply_visual_instance_flip(_item_pickup_instance, ip_data.get("flip_h", false), ip_data.get("flip_v", false))
-		else:
-			_item_pickup_instance.visible = false
+	equipment_rig.update_sockets_for_frame(anim_name, frame_idx)
 
 func stop_animation() -> void:
 	if hurt_flinch_timer > 0.0:
@@ -1034,56 +706,10 @@ func trigger_death_screen() -> void:
 		_on_death_respawn()
 
 func spawn_death_dropped_equipment() -> void:
-	clear_death_dropped_equipment()
-	var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
-	if not spawn_parent:
-		return
-
-	var facing: float = -1.0 if facing_direction < 0 else 1.0
-	var pieces: Array[Dictionary] = [
-		{
-			"vis": _main_weapon_instance,
-			"socket": main_hand_socket,
-			"impulse": Vector2(facing * 48.0, -78.0),
-			"spin": facing * 5.2,
-		},
-		{
-			"vis": _secondary_weapon_instance,
-			"socket": back_socket_weapon,
-			"impulse": Vector2(-facing * 32.0, -64.0),
-			"spin": -facing * 4.0,
-		},
-		{
-			"vis": _shield_instance,
-			"socket": off_hand_socket if is_shield_raised else back_socket_shield,
-			"impulse": Vector2(-facing * 16.0, -54.0),
-			"spin": -facing * 3.0,
-		},
-	]
-
-	var safe_origin: Vector2 = global_position + Vector2(0.0, -18.0)
-	for entry in pieces:
-		var vis_node := entry.get("vis") as Node2D
-		var sock := entry.get("socket") as Node2D
-		if not vis_node or not is_instance_valid(vis_node) or not vis_node.visible:
-			continue
-		var rot: float = sock.global_rotation if (sock and is_instance_valid(sock)) else 0.0
-		var dropped := DroppedEquipmentPiece.spawn_from_visual(
-			vis_node,
-			safe_origin,
-			rot,
-			entry.get("impulse", Vector2.ZERO),
-			entry.get("spin", 0.0),
-			spawn_parent
-		)
-		if dropped:
-			_dropped_death_items.append(dropped)
+	equipment_rig.spawn_death_dropped_equipment()
 
 func clear_death_dropped_equipment() -> void:
-	for item in _dropped_death_items:
-		if item and is_instance_valid(item):
-			item.queue_free()
-	_dropped_death_items.clear()
+	equipment_rig.clear_death_dropped_equipment()
 
 func _on_death_respawn() -> void:
 	clear_death_dropped_equipment()
@@ -1171,19 +797,7 @@ func update_facing(direction: float) -> void:
 			_update_equipment_depth()
 
 func _update_equipment_depth() -> void:
-	# O z-index de cada socket é governado frame a frame pelo perfil calibrado da arma/escudo.
-	if player_sprite:
-		_update_weapon_socket_for_frame(player_sprite.animation, player_sprite.frame)
-	else:
-		if main_hand_socket:
-			main_hand_socket.z_index = 2
-		if off_hand_socket:
-			off_hand_socket.z_index = -1
-		if back_socket_shield:
-			back_socket_shield.z_index = -1
-		if back_socket_weapon:
-			var default_back_z: int = 1 if (secondary_weapon and _detect_weapon_type_string(secondary_weapon) == "dagger") else -2
-			back_socket_weapon.z_index = default_back_z
+	equipment_rig.update_equipment_depth()
 
 ## Intent-filtered check for crouching.
 ## Prevents accidental crouches when tilting the analog stick diagonally while running.
@@ -1328,197 +942,35 @@ func check_ledge() -> bool:
 	ledge_target_position = Vector2(target_x, floor_y)
 	return true
 
-var _active_energize_particles: Node2D = null
-var _slash_shader_mat: ShaderMaterial = null
-
 func _apply_slash_energize_shader(charge_ratio: float) -> void:
-	if not slash_effect:
-		return
-	if not _slash_shader_mat:
-		var sh := load("res://src/combat/slash_colorize.gdshader") as Shader
-		if sh:
-			_slash_shader_mat = ShaderMaterial.new()
-			_slash_shader_mat.shader = sh
-			slash_effect.material = _slash_shader_mat
-	if not _slash_shader_mat:
-		return
-	if weapon and weapon.charge_has_energize and charge_ratio > 0.0:
-		var prof: EnergizeProfile = weapon.get_energize_profile()
-		if prof and prof.tint_slash:
-			_slash_shader_mat.set_shader_parameter("tint_color", prof.glow_color)
-			var strength: float = prof.slash_tint_strength * clampf(0.35 + charge_ratio * 0.65, 0.0, 1.0)
-			_slash_shader_mat.set_shader_parameter("tint_strength", strength)
-			return
-	_slash_shader_mat.set_shader_parameter("tint_strength", 0.0)
+	combat_vfx.apply_slash_energize_shader(charge_ratio)
 
 func update_weapon_energize(charge_progress: float, base_scale: Vector2) -> void:
-	if not _main_weapon_instance or not is_instance_valid(_main_weapon_instance):
-		return
-	if not weapon or not weapon.charge_has_energize:
-		clear_weapon_energize(base_scale)
-		return
-	var prof: EnergizeProfile = weapon.get_energize_profile()
-	if prof:
-		_main_weapon_instance.modulate = prof.compute_modulate(charge_progress)
-		_main_weapon_instance.scale = prof.compute_scale(base_scale, charge_progress)
-		if prof.particle_scene and main_hand_socket:
-			if not _active_energize_particles or not is_instance_valid(_active_energize_particles):
-				var p_inst := prof.particle_scene.instantiate() as Node2D
-				if p_inst:
-					main_hand_socket.add_child(p_inst)
-					p_inst.position = weapon.energize_offset
-					_active_energize_particles = p_inst
-			else:
-				_active_energize_particles.position = weapon.energize_offset
-	else:
-		_main_weapon_instance.modulate = Color.WHITE
-		_main_weapon_instance.scale = base_scale
+	combat_vfx.update_weapon_energize(charge_progress, base_scale)
 
 func trigger_weapon_energize_release() -> void:
-	if not weapon or not weapon.charge_has_energize:
-		return
-	var prof: EnergizeProfile = weapon.get_energize_profile()
-	if not prof or not prof.release_particle_scene:
-		return
-	var burst := prof.release_particle_scene.instantiate() as Node2D
-	if not burst:
-		return
-	var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
-	if not spawn_parent:
-		burst.queue_free()
-		return
-	var world_pos: Vector2 = main_hand_socket.to_global(weapon.energize_offset) if main_hand_socket else global_position
-	spawn_parent.add_child(burst)
-	burst.global_position = world_pos
-	burst.z_index = 5
+	combat_vfx.trigger_weapon_energize_release()
 
 func stop_weapon_energize_particles() -> void:
-	if _active_energize_particles and is_instance_valid(_active_energize_particles):
-		_active_energize_particles.queue_free()
-	_active_energize_particles = null
+	combat_vfx.stop_weapon_energize_particles()
 
 func clear_weapon_energize(base_scale: Vector2) -> void:
-	if _main_weapon_instance and is_instance_valid(_main_weapon_instance):
-		_main_weapon_instance.modulate = Color.WHITE
-		var cur_s: Vector2 = _main_weapon_instance.scale
-		var sx: float = (-1.0 if cur_s.x < 0.0 else 1.0) * absf(base_scale.x)
-		var sy: float = (-1.0 if cur_s.y < 0.0 else 1.0) * absf(base_scale.y)
-		_main_weapon_instance.scale = Vector2(sx, sy)
-	stop_weapon_energize_particles()
+	combat_vfx.clear_weapon_energize(base_scale)
 
 func cycle_axe_energize_profile_debug() -> void:
-	if not weapon or _detect_weapon_type_string(weapon) != "axe":
-		return
-	var presets: PackedStringArray = []
-	var dir := DirAccess.open("res://src/combat/energize_profiles")
-	if dir:
-		dir.list_dir_begin()
-		var file_name := dir.get_next()
-		while file_name != "":
-			if not dir.current_is_dir() and file_name.ends_with(".tres"):
-				presets.append(file_name.get_basename())
-			file_name = dir.get_next()
-		dir.list_dir_end()
-	presets.sort()
-	if presets.is_empty():
-		presets = PackedStringArray(["earth", "fire", "glow_and_bigger", "ice", "water", "wind"])
-	var idx: int = presets.find(weapon.energize_profile)
-	var next_name: String = presets[(idx + 1) % presets.size()]
-	weapon.charge_has_energize = true
-	weapon.custom_energize_profile = null
-	weapon.energize_profile = next_name
-	var prof: EnergizeProfile = weapon.get_energize_profile()
-	var label: String = prof.profile_name if (prof and prof.profile_name != "") else next_name
-	print("[DEBUG] Axe Energize Profile -> %s (%s)" % [label, next_name])
-	if has_method("show_bark"):
-		show_bark("Energize: %s" % label)
+	combat_vfx.cycle_axe_energize_profile_debug()
 
 func spawn_ground_impact_particles(center_x: float, ground_y: float, width: float, facing: int = 1, fallback_scene_path: String = "") -> void:
-	var target_scene: PackedScene = null
-	if weapon and weapon.charge_has_energize:
-		var prof: EnergizeProfile = weapon.get_energize_profile()
-		if prof and prof.ground_impact_scene:
-			target_scene = prof.ground_impact_scene
-	if not target_scene and fallback_scene_path != "" and ResourceLoader.exists(fallback_scene_path):
-		target_scene = load(fallback_scene_path) as PackedScene
-	if not target_scene:
-		return
-	var fx := target_scene.instantiate() as CPUParticles2D
-	if not fx:
-		return
-	var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
-	if not spawn_parent:
-		fx.queue_free()
-		return
-	fx.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	fx.emission_rect_extents = Vector2(maxf(8.0, width * 0.5), 2.0)
-	if facing < 0:
-		fx.direction.x = -absf(fx.direction.x)
-	spawn_parent.add_child(fx)
-	fx.global_position = Vector2(center_x, ground_y - 1.0)
-	fx.z_index = 5
+	combat_vfx.spawn_ground_impact_particles(center_x, ground_y, width, facing, fallback_scene_path)
 
 func set_pickup_item_visual(source_visual: Node2D, effect_profile: PickupEffectProfile = null) -> void:
-	clear_pickup_item_visual()
-	_pickup_effect_profile = effect_profile
-	if not _pickup_effect_profile and ResourceLoader.exists("res://src/world/items/pickup_profiles/default_pickup.tres"):
-		_pickup_effect_profile = load("res://src/world/items/pickup_profiles/default_pickup.tres") as PickupEffectProfile
-	if not item_pickup_socket or not source_visual or not is_instance_valid(source_visual):
-		return
-	var cloned := source_visual.duplicate() as Node2D
-	if not cloned:
-		return
-	_item_pickup_base_scale = cloned.scale
-	cloned.position = Vector2.ZERO
-	cloned.rotation_degrees = 0.0
-	cloned.visible = false
-	item_pickup_socket.add_child(cloned)
-	_item_pickup_instance = cloned
+	combat_vfx.set_pickup_item_visual(source_visual, effect_profile)
 
 func clear_pickup_item_visual() -> void:
-	if _pickup_fx_tween and _pickup_fx_tween.is_valid():
-		_pickup_fx_tween.kill()
-	_pickup_fx_tween = null
-	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
-		_item_pickup_instance.queue_free()
-	_item_pickup_instance = null
-	_pickup_effect_profile = null
+	combat_vfx.clear_pickup_item_visual()
 
 func play_pickup_item_burst() -> void:
-	var prof: PickupEffectProfile = _pickup_effect_profile
-	if not prof and ResourceLoader.exists("res://src/world/items/pickup_profiles/default_pickup.tres"):
-		prof = load("res://src/world/items/pickup_profiles/default_pickup.tres") as PickupEffectProfile
-	if not prof:
-		return
-
-	if prof.rumble_duration > 0.0 and (prof.rumble_weak > 0.0 or prof.rumble_strong > 0.0):
-		CombatFeedback.trigger_rumble(prof.rumble_weak, prof.rumble_strong, prof.rumble_duration)
-
-	if prof.burst_particle_scene and item_pickup_socket:
-		var fx := prof.burst_particle_scene.instantiate() as CPUParticles2D
-		if fx:
-			var spawn_parent: Node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else get_parent()
-			if spawn_parent:
-				if prof.tint_particles:
-					fx.modulate = prof.glow_color
-				spawn_parent.add_child(fx)
-				fx.global_position = item_pickup_socket.global_position
-				fx.z_index = 6
-			else:
-				fx.queue_free()
-
-	if _item_pickup_instance and is_instance_valid(_item_pickup_instance):
-		if _pickup_fx_tween and _pickup_fx_tween.is_valid():
-			_pickup_fx_tween.kill()
-		var sx_sign: float = -1.0 if _item_pickup_instance.scale.x < 0.0 else 1.0
-		var sy_sign: float = -1.0 if _item_pickup_instance.scale.y < 0.0 else 1.0
-		var target_scale := Vector2(_item_pickup_base_scale.x * sx_sign, _item_pickup_base_scale.y * sy_sign)
-		_item_pickup_instance.scale = target_scale * (1.0 + prof.scale_pop)
-		_item_pickup_instance.modulate = prof.compute_peak_modulate()
-		_pickup_fx_tween = create_tween()
-		_pickup_fx_tween.set_parallel(true)
-		_pickup_fx_tween.tween_property(_item_pickup_instance, "scale", target_scale, prof.effect_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		_pickup_fx_tween.tween_property(_item_pickup_instance, "modulate", Color.WHITE, prof.effect_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	combat_vfx.play_pickup_item_burst()
 
 func trigger_pickup_animation(source_visual: Node2D = null, effect_profile: PickupEffectProfile = null) -> void:
 	set_pickup_item_visual(source_visual, effect_profile)

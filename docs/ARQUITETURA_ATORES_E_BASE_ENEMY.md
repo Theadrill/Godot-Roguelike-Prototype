@@ -123,12 +123,12 @@ Cada fase será executada individualmente, validada via `Godot_v4.7.2-stable_win
 
 ---
 
-### 🗡️ FASE 4 — Modularização do `Player`, Tipagem em `WeaponData` & Remoção de Dead Code
-* **O que será feito:**
-  1. Remover o arquivo morto [`src/entities/player/weapon_socket_config.gd`](../src/entities/player/weapon_socket_config.gd) (347 linhas não utilizadas).
-  2. Adicionar `get_archetype_id() -> String` diretamente em [`src/combat/weapon_data.gd`](../src/combat/weapon_data.gd).
-  3. Extrair o gerenciamento de sockets e drop de equipamentos na morte para [`src/entities/player/player_equipment_rig.gd`](../src/entities/player/player_equipment_rig.gd) (`class_name PlayerEquipmentRig`).
-  4. Extrair o gerenciamento de *Slash VFX*, *Energize* e *Pickup VFX* para [`src/entities/player/player_combat_vfx.gd`](../src/entities/player/player_combat_vfx.gd) (`class_name PlayerCombatVFX`), mantendo as assinaturas públicas em `player.gd` intactas para não quebrar nenhum estado ou o `WeaponSocketCalibrator`.
+### 🗡️ FASE 4 — Modularização do `Player`, Tipagem em `WeaponData` & Remoção de Dead Code *(Concluída)*
+* **O que foi feito:**
+  1. Removido o arquivo morto [`src/entities/player/weapon_socket_config.gd`](../src/entities/player/weapon_socket_config.gd) (347 linhas não utilizadas).
+  2. Adicionado `get_archetype_id() -> String` diretamente em [`src/combat/weapon_data.gd`](../src/combat/weapon_data.gd).
+  3. Extraído o gerenciamento de sockets e drop de equipamentos na morte para [`src/entities/player/player_equipment_rig.gd`](../src/entities/player/player_equipment_rig.gd) (`class_name PlayerEquipmentRig`).
+  4. Extraído o gerenciamento de *Slash VFX*, *Energize* e *Pickup VFX* para [`src/entities/player/player_combat_vfx.gd`](../src/entities/player/player_combat_vfx.gd) (`class_name PlayerCombatVFX`), mantendo todas as assinaturas públicas em `player.gd` como fachadas intactas para compatibilidade 100% com os estados e o `WeaponSocketCalibrator`.
 
 #### Contrato de Invariância e Compatibilidade 100% com o `WeaponSocketCalibrator` (`src/tools/weapon_socket_calibrator.gd`)
 Durante e após a modularização do `Player`, os contratos abaixo **NÃO podem ser alterados** para garantir que futuras calibrações no [`weapon_socket_calibrator.tscn`](../src/tools/weapon_socket_calibrator.tscn) continuem refletindo exatamente o jogo:
