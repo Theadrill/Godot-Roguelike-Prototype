@@ -193,9 +193,9 @@ func is_weapon_pedestal_unlocked(index: int) -> bool:
 	if debug_unlock_all_pedestals:
 		return true
 	match index:
-		0: return true # Espada Rústica inicial
-		1: return weapons_discovered_list.size() >= 4 or true # Mantém acessível por padrão para testes de swap
-		2: return bosses_defeated_list.size() >= 3 or true # Mantém acessível por padrão para testes de swap
+		0: return true # Pedestal inicial sempre desbloqueado
+		1: return weapons_discovered_list.size() >= 4
+		2: return bosses_defeated_list.size() >= 3
 		3: return elite_kills_count >= 10
 		4: return total_souls_collected >= 500
 		5: return kills_by_category.get(EnemyCategories.Category.ABOMINATION, 0) >= 50

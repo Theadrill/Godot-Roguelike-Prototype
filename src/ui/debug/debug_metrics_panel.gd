@@ -7,6 +7,8 @@ extends CanvasLayer
 @onready var main_panel: Panel = $MainPanel
 @onready var metrics_scroll: ScrollContainer = $MainPanel/ContentHBox/MetricsScroll
 @onready var metrics_label: RichTextLabel = $MainPanel/ContentHBox/MetricsScroll/MetricsLabel
+@onready var actions_scroll: ScrollContainer = $MainPanel/ContentHBox/ActionsScroll
+@onready var actions_vbox: VBoxContainer = $MainPanel/ContentHBox/ActionsScroll/ActionsVBox
 @onready var btn_close: Button = $MainPanel/Header/BtnClose
 
 # Botões de Teste
@@ -30,6 +32,13 @@ func _ready() -> void:
 	ProgressionManager.metrics_updated.connect(_refresh_metrics)
 
 func _setup_buttons() -> void:
+	if actions_scroll:
+		actions_scroll.follow_focus = true
+	if actions_vbox:
+		for child in actions_vbox.get_children():
+			if child is Control and (child as Control).focus_mode != Control.FOCUS_NONE:
+				(child as Control).focus_entered.connect(_on_action_button_focus_entered.bind(child as Control))
+
 	if btn_close:
 		btn_close.pressed.connect(toggle_panel)
 		
@@ -58,6 +67,7 @@ func _setup_buttons() -> void:
 	)
 	btn_toggle_cheat.pressed.connect(func() -> void: 
 		ProgressionManager.debug_unlock_all_pedestals = not ProgressionManager.debug_unlock_all_pedestals
+		ProgressionManager.metrics_updated.emit()
 		_refresh_metrics()
 	)
 	btn_save.pressed.connect(func() -> void: 
@@ -118,6 +128,8 @@ func toggle_panel() -> void:
 			player.velocity = Vector2.ZERO
 		_refresh_metrics()
 		await get_tree().process_frame
+		if actions_scroll:
+			actions_scroll.scroll_vertical = 0
 		btn_add_souls.grab_focus()
 	else:
 		Input.action_release("slide")
@@ -136,6 +148,10 @@ func toggle_panel() -> void:
 			var player := get_tree().get_first_node_in_group("player") as Player
 			if player:
 				player.is_input_locked = false
+
+func _on_action_button_focus_entered(ctrl: Control) -> void:
+	if actions_scroll and is_instance_valid(ctrl):
+		actions_scroll.ensure_control_visible(ctrl)
 
 func _refresh_metrics() -> void:
 	if not metrics_label:

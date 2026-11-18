@@ -20,6 +20,7 @@ var _is_player_near: bool = false
 var _player_ref: Player = null
 var _original_item_y: float = -22.0
 var _custom_visual_instance: Node2D = null
+var was_populated_this_run: bool = false
 
 ## Registro estático de todos os pedestais próximos para garantir foco exclusivo (sem sobreposição de rótulos)
 static var nearby_pedestals: Array[WeaponPedestal] = []
@@ -34,7 +35,25 @@ func _ready() -> void:
 	interaction_area.body_exited.connect(_on_body_exited)
 	interaction_area.input_event.connect(_on_input_event)
 
+	if not ProgressionManager.metrics_updated.is_connected(_on_metrics_updated):
+		ProgressionManager.metrics_updated.connect(_on_metrics_updated)
+
 	_refresh_pedestal_state()
+
+func set_equipment(new_data: EquipmentData) -> void:
+	equipment_data = new_data
+	was_populated_this_run = (new_data != null)
+	_refresh_pedestal_state()
+	if _is_player_near and _is_current_closest():
+		_show_hint(true)
+
+func _on_metrics_updated() -> void:
+	if not _check_is_unlocked():
+		equipment_data = null
+		was_populated_this_run = false
+	_refresh_pedestal_state()
+	if _is_player_near and _is_current_closest():
+		_show_hint(true)
 
 func _exit_tree() -> void:
 	nearby_pedestals.erase(self)

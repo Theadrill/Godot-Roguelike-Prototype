@@ -9,15 +9,32 @@ const MotherDialogUI = preload("res://src/ui/hub/mother_dialog_ui.gd")
 const BrotherForgeUI = preload("res://src/ui/hub/brother_forge_ui.gd")
 const TouchOfDeathUI = preload("res://src/ui/hub/touch_of_death_ui.gd")
 
+@export_group("Pedestal Draft Pool")
+## Pool de armas corpo a corpo (Melee) elegíveis para sorteio nos pedestais da cabana.
+@export var melee_weapon_pool: Array[WeaponData] = [
+	preload("res://src/entities/equipment/swords/weapon_sword_base.tres"),
+	preload("res://src/entities/equipment/daggers/weapon_dagger_base.tres"),
+	preload("res://src/entities/equipment/axes/weapon_axe_base.tres"),
+	preload("res://src/entities/equipment/hammers/weapon_hammer_base.tres")
+]
+## Pool de armas de alcance (Ranged / Magia) elegíveis para sorteio nos pedestais da cabana.
+@export var ranged_weapon_pool: Array[WeaponData] = [
+	preload("res://src/entities/equipment/bows/weapon_bow_base.tres"),
+	preload("res://src/entities/equipment/crossbows/weapon_crossbow_base.tres"),
+	preload("res://src/entities/equipment/staffs/weapon_staff_base.tres")
+]
+## Pool de escudos elegíveis para sorteio nos pedestais de defesa da cabana.
+@export var shield_pool: Array[ShieldData] = [
+	preload("res://src/entities/equipment/shields/shield_buckler_base.tres")
+]
+
 @onready var player: Player = $Player
 @onready var dog_pet: Node2D = $Pets/DogPreta
 @onready var cat_pet: Node2D = $Pets/CatBela
 @onready var pet_spots: Node2D = $PetSpots
 @onready var exit_portal_area: Area2D = $ExitPortalArea
 @onready var fade_rect: ColorRect = $FadeCanvas/FadeRect
-
-@onready var chest_area: Area2D = get_node_or_null("ChestArea") as Area2D
-@onready var rack_area: Area2D = get_node_or_null("RackArea") as Area2D
+@onready var pedestals_container: Node2D = get_node_or_null("Props/Pedestals") as Node2D
 
 @onready var mother_area: Area2D = get_node_or_null("Props/Mother_Placeholder/MotherArea") as Area2D
 @onready var mother_bark: NpcBark = get_node_or_null("Props/Mother_Placeholder/Bark") as NpcBark
@@ -34,7 +51,6 @@ const TouchOfDeathUI = preload("res://src/ui/hub/touch_of_death_ui.gd")
 @onready var touch_of_death_ui: TouchOfDeathUI = get_node_or_null("TouchOfDeathUI") as TouchOfDeathUI
 
 var _is_transitioning: bool = false
-var _player_near_chest: bool = false
 var _player_near_mother: bool = false
 var _player_near_brother: bool = false
 var _player_near_death: bool = false
@@ -99,7 +115,10 @@ func _ready() -> void:
 			cam.limit_bottom = 360
 		ProgressionManager.apply_skin_to_player(player)
 
-	_setup_chest_interactions()
+	_roll_pedestals_for_run(false)
+	if not ProgressionManager.metrics_updated.is_connected(_on_progression_metrics_updated):
+		ProgressionManager.metrics_updated.connect(_on_progression_metrics_updated)
+
 	_setup_npc_interactions()
 	_setup_portal_and_uis()
 
@@ -119,16 +138,6 @@ func _process(delta: float) -> void:
 		var mat := death_vortex_portal.material as ShaderMaterial
 		if mat:
 			mat.set_shader_parameter("vortex_time", _vortex_time)
-
-func _setup_chest_interactions() -> void:
-	if chest_area:
-		chest_area.input_event.connect(_on_chest_input_event)
-		chest_area.body_entered.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = true)
-		chest_area.body_exited.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = false)
-	if rack_area:
-		rack_area.input_event.connect(_on_chest_input_event)
-		rack_area.body_entered.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = true)
-		rack_area.body_exited.connect(func(b: Node2D) -> void: if b == player: _player_near_chest = false)
 
 func _setup_npc_interactions() -> void:
 	if mother_area:
@@ -161,10 +170,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if player and player.is_input_locked:
 		return
 	if event.is_action_pressed("interact"):
-		if _player_near_chest:
-			get_viewport().set_input_as_handled()
-			_toggle_weapons()
-		elif _player_near_mother:
+		if _player_near_mother:
 			get_viewport().set_input_as_handled()
 			_open_mother_menu()
 		elif _player_near_brother:
@@ -298,30 +304,165 @@ func _play_dialogue_sequence(steps: Array[Dictionary]) -> void:
 				
 		await get_tree().create_timer(delay_after).timeout
 
-# --- Interação com o Baú de Armas ---
-func _on_chest_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if player and player.is_input_locked:
-		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_toggle_weapons()
+# --- Sorteio Dinâmico dos Pedestais por Run ---
+func _on_progression_metrics_updated() -> void:
+	_roll_pedestals_for_run(true)
 
-func _toggle_weapons() -> void:
-	if not player or player.is_input_locked:
+func _roll_pedestals_for_run(only_newly_unlocked: bool = false) -> void:
+	if not pedestals_container:
 		return
-	ProgressionManager.are_weapons_equipped = not ProgressionManager.are_weapons_equipped
-	if ProgressionManager.are_weapons_equipped:
-		if not player.weapon:
-			player.weapon = load("res://src/entities/equipment/swords/weapon_sword_base.tres") as WeaponData
-		if not player.secondary_weapon:
-			player.secondary_weapon = load("res://src/entities/equipment/bows/weapon_bow_base.tres") as WeaponData
-		if not player.shield:
-			player.shield = load("res://src/entities/equipment/shields/shield_buckler_base.tres") as ShieldData
 
-		player.show_equipment_visuals()
-		player.show_bark(tr("MSG_EQUIPPED_BASIC"))
-	else:
-		player.hide_equipment_visuals()
-		player.show_bark(tr("MSG_STASHED_WEAPONS"))
+	var weapon_peds: Array[WeaponPedestal] = []
+	var shield_peds: Array[WeaponPedestal] = []
+	for child in pedestals_container.get_children():
+		var ped := child as WeaponPedestal
+		if not ped:
+			continue
+		if ped.is_shield_pedestal:
+			shield_peds.append(ped)
+		else:
+			weapon_peds.append(ped)
+
+	_roll_weapon_pedestals(weapon_peds, only_newly_unlocked)
+	_roll_shield_pedestals(shield_peds, only_newly_unlocked)
+
+func _roll_weapon_pedestals(weapon_peds: Array[WeaponPedestal], only_newly_unlocked: bool) -> void:
+	var melees: Array[WeaponData] = _filtered_weapons(melee_weapon_pool)
+	var rangeds: Array[WeaponData] = _filtered_weapons(ranged_weapon_pool)
+	melees.shuffle()
+	rangeds.shuffle()
+
+	var all_weapons: Array[WeaponData] = []
+	all_weapons.append_array(melees)
+	all_weapons.append_array(rangeds)
+	all_weapons.shuffle()
+	if all_weapons.is_empty():
+		return
+
+	if not only_newly_unlocked:
+		var unlocked_peds: Array[WeaponPedestal] = []
+		for ped in weapon_peds:
+			if ProgressionManager.is_weapon_pedestal_unlocked(ped.pedestal_index):
+				unlocked_peds.append(ped)
+			else:
+				ped.set_equipment(null)
+
+		if unlocked_peds.is_empty():
+			return
+
+		var chosen: Array[WeaponData] = []
+		if unlocked_peds.size() == 1:
+			chosen.append(all_weapons[0])
+		else:
+			if not melees.is_empty():
+				chosen.append(melees.pop_back())
+			if not rangeds.is_empty():
+				chosen.append(rangeds.pop_back())
+			var remaining: Array[WeaponData] = []
+			remaining.append_array(melees)
+			remaining.append_array(rangeds)
+			remaining.shuffle()
+			while chosen.size() < unlocked_peds.size() and not remaining.is_empty():
+				chosen.append(remaining.pop_back())
+			while chosen.size() < unlocked_peds.size():
+				all_weapons.shuffle()
+				chosen.append(all_weapons[0])
+			chosen.shuffle()
+
+		for i in range(unlocked_peds.size()):
+			unlocked_peds[i].set_equipment(chosen[i].duplicate() as WeaponData)
+		return
+
+	# Preenchimento incremental quando novos pedestais são desbloqueados ao vivo (ex: menu F3)
+	var unlocked_count: int = 0
+	var to_fill: Array[WeaponPedestal] = []
+	var used_names: Array[String] = []
+	var has_melee: bool = false
+	var has_ranged: bool = false
+
+	for ped in weapon_peds:
+		if not ProgressionManager.is_weapon_pedestal_unlocked(ped.pedestal_index):
+			continue
+		unlocked_count += 1
+		var w := ped.equipment_data as WeaponData
+		if w:
+			used_names.append(w.equipment_name)
+			if w.weapon_category == WeaponData.WeaponCategory.MELEE:
+				has_melee = true
+			else:
+				has_ranged = true
+		elif not ped.was_populated_this_run:
+			to_fill.append(ped)
+
+	if player:
+		for equipped in [player.weapon, player.secondary_weapon]:
+			var w := equipped as WeaponData
+			if w:
+				used_names.append(w.equipment_name)
+				if w.weapon_category == WeaponData.WeaponCategory.MELEE:
+					has_melee = true
+				else:
+					has_ranged = true
+
+	if to_fill.is_empty():
+		return
+
+	to_fill.shuffle()
+	for ped in to_fill:
+		var picked: WeaponData = null
+		if unlocked_count >= 2 and not has_melee and not melees.is_empty():
+			picked = _pick_unique_weapon(melees, used_names)
+			has_melee = true
+		elif unlocked_count >= 2 and not has_ranged and not rangeds.is_empty():
+			picked = _pick_unique_weapon(rangeds, used_names)
+			has_ranged = true
+		else:
+			picked = _pick_unique_weapon(all_weapons, used_names)
+
+		if picked:
+			used_names.append(picked.equipment_name)
+			ped.set_equipment(picked.duplicate() as WeaponData)
+
+func _roll_shield_pedestals(shield_peds: Array[WeaponPedestal], only_newly_unlocked: bool) -> void:
+	var shields: Array[ShieldData] = _filtered_shields(shield_pool)
+	if shields.is_empty():
+		return
+
+	var pool_copy: Array[ShieldData] = shields.duplicate()
+	pool_copy.shuffle()
+
+	for ped in shield_peds:
+		if not ProgressionManager.is_shield_pedestal_unlocked(ped.pedestal_index):
+			if not only_newly_unlocked:
+				ped.set_equipment(null)
+			continue
+		if only_newly_unlocked and ped.was_populated_this_run:
+			continue
+		if pool_copy.is_empty():
+			pool_copy = shields.duplicate()
+			pool_copy.shuffle()
+		var chosen_shield: ShieldData = pool_copy.pop_back()
+		ped.set_equipment(chosen_shield.duplicate() as ShieldData)
+
+func _filtered_weapons(pool: Array[WeaponData]) -> Array[WeaponData]:
+	var result: Array[WeaponData] = []
+	for w in pool:
+		if w:
+			result.append(w)
+	return result
+
+func _filtered_shields(pool: Array[ShieldData]) -> Array[ShieldData]:
+	var result: Array[ShieldData] = []
+	for s in pool:
+		if s:
+			result.append(s)
+	return result
+
+func _pick_unique_weapon(candidates: Array[WeaponData], used_names: Array[String]) -> WeaponData:
+	for candidate in candidates:
+		if not used_names.has(candidate.equipment_name):
+			return candidate
+	return candidates[0] if not candidates.is_empty() else null
 
 # --- Interação com a Morte & Sequência do Portal ---
 func _on_exit_portal_entered(body: Node2D) -> void:
