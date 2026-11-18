@@ -4,6 +4,20 @@ extends RigidBody2D
 ## Peca fisica temporaria gerada ao morrer (Dead Cells style) para que armas/escudos
 ## caiam no chao colidindo naturalmente com paredes e plataformas sem clipar.
 
+var _pending_global_pos: Vector2 = Vector2.ZERO
+var _pending_rotation: float = 0.0
+var _pending_impulse: Vector2 = Vector2.ZERO
+var _pending_spin: float = 0.0
+var _has_pending_transform: bool = false
+
+func _ready() -> void:
+	if _has_pending_transform:
+		global_position = _pending_global_pos
+		rotation = _pending_rotation
+		linear_velocity = _pending_impulse
+		angular_velocity = _pending_spin
+		_has_pending_transform = false
+
 static func spawn_from_visual(
 	source_visual: Node2D,
 	spawn_global_pos: Vector2,
@@ -43,9 +57,11 @@ static func spawn_from_visual(
 	cloned.visible = true
 	piece.add_child(cloned)
 
-	parent_node.add_child(piece)
-	piece.global_position = spawn_global_pos
-	piece.rotation = initial_rotation
-	piece.linear_velocity = impulse
-	piece.angular_velocity = spin_speed
+	piece._pending_global_pos = spawn_global_pos
+	piece._pending_rotation = initial_rotation
+	piece._pending_impulse = impulse
+	piece._pending_spin = spin_speed
+	piece._has_pending_transform = true
+
+	parent_node.call_deferred("add_child", piece)
 	return piece
