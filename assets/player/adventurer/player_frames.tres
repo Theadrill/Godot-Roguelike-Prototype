@@ -298,6 +298,10 @@ region = Rect2(83, 62, 83, 62)
 atlas = ExtResource("25_death_sheet")
 region = Rect2(0, 0, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_death_1"]
+atlas = ExtResource("25_death_sheet")
+region = Rect2(83, 0, 83, 62)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_roll_0"]
 atlas = ExtResource("7_roll_sheet")
 region = Rect2(0, 0, 83, 62)
@@ -707,10 +711,13 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_death_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_death_1")
 }],
 "loop": 0,
 "name": &"death",
-"speed": 1.0
+"speed": 1.5
 }, {
 "frames": [{
 "duration": 1.0,
