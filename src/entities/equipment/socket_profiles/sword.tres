@@ -593,6 +593,38 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"crouch_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5, -27),
+"rot": 84.0,
+"visible": true,
+"z_index": -2
+},
+"crouch_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5, -28),
+"rot": 84.0,
+"visible": true,
+"z_index": -2
+},
+"crouch_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5, -27.7),
+"rot": 84.0,
+"visible": true,
+"z_index": -2
+},
+"crouch_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-5, -27),
+"rot": 84.0,
+"visible": true,
+"z_index": -2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
