@@ -135,8 +135,10 @@ func handle_incoming_hit(damage: float, knockback: Vector2, _hitstop: float, inc
 		if (player.shield and player.shield.has_repulsion_modifier) or has_spectral:
 			var shockwave_scene: PackedScene = SHOCKWAVE_SCENE
 			if shockwave_scene:
+				var spawn_parent: Node = player.get_parent()
 				var sw := shockwave_scene.instantiate() as RadialShockwave
-				sw.global_position = player.global_position + Vector2(0.0, -18.0)
+				var target_global: Vector2 = player.global_position + Vector2(0.0, -18.0)
+				sw.position = spawn_parent.to_local(target_global) if spawn_parent is Node2D else target_global
 				var wave_color := Color(0.42, 0.85, 0.7, 0.95) if has_spectral else Color(0.3, 0.85, 1.0, 0.9)
 				var wave_radius: float = 80.0 if has_spectral else (player.shield.repulsion_radius if player.shield else 60.0)
 				var wave_force: float = 300.0 if has_spectral else (player.shield.repulsion_force if player.shield else 220.0)
@@ -149,7 +151,7 @@ func handle_incoming_hit(damage: float, knockback: Vector2, _hitstop: float, inc
 					player,
 					wave_color
 				)
-				player.get_parent().add_child(sw)
+				spawn_parent.add_child(sw)
 
 		# Zero damage taken!
 		return true

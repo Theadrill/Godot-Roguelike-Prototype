@@ -105,8 +105,10 @@ func _on_slam_impact() -> void:
 	# Spawn RadialShockwave with area damage
 	var shockwave_scene: PackedScene = SHOCKWAVE_SCENE
 	if shockwave_scene:
+		var spawn_parent: Node = player.get_parent()
 		var sw := shockwave_scene.instantiate() as RadialShockwave
-		sw.global_position = player.global_position + Vector2(0.0, -4.0)
+		var target_global: Vector2 = player.global_position + Vector2(0.0, -4.0)
+		sw.position = spawn_parent.to_local(target_global) if spawn_parent is Node2D else target_global
 		sw.setup(
 			shockwave_radius,
 			shockwave_force,
@@ -115,4 +117,4 @@ func _on_slam_impact() -> void:
 			player,
 			Color(1.0, 0.85, 0.35, 0.95)
 		)
-		player.get_parent().add_child(sw)
+		spawn_parent.add_child(sw)

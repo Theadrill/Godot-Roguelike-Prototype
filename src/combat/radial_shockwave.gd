@@ -93,18 +93,15 @@ func _trigger_physics_shockwave() -> void:
 			(entity as CharacterBody2D).velocity = knockback_dir * force
 
 func _has_clear_line_of_sight(space: PhysicsDirectSpaceState2D, entity: Node2D) -> bool:
-	var origin: Vector2 = global_position + Vector2(0.0, -4.0)
-	var sample_points: Array[Vector2] = [
-		entity.global_position + Vector2(0.0, -16.0),
-		entity.global_position + Vector2(0.0, -6.0)
-	]
-	for target_pos in sample_points:
-		var ray_query := PhysicsRayQueryParameters2D.create(origin, target_pos, ENVIRONMENT_LAYER_MASK)
-		ray_query.collide_with_areas = false
-		ray_query.collide_with_bodies = true
-		if space.intersect_ray(ray_query).is_empty():
-			return true
-	return false
+	var origin: Vector2 = global_position
+	var target_low: Vector2 = entity.global_position + Vector2(0.0, -6.0)
+	var ray_low := PhysicsRayQueryParameters2D.create(origin, target_low, ENVIRONMENT_LAYER_MASK)
+	ray_low.collide_with_areas = false
+	ray_low.collide_with_bodies = true
+	ray_low.hit_from_inside = true
+	if not space.intersect_ray(ray_low).is_empty():
+		return false
+	return true
 
 func _compute_visual_occlusion() -> void:
 	_ray_dirs.resize(RING_SEGMENTS)
@@ -119,6 +116,7 @@ func _compute_visual_occlusion() -> void:
 			var ray_query := PhysicsRayQueryParameters2D.create(global_position, global_position + dir * radius, ENVIRONMENT_LAYER_MASK)
 			ray_query.collide_with_areas = false
 			ray_query.collide_with_bodies = true
+			ray_query.hit_from_inside = true
 			var hit := space.intersect_ray(ray_query)
 			if not hit.is_empty():
 				max_d = global_position.distance_to(hit.position)
@@ -147,8 +145,8 @@ func _draw() -> void:
 		var next_i: int = (i + 1) % RING_SEGMENTS
 		var max0: float = _ray_max_dists[i]
 		var max1: float = _ray_max_dists[next_i]
-		if _current_radius > max0 + 1.5 and _current_radius > max1 + 1.5:
+		if _current_radius > max0 + 1.0 or _current_radius > max1 + 1.0:
 			continue
-		var p0: Vector2 = _ray_dirs[i] * minf(_current_radius, max0)
-		var p1: Vector2 = _ray_dirs[next_i] * minf(_current_radius, max1)
+		var p0: Vector2 = _ray_dirs[i] * _current_radius
+		var p1: Vector2 = _ray_dirs[next_i] * _current_radius
 		draw_line(p0, p1, col, 2.5, false)
