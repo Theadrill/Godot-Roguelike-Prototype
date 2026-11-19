@@ -169,10 +169,6 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	player.hitbox.rumble_duration = player.weapon.rumble_duration * (1.0 + charge_ratio * 0.4)
 	player.hitbox.combo_step = current_step + 1
 
-	if charge_ratio > 0.4:
-		# Extra impact juice for charged strike
-		CombatFeedback.apply_hit_feedback(0.08, 0.7, 1.0, 0.15)
-	
 	# Keep Hitbox OFF during Windup frames! It will activate on _step_active_start_frame.
 	player.hitbox.set_active(false)
 	_is_plunge_active = false
@@ -224,6 +220,8 @@ func exit() -> void:
 	var was_charging: bool = is_charging
 	var should_clear_energize: bool = was_charging or _was_energized_swing
 	is_charging = false
+	if was_charging:
+		CombatFeedback.stop_rumble()
 	_was_energized_swing = false
 	_is_plunge_active = false
 	_is_air_stall_active = false
@@ -265,6 +263,7 @@ func physics_update(delta: float) -> void:
 
 		# Energizing glow & particle FX controlled by WeaponData's EnergizeProfile
 		player.update_weapon_energize(charge_progress, _charge_base_weapon_scale)
+		CombatFeedback.update_charge_rumble(charge_progress)
 
 		# Keep player planted in place during charge windup (only allow turning facing direction)
 		if player.is_on_floor():
@@ -281,6 +280,7 @@ func physics_update(delta: float) -> void:
 		# Slide / Dodge cancel during charge
 		if player.is_slide_requested():
 			is_charging = false
+			CombatFeedback.stop_rumble()
 			last_completed_step = -1
 			state_machine.transition_to("slide")
 			return
@@ -288,6 +288,7 @@ func physics_update(delta: float) -> void:
 		# Release button: UNLEASH CHARGED SMASH!
 		if not Input.is_action_pressed("attack_primary"):
 			is_charging = false
+			CombatFeedback.stop_rumble()
 			_was_energized_swing = true
 			player.trigger_weapon_energize_release()
 			player.stop_weapon_energize_particles()

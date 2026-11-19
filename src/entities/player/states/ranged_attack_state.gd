@@ -80,6 +80,8 @@ func _start_shot_cycle(is_repeat: bool = false) -> void:
 
 func exit() -> void:
 	has_fired = false
+	if player and player.weapon and player.weapon.is_charge_attack:
+		CombatFeedback.stop_rumble()
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
 	# Restore resting grip stance (visual_offset and visual_rotation_degrees)
@@ -142,6 +144,8 @@ func physics_update(delta: float) -> void:
 
 			# Energizing glow & particle FX controlled by WeaponData's EnergizeProfile
 			player.update_weapon_energize(charge_progress, _charge_base_weapon_scale)
+			if player.weapon.is_charge_attack:
+				CombatFeedback.update_charge_rumble(charge_progress)
 
 			# Planted stance while aiming/charging on floor (matches Dead Cells bow/spell lock)
 			if player.is_on_floor():
@@ -157,6 +161,7 @@ func physics_update(delta: float) -> void:
 			# Determine when to loose projectile or start spell cast:
 			if player.weapon.is_charge_attack:
 				if not Input.is_action_pressed("attack_primary"):
+					CombatFeedback.stop_rumble()
 					if is_spell:
 						_start_spell_cast()
 					else:
@@ -319,7 +324,8 @@ func _fire_projectile(advance_to_recovery: bool = true) -> void:
 		player.velocity.x = -player.facing_direction * recoil_force
 	else:
 		player.velocity.x = 0.0
-	CombatFeedback.apply_hit_feedback(0.04, weapon.rumble_weak, weapon.rumble_strong, weapon.rumble_duration)
+	if not weapon.is_charge_attack:
+		CombatFeedback.apply_hit_feedback(0.04, weapon.rumble_weak, weapon.rumble_strong, weapon.rumble_duration)
 
 	# Set reload/recovery cadence
 	if advance_to_recovery:
