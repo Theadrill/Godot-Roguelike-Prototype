@@ -32,12 +32,12 @@ func handle_debug_input(event: InputEvent) -> bool:
 	if event.is_action_pressed("toggle_shield_repulsion_debug") and not event.is_echo():
 		toggle_shield_repulsion()
 		return true
+	if event.is_action_pressed("cycle_energize_debug") and not event.is_echo():
+		_player.cycle_axe_energize_profile_debug()
+		return true
 	if event is InputEventKey and event.pressed and not event.is_echo():
 		if event.keycode == KEY_T:
 			cycle_enemy_tier_live()
-			return true
-		if event.keycode == KEY_Y:
-			_player.cycle_axe_energize_profile_debug()
 			return true
 	return false
 

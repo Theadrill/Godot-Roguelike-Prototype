@@ -75,6 +75,11 @@ func _ready() -> void:
 		_create_key_event(KEY_3),
 		_create_joy_button_event(JOY_BUTTON_DPAD_LEFT)
 	])
+	# Tecla Y (Teclado) / D-Pad Right (Gamepad): CICLAR ELEMENTO DE ENERGIZE/CHARGE (DEBUG)
+	_register_action("cycle_energize_debug", [
+		_create_key_event(KEY_Y),
+		_create_joy_button_event(JOY_BUTTON_DPAD_RIGHT)
+	])
 	# Tecla F2 (Teclado): TOGGLE OVERLAY DE PERFORMANCE (FPS / FRAMETIME)
 	_register_action("toggle_performance_overlay", [
 		_create_key_event(KEY_F2)
