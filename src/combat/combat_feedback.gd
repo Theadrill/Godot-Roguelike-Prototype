@@ -22,8 +22,8 @@ func trigger_rumble(weak: float = 0.4, strong: float = 0.7, duration: float = 0.
 
 func update_charge_rumble(charge_progress: float) -> void:
 	var t: float = clampf(charge_progress, 0.0, 1.0)
-	var weak: float = lerpf(0.06, 0.45, t)
-	var strong: float = lerpf(0.0, 0.65, t * t)
+	var weak: float = lerpf(0.015, 0.42, t * t)
+	var strong: float = lerpf(0.0, 0.62, t * t * t)
 	Input.start_joy_vibration(0, weak, strong, 0.08)
 
 func stop_rumble() -> void:
