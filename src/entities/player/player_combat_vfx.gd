@@ -246,12 +246,58 @@ func spawn_ground_impact_particles(center_x: float, ground_y: float, width: floa
 	if not spawn_parent:
 		fx.queue_free()
 		return
+	var half_w: float = maxf(8.0, width * 0.5)
+	var left_x: float = center_x - half_w
+	var right_x: float = center_x + half_w
+
+	var space: PhysicsDirectSpaceState2D = _player.get_world_2d().direct_space_state if _player.get_world_2d() else null
+	if space:
+		var wall_y: float = ground_y - 6.0
+		var left_wall_q := PhysicsRayQueryParameters2D.create(Vector2(center_x, wall_y), Vector2(left_x, wall_y), 1)
+		left_wall_q.collide_with_areas = false
+		var left_hit := space.intersect_ray(left_wall_q)
+		if not left_hit.is_empty():
+			left_x = minf(center_x, left_hit.position.x + 2.0)
+
+		var right_wall_q := PhysicsRayQueryParameters2D.create(Vector2(center_x, wall_y), Vector2(right_x, wall_y), 1)
+		right_wall_q.collide_with_areas = false
+		var right_hit := space.intersect_ray(right_wall_q)
+		if not right_hit.is_empty():
+			right_x = maxf(center_x, right_hit.position.x - 2.0)
+
+		# Recorta nas bordas da plataforma para não spawnar partículas flutuando no vazio
+		var step_px: float = 8.0
+		var valid_left: float = center_x
+		var probe_x: float = center_x - step_px
+		while probe_x >= left_x:
+			var floor_q := PhysicsRayQueryParameters2D.create(Vector2(probe_x, ground_y - 4.0), Vector2(probe_x, ground_y + 10.0), 1)
+			floor_q.collide_with_areas = false
+			if space.intersect_ray(floor_q).is_empty():
+				break
+			valid_left = probe_x
+			probe_x -= step_px
+		left_x = maxf(left_x, valid_left)
+
+		var valid_right: float = center_x
+		probe_x = center_x + step_px
+		while probe_x <= right_x:
+			var floor_q := PhysicsRayQueryParameters2D.create(Vector2(probe_x, ground_y - 4.0), Vector2(probe_x, ground_y + 10.0), 1)
+			floor_q.collide_with_areas = false
+			if space.intersect_ray(floor_q).is_empty():
+				break
+			valid_right = probe_x
+			probe_x += step_px
+		right_x = minf(right_x, valid_right)
+
+	var clamped_half_w: float = maxf(4.0, (right_x - left_x) * 0.5)
+	var clamped_center_x: float = (left_x + right_x) * 0.5
+
 	fx.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	fx.emission_rect_extents = Vector2(maxf(8.0, width * 0.5), 2.0)
+	fx.emission_rect_extents = Vector2(clamped_half_w, 2.0)
 	if facing < 0:
 		fx.direction.x = -absf(fx.direction.x)
 	spawn_parent.add_child(fx)
-	fx.global_position = Vector2(center_x, ground_y - 1.0)
+	fx.global_position = Vector2(clamped_center_x, ground_y - 1.0)
 	fx.z_index = 5
 
 

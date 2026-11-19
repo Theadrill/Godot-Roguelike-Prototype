@@ -10,14 +10,20 @@ extends Node2D
 @export_range(0.05, 1.0, 0.02, "suffix:s") var duration: float = 0.22
 @export var shockwave_color: Color = Color(1.0, 1.0, 1.0, 0.85)
 
+const ENVIRONMENT_LAYER_MASK: int = 1
+const RING_SEGMENTS: int = 48
+
 var attacker: Node2D = null
 var ignored_entity: Node2D = null
 
 var _elapsed_time: float = 0.0
 var _current_radius: float = 0.0
 var _current_alpha: float = 1.0
+var _ray_dirs: PackedVector2Array = PackedVector2Array()
+var _ray_max_dists: PackedFloat32Array = PackedFloat32Array()
 
 func _ready() -> void:
+	_compute_visual_occlusion()
 	_trigger_physics_shockwave()
 	queue_redraw()
 
@@ -70,6 +76,9 @@ func _trigger_physics_shockwave() -> void:
 
 		processed_entities.append(entity)
 
+		if not _has_clear_line_of_sight(space, entity):
+			continue
+
 		var diff: Vector2 = (entity.global_position + Vector2(0.0, -16.0)) - global_position
 		var dir: Vector2 = diff.normalized()
 		if dir == Vector2.ZERO:
@@ -82,6 +91,38 @@ func _trigger_physics_shockwave() -> void:
 			hurtbox.take_hit(damage, knockback_dir * force, 0.05 if damage > 0.0 else 0.0)
 		elif entity is CharacterBody2D:
 			(entity as CharacterBody2D).velocity = knockback_dir * force
+
+func _has_clear_line_of_sight(space: PhysicsDirectSpaceState2D, entity: Node2D) -> bool:
+	var origin: Vector2 = global_position + Vector2(0.0, -4.0)
+	var sample_points: Array[Vector2] = [
+		entity.global_position + Vector2(0.0, -16.0),
+		entity.global_position + Vector2(0.0, -6.0)
+	]
+	for target_pos in sample_points:
+		var ray_query := PhysicsRayQueryParameters2D.create(origin, target_pos, ENVIRONMENT_LAYER_MASK)
+		ray_query.collide_with_areas = false
+		ray_query.collide_with_bodies = true
+		if space.intersect_ray(ray_query).is_empty():
+			return true
+	return false
+
+func _compute_visual_occlusion() -> void:
+	_ray_dirs.resize(RING_SEGMENTS)
+	_ray_max_dists.resize(RING_SEGMENTS)
+	var space := get_world_2d().direct_space_state
+	for i in range(RING_SEGMENTS):
+		var angle: float = (TAU * float(i)) / float(RING_SEGMENTS)
+		var dir := Vector2(cos(angle), sin(angle))
+		_ray_dirs[i] = dir
+		var max_d: float = radius
+		if space:
+			var ray_query := PhysicsRayQueryParameters2D.create(global_position, global_position + dir * radius, ENVIRONMENT_LAYER_MASK)
+			ray_query.collide_with_areas = false
+			ray_query.collide_with_bodies = true
+			var hit := space.intersect_ray(ray_query)
+			if not hit.is_empty():
+				max_d = global_position.distance_to(hit.position)
+		_ray_max_dists[i] = max_d
 
 func _process(delta: float) -> void:
 	_elapsed_time += delta
@@ -99,4 +140,15 @@ func _draw() -> void:
 		return
 	var col := shockwave_color
 	col.a = _current_alpha
-	draw_arc(Vector2.ZERO, _current_radius, 0.0, TAU, 32, col, 2.5, false)
+	if _ray_dirs.size() != RING_SEGMENTS or _ray_max_dists.size() != RING_SEGMENTS:
+		draw_arc(Vector2.ZERO, _current_radius, 0.0, TAU, 32, col, 2.5, false)
+		return
+	for i in range(RING_SEGMENTS):
+		var next_i: int = (i + 1) % RING_SEGMENTS
+		var max0: float = _ray_max_dists[i]
+		var max1: float = _ray_max_dists[next_i]
+		if _current_radius > max0 + 1.5 and _current_radius > max1 + 1.5:
+			continue
+		var p0: Vector2 = _ray_dirs[i] * minf(_current_radius, max0)
+		var p1: Vector2 = _ray_dirs[next_i] * minf(_current_radius, max1)
+		draw_line(p0, p1, col, 2.5, false)
