@@ -44,7 +44,7 @@ Ao acordar de volta na cama, sua família está viva e salva dentro de casa. **A
   * *Jump Buffer:* 0.12s de antecipação para disparar o salto no primeiro frame de aterrissagem.
 * **Pulo na Parede (Wall-Jump):**
   * Suporte a *Wall-Slide* e *Wall-Jump* com vetor diagonal de repulsão e trava de input de 0.1s para arco limpo de saída.
-* **Rolamento com Invulnerabilidade Total (Dodge Roll):**
+* **Deslize / Esquiva com Invulnerabilidade Total (Slide / Dash):**
   * Arrancada horizontal com i-frames durante toda a janela ativa.
   * Atravessa corpos de inimigos e cancela animações de ataque básico.
 * **Estados Preparados (Stubs):**
@@ -75,7 +75,7 @@ Ao acordar de volta na cama, sua família está viva e salva dentro de casa. **A
 ### 1. Resolução e Métricas Espaciais
 * **Resolução Base:** **640 × 360 pixels** (proporção 16:9 pixel-perfect com escala inteira para 1080p, 1440p e 4K).
 * **Grade de Tiles:** **16 × 16 pixels** (flexível, permitindo plataformas finas de 16px e blocos compostos de 32px ou 64px).
-* **Dimensões do Personagem:** **16 px de largura × 40 px de altura** (passa em corredores de 48px; exige rolamento em vãos de 32px).
+* **Dimensões do Personagem:** **16 px de largura × 40 px de altura** (passa em corredores de 48px; exige slide em vãos de 32px).
 * **Régua de Saltos:**
   * 1º Pulo: 4 tiles de altura (64 px) | Vão horizontal: 4 tiles (64 px).
   * Pulo Duplo: 7 tiles de altura acumulada (112 px) | Vão horizontal: 6 tiles (96 px).

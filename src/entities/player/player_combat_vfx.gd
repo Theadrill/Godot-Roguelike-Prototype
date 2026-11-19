@@ -137,7 +137,7 @@ func apply_slash_energize_shader(charge_ratio: float) -> void:
 
 
 func update_weapon_energize(charge_progress: float, base_scale: Vector2) -> void:
-	var main_inst: Node2D = _player._main_weapon_instance
+	var main_inst: Node2D = _player.main_weapon_instance
 	if not main_inst or not is_instance_valid(main_inst):
 		return
 	var weapon: WeaponData = _player.weapon
@@ -189,7 +189,7 @@ func stop_weapon_energize_particles() -> void:
 
 
 func clear_weapon_energize(base_scale: Vector2) -> void:
-	var main_inst: Node2D = _player._main_weapon_instance
+	var main_inst: Node2D = _player.main_weapon_instance
 	if main_inst and is_instance_valid(main_inst):
 		main_inst.modulate = Color.WHITE
 		var cur_s: Vector2 = main_inst.scale
@@ -270,16 +270,16 @@ func set_pickup_item_visual(source_visual: Node2D, effect_profile: PickupEffectP
 	cloned.rotation_degrees = 0.0
 	cloned.visible = false
 	_player.item_pickup_socket.add_child(cloned)
-	_player._item_pickup_instance = cloned
+	_player.item_pickup_instance = cloned
 
 
 func clear_pickup_item_visual() -> void:
 	if _pickup_fx_tween and _pickup_fx_tween.is_valid():
 		_pickup_fx_tween.kill()
 	_pickup_fx_tween = null
-	if _player._item_pickup_instance and is_instance_valid(_player._item_pickup_instance):
-		_player._item_pickup_instance.queue_free()
-	_player._item_pickup_instance = null
+	if _player.item_pickup_instance and is_instance_valid(_player.item_pickup_instance):
+		_player.item_pickup_instance.queue_free()
+	_player.item_pickup_instance = null
 	_pickup_effect_profile = null
 
 
@@ -306,7 +306,7 @@ func play_pickup_item_burst() -> void:
 			else:
 				fx.queue_free()
 
-	var inst: Node2D = _player._item_pickup_instance
+	var inst: Node2D = _player.item_pickup_instance
 	if inst and is_instance_valid(inst):
 		if _pickup_fx_tween and _pickup_fx_tween.is_valid():
 			_pickup_fx_tween.kill()

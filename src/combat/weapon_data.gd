@@ -575,7 +575,7 @@ func get_step_active_end_frame(step_index: int, is_airborne: bool = false) -> in
 			return maxi(get_step_active_start_frame(step_index, is_airborne), step_data.active_end_frame)
 	return 4 if step_index == 1 else 3
 
-## Retorna se este passo bloqueia o cancelamento por esquiva (Slide/Roll) após o fim do Windup (durante o corte e a pausa final).
+## Retorna se este passo bloqueia o cancelamento por esquiva (Slide) após o fim do Windup (durante o corte e a pausa final).
 func is_step_dodge_locked_after_windup(step_index: int) -> bool:
 	if attack_set and not attack_set.steps.is_empty():
 		var step_data: ComboStepData = attack_set.get_step(step_index)

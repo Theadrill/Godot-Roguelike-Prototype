@@ -69,7 +69,6 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"fall": 2,
 	"fall_from_jump": 3,
 	"slide": 2,
-	"roll": 1,
 	"double_jump": 4,
 	"wall_cling": 1,
 	"wall_slide": 2,
@@ -119,7 +118,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 @export_group("2. Animação, Frame & File")
 ## Escolha a animação do aventureiro para visualizar e calibrar.
-@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "roll", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack1", "air_attack2", "air_attack3", "cast", "channeling", "bow_attack", "bow_air_attack", "crossbow_attack", "crossbow_air_attack", "block", "block_loop", "heal", "pickup", "hurt") var selected_animation: String = "idle":
+@export_enum("idle", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack1", "air_attack2", "air_attack3", "cast", "channeling", "bow_attack", "bow_air_attack", "crossbow_attack", "crossbow_air_attack", "block", "block_loop", "heal", "pickup", "hurt") var selected_animation: String = "idle":
 	set(value):
 		selected_animation = value
 		_on_configuration_changed()
@@ -130,12 +129,6 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		var max_f: int = ANIMATION_FRAME_COUNTS.get(selected_animation, 4) - 1
 		current_frame = clampi(value, 0, max_f)
 		_on_frame_changed()
-
-## Simulação da rotação da cambalhota (0°, 90°, 180°, 270°). Só tem efeito visual ao inspecionar "roll".
-@export_enum("0°", "90°", "180°", "270°") var roll_preview_angle: String = "0°":
-	set(value):
-		roll_preview_angle = value
-		_apply_roll_preview()
 
 ## Clique nesta caixinha para SALVAR a posição, rotação, inversão e Z-Index atuais diretamente no .tres correspondente!
 @export var SAVE_FRAME_TO_PROFILE: bool = false:
@@ -554,32 +547,8 @@ func _on_configuration_changed() -> void:
 	if current_frame > max_f:
 		current_frame = 0
 
-	_apply_roll_preview()
 	_sync_slash_from_weapon_data()
 	_on_frame_changed()
-
-func _apply_roll_preview() -> void:
-	var visual_node := get_node_or_null("Visual") as Node2D
-	if not visual_node:
-		return
-	if selected_animation == "roll":
-		var deg := 0.0
-		match roll_preview_angle:
-			"90°": deg = 90.0
-			"180°": deg = 180.0
-			"270°": deg = 270.0
-			_: deg = 0.0
-		if is_zero_approx(deg):
-			visual_node.rotation = 0.0
-			visual_node.position = Vector2.ZERO
-		else:
-			var rad := deg_to_rad(deg)
-			var pivot := Vector2(0.0, -10.0)
-			visual_node.rotation = rad
-			visual_node.position = pivot - pivot.rotated(rad)
-	else:
-		visual_node.rotation = 0.0
-		visual_node.position = Vector2.ZERO
 
 func _on_frame_changed() -> void:
 	var sprite := _get_node_safe("Visual/CharacterSprite") as AnimatedSprite2D

@@ -36,10 +36,6 @@ func _ready() -> void:
 		_create_key_event(KEY_SHIFT),
 		_create_joy_button_event(JOY_BUTTON_B)
 	])
-	_register_action("roll", [
-		_create_key_event(KEY_SHIFT),
-		_create_joy_button_event(JOY_BUTTON_B)
-	])
 	# Botão X (Xbox) / Quadrado (PlayStation) / Botão Esquerdo Mouse / Tecla J: ARMA ATUAL
 	_register_action("attack_primary", [
 		_create_mouse_button_event(MOUSE_BUTTON_LEFT),

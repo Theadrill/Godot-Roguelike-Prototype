@@ -57,14 +57,6 @@ var rally_timer: float = 0.0
 @export_range(100.0, 800.0, 10.0, "suffix:px/s") var slide_speed: float = 240.0
 @export_range(0.1, 1.0, 0.01, "suffix:s") var slide_duration: float = 0.28
 
-## Compatibilidade retroativa com roll
-var roll_speed: float:
-	get: return slide_speed
-	set(val): slide_speed = val
-var roll_duration: float:
-	get: return slide_duration
-	set(val): slide_duration = val
-
 @export_group("Combat & Equipment")
 @export var weapon: WeaponData
 @export var secondary_weapon: WeaponData
@@ -123,7 +115,7 @@ var parry_cooldown_timer: float = 0.0
 var ledge_target_position: Vector2 = Vector2.ZERO
 
 ## Trava total de inputs e controles (usado durante menus, diálogos diegéticos e transições)
-var _ignore_roll_timer: float = 0.0
+var _ignore_slide_timer: float = 0.0
 var is_input_locked: bool = false:
 	set(value):
 		var was_locked: bool = is_input_locked
@@ -134,17 +126,12 @@ var is_input_locked: bool = false:
 			if state_machine:
 				state_machine.transition_to("idle")
 		elif was_locked:
-			# Evita que o botão B usado para fechar janelas acione roll/dodge indesejado
-			_ignore_roll_timer = 0.35
+			# Evita que o botão B usado para fechar janelas acione slide/dodge indesejado
+			_ignore_slide_timer = 0.35
 			jump_buffer_timer = 0.0
 
 func is_slide_requested() -> bool:
-	return _ignore_roll_timer <= 0.0 and not is_input_locked and (
-		Input.is_action_just_pressed("slide") or Input.is_action_just_pressed("roll")
-	)
-
-func is_roll_requested() -> bool:
-	return is_slide_requested()
+	return _ignore_slide_timer <= 0.0 and not is_input_locked and Input.is_action_just_pressed("slide")
 
 @onready var state_machine: StateMachine = $StateMachine
 const default_slash_frames = preload("res://assets/effects/slashes/slash_frames.tres")
@@ -176,12 +163,12 @@ var combat_vfx: PlayerCombatVFX = PlayerCombatVFX.new()
 var sensors: PlayerSensors = PlayerSensors.new()
 var debug_actions: PlayerDebugActions = PlayerDebugActions.new()
 
-var _main_weapon_instance: Node2D = null
-var _secondary_weapon_instance: Node2D = null
-var _shield_instance: Node2D = null
-var _tea_bottle_instance: Node2D = null
-var _item_pickup_instance: Node2D = null
-var _dropped_death_items: Array[Node] = []
+var main_weapon_instance: Node2D = null
+var secondary_weapon_instance: Node2D = null
+var shield_instance: Node2D = null
+var tea_bottle_instance: Node2D = null
+var item_pickup_instance: Node2D = null
+var dropped_death_items: Array[Node] = []
 var tea_bottle_frame_override: int = -1
 var is_shield_raised: bool = false
 var is_dead: bool = false
@@ -387,8 +374,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		coyote_timer = max(0.0, coyote_timer - delta)
 
-	if _ignore_roll_timer > 0.0:
-		_ignore_roll_timer = max(0.0, _ignore_roll_timer - delta)
+	if _ignore_slide_timer > 0.0:
+		_ignore_slide_timer = max(0.0, _ignore_slide_timer - delta)
 
 	if is_input_locked:
 		jump_buffer_timer = 0.0

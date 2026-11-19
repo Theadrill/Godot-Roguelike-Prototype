@@ -27,7 +27,7 @@ func exit() -> void:
 	player.stop_animation()
 	player.set_dodge_invulnerable(false)
 	if player.has_meta("mod_folha_de_fogo") and player.get_meta("mod_folha_de_fogo"):
-		player.set_meta("has_post_roll_buff", true)
+		player.set_meta("has_post_slide_buff", true)
 
 func physics_update(delta: float) -> void:
 	slide_timer -= delta

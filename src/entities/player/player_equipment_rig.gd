@@ -16,11 +16,11 @@ func setup(player_ref: CharacterBody2D) -> void:
 	if _player.tea_bottle_socket and ResourceLoader.exists("res://src/entities/equipment/items/tea_bottle_visual.tscn"):
 		var tb_scene := load("res://src/entities/equipment/items/tea_bottle_visual.tscn") as PackedScene
 		if tb_scene:
-			_player._tea_bottle_instance = tb_scene.instantiate() as Node2D
-			_player.tea_bottle_socket.add_child(_player._tea_bottle_instance)
-			_player._tea_bottle_instance.position = Vector2.ZERO
-			_player._tea_bottle_instance.rotation_degrees = 0.0
-			_player._tea_bottle_instance.visible = false
+			_player.tea_bottle_instance = tb_scene.instantiate() as Node2D
+			_player.tea_bottle_socket.add_child(_player.tea_bottle_instance)
+			_player.tea_bottle_instance.position = Vector2.ZERO
+			_player.tea_bottle_instance.rotation_degrees = 0.0
+			_player.tea_bottle_instance.visible = false
 
 	if ResourceLoader.exists("res://src/entities/equipment/socket_profiles/item_pickup.tres"):
 		_item_pickup_profile = load("res://src/entities/equipment/socket_profiles/item_pickup.tres") as WeaponSocketProfile
@@ -36,115 +36,115 @@ func set_shield_raised(raised: bool) -> void:
 	if _player.is_shield_raised == raised:
 		return
 	_player.is_shield_raised = raised
-	if not _player._shield_instance or not is_instance_valid(_player._shield_instance):
+	if not _player.shield_instance or not is_instance_valid(_player.shield_instance):
 		return
 
 	var target_socket: Marker2D = _player.off_hand_socket if _player.is_shield_raised else _player.back_socket_shield
-	if target_socket and _player._shield_instance.get_parent() != target_socket:
-		_player._shield_instance.reparent(target_socket, false)
-	_player._shield_instance.position = Vector2.ZERO
-	_player._shield_instance.rotation_degrees = 0.0
-	_player._shield_instance.z_index = 0
+	if target_socket and _player.shield_instance.get_parent() != target_socket:
+		_player.shield_instance.reparent(target_socket, false)
+	_player.shield_instance.position = Vector2.ZERO
+	_player.shield_instance.rotation_degrees = 0.0
+	_player.shield_instance.z_index = 0
 	if _player.player_sprite:
 		update_sockets_for_frame(_player.player_sprite.animation, _player.player_sprite.frame)
 
 
 func hide_equipment_visuals() -> void:
 	_player.are_weapons_hidden = true
-	if _player._main_weapon_instance and is_instance_valid(_player._main_weapon_instance):
-		_player._main_weapon_instance.visible = false
-	if _player._secondary_weapon_instance and is_instance_valid(_player._secondary_weapon_instance):
-		_player._secondary_weapon_instance.visible = false
-	if _player._shield_instance and is_instance_valid(_player._shield_instance):
-		_player._shield_instance.visible = false
+	if _player.main_weapon_instance and is_instance_valid(_player.main_weapon_instance):
+		_player.main_weapon_instance.visible = false
+	if _player.secondary_weapon_instance and is_instance_valid(_player.secondary_weapon_instance):
+		_player.secondary_weapon_instance.visible = false
+	if _player.shield_instance and is_instance_valid(_player.shield_instance):
+		_player.shield_instance.visible = false
 
 
 func clear_all_equipment() -> void:
 	_player.weapon = null
 	_player.secondary_weapon = null
 	_player.shield = null
-	if _player._main_weapon_instance and is_instance_valid(_player._main_weapon_instance):
-		_player._main_weapon_instance.queue_free()
-		_player._main_weapon_instance = null
-	if _player._secondary_weapon_instance and is_instance_valid(_player._secondary_weapon_instance):
-		_player._secondary_weapon_instance.queue_free()
-		_player._secondary_weapon_instance = null
-	if _player._shield_instance and is_instance_valid(_player._shield_instance):
-		_player._shield_instance.queue_free()
-		_player._shield_instance = null
+	if _player.main_weapon_instance and is_instance_valid(_player.main_weapon_instance):
+		_player.main_weapon_instance.queue_free()
+		_player.main_weapon_instance = null
+	if _player.secondary_weapon_instance and is_instance_valid(_player.secondary_weapon_instance):
+		_player.secondary_weapon_instance.queue_free()
+		_player.secondary_weapon_instance = null
+	if _player.shield_instance and is_instance_valid(_player.shield_instance):
+		_player.shield_instance.queue_free()
+		_player.shield_instance = null
 	_player.are_weapons_hidden = true
 
 
 func show_equipment_visuals() -> void:
 	_player.are_weapons_hidden = false
-	if _player._main_weapon_instance and is_instance_valid(_player._main_weapon_instance):
-		_player._main_weapon_instance.visible = true
+	if _player.main_weapon_instance and is_instance_valid(_player.main_weapon_instance):
+		_player.main_weapon_instance.visible = true
 	else:
 		update_main_weapon_visual()
 
-	if _player._secondary_weapon_instance and is_instance_valid(_player._secondary_weapon_instance):
-		_player._secondary_weapon_instance.visible = true
+	if _player.secondary_weapon_instance and is_instance_valid(_player.secondary_weapon_instance):
+		_player.secondary_weapon_instance.visible = true
 	else:
 		update_secondary_weapon_visual()
 
-	if _player._shield_instance and is_instance_valid(_player._shield_instance):
-		_player._shield_instance.visible = true
+	if _player.shield_instance and is_instance_valid(_player.shield_instance):
+		_player.shield_instance.visible = true
 	else:
 		update_shield_visual()
 
 
 func update_main_weapon_visual() -> void:
-	if _player._main_weapon_instance and is_instance_valid(_player._main_weapon_instance):
-		_player._main_weapon_instance.queue_free()
-		_player._main_weapon_instance = null
+	if _player.main_weapon_instance and is_instance_valid(_player.main_weapon_instance):
+		_player.main_weapon_instance.queue_free()
+		_player.main_weapon_instance = null
 
 	if _player.main_hand_socket:
 		for child in _player.main_hand_socket.get_children():
 			child.queue_free()
 
 	if _player.weapon and _player.weapon.visual_scene and _player.main_hand_socket:
-		_player._main_weapon_instance = _player.weapon.visual_scene.instantiate() as Node2D
-		if _player._main_weapon_instance:
-			_player.main_hand_socket.add_child(_player._main_weapon_instance)
+		_player.main_weapon_instance = _player.weapon.visual_scene.instantiate() as Node2D
+		if _player.main_weapon_instance:
+			_player.main_hand_socket.add_child(_player.main_weapon_instance)
 			var has_socket_profile: bool = _player.weapon.get_socket_profile() != null
-			_player._main_weapon_instance.position = Vector2.ZERO if has_socket_profile else _player.weapon.visual_offset
-			_player._main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else _player.weapon.visual_rotation_degrees
-			_player._main_weapon_instance.z_index = 0
-			_player._main_weapon_instance.visible = not _player.are_weapons_hidden
+			_player.main_weapon_instance.position = Vector2.ZERO if has_socket_profile else _player.weapon.visual_offset
+			_player.main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else _player.weapon.visual_rotation_degrees
+			_player.main_weapon_instance.z_index = 0
+			_player.main_weapon_instance.visible = not _player.are_weapons_hidden
 			if _player.player_sprite and _player.player_sprite.visible:
 				update_sockets_for_frame(_player.player_sprite.animation, _player.player_sprite.frame)
 
 
 func update_secondary_weapon_visual() -> void:
-	if _player._secondary_weapon_instance and is_instance_valid(_player._secondary_weapon_instance):
-		_player._secondary_weapon_instance.queue_free()
-		_player._secondary_weapon_instance = null
+	if _player.secondary_weapon_instance and is_instance_valid(_player.secondary_weapon_instance):
+		_player.secondary_weapon_instance.queue_free()
+		_player.secondary_weapon_instance = null
 
 	if _player.secondary_weapon and _player.secondary_weapon.visual_scene and _player.back_socket_weapon:
-		_player._secondary_weapon_instance = _player.secondary_weapon.visual_scene.instantiate() as Node2D
-		if _player._secondary_weapon_instance:
-			_player.back_socket_weapon.add_child(_player._secondary_weapon_instance)
-			_player._secondary_weapon_instance.position = Vector2.ZERO
-			_player._secondary_weapon_instance.rotation_degrees = 0.0
-			_player._secondary_weapon_instance.z_index = 0
-			_player._secondary_weapon_instance.visible = not _player.are_weapons_hidden
+		_player.secondary_weapon_instance = _player.secondary_weapon.visual_scene.instantiate() as Node2D
+		if _player.secondary_weapon_instance:
+			_player.back_socket_weapon.add_child(_player.secondary_weapon_instance)
+			_player.secondary_weapon_instance.position = Vector2.ZERO
+			_player.secondary_weapon_instance.rotation_degrees = 0.0
+			_player.secondary_weapon_instance.z_index = 0
+			_player.secondary_weapon_instance.visible = not _player.are_weapons_hidden
 
 
 func update_shield_visual() -> void:
-	if _player._shield_instance and is_instance_valid(_player._shield_instance):
-		_player._shield_instance.queue_free()
-		_player._shield_instance = null
+	if _player.shield_instance and is_instance_valid(_player.shield_instance):
+		_player.shield_instance.queue_free()
+		_player.shield_instance = null
 
 	if _player.shield and _player.shield.visual_scene:
-		_player._shield_instance = _player.shield.visual_scene.instantiate() as Node2D
-		if _player._shield_instance:
+		_player.shield_instance = _player.shield.visual_scene.instantiate() as Node2D
+		if _player.shield_instance:
 			var target_socket: Marker2D = _player.off_hand_socket if _player.is_shield_raised else _player.back_socket_shield
 			if target_socket:
-				target_socket.add_child(_player._shield_instance)
-			_player._shield_instance.position = Vector2.ZERO
-			_player._shield_instance.rotation_degrees = 0.0
-			_player._shield_instance.z_index = 0
-			_player._shield_instance.visible = not _player.are_weapons_hidden
+				target_socket.add_child(_player.shield_instance)
+			_player.shield_instance.position = Vector2.ZERO
+			_player.shield_instance.rotation_degrees = 0.0
+			_player.shield_instance.z_index = 0
+			_player.shield_instance.visible = not _player.are_weapons_hidden
 
 
 func apply_visual_instance_flip(instance: Node2D, flip_h: bool, flip_v: bool) -> void:
@@ -185,10 +185,10 @@ func update_sockets_for_frame(anim_name: StringName, frame_idx: int) -> void:
 			if anim_name == &"corner_climb" and hand_z < 1:
 				hand_z = 2
 			_player.main_hand_socket.z_index = hand_z
-			if _player._main_weapon_instance and is_instance_valid(_player._main_weapon_instance):
+			if _player.main_weapon_instance and is_instance_valid(_player.main_weapon_instance):
 				var should_be_visible: bool = data.get("visible", true)
-				_player._main_weapon_instance.visible = should_be_visible and not _player.are_weapons_hidden
-				apply_visual_instance_flip(_player._main_weapon_instance, data.get("flip_h", false), data.get("flip_v", false))
+				_player.main_weapon_instance.visible = should_be_visible and not _player.are_weapons_hidden
+				apply_visual_instance_flip(_player.main_weapon_instance, data.get("flip_h", false), data.get("flip_v", false))
 
 	# 2. Back Sockets (Arma e Escudo nas costas usam o perfil da arma ou fallback)
 	if _player.secondary_weapon:
@@ -200,11 +200,11 @@ func update_sockets_for_frame(anim_name: StringName, frame_idx: int) -> void:
 				_player.back_socket_weapon.rotation_degrees = back_data.get("rot", 0.0)
 				var default_back_z: int = 1 if _player.secondary_weapon.get_archetype_id() == "dagger" else -2
 				_player.back_socket_weapon.z_index = back_data.get("z_index", default_back_z)
-			if _player._secondary_weapon_instance and is_instance_valid(_player._secondary_weapon_instance):
-				_player._secondary_weapon_instance.position = Vector2.ZERO
-				_player._secondary_weapon_instance.rotation_degrees = 0.0
-				_player._secondary_weapon_instance.visible = back_data.get("visible", true) and not _player.are_weapons_hidden
-				apply_visual_instance_flip(_player._secondary_weapon_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
+			if _player.secondary_weapon_instance and is_instance_valid(_player.secondary_weapon_instance):
+				_player.secondary_weapon_instance.position = Vector2.ZERO
+				_player.secondary_weapon_instance.rotation_degrees = 0.0
+				_player.secondary_weapon_instance.visible = back_data.get("visible", true) and not _player.are_weapons_hidden
+				apply_visual_instance_flip(_player.secondary_weapon_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
 	elif _player.back_socket_profile and _player.back_socket_weapon:
 		var torso_pos: Vector2 = _player.back_socket_profile.get_frame_pos(anim_name, frame_idx)
 		_player.back_socket_weapon.position = torso_pos
@@ -222,11 +222,11 @@ func update_sockets_for_frame(anim_name: StringName, frame_idx: int) -> void:
 						_player.off_hand_socket.position = hand_data.get("pos", Vector2(7, -19))
 						_player.off_hand_socket.rotation_degrees = hand_data.get("rot", 0.0)
 						_player.off_hand_socket.z_index = hand_data.get("z_index", 2)
-					if _player._shield_instance and is_instance_valid(_player._shield_instance):
-						_player._shield_instance.position = Vector2.ZERO
-						_player._shield_instance.rotation_degrees = 0.0
-						_player._shield_instance.visible = hand_data.get("visible", true) and not _player.are_weapons_hidden
-						apply_visual_instance_flip(_player._shield_instance, hand_data.get("flip_h", false), hand_data.get("flip_v", false))
+					if _player.shield_instance and is_instance_valid(_player.shield_instance):
+						_player.shield_instance.position = Vector2.ZERO
+						_player.shield_instance.rotation_degrees = 0.0
+						_player.shield_instance.visible = hand_data.get("visible", true) and not _player.are_weapons_hidden
+						apply_visual_instance_flip(_player.shield_instance, hand_data.get("flip_h", false), hand_data.get("flip_v", false))
 			else:
 				if sh_profile.has_method("get_back_frame_data"):
 					var back_data := sh_profile.get_back_frame_data(anim_name, frame_idx)
@@ -234,11 +234,11 @@ func update_sockets_for_frame(anim_name: StringName, frame_idx: int) -> void:
 						_player.back_socket_shield.position = back_data.get("pos", Vector2(-9, -24))
 						_player.back_socket_shield.rotation_degrees = back_data.get("rot", 0.0)
 						_player.back_socket_shield.z_index = back_data.get("z_index", -1)
-					if _player._shield_instance and is_instance_valid(_player._shield_instance):
-						_player._shield_instance.position = Vector2.ZERO
-						_player._shield_instance.rotation_degrees = 0.0
-						_player._shield_instance.visible = back_data.get("visible", true) and not _player.are_weapons_hidden
-						apply_visual_instance_flip(_player._shield_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
+					if _player.shield_instance and is_instance_valid(_player.shield_instance):
+						_player.shield_instance.position = Vector2.ZERO
+						_player.shield_instance.rotation_degrees = 0.0
+						_player.shield_instance.visible = back_data.get("visible", true) and not _player.are_weapons_hidden
+						apply_visual_instance_flip(_player.shield_instance, back_data.get("flip_h", false), back_data.get("flip_v", false))
 	elif _player.back_socket_shield:
 		if _player.back_socket_weapon:
 			_player.back_socket_shield.position = _player.back_socket_weapon.position + Vector2(-3.0, 0.0)
@@ -248,36 +248,36 @@ func update_sockets_for_frame(anim_name: StringName, frame_idx: int) -> void:
 			_player.back_socket_shield.z_index = -1
 
 	# 4. Garrafa de Chá (exibida apenas durante a animação "heal")
-	if _player._tea_bottle_instance and is_instance_valid(_player._tea_bottle_instance):
+	if _player.tea_bottle_instance and is_instance_valid(_player.tea_bottle_instance):
 		if anim_name == &"heal" and _player.tea_bottle_socket:
 			var tb_data: Dictionary = _tea_bottle_profile.get_frame_data(anim_name, frame_idx) if _tea_bottle_profile else {}
 			_player.tea_bottle_socket.position = tb_data.get("pos", Vector2(10, -24))
 			_player.tea_bottle_socket.rotation_degrees = tb_data.get("rot", 0.0)
 			_player.tea_bottle_socket.z_index = tb_data.get("z_index", 3)
-			_player._tea_bottle_instance.position = Vector2.ZERO
-			_player._tea_bottle_instance.rotation_degrees = 0.0
-			_player._tea_bottle_instance.visible = tb_data.get("visible", true) and not _player.are_weapons_hidden
-			apply_visual_instance_flip(_player._tea_bottle_instance, tb_data.get("flip_h", false), tb_data.get("flip_v", false))
-			var tb_sprite := _player._tea_bottle_instance.get_node_or_null("Sprite2D") as Sprite2D
+			_player.tea_bottle_instance.position = Vector2.ZERO
+			_player.tea_bottle_instance.rotation_degrees = 0.0
+			_player.tea_bottle_instance.visible = tb_data.get("visible", true) and not _player.are_weapons_hidden
+			apply_visual_instance_flip(_player.tea_bottle_instance, tb_data.get("flip_h", false), tb_data.get("flip_v", false))
+			var tb_sprite := _player.tea_bottle_instance.get_node_or_null("Sprite2D") as Sprite2D
 			if tb_sprite:
 				var tb_frame: int = _player.tea_bottle_frame_override if _player.tea_bottle_frame_override >= 0 else frame_idx
 				tb_sprite.frame = clampi(tb_frame, 0, 2)
 		else:
-			_player._tea_bottle_instance.visible = false
+			_player.tea_bottle_instance.visible = false
 
 	# 5. Item sendo Pego (exibido durante a animação "pickup" usando o visual do item coletado)
-	if _player._item_pickup_instance and is_instance_valid(_player._item_pickup_instance):
+	if _player.item_pickup_instance and is_instance_valid(_player.item_pickup_instance):
 		if anim_name == &"pickup" and _player.item_pickup_socket:
 			var ip_data: Dictionary = _item_pickup_profile.get_frame_data(anim_name, frame_idx) if _item_pickup_profile else {}
 			_player.item_pickup_socket.position = ip_data.get("pos", Vector2(13, -10))
 			_player.item_pickup_socket.rotation_degrees = ip_data.get("rot", 0.0)
 			_player.item_pickup_socket.z_index = ip_data.get("z_index", 3)
-			_player._item_pickup_instance.position = Vector2.ZERO
-			_player._item_pickup_instance.rotation_degrees = 0.0
-			_player._item_pickup_instance.visible = ip_data.get("visible", frame_idx > 0) and not _player.are_weapons_hidden
-			apply_visual_instance_flip(_player._item_pickup_instance, ip_data.get("flip_h", false), ip_data.get("flip_v", false))
+			_player.item_pickup_instance.position = Vector2.ZERO
+			_player.item_pickup_instance.rotation_degrees = 0.0
+			_player.item_pickup_instance.visible = ip_data.get("visible", frame_idx > 0) and not _player.are_weapons_hidden
+			apply_visual_instance_flip(_player.item_pickup_instance, ip_data.get("flip_h", false), ip_data.get("flip_v", false))
 		else:
-			_player._item_pickup_instance.visible = false
+			_player.item_pickup_instance.visible = false
 
 
 func update_equipment_depth() -> void:
@@ -304,19 +304,19 @@ func spawn_death_dropped_equipment() -> void:
 	var facing: float = -1.0 if _player.facing_direction < 0 else 1.0
 	var pieces: Array[Dictionary] = [
 		{
-			"vis": _player._main_weapon_instance,
+			"vis": _player.main_weapon_instance,
 			"socket": _player.main_hand_socket,
 			"impulse": Vector2(facing * 48.0, -78.0),
 			"spin": facing * 5.2,
 		},
 		{
-			"vis": _player._secondary_weapon_instance,
+			"vis": _player.secondary_weapon_instance,
 			"socket": _player.back_socket_weapon,
 			"impulse": Vector2(-facing * 32.0, -64.0),
 			"spin": -facing * 4.0,
 		},
 		{
-			"vis": _player._shield_instance,
+			"vis": _player.shield_instance,
 			"socket": _player.off_hand_socket if _player.is_shield_raised else _player.back_socket_shield,
 			"impulse": Vector2(-facing * 16.0, -54.0),
 			"spin": -facing * 3.0,
@@ -339,11 +339,11 @@ func spawn_death_dropped_equipment() -> void:
 			spawn_parent
 		)
 		if dropped:
-			_player._dropped_death_items.append(dropped)
+			_player.dropped_death_items.append(dropped)
 
 
 func clear_death_dropped_equipment() -> void:
-	for item in _player._dropped_death_items:
+	for item in _player.dropped_death_items:
 		if item and is_instance_valid(item):
 			item.queue_free()
-	_player._dropped_death_items.clear()
+	_player.dropped_death_items.clear()

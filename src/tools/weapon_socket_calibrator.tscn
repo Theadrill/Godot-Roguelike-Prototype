@@ -6,15 +6,14 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-selected_weapon = "crossbow"
-selected_animation = "crossbow_attack"
-current_frame = 2
+selected_weapon = "staff"
+selected_animation = "crouch"
 reference_secondary_weapon = "none"
-socket_pos_x = 6.4
-socket_pos_y = -22.9
+socket_pos_x = 9.0
+socket_pos_y = -12.5
 socket_z_index = -1
 slash_offset_x = -1.0
-status_message = "SUCESSO! Salvo em crossbow.tres (Arma na Mão) -> [crossbow_attack Frame 2] (Pos: (6.400000, -22.900000), Rot: 0.0°, Z: -1, FlipH: false, FlipV: false)"
+status_message = "staff [Arma na Mão (MainHandSocket)] -> crouch Frame 0 (Z: -1, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,8 +27,7 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"crossbow_attack"
-frame = 2
+animation = &"crouch"
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
@@ -39,17 +37,16 @@ position = Vector2(-7, -20)
 rotation = -3.054325
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
-z_index = -2
-position = Vector2(-9, -24)
+z_index = -3
+position = Vector2(-5, -23)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = -1
-position = Vector2(6.4, -22.9)
+position = Vector2(9, -12.5)
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
-position = Vector2(6, -20)
-rotation = -0.61086524
+position = Vector2(7, -12)
 
 [node name="TeaBottleSocket" type="Marker2D" parent="Visual" unique_id=1498765432]
 z_index = 2

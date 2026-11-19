@@ -12,9 +12,13 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 
 ---
 
-## 🟡 2. Estados e Ações Opcionais / Pausados
-- [ ] **`air_attack2` (Opcional / Não utilizado no momento):**
-  - Os Sets de Espada, Adaga e Machado agora usam `air_attack1` no ar (padrão econômico estilo Dead Cells), deixando `air_attack2` sem uso por enquanto.
+## 🟡 2. Estados e Ações Opcionais / Pausados / Próximos
+- [ ] **`idle_break` (Próximo sprite planejado):**
+  - Animação de variação após inatividade em `Idle` (substituindo o antigo stub do `HeadbandPlaceholder`).
+- [ ] **`air_attack2` (Pausado / Descartado por enquanto):**
+  - Os Sets de Espada, Adaga e Machado usam `air_attack1` no ar (padrão econômico estilo Dead Cells), deixando `air_attack2` fora de uso por decisão do PO.
+- [x] **Unificação `roll` -> `slide`:**
+  - Nomenclatura de `roll` removida/unificada para `slide` (única esquiva/dash do jogo); animação `roll` obsoleta removida de `player_frames.tres` (mantendo `player_roll_sheet.png` apenas como fonte dos 4 frames do `double_jump`).
 - [x] **Slash dedicado do `air_attack3` (`slash_air_attack3`)** — alinhado via GUIDE amarelo e sincronizado frame a frame com as fases do mergulho (`PREP`, `FALL_LOOP`, `IMPACT`, `RECOVERY`).
 
 ---

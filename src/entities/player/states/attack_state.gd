@@ -82,7 +82,7 @@ func enter() -> void:
 			player.player_sprite.frame = ready_frame
 			player._update_weapon_socket_for_frame(ready_anim, ready_frame)
 		_charge_base_socket_rot = player.main_hand_socket.rotation_degrees if player.main_hand_socket else -35.0
-		_charge_base_weapon_scale = player._main_weapon_instance.scale if player._main_weapon_instance else Vector2.ONE
+		_charge_base_weapon_scale = player.main_weapon_instance.scale if player.main_weapon_instance else Vector2.ONE
 		return
 
 	is_charging = false
@@ -157,9 +157,9 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	var total_mult: float = step_mult * charge_mult
 
 	# Elixir de Folha-de-Fogo: +20% no primeiro ataque pós-esquiva
-	if player.has_meta("has_post_roll_buff") and player.get_meta("has_post_roll_buff"):
+	if player.has_meta("has_post_slide_buff") and player.get_meta("has_post_slide_buff"):
 		total_mult *= 1.20
-		player.set_meta("has_post_roll_buff", false)
+		player.set_meta("has_post_slide_buff", false)
 
 	player.hitbox.damage = player.weapon.base_damage * total_mult
 	player.hitbox.knockback_force = player.weapon.knockback_force * total_mult
@@ -234,11 +234,11 @@ func exit() -> void:
 		player.hitbox.hit_landed.disconnect(_on_attack_hit_landed)
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
-	if player._main_weapon_instance:
+	if player.main_weapon_instance:
 		if should_clear_energize:
 			player.clear_weapon_energize(_charge_base_weapon_scale)
 		else:
-			player._main_weapon_instance.modulate = Color.WHITE
+			player.main_weapon_instance.modulate = Color.WHITE
 	if player.main_hand_socket:
 		player.main_hand_socket.rotation_degrees = -35.0
 	if player.hitbox.has_node("CollisionShape2D"):

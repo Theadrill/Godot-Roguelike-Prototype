@@ -26,10 +26,10 @@ func enter() -> void:
 		return
 
 	var is_spell: bool = player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_SPELL
-	if not is_spell and player._main_weapon_instance and player.weapon.get_socket_profile() == null:
-		player._main_weapon_instance.position = player.weapon.attack_visual_offset
-		player._main_weapon_instance.rotation_degrees = player.weapon.attack_visual_rotation_degrees
-	_charge_base_weapon_scale = player._main_weapon_instance.scale if player._main_weapon_instance else Vector2.ONE
+	if not is_spell and player.main_weapon_instance and player.weapon.get_socket_profile() == null:
+		player.main_weapon_instance.position = player.weapon.attack_visual_offset
+		player.main_weapon_instance.rotation_degrees = player.weapon.attack_visual_rotation_degrees
+	_charge_base_weapon_scale = player.main_weapon_instance.scale if player.main_weapon_instance else Vector2.ONE
 
 	_start_shot_cycle(false)
 
@@ -83,10 +83,10 @@ func exit() -> void:
 	if player.player_sprite:
 		player.player_sprite.speed_scale = 1.0
 	# Restore resting grip stance (visual_offset and visual_rotation_degrees)
-	if player.weapon and player._main_weapon_instance:
+	if player.weapon and player.main_weapon_instance:
 		var has_socket_profile: bool = player.weapon.get_socket_profile() != null
-		player._main_weapon_instance.position = Vector2.ZERO if has_socket_profile else player.weapon.visual_offset
-		player._main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else player.weapon.visual_rotation_degrees
+		player.main_weapon_instance.position = Vector2.ZERO if has_socket_profile else player.weapon.visual_offset
+		player.main_weapon_instance.rotation_degrees = 0.0 if has_socket_profile else player.weapon.visual_rotation_degrees
 		player.clear_weapon_energize(_charge_base_weapon_scale)
 	elif player:
 		player.clear_weapon_energize(_charge_base_weapon_scale)
@@ -121,8 +121,8 @@ func physics_update(delta: float) -> void:
 			if is_spell:
 				if player.player_sprite and player.player_sprite.animation != &"channeling":
 					player.play_animation(&"channeling")
-				if player._main_weapon_instance:
-					player._main_weapon_instance.rotation_degrees = jitter
+				if player.main_weapon_instance:
+					player.main_weapon_instance.rotation_degrees = jitter
 			elif player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW:
 				var draw_max: int = 3 if _bow_anim_name == &"bow_air_attack" else 4
 				var start_f: int = 2 if _is_bow_repeat_shot else 0
@@ -213,7 +213,7 @@ func physics_update(delta: float) -> void:
 			player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
 			player.move_and_slide()
 
-			# Roll cancel during reload
+			# Slide cancel during reload
 			if player.is_slide_requested():
 				state_machine.transition_to("slide")
 				return
@@ -235,8 +235,8 @@ func _start_spell_cast() -> void:
 	has_fired = false
 	_cast_total_duration = 0.36
 	phase_timer = _cast_total_duration
-	if player._main_weapon_instance:
-		player._main_weapon_instance.rotation_degrees = 0.0
+	if player.main_weapon_instance:
+		player.main_weapon_instance.rotation_degrees = 0.0
 	player.play_animation(&"cast")
 	if player.player_sprite:
 		player.player_sprite.frame = 0
@@ -259,8 +259,8 @@ func _fire_projectile(advance_to_recovery: bool = true) -> void:
 	# Reset visual charge aura and spawn release burst upon discharge
 	player.trigger_weapon_energize_release()
 	player.clear_weapon_energize(_charge_base_weapon_scale)
-	if player._main_weapon_instance:
-		player._main_weapon_instance.rotation_degrees = 0.0
+	if player.main_weapon_instance:
+		player.main_weapon_instance.rotation_degrees = 0.0
 
 	var weapon := player.weapon
 	var is_spell: bool = weapon.weapon_category == WeaponData.WeaponCategory.RANGED_SPELL

@@ -105,7 +105,7 @@ No Godot (`src/entities/player/player.tscn` e `player.gd`):
 
 Os perfis de socket ficam em `src/entities/equipment/socket_profiles/*.tres` e usam o script [`weapon_socket_profile.gd`](../src/entities/equipment/socket_profiles/weapon_socket_profile.gd).
 
-1. **Animações com propriedades exportadas diretas** (`idle`, `run`, `jump`, `crouch`, `fall`, `fall_from_jump`, `slide`, `roll`, `double_jump`, `wall_cling`, `wall_slide`, `corner_climb`):
+1. **Animações com propriedades exportadas diretas** (`idle`, `run`, `jump`, `crouch`, `fall`, `fall_from_jump`, `slide`, `double_jump`, `wall_cling`, `wall_slide`, `corner_climb`):
    - Posição e rotação da mão ficam em propriedades diretas como `idle_0_pos`, `idle_0_rot`, `idle_0_visible`, E também sincronizadas no dicionário `hand_frames["idle_0"]`.
 2. **Animações de combate e extras** (`attack1`, `attack2`, `attack3`, `air_attack1`, `air_attack2`, `air_attack3`, `cast`, `channeling`, `block`, `block_loop`, `stagger`, `die`):
    - Os dados da mão principal ficam armazenados no dicionário exportado **`hand_frames`** usando a chave `"<anim>_<frame>"` (ex: `"attack1_0"`, `"attack1_1"`, ..., `"attack1_4"`):
