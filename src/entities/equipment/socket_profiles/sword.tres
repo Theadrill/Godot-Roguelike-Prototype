@@ -62,7 +62,7 @@ roll_2_pos = Vector2(-4, -14)
 roll_2_rot = -270.0
 roll_3_pos = Vector2(4, -18)
 roll_3_rot = 0.0
-double_jump_0_pos = Vector2(4, -14)
+double_jump_0_pos = Vector2(10, -30)
 double_jump_0_rot = -90.0
 double_jump_1_pos = Vector2(0, -18)
 double_jump_1_rot = -180.0
@@ -625,6 +625,14 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"double_jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-2, -40),
+"rot": 72.0,
+"visible": true,
+"z_index": -2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
@@ -726,6 +734,86 @@ back_frames = {
 "idle_3": {
 "pos": Vector2(-10.000001, -35.000004),
 "rot": 74.99999,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -36),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -38),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -38),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-12, -33),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -33),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -33),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -33),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_waist_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-12, -33),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_waist_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -33),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_waist_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -33),
+"rot": 75.0,
 "visible": true,
 "z_index": -2
 },
@@ -878,86 +966,6 @@ back_frames = {
 "flip_v": true,
 "pos": Vector2(3, -40),
 "rot": 89.49999,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-12, -33),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -33),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -33),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_3": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -33),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_break_1_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -36),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_break_1_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -38),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_break_1_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -38),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_waist_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-12, -33),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_waist_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -33),
-"rot": 75.0,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_waist_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -33),
-"rot": 75.0,
 "visible": true,
 "z_index": -2
 }
@@ -1347,6 +1355,14 @@ hand_frames = {
 "visible": true,
 "z_index": 2
 },
+"double_jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(10, -30),
+"rot": -90.0,
+"visible": true,
+"z_index": 2
+},
 "fall_0": {
 "flip_h": false,
 "flip_v": false,
@@ -1426,6 +1442,62 @@ hand_frames = {
 "rot": -45.0,
 "visible": true,
 "z_index": 2
+},
+"idle_break_1_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -37),
+"rot": 45.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -39),
+"rot": 45.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -39),
+"rot": 45.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16, -24),
+"rot": -117.5,
+"visible": true,
+"z_index": 2
+},
+"idle_sheathe_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16, -44),
+"rot": 42.3,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -39),
+"rot": 45.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-8, -34),
+"rot": 45.0,
+"visible": true,
+"z_index": -2
 },
 "jump_0": {
 "flip_h": false,
@@ -1560,61 +1632,5 @@ hand_frames = {
 "rot": -123.999985,
 "visible": true,
 "z_index": 2
-},
-"idle_sheathe_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-16, -24),
-"rot": -117.5,
-"visible": true,
-"z_index": 2
-},
-"idle_sheathe_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-16, -44),
-"rot": 42.3,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -39),
-"rot": 45.0,
-"visible": true,
-"z_index": -2
-},
-"idle_sheathe_3": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-8, -34),
-"rot": 45.0,
-"visible": true,
-"z_index": -2
-},
-"idle_break_1_0": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -37),
-"rot": 45.0,
-"visible": true,
-"z_index": -2
-},
-"idle_break_1_1": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -39),
-"rot": 45.0,
-"visible": true,
-"z_index": -2
-},
-"idle_break_1_2": {
-"flip_h": false,
-"flip_v": false,
-"pos": Vector2(-10, -39),
-"rot": 45.0,
-"visible": true,
-"z_index": -2
 }
 }

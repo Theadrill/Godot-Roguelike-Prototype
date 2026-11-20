@@ -63,8 +63,8 @@ roll_2_pos = Vector2(-3, -12)
 roll_2_rot = -270.0
 roll_3_pos = Vector2(3, -16)
 roll_3_rot = 0.0
-double_jump_0_pos = Vector2(3, -12)
-double_jump_0_rot = -90.0
+double_jump_0_pos = Vector2(10, -27)
+double_jump_0_rot = -255.0
 double_jump_1_pos = Vector2(0, -16)
 double_jump_1_rot = -180.0
 double_jump_2_pos = Vector2(-3, -12)
@@ -622,6 +622,14 @@ back_frames = {
 "flip_v": false,
 "pos": Vector2(-5, -7),
 "rot": -223.5,
+"visible": true,
+"z_index": 1
+},
+"double_jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-3, -23),
+"rot": -195.0,
 "visible": true,
 "z_index": 1
 },
@@ -1352,6 +1360,14 @@ hand_frames = {
 "flip_v": false,
 "pos": Vector2(-10, -7),
 "rot": -185.0,
+"visible": true,
+"z_index": 2
+},
+"double_jump_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(10, -27),
+"rot": -255.0,
 "visible": true,
 "z_index": 2
 },
