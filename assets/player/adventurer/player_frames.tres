@@ -25,8 +25,8 @@
 [ext_resource type="Texture2D" uid="uid://dhm8pxlu678i8" path="res://assets/player/adventurer/crossbow/player_crossbow_sheet.png" id="23_crossbow_sheet"]
 [ext_resource type="Texture2D" uid="uid://d37w04ejnwrxi" path="res://assets/player/adventurer/crossbow/player_crossbow_air_sheet.png" id="24_crossbow_air_sheet"]
 [ext_resource type="Texture2D" uid="uid://77x4ffj3a5vv" path="res://assets/player/adventurer/death/player_death_sheet.png" id="25_death_sheet"]
-[ext_resource type="Texture2D" path="res://assets/player/adventurer/idle/player_idle_sheathe_sheet.png" id="26_idle_sheathe_sheet"]
-[ext_resource type="Texture2D" path="res://assets/player/adventurer/idle/player_idle_break_1_sheet.png" id="27_idle_break_1_sheet"]
+[ext_resource type="Texture2D" uid="uid://1oqhdb5du86r" path="res://assets/player/adventurer/idle/player_idle_sheathe_sheet.png" id="26_idle_sheathe_sheet"]
+[ext_resource type="Texture2D" uid="uid://cyabdp6i15h5s" path="res://assets/player/adventurer/idle/player_idle_break_1_sheet.png" id="27_idle_break_1_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_1"]
 atlas = ExtResource("17_air_attack1_sheet")
@@ -368,6 +368,34 @@ region = Rect2(0, 62, 83, 62)
 atlas = ExtResource("1_idle_sheet")
 region = Rect2(83, 62, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_break_1_0"]
+atlas = ExtResource("27_idle_break_1_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_break_1_1"]
+atlas = ExtResource("27_idle_break_1_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_break_1_2"]
+atlas = ExtResource("27_idle_break_1_sheet")
+region = Rect2(0, 124, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_0"]
+atlas = ExtResource("26_idle_sheathe_sheet")
+region = Rect2(0, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_1"]
+atlas = ExtResource("26_idle_sheathe_sheet")
+region = Rect2(83, 0, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_2"]
+atlas = ExtResource("26_idle_sheathe_sheet")
+region = Rect2(0, 62, 83, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_3"]
+atlas = ExtResource("26_idle_sheathe_sheet")
+region = Rect2(83, 62, 83, 62)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_jump_0"]
 atlas = ExtResource("3_jump_sheet")
 region = Rect2(0, 0, 83, 62)
@@ -387,34 +415,6 @@ region = Rect2(83, 62, 83, 62)
 [sub_resource type="AtlasTexture" id="AtlasTexture_pickup_2"]
 atlas = ExtResource("21_pickup_sheet")
 region = Rect2(0, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_0"]
-atlas = ExtResource("26_idle_sheathe_sheet")
-region = Rect2(0, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_1"]
-atlas = ExtResource("26_idle_sheathe_sheet")
-region = Rect2(83, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_2"]
-atlas = ExtResource("26_idle_sheathe_sheet")
-region = Rect2(0, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_3"]
-atlas = ExtResource("26_idle_sheathe_sheet")
-region = Rect2(83, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_idle_break_1_0"]
-atlas = ExtResource("27_idle_break_1_sheet")
-region = Rect2(0, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_idle_break_1_1"]
-atlas = ExtResource("27_idle_break_1_sheet")
-region = Rect2(0, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_idle_break_1_2"]
-atlas = ExtResource("27_idle_break_1_sheet")
-region = Rect2(0, 124, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_run_0"]
 atlas = ExtResource("2_run_sheet")
@@ -835,6 +835,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_break_1_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_break_1_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_break_1_2")
+}],
+"loop": 1,
+"name": &"idle_break_1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_idle_sheathe_0")
 }, {
 "duration": 1.0,
@@ -849,20 +863,6 @@ animations = [{
 "loop": 0,
 "name": &"idle_sheathe",
 "speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_idle_break_1_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_idle_break_1_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_idle_break_1_2")
-}],
-"loop": 1,
-"name": &"idle_break_1",
-"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
