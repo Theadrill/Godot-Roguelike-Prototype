@@ -233,7 +233,7 @@ func update_sockets_for_frame(anim_name: StringName, frame_idx: int) -> void:
 					if _player.back_socket_shield:
 						_player.back_socket_shield.position = back_data.get("pos", Vector2(-9, -24))
 						_player.back_socket_shield.rotation_degrees = back_data.get("rot", 0.0)
-						_player.back_socket_shield.z_index = back_data.get("z_index", -1)
+						_player.back_socket_shield.z_index = back_data.get("z_index", -3)
 					if _player.shield_instance and is_instance_valid(_player.shield_instance):
 						_player.shield_instance.position = Vector2.ZERO
 						_player.shield_instance.rotation_degrees = 0.0
@@ -242,10 +242,10 @@ func update_sockets_for_frame(anim_name: StringName, frame_idx: int) -> void:
 	elif _player.back_socket_shield:
 		if _player.back_socket_weapon:
 			_player.back_socket_shield.position = _player.back_socket_weapon.position + Vector2(-3.0, 0.0)
-			_player.back_socket_shield.z_index = -1
+			_player.back_socket_shield.z_index = -3
 		elif _player.back_socket_profile:
 			_player.back_socket_shield.position = _player.back_socket_profile.get_frame_pos(anim_name, frame_idx) + Vector2(-3.0, 0.0)
-			_player.back_socket_shield.z_index = -1
+			_player.back_socket_shield.z_index = -3
 
 	# 4. Garrafa de Chá (exibida apenas durante a animação "heal")
 	if _player.tea_bottle_instance and is_instance_valid(_player.tea_bottle_instance):

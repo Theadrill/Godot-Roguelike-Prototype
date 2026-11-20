@@ -73,6 +73,7 @@ double_jump_3_pos = Vector2(4, -18)
 double_jump_3_rot = 0.0
 default_back_pos = Vector2(-9, -24)
 default_back_rot = 0.0
+default_back_z_index = -3
 back_frames = {
 "air_attack1_0": {
 "flip_h": false,
@@ -208,7 +209,7 @@ back_frames = {
 "pos": Vector2(-7, -31),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack2_1": {
 "flip_h": false,
@@ -216,7 +217,7 @@ back_frames = {
 "pos": Vector2(-9, -30),
 "rot": -12.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack2_2": {
 "flip_h": false,
@@ -224,7 +225,7 @@ back_frames = {
 "pos": Vector2(-11, -29),
 "rot": -28.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack2_3": {
 "flip_h": false,
@@ -232,7 +233,7 @@ back_frames = {
 "pos": Vector2(-4, -24),
 "rot": 24.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack2_4": {
 "flip_h": false,
@@ -240,7 +241,7 @@ back_frames = {
 "pos": Vector2(-20, -24),
 "rot": -8.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack2_5": {
 "flip_h": false,
@@ -248,7 +249,7 @@ back_frames = {
 "pos": Vector2(-5, -26),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack3_0": {
 "flip_h": false,
@@ -256,7 +257,7 @@ back_frames = {
 "pos": Vector2(16, -29),
 "rot": 12.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack3_1": {
 "flip_h": false,
@@ -264,7 +265,7 @@ back_frames = {
 "pos": Vector2(16, -29.5),
 "rot": 12.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack3_2": {
 "flip_h": false,
@@ -272,7 +273,7 @@ back_frames = {
 "pos": Vector2(-4, -24),
 "rot": 3.9999998,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack3_3": {
 "flip_h": false,
@@ -280,7 +281,7 @@ back_frames = {
 "pos": Vector2(-3.5, -22),
 "rot": 3.9999998,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack3_4": {
 "flip_h": false,
@@ -288,7 +289,7 @@ back_frames = {
 "pos": Vector2(-3.5, -24),
 "rot": 3.9999998,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "attack3_5": {
 "flip_h": false,
@@ -296,7 +297,7 @@ back_frames = {
 "pos": Vector2(-3.5, -23),
 "rot": 3.9999998,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "block_0": {
 "flip_h": false,
@@ -304,7 +305,7 @@ back_frames = {
 "pos": Vector2(-5, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "block_1": {
 "flip_h": false,
@@ -312,7 +313,7 @@ back_frames = {
 "pos": Vector2(-7, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "block_2": {
 "flip_h": false,
@@ -320,7 +321,7 @@ back_frames = {
 "pos": Vector2(3, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "block_loop_0": {
 "flip_h": false,
@@ -328,7 +329,7 @@ back_frames = {
 "pos": Vector2(3, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "block_loop_1": {
 "flip_h": false,
@@ -336,7 +337,7 @@ back_frames = {
 "pos": Vector2(3, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "bow_air_attack_0": {
 "flip_h": false,
@@ -392,7 +393,7 @@ back_frames = {
 "pos": Vector2(-5, -28.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "cast_1": {
 "flip_h": false,
@@ -400,7 +401,7 @@ back_frames = {
 "pos": Vector2(-5, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "cast_2": {
 "flip_h": false,
@@ -408,7 +409,7 @@ back_frames = {
 "pos": Vector2(-7, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "cast_3": {
 "flip_h": false,
@@ -416,7 +417,7 @@ back_frames = {
 "pos": Vector2(3, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "channeling_0": {
 "flip_h": false,
@@ -424,7 +425,7 @@ back_frames = {
 "pos": Vector2(3, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "channeling_1": {
 "flip_h": false,
@@ -432,7 +433,7 @@ back_frames = {
 "pos": Vector2(2.5, -26.5),
 "rot": 4.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "corner_climb_0": {
 "flip_h": false,
@@ -440,7 +441,7 @@ back_frames = {
 "pos": Vector2(-17, 5),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "corner_climb_1": {
 "flip_h": false,
@@ -448,7 +449,7 @@ back_frames = {
 "pos": Vector2(-14, -9),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "corner_climb_2": {
 "flip_h": false,
@@ -456,7 +457,7 @@ back_frames = {
 "pos": Vector2(-11, -14),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "corner_climb_3": {
 "flip_h": false,
@@ -464,7 +465,7 @@ back_frames = {
 "pos": Vector2(-10, -17),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "corner_climb_4": {
 "flip_h": false,
@@ -472,7 +473,7 @@ back_frames = {
 "pos": Vector2(-9, -17),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "crossbow_air_attack_0": {
 "flip_h": false,
@@ -536,7 +537,7 @@ back_frames = {
 "pos": Vector2(-4, -33),
 "rot": -12.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "fall_1": {
 "flip_h": false,
@@ -544,7 +545,7 @@ back_frames = {
 "pos": Vector2(-5, -34),
 "rot": -12.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "fall_from_jump_0": {
 "flip_h": false,
@@ -552,7 +553,7 @@ back_frames = {
 "pos": Vector2(-4, -31),
 "rot": -12.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "fall_from_jump_1": {
 "flip_h": false,
@@ -560,7 +561,7 @@ back_frames = {
 "pos": Vector2(-4, -32),
 "rot": -16.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "fall_from_jump_2": {
 "flip_h": false,
@@ -568,7 +569,7 @@ back_frames = {
 "pos": Vector2(-4, -35),
 "rot": -20.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "heal_0": {
 "flip_h": false,
@@ -600,7 +601,7 @@ back_frames = {
 "pos": Vector2(-7, -29.5),
 "rot": -174.99998,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "hurt_2": {
 "flip_h": false,
@@ -608,27 +609,31 @@ back_frames = {
 "pos": Vector2(-7, -29.5),
 "rot": -174.99998,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "idle_0": {
 "pos": Vector2(-9, -28),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -3
 },
 "idle_1": {
 "pos": Vector2(-9, -30),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -3
 },
 "idle_2": {
 "pos": Vector2(-9, -30),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -3
 },
 "idle_3": {
 "pos": Vector2(-9, -29),
 "rot": 0.0,
-"visible": true
+"visible": true,
+"z_index": -3
 },
 "jump_0": {
 "flip_h": false,
@@ -636,7 +641,7 @@ back_frames = {
 "pos": Vector2(-4, -27),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "jump_1": {
 "flip_h": false,
@@ -644,7 +649,7 @@ back_frames = {
 "pos": Vector2(-3, -25),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "jump_2": {
 "flip_h": false,
@@ -652,7 +657,7 @@ back_frames = {
 "pos": Vector2(-3, -33),
 "rot": -20.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "jump_3": {
 "flip_h": false,
@@ -660,7 +665,7 @@ back_frames = {
 "pos": Vector2(-3, -36),
 "rot": -22.5,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "pickup_0": {
 "flip_h": false,
@@ -692,7 +697,7 @@ back_frames = {
 "pos": Vector2(-4, -34),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "roll_1": {
 "flip_h": false,
@@ -700,7 +705,7 @@ back_frames = {
 "pos": Vector2(7, -30.000002),
 "rot": 154.9,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "roll_2": {
 "flip_h": false,
@@ -708,7 +713,7 @@ back_frames = {
 "pos": Vector2(1.999999, -15),
 "rot": 228.39998,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "roll_3": {
 "flip_h": false,
@@ -716,7 +721,7 @@ back_frames = {
 "pos": Vector2(-13, -21),
 "rot": -61.9,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "run_0": {
 "flip_h": false,
@@ -772,7 +777,7 @@ back_frames = {
 "pos": Vector2(-15, -5),
 "rot": -77.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "slide_1": {
 "flip_h": false,
@@ -780,7 +785,7 @@ back_frames = {
 "pos": Vector2(-14.8, -5),
 "rot": -85.2,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "wall_cling_0": {
 "flip_h": false,
@@ -788,7 +793,7 @@ back_frames = {
 "pos": Vector2(3, -37),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "wall_slide_0": {
 "flip_h": false,
@@ -796,7 +801,7 @@ back_frames = {
 "pos": Vector2(3, -37),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "wall_slide_1": {
 "flip_h": false,
@@ -804,7 +809,7 @@ back_frames = {
 "pos": Vector2(3, -37),
 "rot": 0.0,
 "visible": true,
-"z_index": -2
+"z_index": -3
 },
 "idle_sheathe_0": {
 "flip_h": false,

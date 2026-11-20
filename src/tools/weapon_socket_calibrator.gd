@@ -665,7 +665,7 @@ func _on_frame_changed() -> void:
 		var bs_data: Dictionary = _shield_profile_resource.get_back_frame_data(selected_animation, current_frame)
 		back_s.position = bs_data.get("pos", Vector2(-9, -24))
 		back_s.rotation_degrees = bs_data.get("rot", 0.0)
-		back_s.z_index = bs_data.get("z_index", -1)
+		back_s.z_index = bs_data.get("z_index", -3)
 		if _back_shield_instance and is_instance_valid(_back_shield_instance):
 			_back_shield_instance.visible = bs_data.get("visible", true)
 			_apply_visual_flip(_back_shield_instance, bs_data.get("flip_h", false), bs_data.get("flip_v", false))

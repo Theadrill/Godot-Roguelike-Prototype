@@ -510,7 +510,7 @@ back_frames = {
 "pos": Vector2(-9, 21.999998),
 "rot": -24.0,
 "visible": true,
-"z_index": 2
+"z_index": -2
 },
 "corner_climb_1": {
 "flip_h": false,
@@ -518,7 +518,7 @@ back_frames = {
 "pos": Vector2(-6, 7.999998),
 "rot": -24.0,
 "visible": true,
-"z_index": 2
+"z_index": -2
 },
 "corner_climb_2": {
 "flip_h": false,
@@ -526,7 +526,7 @@ back_frames = {
 "pos": Vector2(-3, 2.999998),
 "rot": -24.0,
 "visible": true,
-"z_index": 2
+"z_index": -2
 },
 "corner_climb_3": {
 "flip_h": false,
@@ -534,7 +534,7 @@ back_frames = {
 "pos": Vector2(-2, -1.9073486e-06),
 "rot": -24.0,
 "visible": true,
-"z_index": 2
+"z_index": -2
 },
 "corner_climb_4": {
 "flip_h": false,
@@ -542,7 +542,7 @@ back_frames = {
 "pos": Vector2(-1, -1.9073486e-06),
 "rot": -24.0,
 "visible": true,
-"z_index": 2
+"z_index": -2
 },
 "crossbow_air_attack_0": {
 "flip_h": true,

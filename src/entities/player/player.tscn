@@ -100,7 +100,7 @@ position = Vector2(-3, -20)
 rotation = -2.00713
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=1368973559]
-z_index = -1
+z_index = -3
 position = Vector2(-6, -20)
 rotation = -0.14
 
