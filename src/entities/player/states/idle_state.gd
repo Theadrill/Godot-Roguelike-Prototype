@@ -4,7 +4,8 @@ extends State
 var player: Player
 
 # Idle breaks architecture
-@export var idle_break_delay: float = 4.5
+## Tempo parado em Idle antes de entrar em um Idle Break aleatório.
+@export_range(1.0, 30.0, 0.5, "suffix:s") var idle_break_delay: float = 4.5
 var idle_timer: float = 0.0
 var breath_time: float = 0.0
 var is_in_idle_break: bool = false
@@ -61,6 +62,7 @@ func physics_update(delta: float) -> void:
 
 	# Se os controles do jogador estiverem travados (menus/diálogos), apenas anima a respiração sem reagir a botões
 	if player.is_input_locked:
+		idle_timer = 0.0
 		_process_breathing_visuals(delta)
 		player.move_and_slide()
 		return
@@ -106,13 +108,18 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("run")
 		return
 
+	if player.player_sprite and player.player_sprite.visible:
+		idle_timer += delta
+		if idle_timer >= idle_break_delay and state_machine and state_machine.states.has("idlebreak"):
+			state_machine.transition_to("idlebreak")
+			return
+
 	_process_breathing_visuals(delta)
 	player.move_and_slide()
 
 func _process_breathing_visuals(delta: float) -> void:
 	if player.idle_sprite and player.idle_sprite.visible:
 		# O sprite já possui sua própria animação de respiração desenhada nos frames
-		player.move_and_slide()
 		return
 
 	# Continuous Breathing (Occurs constantly while idle)

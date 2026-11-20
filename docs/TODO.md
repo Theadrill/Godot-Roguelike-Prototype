@@ -13,8 +13,6 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 ---
 
 ## 🟡 2. Estados e Ações Opcionais / Pausados / Próximos
-- [ ] **`idle_break` (Próximo sprite planejado):**
-  - Animação de variação após inatividade em `Idle` (substituindo o antigo stub do `HeadbandPlaceholder`).
 - [ ] **`air_attack2` (Pausado / Descartado por enquanto):**
   - Os Sets de Espada, Adaga e Machado usam `air_attack1` no ar (padrão econômico estilo Dead Cells), deixando `air_attack2` fora de uso por decisão do PO.
 - [x] **Unificação `roll` -> `slide`:**
@@ -25,6 +23,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 
 ## 🟢 3. Estados que JÁ Têm Sprite Próprio ou Reaproveitado Funcionando (`assets/player/adventurer/player_frames.tres`)
 - [x] **`Idle`** (`idle` — 4 frames)
+- [x] **`IdleBreak`** (`idle_sheathe` — 4 frames para Espada/Machado/Martelo/Arco/Cajado + transição direta para Adaga/Besta/Desarmado → pool aleatório anti-repetição iniciando com `idle_break_1` — 3 frames)
 - [x] **`Run`** (`run` — 6 frames)
 - [x] **`Jump`** (`jump` — 4 frames)
 - [x] **`WallJump`** (`jump` — reutilizando pose de subida do pulo, estilo Dead Cells)

@@ -887,6 +887,62 @@ back_frames = {
 "rot": -198.2,
 "visible": true,
 "z_index": -2
+},
+"idle_sheathe_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -15),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -13),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -15),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_3": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -15),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {
@@ -1315,5 +1371,29 @@ hand_frames = {
 "rot": 174.09999,
 "visible": true,
 "z_index": 2
+},
+"idle_break_1_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_1": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_2": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-2, -16),
+"rot": 0.0,
+"visible": true,
+"z_index": -2
 }
 }

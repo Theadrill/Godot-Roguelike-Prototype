@@ -473,6 +473,8 @@ func swap_weapons() -> void:
 	secondary_weapon = temp
 	_update_main_weapon_visual()
 	_update_secondary_weapon_visual()
+	if state_machine and state_machine.current_state and state_machine.current_state.name == &"IdleBreak":
+		state_machine.transition_to("idle")
 
 func cycle_reserve_weapon() -> void:
 	debug_actions.cycle_reserve_weapon()

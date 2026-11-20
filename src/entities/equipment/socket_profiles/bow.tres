@@ -867,6 +867,62 @@ back_frames = {
 "rot": -174.99998,
 "visible": true,
 "z_index": -2
+},
+"idle_sheathe_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-8, -23),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -23),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -23),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -23),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -26),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -28),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -28),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {
@@ -1391,5 +1447,61 @@ hand_frames = {
 "rot": -19.0,
 "visible": true,
 "z_index": 2
+},
+"idle_sheathe_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-16, -24),
+"rot": -190.0,
+"visible": true,
+"z_index": 2
+},
+"idle_sheathe_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-14, -38),
+"rot": -190.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -32),
+"rot": -185.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_3": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-7, -25),
+"rot": -185.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-8, -26),
+"rot": -185.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-8, -28),
+"rot": -185.0,
+"visible": true,
+"z_index": -2
+},
+"idle_break_1_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-8, -28),
+"rot": -185.0,
+"visible": true,
+"z_index": -2
 }
 }

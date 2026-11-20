@@ -28,6 +28,7 @@
 [ext_resource type="Script" path="res://src/entities/player/states/pickup_state.gd" id="26_pickup"]
 [ext_resource type="PackedScene" path="res://src/ui/low_health_vignette.tscn" id="27_low_hp_vignette"]
 [ext_resource type="Script" path="res://src/entities/player/states/death_state.gd" id="28_death"]
+[ext_resource type="Script" path="res://src/entities/player/states/idle_break_state.gd" id="29_idle_break"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
@@ -174,6 +175,9 @@ initial_state = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="StateMachine" unique_id=863032421]
 script = ExtResource("3_idle")
+
+[node name="IdleBreak" type="Node" parent="StateMachine" unique_id=863032422]
+script = ExtResource("29_idle_break")
 
 [node name="Run" type="Node" parent="StateMachine" unique_id=2145856733]
 script = ExtResource("4_run")

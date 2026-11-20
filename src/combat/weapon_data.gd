@@ -111,6 +111,12 @@ func get_archetype_id() -> String:
 		return "bow"
 	return "sword"
 
+## Retorna true se a arma suporta a animação de guardar nas costas (idle_sheathe) antes do Idle Break.
+## Adagas e Bestas são guardadas na cintura/coldre, portanto fazem transição direta por enquanto.
+func can_use_back_sheathe() -> bool:
+	var arch: String = get_archetype_id()
+	return arch != "dagger" and arch != "crossbow"
+
 @export_group("Combo & Attack Set (Moveset)")
 
 ## O Conjunto de Ataques (AttackSetData) que esta arma utiliza!
