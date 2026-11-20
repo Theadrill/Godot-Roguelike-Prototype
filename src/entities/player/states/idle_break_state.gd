@@ -1,8 +1,8 @@
 class_name IdleBreakState
 extends State
 
-## Estado de Idle Break extensível com sorteio aleatório anti-repetição e transição opcional de guarda nas costas (idle_sheathe).
-## Armas na cintura (dagger, crossbow) ou personagem desarmado entram direto no Idle Break sorteado.
+## Estado de Idle Break extensível com sorteio aleatório anti-repetição e transição de guarda antes do Idle Break:
+## "idle_sheathe" para armas nas costas (sword, axe, hammer, bow, staff) e "idle_sheathe_waist" para cintura (dagger, crossbow).
 
 enum Phase {
 	SHEATHING,
@@ -17,6 +17,7 @@ enum Phase {
 
 var player: Player
 var _phase: Phase = Phase.PLAYING_BREAK
+var _active_sheathe_anim: StringName = &""
 var _active_break_anim: StringName = &""
 var _last_picked_break: StringName = &""
 var _break_elapsed: float = 0.0
@@ -28,27 +29,29 @@ func enter() -> void:
 		return
 	player.velocity.x = 0.0
 	_break_elapsed = 0.0
+	_active_sheathe_anim = &""
 
 	_active_break_anim = _pick_random_break_animation()
 	if _active_break_anim == &"":
 		state_machine.transition_to("idle")
 		return
 
+	var target_sheathe: StringName = player.weapon.get_idle_sheathe_animation() if player.weapon else &""
 	var has_sheathe: bool = (
-		player.weapon != null
+		target_sheathe != &""
 		and not player.are_weapons_hidden
-		and player.weapon.can_use_back_sheathe()
 		and player.player_sprite != null
 		and player.player_sprite.sprite_frames != null
-		and player.player_sprite.sprite_frames.has_animation(&"idle_sheathe")
+		and player.player_sprite.sprite_frames.has_animation(target_sheathe)
 	)
 
 	if has_sheathe:
 		_phase = Phase.SHEATHING
-		player.play_animation(&"idle_sheathe")
+		_active_sheathe_anim = target_sheathe
+		player.play_animation(_active_sheathe_anim)
 		if player.player_sprite:
 			player.player_sprite.frame = 0
-		player._update_weapon_socket_for_frame(&"idle_sheathe", 0)
+		player._update_weapon_socket_for_frame(_active_sheathe_anim, 0)
 	else:
 		_start_break_animation()
 
@@ -118,7 +121,7 @@ func physics_update(delta: float) -> void:
 
 	match _phase:
 		Phase.SHEATHING:
-			if player.player_sprite.animation == &"idle_sheathe" and not player.player_sprite.is_playing():
+			if player.player_sprite.animation == _active_sheathe_anim and not player.player_sprite.is_playing():
 				_start_break_animation()
 		Phase.PLAYING_BREAK:
 			var is_looping: bool = player.player_sprite.sprite_frames.get_animation_loop(_active_break_anim)

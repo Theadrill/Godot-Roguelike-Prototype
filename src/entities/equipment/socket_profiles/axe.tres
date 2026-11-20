@@ -937,6 +937,22 @@ back_frames = {
 "rot": -78.19999,
 "visible": true,
 "z_index": -2
+},
+"idle_sheathe_waist_0": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-8, -23),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
+},
+"idle_sheathe_waist_1": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-6, -23),
+"rot": -130.0,
+"visible": true,
+"z_index": -2
 }
 }
 default_flip_h = true

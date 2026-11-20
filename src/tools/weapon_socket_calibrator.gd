@@ -64,6 +64,7 @@ const ATTACK_ANIMATIONS: Array[String] = [
 const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"idle": 4,
 	"idle_sheathe": 4,
+	"idle_sheathe_waist": 2,
 	"idle_break_1": 3,
 	"run": 6,
 	"jump": 4,
@@ -122,7 +123,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 
 @export_group("2. Animação, Frame & File")
 ## Escolha a animação do aventureiro para visualizar e calibrar.
-@export_enum("idle", "idle_sheathe", "idle_break_1", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack1", "air_attack2", "air_attack3", "cast", "channeling", "bow_attack", "bow_air_attack", "crossbow_attack", "crossbow_air_attack", "block", "block_loop", "heal", "pickup", "hurt") var selected_animation: String = "idle":
+@export_enum("idle", "idle_sheathe", "idle_sheathe_waist", "idle_break_1", "run", "jump", "crouch", "fall", "fall_from_jump", "slide", "double_jump", "wall_cling", "wall_slide", "corner_climb", "attack1", "attack2", "attack3", "air_attack1", "air_attack2", "air_attack3", "cast", "channeling", "bow_attack", "bow_air_attack", "crossbow_attack", "crossbow_air_attack", "block", "block_loop", "heal", "pickup", "hurt") var selected_animation: String = "idle":
 	set(value):
 		selected_animation = value
 		_on_configuration_changed()
