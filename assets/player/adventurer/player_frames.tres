@@ -27,7 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://77x4ffj3a5vv" path="res://assets/player/adventurer/death/player_death_sheet.png" id="25_death_sheet"]
 [ext_resource type="Texture2D" uid="uid://1oqhdb5du86r" path="res://assets/player/adventurer/idle/player_idle_sheathe_sheet.png" id="26_idle_sheathe_sheet"]
 [ext_resource type="Texture2D" uid="uid://cyabdp6i15h5s" path="res://assets/player/adventurer/idle/player_idle_break_1_sheet.png" id="27_idle_break_1_sheet"]
-[ext_resource type="Texture2D" path="res://assets/player/adventurer/idle/player_idle_sheathe_waist_sheet.png" id="28_idle_sheathe_waist_sheet"]
+[ext_resource type="Texture2D" uid="uid://d1wxji1cm5o0k" path="res://assets/player/adventurer/idle/player_idle_sheathe_waist_sheet.png" id="28_idle_sheathe_waist_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_air_attack1_1"]
 atlas = ExtResource("17_air_attack1_sheet")
