@@ -72,7 +72,7 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"fall": 2,
 	"fall_from_jump": 3,
 	"slide": 2,
-	"double_jump": 4,
+	"double_jump": 1,
 	"wall_cling": 1,
 	"wall_slide": 2,
 	"corner_climb": 5,
@@ -606,12 +606,12 @@ func _on_frame_changed() -> void:
 	if not sprite:
 		return
 
-	# 1. Pose do aventureiro no frame selecionado (clampa frame de textura e aplica rotação 4x em double_jump via código)
+	# 1. Pose do aventureiro no frame selecionado
 	if sprite.sprite_frames and sprite.sprite_frames.has_animation(selected_animation):
 		sprite.animation = selected_animation
 		var frame_count: int = sprite.sprite_frames.get_frame_count(selected_animation)
 		sprite.frame = clampi(current_frame, 0, maxi(0, frame_count - 1))
-		PlayerEquipmentRig.apply_sprite_pose_transform(sprite, StringName(selected_animation), current_frame)
+		PlayerEquipmentRig.apply_sprite_pose_transform(sprite, StringName(selected_animation))
 
 	var hand_w := _get_node_safe("Visual/MainHandSocket") as Marker2D
 	var hand_s := _get_node_safe("Visual/OffHandSocket") as Marker2D

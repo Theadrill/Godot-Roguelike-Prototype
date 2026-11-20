@@ -27,7 +27,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`Run`** (`run` — 6 frames)
 - [x] **`Jump`** (`jump` — 4 frames)
 - [x] **`WallJump`** (`jump` — reutilizando pose de subida do pulo, estilo Dead Cells)
-- [x] **`DoubleJump`** (`double_jump` — 1 frame base em `player_roll_sheet.png` `83x62` rotacionado em 4 passos `0°/90°/180°/270°` via código + preview 4x no `WeaponSocketCalibrator`)
+- [x] **`DoubleJump`** (`double_jump` — 1 frame único em `player_roll_sheet.png` `83x62` e no `WeaponSocketCalibrator`; em jogo, gira o `Visual` inteiro — sprite + todos os sockets — em 4 passos `0°/90°/180°/270°`)
 - [x] **`Fall`** (`fall_from_jump` — 3 frames de transição + `fall` — 2 frames em loop)
 - [x] **`Crouch`** (`crouch` — 4 frames)
 - [x] **`HardLanding`** (`crouch` — reutilizando pose agachada sem deformar pixels)

@@ -296,7 +296,8 @@ func play_animation(anim_name: StringName) -> void:
 		hurt_flinch_timer = 0.0
 		_pending_anim_after_flinch = &""
 
-	PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, anim_name, 0)
+	PlayerEquipmentRig.reset_visual_transform(visual)
+	PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, anim_name)
 
 	if animation_player and animation_player.has_animation(anim_name):
 		if animation_player.current_animation != anim_name or not animation_player.is_playing():
@@ -343,20 +344,19 @@ func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> v
 	equipment_rig.update_sockets_for_frame(anim_name, frame_idx)
 
 func apply_double_jump_rotation_frame(frame_idx: int) -> void:
-	## Rotaciona o único frame do double_jump em 4 passos (0°, 90°, 180°, 270°) mantendo os sockets sincronizados.
-	if not player_sprite or hurt_flinch_timer > 0.0:
+	## Rotaciona o nó Visual inteiro (sprite de 1 frame + todos os sockets) em 4 passos (0°, 90°, 180°, 270°).
+	if not visual or hurt_flinch_timer > 0.0:
 		return
-	var clamped_frame: int = clampi(frame_idx, 0, 3)
-	PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, &"double_jump", clamped_frame)
-	_update_weapon_socket_for_frame(&"double_jump", clamped_frame)
+	PlayerEquipmentRig.apply_double_jump_visual_rotation(visual, frame_idx, facing_direction)
 
 func stop_animation() -> void:
 	if hurt_flinch_timer > 0.0:
 		return
+	PlayerEquipmentRig.reset_visual_transform(visual)
 	if animation_player and animation_player.is_playing():
 		animation_player.stop()
 	if player_sprite:
-		PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, &"", 0)
+		PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, &"")
 		player_sprite.visible = false
 		player_sprite.stop()
 	if body_polygon:

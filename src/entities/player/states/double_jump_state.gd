@@ -20,8 +20,7 @@ func enter() -> void:
 	player.apply_double_jump_rotation_frame(0)
 
 func exit() -> void:
-	if player and player.player_sprite:
-		PlayerEquipmentRig.apply_sprite_pose_transform(player.player_sprite, &"", 0)
+	PlayerEquipmentRig.reset_visual_transform(player.visual)
 	player.stop_animation()
 
 func physics_update(delta: float) -> void:
@@ -63,9 +62,12 @@ func physics_update(delta: float) -> void:
 			state_machine.transition_to("attack")
 		return
 
+	var prev_facing: int = player.facing_direction
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:
 		player.update_facing(direction)
+		if player.facing_direction != prev_facing:
+			player.apply_double_jump_rotation_frame(_current_rotation_frame)
 		player.velocity.x = move_toward(player.velocity.x, direction * player.run_speed, (player.run_speed / player.acceleration_time) * delta)
 	else:
 		player.velocity.x = move_toward(player.velocity.x, 0.0, (player.run_speed / 0.15) * delta)

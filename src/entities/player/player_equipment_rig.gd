@@ -10,22 +10,39 @@ const DOUBLE_JUMP_ROTATION_PIVOT := Vector2(-1.0, -29.5)
 const DOUBLE_JUMP_STEP_DEGREES := 90.0
 
 
-static func apply_sprite_pose_transform(sprite: AnimatedSprite2D, anim_name: StringName, frame_idx: int) -> void:
-	## Aplica a âncora padrão do aventureiro ou os 4 passos de rotação (0°, 90°, 180°, 270°) do double_jump em torno do centro encolhido.
+static func apply_sprite_pose_transform(sprite: AnimatedSprite2D, anim_name: StringName) -> void:
+	## Aplica a âncora padrão do aventureiro ou a âncora especial do corner_climb.
 	if not sprite:
-		return
-	if anim_name == &"double_jump":
-		var clamped_step: int = clampi(frame_idx, 0, 3)
-		var rad: float = deg_to_rad(float(clamped_step) * DOUBLE_JUMP_STEP_DEGREES)
-		var base_offset: Vector2 = STANDARD_SPRITE_POS - DOUBLE_JUMP_ROTATION_PIVOT
-		sprite.position = DOUBLE_JUMP_ROTATION_PIVOT + base_offset.rotated(rad)
-		sprite.rotation = rad
 		return
 	sprite.rotation = 0.0
 	if anim_name == &"corner_climb":
 		sprite.position = CORNER_CLIMB_SPRITE_POS
 	else:
 		sprite.position = STANDARD_SPRITE_POS
+
+
+static func apply_double_jump_visual_rotation(visual_node: Node2D, frame_idx: int, facing_dir: int) -> void:
+	## Rotaciona o nó Visual inteiro (sprite + todos os sockets equipados) em 4 passos (0°, 90°, 180°, 270°) ao redor do centro encolhido.
+	if not visual_node:
+		return
+	var clamped_step: int = clampi(frame_idx, 0, 3)
+	var sign_x: float = -1.0 if facing_dir < 0 else 1.0
+	var rad: float = deg_to_rad(float(clamped_step) * DOUBLE_JUMP_STEP_DEGREES) * sign_x
+	if is_zero_approx(rad):
+		visual_node.rotation = 0.0
+		visual_node.position = Vector2.ZERO
+		return
+	var scaled_pivot := Vector2(DOUBLE_JUMP_ROTATION_PIVOT.x * sign_x, DOUBLE_JUMP_ROTATION_PIVOT.y)
+	visual_node.rotation = rad
+	visual_node.position = scaled_pivot - scaled_pivot.rotated(rad)
+
+
+static func reset_visual_transform(visual_node: Node2D) -> void:
+	## Restaura rotação e posição originais do nó Visual sem alterar sua escala.
+	if not visual_node:
+		return
+	visual_node.rotation = 0.0
+	visual_node.position = Vector2.ZERO
 
 
 var _player: CharacterBody2D = null
