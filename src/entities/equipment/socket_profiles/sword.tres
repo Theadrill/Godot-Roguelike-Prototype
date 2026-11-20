@@ -952,6 +952,14 @@ back_frames = {
 "rot": 75.0,
 "visible": true,
 "z_index": -2
+},
+"idle_sheathe_waist_2": {
+"flip_h": false,
+"flip_v": false,
+"pos": Vector2(-10, -33),
+"rot": 75.0,
+"visible": true,
+"z_index": -2
 }
 }
 hand_frames = {

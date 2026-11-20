@@ -23,7 +23,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 
 ## 🟢 3. Estados que JÁ Têm Sprite Próprio ou Reaproveitado Funcionando (`assets/player/adventurer/player_frames.tres`)
 - [x] **`Idle`** (`idle` — 4 frames)
-- [x] **`IdleBreak`** (`idle_sheathe` — 4 frames para Espada/Machado/Martelo/Arco/Cajado; `idle_sheathe_waist` — 2 frames para Adaga/Besta; transição direta quando desarmado → pool aleatório anti-repetição iniciando com `idle_break_1` — 3 frames)
+- [x] **`IdleBreak`** (`idle_sheathe` — 4 frames para Espada/Machado/Martelo/Arco/Cajado; `idle_sheathe_waist` — 3 frames para Adaga/Besta; transição direta quando desarmado → pool aleatório anti-repetição iniciando com `idle_break_1` — 3 frames)
 - [x] **`Run`** (`run` — 6 frames)
 - [x] **`Jump`** (`jump` — 4 frames)
 - [x] **`WallJump`** (`jump` — reutilizando pose de subida do pulo, estilo Dead Cells)

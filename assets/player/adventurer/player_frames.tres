@@ -405,6 +405,10 @@ region = Rect2(0, 0, 83, 62)
 atlas = ExtResource("28_idle_sheathe_waist_sheet")
 region = Rect2(0, 62, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_sheathe_waist_2"]
+atlas = ExtResource("28_idle_sheathe_waist_sheet")
+region = Rect2(0, 124, 83, 62)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_jump_0"]
 atlas = ExtResource("3_jump_sheet")
 region = Rect2(0, 0, 83, 62)
@@ -879,6 +883,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_idle_sheathe_waist_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_sheathe_waist_2")
 }],
 "loop": 0,
 "name": &"idle_sheathe_waist",

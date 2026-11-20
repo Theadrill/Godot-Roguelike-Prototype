@@ -64,7 +64,7 @@ const ATTACK_ANIMATIONS: Array[String] = [
 const ANIMATION_FRAME_COUNTS: Dictionary = {
 	"idle": 4,
 	"idle_sheathe": 4,
-	"idle_sheathe_waist": 2,
+	"idle_sheathe_waist": 3,
 	"idle_break_1": 3,
 	"run": 6,
 	"jump": 4,
