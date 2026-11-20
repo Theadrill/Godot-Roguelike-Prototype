@@ -161,10 +161,26 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		PASTE_SOCKET_FRAME = false
 
 @export_group("3. Elementos de Apoio & Referência")
+## Exibir ou ocultar a arma na mão principal como referência quando não estiver calibrando Arma na Mão.
+@export var show_main_weapon_reference: bool = false:
+	set(value):
+		show_main_weapon_reference = value
+		_update_visual_instances()
+		_on_frame_changed()
+
+## Exibir ou ocultar a arma nas costas como referência quando não estiver calibrando Arma nas Costas.
+@export var show_back_weapon_reference: bool = false:
+	set(value):
+		show_back_weapon_reference = value
+		_load_resources()
+		_update_visual_instances()
+		_on_frame_changed()
+
 ## Arma secundária para ver nas costas como referência.
 @export_enum("none", "bow", "sword", "dagger", "hammer", "axe", "staff", "crossbow") var reference_secondary_weapon: String = "bow":
 	set(value):
 		reference_secondary_weapon = value
+		_load_resources()
 		_update_visual_instances()
 		_on_frame_changed()
 
@@ -466,8 +482,9 @@ func _update_visual_instances() -> void:
 		for c in pickup_s.get_children(): c.queue_free()
 		_item_pickup_instance = null
 
-	# 1. Arma na mão principal (sempre aparece, exceto se desativada)
-	if hand_w and selected_weapon != "none":
+	# 1. Arma na mão principal (aparece se calibrando Arma na Mão OU se show_main_weapon_reference=true)
+	var should_show_main_weapon: bool = (socket_target == "Arma na Mão (MainHandSocket)") or show_main_weapon_reference
+	if hand_w and should_show_main_weapon and selected_weapon != "none":
 		var w_scene_path: String = WEAPON_SCENES.get(selected_weapon, "")
 		if ResourceLoader.exists(w_scene_path):
 			var scene := load(w_scene_path) as PackedScene
@@ -490,9 +507,11 @@ func _update_visual_instances() -> void:
 				_off_hand_instance.position = Vector2.ZERO
 				_off_hand_instance.rotation_degrees = 0.0
 
-	# 3. Arma nas costas (aparece se calibrando Arma nas Costas OU como referência)
-	var sec_w := selected_weapon if socket_target == "Arma nas Costas (BackSocketWeapon)" else reference_secondary_weapon
-	if back_w and sec_w != "none":
+	# 3. Arma nas costas (aparece se calibrando Arma nas Costas OU se show_back_weapon_reference=true)
+	var should_show_back_weapon: bool = (socket_target == "Arma nas Costas (BackSocketWeapon)") or show_back_weapon_reference
+	var ref_back_weapon: String = reference_secondary_weapon if reference_secondary_weapon != "none" else selected_weapon
+	var sec_w: String = selected_weapon if socket_target == "Arma nas Costas (BackSocketWeapon)" else ref_back_weapon
+	if back_w and should_show_back_weapon and sec_w != "none":
 		var b_scene_path: String = WEAPON_SCENES.get(sec_w, "")
 		if ResourceLoader.exists(b_scene_path):
 			var b_scene := load(b_scene_path) as PackedScene
@@ -597,12 +616,13 @@ func _on_frame_changed() -> void:
 			_apply_visual_flip(_off_hand_instance, s_hand_data.get("flip_h", false), s_hand_data.get("flip_v", false))
 
 	# 4. Posição da Arma nas Costas (BackSocketWeapon)
-	var active_back_weapon_prof := _weapon_profile_resource if socket_target == "Arma nas Costas (BackSocketWeapon)" else _ref_sec_weapon_profile
+	var use_selected_for_back: bool = (socket_target == "Arma nas Costas (BackSocketWeapon)") or (reference_secondary_weapon == "none")
+	var active_back_weapon_prof: WeaponSocketProfile = _weapon_profile_resource if use_selected_for_back else _ref_sec_weapon_profile
 	if back_w and active_back_weapon_prof and active_back_weapon_prof.has_method("get_back_frame_data"):
 		var bw_data: Dictionary = active_back_weapon_prof.get_back_frame_data(selected_animation, current_frame)
 		back_w.position = bw_data.get("pos", Vector2(-6, -24))
 		back_w.rotation_degrees = bw_data.get("rot", -175.0)
-		var back_weapon_name: String = selected_weapon if socket_target == "Arma nas Costas (BackSocketWeapon)" else reference_secondary_weapon
+		var back_weapon_name: String = selected_weapon if use_selected_for_back else reference_secondary_weapon
 		var fallback_back_z: int = 1 if "dagger" in back_weapon_name else -2
 		back_w.z_index = bw_data.get("z_index", fallback_back_z)
 		if _back_weapon_instance and is_instance_valid(_back_weapon_instance):
