@@ -309,18 +309,6 @@ region = Rect2(83, 0, 83, 62)
 atlas = ExtResource("7_roll_sheet")
 region = Rect2(0, 0, 83, 62)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_roll_1"]
-atlas = ExtResource("7_roll_sheet")
-region = Rect2(83, 0, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_roll_2"]
-atlas = ExtResource("7_roll_sheet")
-region = Rect2(0, 62, 83, 62)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_roll_3"]
-atlas = ExtResource("7_roll_sheet")
-region = Rect2(83, 62, 83, 62)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_fall_0"]
 atlas = ExtResource("5_fall_sheet")
 region = Rect2(0, 0, 83, 62)
@@ -765,15 +753,6 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_roll_0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_roll_1")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_roll_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_roll_3")
 }],
 "loop": 0,
 "name": &"double_jump",

@@ -16,7 +16,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [ ] **`air_attack2` (Pausado / Descartado por enquanto):**
   - Os Sets de Espada, Adaga e Machado usam `air_attack1` no ar (padrão econômico estilo Dead Cells), deixando `air_attack2` fora de uso por decisão do PO.
 - [x] **Unificação `roll` -> `slide`:**
-  - Nomenclatura de `roll` removida/unificada para `slide` (única esquiva/dash do jogo); animação `roll` obsoleta removida de `player_frames.tres` (mantendo `player_roll_sheet.png` apenas como fonte dos 4 frames do `double_jump`).
+  - Nomenclatura de `roll` removida/unificada para `slide` (única esquiva/dash do jogo); animação `roll` obsoleta removida de `player_frames.tres` (mantendo `player_roll_sheet.png` em 1 frame `83x62` como base para a rotação em código do `double_jump`).
 - [x] **Slash dedicado do `air_attack3` (`slash_air_attack3`)** — alinhado via GUIDE amarelo e sincronizado frame a frame com as fases do mergulho (`PREP`, `FALL_LOOP`, `IMPACT`, `RECOVERY`).
 
 ---
@@ -27,7 +27,7 @@ Nestes estados, como o estado anterior chama `stop_animation()` no `exit()` e o 
 - [x] **`Run`** (`run` — 6 frames)
 - [x] **`Jump`** (`jump` — 4 frames)
 - [x] **`WallJump`** (`jump` — reutilizando pose de subida do pulo, estilo Dead Cells)
-- [x] **`DoubleJump`** (`double_jump` — 4 frames de giro no ar)
+- [x] **`DoubleJump`** (`double_jump` — 1 frame base em `player_roll_sheet.png` `83x62` rotacionado em 4 passos `0°/90°/180°/270°` via código + preview 4x no `WeaponSocketCalibrator`)
 - [x] **`Fall`** (`fall_from_jump` — 3 frames de transição + `fall` — 2 frames em loop)
 - [x] **`Crouch`** (`crouch` — 4 frames)
 - [x] **`HardLanding`** (`crouch` — reutilizando pose agachada sem deformar pixels)

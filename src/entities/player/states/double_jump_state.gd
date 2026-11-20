@@ -1,7 +1,12 @@
 class_name DoubleJumpState
 extends State
 
+const ROTATION_FRAME_COUNT: int = 4
+const ROTATION_STEP_DURATION: float = 1.0 / 13.0 # 4 passos (~0.308s) cobrindo a subida do duplo pulo (~0.312s)
+
 var player: Player
+var _rotation_elapsed: float = 0.0
+var _current_rotation_frame: int = 0
 
 func enter() -> void:
 	player = character as Player
@@ -9,9 +14,14 @@ func enter() -> void:
 	player.velocity.y = player.double_jump_velocity
 	player.is_wall_recovery_active = false
 	player.fall_peak_y = minf(player.fall_peak_y, player.global_position.y)
+	_rotation_elapsed = 0.0
+	_current_rotation_frame = 0
 	player.play_animation(&"double_jump")
+	player.apply_double_jump_rotation_frame(0)
 
 func exit() -> void:
+	if player and player.player_sprite:
+		PlayerEquipmentRig.apply_sprite_pose_transform(player.player_sprite, &"", 0)
 	player.stop_animation()
 
 func physics_update(delta: float) -> void:
@@ -73,5 +83,12 @@ func physics_update(delta: float) -> void:
 		if player.check_ledge():
 			state_machine.transition_to("ledgeclimb")
 			return
+
+	if _current_rotation_frame < ROTATION_FRAME_COUNT - 1:
+		_rotation_elapsed += delta
+		var next_frame: int = mini(int(_rotation_elapsed / ROTATION_STEP_DURATION), ROTATION_FRAME_COUNT - 1)
+		if next_frame != _current_rotation_frame:
+			_current_rotation_frame = next_frame
+			player.apply_double_jump_rotation_frame(_current_rotation_frame)
 
 	player.move_and_slide()

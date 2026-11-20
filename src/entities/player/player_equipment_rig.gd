@@ -4,6 +4,30 @@ extends RefCounted
 ## Sub-controlador modular de equipamentos, sockets frame-a-frame e drop na morte do Player.
 ## Mantém paridade matemática 1:1 com o WeaponSocketCalibrator (mesmos 6 sockets, âncoras, flips e Z-index).
 
+const STANDARD_SPRITE_POS := Vector2(-2.0, -29.0)
+const CORNER_CLIMB_SPRITE_POS := Vector2(-6.5, 4.0)
+const DOUBLE_JUMP_ROTATION_PIVOT := Vector2(-1.0, -29.5)
+const DOUBLE_JUMP_STEP_DEGREES := 90.0
+
+
+static func apply_sprite_pose_transform(sprite: AnimatedSprite2D, anim_name: StringName, frame_idx: int) -> void:
+	## Aplica a âncora padrão do aventureiro ou os 4 passos de rotação (0°, 90°, 180°, 270°) do double_jump em torno do centro encolhido.
+	if not sprite:
+		return
+	if anim_name == &"double_jump":
+		var clamped_step: int = clampi(frame_idx, 0, 3)
+		var rad: float = deg_to_rad(float(clamped_step) * DOUBLE_JUMP_STEP_DEGREES)
+		var base_offset: Vector2 = STANDARD_SPRITE_POS - DOUBLE_JUMP_ROTATION_PIVOT
+		sprite.position = DOUBLE_JUMP_ROTATION_PIVOT + base_offset.rotated(rad)
+		sprite.rotation = rad
+		return
+	sprite.rotation = 0.0
+	if anim_name == &"corner_climb":
+		sprite.position = CORNER_CLIMB_SPRITE_POS
+	else:
+		sprite.position = STANDARD_SPRITE_POS
+
+
 var _player: CharacterBody2D = null
 var _tea_bottle_profile: WeaponSocketProfile = null
 var _item_pickup_profile: WeaponSocketProfile = null

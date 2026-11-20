@@ -296,11 +296,7 @@ func play_animation(anim_name: StringName) -> void:
 		hurt_flinch_timer = 0.0
 		_pending_anim_after_flinch = &""
 
-	# Position handling: corner_climb has custom anchor; other animations use standard (-2, -29)
-	if anim_name == &"corner_climb":
-		player_sprite.position = Vector2(-6.5, 4.0)
-	else:
-		player_sprite.position = Vector2(-2, -29)
+	PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, anim_name, 0)
 
 	if animation_player and animation_player.has_animation(anim_name):
 		if animation_player.current_animation != anim_name or not animation_player.is_playing():
@@ -346,12 +342,21 @@ func _apply_visual_instance_flip(instance: Node2D, flip_h: bool, flip_v: bool) -
 func _update_weapon_socket_for_frame(anim_name: StringName, frame_idx: int) -> void:
 	equipment_rig.update_sockets_for_frame(anim_name, frame_idx)
 
+func apply_double_jump_rotation_frame(frame_idx: int) -> void:
+	## Rotaciona o único frame do double_jump em 4 passos (0°, 90°, 180°, 270°) mantendo os sockets sincronizados.
+	if not player_sprite or hurt_flinch_timer > 0.0:
+		return
+	var clamped_frame: int = clampi(frame_idx, 0, 3)
+	PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, &"double_jump", clamped_frame)
+	_update_weapon_socket_for_frame(&"double_jump", clamped_frame)
+
 func stop_animation() -> void:
 	if hurt_flinch_timer > 0.0:
 		return
 	if animation_player and animation_player.is_playing():
 		animation_player.stop()
 	if player_sprite:
+		PlayerEquipmentRig.apply_sprite_pose_transform(player_sprite, &"", 0)
 		player_sprite.visible = false
 		player_sprite.stop()
 	if body_polygon:

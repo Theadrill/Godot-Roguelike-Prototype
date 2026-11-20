@@ -28,7 +28,7 @@ MANIFEST: list[tuple[str, int, int, int, int, list[str]]] = [
     ("crouch/player_crouch_sheet.png", 83, 62, 2, 2, [f"crouch/individual/adventurer_crouch_{i:02d}.png" for i in range(4)]),
     ("fall/player_fall_sheet.png", 83, 62, 1, 2, [f"fall/individual/adventurer_fall_{i:02d}.png" for i in range(2)]),
     ("slide/player_slide_sheet.png", 83, 62, 1, 2, [f"slide/individual/adventurer_slide_{i:02d}.png" for i in range(2)]),
-    ("roll/player_roll_sheet.png", 83, 62, 2, 2, [f"roll/individual/roll_{i}.png" for i in range(4)]),
+    ("roll/player_roll_sheet.png", 83, 62, 1, 1, ["roll/individual/roll_0.png"]),
     ("wall_slide/player_wall_slide_sheet.png", 83, 62, 1, 3, [f"wall_slide/individual/adventurer_wall_slide_{i:02d}.png" for i in range(3)]),
     ("corner_climb/player_corner_climb_sheet.png", 83, 76, 2, 3, [f"corner_climb/individual/adventurer_corner_climb_{i:02d}.png" for i in range(5)]),
     ("attack/player_attack1_sheet.png", 83, 62, 2, 3, [f"attack/individual/adventurer_attack1_{i:02d}.png" for i in range(5)]),
