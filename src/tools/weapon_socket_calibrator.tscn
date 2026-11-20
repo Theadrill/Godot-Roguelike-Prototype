@@ -8,7 +8,7 @@
 script = ExtResource("1_calibrator")
 socket_target = "Arma nas Costas (BackSocketWeapon)"
 current_frame = 3
-reference_secondary_weapon = "bow"
+reference_back_weapon = "bow"
 socket_pos_x = -10.000001
 socket_pos_y = -35.000004
 socket_rotation = 74.999985

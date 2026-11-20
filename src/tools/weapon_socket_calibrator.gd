@@ -105,6 +105,8 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 	set(value):
 		socket_target = value
 		_on_configuration_changed()
+		if Engine.is_editor_hint():
+			notify_property_list_changed()
 
 ## Escolha a arma (usado quando estiver calibrando Arma na Mão ou nas Costas).
 @export_enum("sword", "sword_2", "dagger", "dagger_2", "hammer", "hammer_2", "axe", "axe_2", "staff", "staff_2", "bow", "bow_2", "crossbow", "crossbow_2") var selected_weapon: String = "sword":
@@ -165,6 +167,15 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 @export var show_main_weapon_reference: bool = false:
 	set(value):
 		show_main_weapon_reference = value
+		_load_resources()
+		_update_visual_instances()
+		_on_frame_changed()
+
+## Arma principal exibida como referência na mão quando show_main_weapon_reference está ativo.
+@export_enum("sword", "dagger", "hammer", "axe", "staff", "bow", "crossbow") var reference_main_weapon: String = "sword":
+	set(value):
+		reference_main_weapon = value
+		_load_resources()
 		_update_visual_instances()
 		_on_frame_changed()
 
@@ -176,10 +187,10 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		_update_visual_instances()
 		_on_frame_changed()
 
-## Arma secundária para ver nas costas como referência.
-@export_enum("none", "bow", "sword", "dagger", "hammer", "axe", "staff", "crossbow") var reference_secondary_weapon: String = "bow":
+## Arma secundária exibida como referência nas costas quando show_back_weapon_reference está ativo.
+@export_enum("bow", "sword", "dagger", "hammer", "axe", "staff", "crossbow") var reference_back_weapon: String = "bow":
 	set(value):
-		reference_secondary_weapon = value
+		reference_back_weapon = value
 		_load_resources()
 		_update_visual_instances()
 		_on_frame_changed()
@@ -190,6 +201,16 @@ const ANIMATION_FRAME_COUNTS: Dictionary = {
 		show_shield_reference = value
 		_update_visual_instances()
 		_on_frame_changed()
+
+
+func _validate_property(property: Dictionary) -> void:
+	var prop_name: StringName = property.get("name", &"")
+	if socket_target == "Arma na Mão (MainHandSocket)" and prop_name in [&"show_main_weapon_reference", &"reference_main_weapon"]:
+		property["usage"] = PROPERTY_USAGE_STORAGE
+	elif socket_target == "Arma nas Costas (BackSocketWeapon)" and prop_name in [&"show_back_weapon_reference", &"reference_back_weapon"]:
+		property["usage"] = PROPERTY_USAGE_STORAGE
+	elif socket_target in ["Escudo na Mão (OffHandSocket)", "Escudo nas Costas (BackSocketShield)"] and prop_name == &"show_shield_reference":
+		property["usage"] = PROPERTY_USAGE_STORAGE
 
 @export_group("4. Ajustes do Frame Atual (X, Y, Ângulo, Inversão e Z-Index)")
 ## Posição X do socket (step de 0.1 px, sem barra de slider).
@@ -351,7 +372,8 @@ var _weapon_profile_resource: WeaponSocketProfile = null
 var _shield_profile_resource: WeaponSocketProfile = null
 var _tea_bottle_profile_resource: WeaponSocketProfile = null
 var _item_pickup_profile_resource: WeaponSocketProfile = null
-var _ref_sec_weapon_profile: WeaponSocketProfile = null
+var _ref_main_weapon_profile: WeaponSocketProfile = null
+var _ref_back_weapon_profile: WeaponSocketProfile = null
 var _weapon_data_resource: WeaponData = null
 
 var _main_hand_instance: Node2D = null
@@ -395,12 +417,17 @@ func _load_resources() -> void:
 	else:
 		_shield_profile_resource = null
 
-	if reference_secondary_weapon != "none":
-		var ref_path := "res://src/entities/equipment/socket_profiles/%s.tres" % reference_secondary_weapon
-		if ResourceLoader.exists(ref_path):
-			_ref_sec_weapon_profile = load(ref_path) as WeaponSocketProfile
+	var ref_main_path := "res://src/entities/equipment/socket_profiles/%s.tres" % reference_main_weapon
+	if ResourceLoader.exists(ref_main_path):
+		_ref_main_weapon_profile = load(ref_main_path) as WeaponSocketProfile
 	else:
-		_ref_sec_weapon_profile = null
+		_ref_main_weapon_profile = null
+
+	var ref_back_path := "res://src/entities/equipment/socket_profiles/%s.tres" % reference_back_weapon
+	if ResourceLoader.exists(ref_back_path):
+		_ref_back_weapon_profile = load(ref_back_path) as WeaponSocketProfile
+	else:
+		_ref_back_weapon_profile = null
 
 	if ResourceLoader.exists(TEA_BOTTLE_PROFILE_PATH):
 		_tea_bottle_profile_resource = load(TEA_BOTTLE_PROFILE_PATH) as WeaponSocketProfile
@@ -482,10 +509,12 @@ func _update_visual_instances() -> void:
 		for c in pickup_s.get_children(): c.queue_free()
 		_item_pickup_instance = null
 
-	# 1. Arma na mão principal (aparece se calibrando Arma na Mão OU se show_main_weapon_reference=true)
-	var should_show_main_weapon: bool = (socket_target == "Arma na Mão (MainHandSocket)") or show_main_weapon_reference
-	if hand_w and should_show_main_weapon and selected_weapon != "none":
-		var w_scene_path: String = WEAPON_SCENES.get(selected_weapon, "")
+	# 1. Arma na mão principal (usa selected_weapon se editando MainHand, senão reference_main_weapon quando show_main_weapon_reference=true)
+	var is_editing_main: bool = (socket_target == "Arma na Mão (MainHandSocket)")
+	var should_show_main_weapon: bool = is_editing_main or show_main_weapon_reference
+	var main_w: String = selected_weapon if is_editing_main else reference_main_weapon
+	if hand_w and should_show_main_weapon and main_w != "none":
+		var w_scene_path: String = WEAPON_SCENES.get(main_w, "")
 		if ResourceLoader.exists(w_scene_path):
 			var scene := load(w_scene_path) as PackedScene
 			if scene:
@@ -507,10 +536,10 @@ func _update_visual_instances() -> void:
 				_off_hand_instance.position = Vector2.ZERO
 				_off_hand_instance.rotation_degrees = 0.0
 
-	# 3. Arma nas costas (aparece se calibrando Arma nas Costas OU se show_back_weapon_reference=true)
-	var should_show_back_weapon: bool = (socket_target == "Arma nas Costas (BackSocketWeapon)") or show_back_weapon_reference
-	var ref_back_weapon: String = reference_secondary_weapon if reference_secondary_weapon != "none" else selected_weapon
-	var sec_w: String = selected_weapon if socket_target == "Arma nas Costas (BackSocketWeapon)" else ref_back_weapon
+	# 3. Arma nas costas (usa selected_weapon se editando BackWeapon, senão reference_back_weapon quando show_back_weapon_reference=true)
+	var is_editing_back: bool = (socket_target == "Arma nas Costas (BackSocketWeapon)")
+	var should_show_back_weapon: bool = is_editing_back or show_back_weapon_reference
+	var sec_w: String = selected_weapon if is_editing_back else reference_back_weapon
 	if back_w and should_show_back_weapon and sec_w != "none":
 		var b_scene_path: String = WEAPON_SCENES.get(sec_w, "")
 		if ResourceLoader.exists(b_scene_path):
@@ -593,8 +622,10 @@ func _on_frame_changed() -> void:
 	var pickup_s := _get_node_safe("Visual/ItemPickupSocket") as Marker2D
 
 	# 2. Posição da Arma na Mão Principal (Tudo na mão = 2)
-	if hand_w and _weapon_profile_resource and _weapon_profile_resource.has_method("get_frame_data"):
-		var w_data: Dictionary = _weapon_profile_resource.get_frame_data(selected_animation, current_frame)
+	var is_editing_main_hand: bool = (socket_target == "Arma na Mão (MainHandSocket)")
+	var active_main_weapon_prof: WeaponSocketProfile = _weapon_profile_resource if is_editing_main_hand else _ref_main_weapon_profile
+	if hand_w and active_main_weapon_prof and active_main_weapon_prof.has_method("get_frame_data"):
+		var w_data: Dictionary = active_main_weapon_prof.get_frame_data(selected_animation, current_frame)
 		hand_w.position = w_data.get("pos", Vector2(6, -20))
 		hand_w.rotation_degrees = w_data.get("rot", -35.0)
 		var hand_z: int = w_data.get("z_index", 2)
@@ -616,13 +647,13 @@ func _on_frame_changed() -> void:
 			_apply_visual_flip(_off_hand_instance, s_hand_data.get("flip_h", false), s_hand_data.get("flip_v", false))
 
 	# 4. Posição da Arma nas Costas (BackSocketWeapon)
-	var use_selected_for_back: bool = (socket_target == "Arma nas Costas (BackSocketWeapon)") or (reference_secondary_weapon == "none")
-	var active_back_weapon_prof: WeaponSocketProfile = _weapon_profile_resource if use_selected_for_back else _ref_sec_weapon_profile
+	var is_editing_back_weapon: bool = (socket_target == "Arma nas Costas (BackSocketWeapon)")
+	var active_back_weapon_prof: WeaponSocketProfile = _weapon_profile_resource if is_editing_back_weapon else _ref_back_weapon_profile
 	if back_w and active_back_weapon_prof and active_back_weapon_prof.has_method("get_back_frame_data"):
 		var bw_data: Dictionary = active_back_weapon_prof.get_back_frame_data(selected_animation, current_frame)
 		back_w.position = bw_data.get("pos", Vector2(-6, -24))
 		back_w.rotation_degrees = bw_data.get("rot", -175.0)
-		var back_weapon_name: String = selected_weapon if use_selected_for_back else reference_secondary_weapon
+		var back_weapon_name: String = selected_weapon if is_editing_back_weapon else reference_back_weapon
 		var fallback_back_z: int = 1 if "dagger" in back_weapon_name else -2
 		back_w.z_index = bw_data.get("z_index", fallback_back_z)
 		if _back_weapon_instance and is_instance_valid(_back_weapon_instance):
