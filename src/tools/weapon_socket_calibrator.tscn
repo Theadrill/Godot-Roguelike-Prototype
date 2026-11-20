@@ -6,15 +6,15 @@
 
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
-current_frame = 3
+selected_animation = "idle_break_1"
 show_main_weapon_reference = true
+reference_main_weapon = "dagger"
 show_back_weapon_reference = true
-socket_pos_x = -16.0
-socket_pos_y = -15.0
-socket_rotation = 130.0
-socket_z_index = 2
+socket_pos_x = -10.0
+socket_pos_y = -37.0
+socket_rotation = 45.0
 slash_offset_x = -1.0
-status_message = "sword [Arma na Mão (MainHandSocket)] -> idle Frame 3 (Z: 2, FlipH: false, FlipV: false)"
+status_message = "sword [Arma na Mão (MainHandSocket)] -> idle_break_1 Frame 0 (Z: -2, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -28,28 +28,28 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"idle"
-frame = 3
+animation = &"idle_break_1"
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
 z_index = -2
 z_as_relative = false
-position = Vector2(-7, -24)
+position = Vector2(-6, -26)
 rotation = -3.3161256
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3
-position = Vector2(-9, -29)
+position = Vector2(-9, -30)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
-z_index = 2
-position = Vector2(-16, -15)
-rotation = 2.268928
+z_index = -2
+position = Vector2(-10, -37)
+rotation = 0.7853982
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
-position = Vector2(11, -20)
+position = Vector2(6, -20)
+rotation = -0.61086524
 
 [node name="TeaBottleSocket" type="Marker2D" parent="Visual" unique_id=1498765432]
 z_index = 2
