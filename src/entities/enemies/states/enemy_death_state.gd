@@ -12,11 +12,12 @@ var is_waiting_respawn: bool = false
 
 func enter() -> void:
 	enemy = character as BaseEnemy
-	fade_timer = 0.5
 	is_waiting_respawn = false
 	if not enemy:
+		fade_timer = 0.5
 		return
 
+	fade_timer = enemy.death_dissolve_duration
 	enemy.is_hyper_armored = false
 	enemy.hide_telegraph()
 	enemy._on_death_enter()
@@ -28,16 +29,20 @@ func enter() -> void:
 		if enemy.hurtbox.has_node("CollisionShape2D"):
 			enemy.hurtbox.get_node("CollisionShape2D").set_deferred("disabled", true)
 
-	# Death visual: flatten slightly & tint dark red
+	# Death visual: final impact hit flash + pixel dissolve (keeps scale & white modulate crisp for shader)
 	if enemy.visual:
-		enemy.visual.scale.y = 0.4 * enemy.get_visual_scale_magnitude()
-		enemy.visual.modulate = Color(0.6, 0.2, 0.2, 0.8)
+		enemy.visual.scale.y = enemy.get_visual_scale_magnitude()
+		enemy.visual.modulate = Color.WHITE
+	enemy.trigger_hit_flash(0.09)
+	enemy.set_dissolve_amount(0.0)
 
 	ProgressionManager.record_kill(enemy.enemy_category, enemy.is_elite_active)
 	ProgressionManager.add_souls(15 if enemy.is_elite_active else 5)
 
 
 func exit() -> void:
+	if enemy:
+		enemy.set_dissolve_amount(0.0)
 	if enemy and enemy.visual:
 		enemy.visual.visible = true
 		enemy.visual.scale.y = enemy.get_visual_scale_magnitude()
@@ -58,8 +63,9 @@ func physics_update(delta: float) -> void:
 
 	if not is_waiting_respawn:
 		fade_timer -= delta
-		if enemy.visual:
-			enemy.visual.modulate.a = maxf(0.0, fade_timer / 0.5)
+		var duration: float = maxf(0.01, enemy.death_dissolve_duration)
+		var progress: float = clampf(1.0 - (fade_timer / duration), 0.0, 1.0)
+		enemy.set_dissolve_amount(progress)
 
 		if fade_timer <= 0.0:
 			if enemy.respawn_enabled:

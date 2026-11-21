@@ -45,10 +45,6 @@ func _init() -> void:
 	respawn_delay = 5.0
 
 
-func _get_flash_target() -> CanvasItem:
-	return body_polygon if body_polygon else visual
-
-
 func _on_enemy_ready() -> void:
 	deactivate_all_attacks()
 	if hitbox:

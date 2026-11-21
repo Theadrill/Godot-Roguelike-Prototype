@@ -80,6 +80,13 @@ enum CooldownBehavior {
 @export var respawn_enabled: bool = false
 @export_range(1.0, 30.0, 0.5, "suffix:s") var respawn_delay: float = 4.0
 
+@export_group("Death & VFX")
+## Duração da dissolução em pixels ao morrer.
+@export_range(0.2, 1.5, 0.05, "suffix:s") var death_dissolve_duration: float = 0.55
+## Cor da borda incandescente da dissolução (padrão: esmeralda espectral; Elites usam brasa carmesim).
+@export var death_burn_color: Color = Color(0.35, 0.92, 0.68, 1.0)
+@export var elite_death_burn_color: Color = Color(1.0, 0.38, 0.18, 1.0)
+
 var spawn_position: Vector2 = Vector2.ZERO
 var base_max_health: float = 60.0
 var current_health: float = 60.0
@@ -94,6 +101,23 @@ var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
 var _cached_player: Player = null
 var _patrol_scan_timer: float = 0.0
+
+static var _shared_dissolve_noise: NoiseTexture2D = null
+
+
+static func _get_shared_dissolve_noise() -> NoiseTexture2D:
+	if _shared_dissolve_noise == null:
+		var fnl := FastNoiseLite.new()
+		fnl.noise_type = FastNoiseLite.TYPE_CELLULAR
+		fnl.frequency = 0.14
+		fnl.fractal_octaves = 2
+		var ntex := NoiseTexture2D.new()
+		ntex.width = 64
+		ntex.height = 64
+		ntex.seamless = true
+		ntex.noise = fnl
+		_shared_dissolve_noise = ntex
+	return _shared_dissolve_noise
 
 # Active Tier State
 var active_tier: int = 1
@@ -134,7 +158,12 @@ func _ready() -> void:
 		flash_material = ShaderMaterial.new()
 		flash_material.shader = shader
 		flash_material.set_shader_parameter("flash_active", false)
+		flash_material.set_shader_parameter("dissolve_amount", 0.0)
+		flash_material.set_shader_parameter("noise_texture", _get_shared_dissolve_noise())
+		flash_material.set_shader_parameter("burn_color", elite_death_burn_color if is_elite_active else death_burn_color)
 		flash_target.material = flash_material
+		if flash_target == visual:
+			_propagate_parent_material_to_visuals(visual)
 
 	_on_enemy_ready()
 
@@ -207,6 +236,9 @@ func apply_tier_by_level(player_level: int) -> void:
 	if visual:
 		var mag: float = get_visual_scale_magnitude()
 		visual.scale = Vector2(float(facing_direction) * mag, mag)
+	set_dissolve_amount(0.0)
+	if flash_material:
+		flash_material.set_shader_parameter("flash_active", false)
 
 
 func update_facing(direction: float, force_sync: bool = false) -> void:
@@ -374,6 +406,22 @@ func trigger_hit_flash(duration: float = 0.08) -> void:
 		flash_material.set_shader_parameter("flash_active", true)
 
 
+func _propagate_parent_material_to_visuals(node: Node) -> void:
+	for child in node.get_children():
+		var child_name: String = String(child.name)
+		if child_name == "TelegraphMark" or child_name.begins_with("Hitbox") or child_name.begins_with("SlashArc"):
+			continue
+		if child is CanvasItem:
+			(child as CanvasItem).use_parent_material = true
+		_propagate_parent_material_to_visuals(child)
+
+
+func set_dissolve_amount(amount: float) -> void:
+	if flash_material:
+		flash_material.set_shader_parameter("burn_color", elite_death_burn_color if is_elite_active else death_burn_color)
+		flash_material.set_shader_parameter("dissolve_amount", clampf(amount, 0.0, 1.0))
+
+
 func on_attack_blocked(is_parry: bool) -> void:
 	if active_behavior == CooldownBehavior.ADAPTIVE and can_move:
 		is_adaptive_evading = true
@@ -422,6 +470,9 @@ func respawn() -> void:
 		visual.visible = true
 		visual.modulate = Color.WHITE
 		visual.scale = Vector2(float(facing_direction) * mag, mag)
+	set_dissolve_amount(0.0)
+	if flash_material:
+		flash_material.set_shader_parameter("flash_active", false)
 
 	set_collision_layer_value(3, true)
 	var body_col := get_node_or_null("CollisionShape2D") as CollisionShape2D

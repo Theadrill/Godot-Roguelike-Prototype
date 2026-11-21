@@ -228,10 +228,13 @@ func _ready() -> void:
 
 	# Setup hit flash shader material
 	var shader := load("res://src/shaders/hit_flash.gdshader") as Shader
-	if shader and body_polygon:
+	if shader:
 		flash_material = ShaderMaterial.new()
 		flash_material.shader = shader
-		body_polygon.material = flash_material
+		if player_sprite:
+			player_sprite.material = flash_material
+		if body_polygon:
+			body_polygon.material = flash_material
 
 	if slash_effect and slash_effect is AnimatedSprite2D:
 		slash_effect.animation_finished.connect(func(): slash_effect.visible = false)
