@@ -11,6 +11,31 @@ enum CooldownBehavior {
 	ADAPTIVE           ## Agressivo, mas se bloqueado/parried, esquiva para trás e reposiciona
 }
 
+enum DissolvePreset {
+	DEATH_EMERALD, ## Esmeralda Espectral (Padrão Toque da Morte)
+	DARK_ASH,      ## Sombrio / Fuligem Abissal (Dark)
+	PURPLE_VOID,   ## Roxo Arcano / Vazio
+	FIRE,          ## Fogo / Brasa Incandescente
+	ICE,           ## Gelo / Ciano Cristalino
+	WATER,         ## Água / Azul Abissal
+	EARTH,         ## Terra / Âmbar & Pedra
+	WIND,          ## Vento / Éter Menta
+	CRIMSON_BLOOD, ## Carmesim / Sangue (Padrão Elite)
+	CUSTOM         ## Usa as cores personalizadas (Custom Burn / Ash Color) abaixo
+}
+
+const DISSOLVE_PRESET_COLORS: Dictionary = {
+	DissolvePreset.DEATH_EMERALD: [Color(0.35, 0.92, 0.68, 1.0), Color(0.04, 0.14, 0.11, 1.0)],
+	DissolvePreset.DARK_ASH: [Color(0.32, 0.35, 0.42, 1.0), Color(0.04, 0.04, 0.06, 1.0)],
+	DissolvePreset.PURPLE_VOID: [Color(0.72, 0.27, 1.0, 1.0), Color(0.14, 0.04, 0.22, 1.0)],
+	DissolvePreset.FIRE: [Color(1.0, 0.35, 0.08, 1.0), Color(0.16, 0.06, 0.03, 1.0)],
+	DissolvePreset.ICE: [Color(0.45, 0.92, 1.0, 1.0), Color(0.07, 0.20, 0.30, 1.0)],
+	DissolvePreset.WATER: [Color(0.15, 0.62, 1.0, 1.0), Color(0.04, 0.11, 0.26, 1.0)],
+	DissolvePreset.EARTH: [Color(0.95, 0.82, 0.20, 1.0), Color(0.18, 0.13, 0.05, 1.0)],
+	DissolvePreset.WIND: [Color(0.65, 1.0, 0.78, 1.0), Color(0.10, 0.21, 0.16, 1.0)],
+	DissolvePreset.CRIMSON_BLOOD: [Color(0.92, 0.15, 0.20, 1.0), Color(0.18, 0.03, 0.04, 1.0)]
+}
+
 @export_group("Base Stats")
 @export var is_elite: bool = false ## Se marcado true, este inimigo sempre será Elite nesta sala/mapa
 @export var enemy_category: EnemyCategories.Category = EnemyCategories.Category.HUMANOID
@@ -81,11 +106,20 @@ enum CooldownBehavior {
 @export_range(1.0, 30.0, 0.5, "suffix:s") var respawn_delay: float = 4.0
 
 @export_group("Death & VFX")
+## Preset visual de cores da dissolução ao morrer (selecione no Inspector por inimigo).
+@export var death_dissolve_preset: DissolvePreset = DissolvePreset.DEATH_EMERALD
+## Preset visual usado quando este inimigo for Elite.
+@export var elite_dissolve_preset: DissolvePreset = DissolvePreset.CRIMSON_BLOOD
 ## Duração da dissolução em pixels ao morrer.
 @export_range(0.2, 1.5, 0.05, "suffix:s") var death_dissolve_duration: float = 0.55
-## Cor da borda incandescente da dissolução (padrão: esmeralda espectral; Elites usam brasa carmesim).
+## Cor da crista externa (usada quando o preset estiver em CUSTOM).
 @export var death_burn_color: Color = Color(0.35, 0.92, 0.68, 1.0)
+## Cor da faixa interna de carbonização (usada quando o preset estiver em CUSTOM).
+@export var death_ash_color: Color = Color(0.04, 0.14, 0.11, 1.0)
+## Cor da crista externa para Elites (usada quando elite_dissolve_preset estiver em CUSTOM).
 @export var elite_death_burn_color: Color = Color(1.0, 0.38, 0.18, 1.0)
+## Cor da faixa interna de carbonização para Elites (usada quando elite_dissolve_preset estiver em CUSTOM).
+@export var elite_death_ash_color: Color = Color(0.18, 0.03, 0.04, 1.0)
 
 var spawn_position: Vector2 = Vector2.ZERO
 var base_max_health: float = 60.0
@@ -160,7 +194,9 @@ func _ready() -> void:
 		flash_material.set_shader_parameter("flash_active", false)
 		flash_material.set_shader_parameter("dissolve_amount", 0.0)
 		flash_material.set_shader_parameter("noise_texture", _get_shared_dissolve_noise())
-		flash_material.set_shader_parameter("burn_color", elite_death_burn_color if is_elite_active else death_burn_color)
+		var colors: Array[Color] = _get_active_dissolve_colors()
+		flash_material.set_shader_parameter("burn_color", colors[0])
+		flash_material.set_shader_parameter("ash_color", colors[1])
 		flash_target.material = flash_material
 		if flash_target == visual:
 			_propagate_parent_material_to_visuals(visual)
@@ -416,9 +452,21 @@ func _propagate_parent_material_to_visuals(node: Node) -> void:
 		_propagate_parent_material_to_visuals(child)
 
 
+func _get_active_dissolve_colors() -> Array[Color]:
+	var active_preset: DissolvePreset = elite_dissolve_preset if is_elite_active else death_dissolve_preset
+	if active_preset != DissolvePreset.CUSTOM and DISSOLVE_PRESET_COLORS.has(active_preset):
+		var pair: Array = DISSOLVE_PRESET_COLORS[active_preset]
+		return [pair[0] as Color, pair[1] as Color]
+	if is_elite_active:
+		return [elite_death_burn_color, elite_death_ash_color]
+	return [death_burn_color, death_ash_color]
+
+
 func set_dissolve_amount(amount: float) -> void:
 	if flash_material:
-		flash_material.set_shader_parameter("burn_color", elite_death_burn_color if is_elite_active else death_burn_color)
+		var colors: Array[Color] = _get_active_dissolve_colors()
+		flash_material.set_shader_parameter("burn_color", colors[0])
+		flash_material.set_shader_parameter("ash_color", colors[1])
 		flash_material.set_shader_parameter("dissolve_amount", clampf(amount, 0.0, 1.0))
 
 
