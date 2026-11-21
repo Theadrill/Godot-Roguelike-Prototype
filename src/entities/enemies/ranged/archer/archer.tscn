@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://u2tkojal00fn" path="res://src/entities/enemies/ranged/archer/states/aim_state.gd" id="6_aim"]
 [ext_resource type="Script" uid="uid://cs6x7i5w3i1en" path="res://src/entities/enemies/ranged/archer/states/shoot_state.gd" id="7_shoot"]
 [ext_resource type="Script" uid="uid://dl2acnhtnkcot" path="res://src/entities/enemies/ranged/archer/states/hurt_state.gd" id="8_hurt"]
-[ext_resource type="Script" path="res://src/entities/enemies/states/enemy_death_state.gd" id="9_death"]
+[ext_resource type="Script" uid="uid://dltbn0ymhmlyg" path="res://src/entities/enemies/states/enemy_death_state.gd" id="9_death"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(16, 40)
@@ -22,7 +22,7 @@ floor_constant_speed = true
 floor_snap_length = 8.0
 script = ExtResource("1_archer")
 arrow_speed = 250.0
-shoot_cooldown = 2.0
+death_dissolve_preset = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879905712]
 position = Vector2(0, -20)
