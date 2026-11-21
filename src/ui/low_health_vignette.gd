@@ -1,7 +1,7 @@
 class_name LowHealthVignette
 extends CanvasLayer
 
-## Vinheta pixel-art (640x360 com Bayer Dithering) para alerta de vida baixa.
+## Vinheta pixel-art (480x270 com Bayer Dithering) para alerta de vida baixa.
 ## Comeca sutil abaixo de `start_health_ratio` (40%) e atinge o maximo em `max_health_ratio` (15%),
 ## com pico reativo curto ao sofrer dano e dissipacao suave ao curar.
 

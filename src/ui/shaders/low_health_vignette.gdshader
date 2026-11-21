@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform vec4 vignette_color : source_color = vec4(0.58, 0.04, 0.05, 1.0);
-uniform vec2 pixel_resolution = vec2(640.0, 360.0);
+uniform vec2 pixel_resolution = vec2(480.0, 270.0);
 uniform float inner_radius : hint_range(0.0, 1.5) = 0.78;
 uniform float outer_radius : hint_range(0.1, 2.0) = 1.12;
 uniform float alpha : hint_range(0.0, 1.0) = 0.0;

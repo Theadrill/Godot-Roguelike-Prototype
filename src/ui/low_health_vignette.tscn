@@ -6,7 +6,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vignette"]
 shader = ExtResource("2_shader")
 shader_parameter/vignette_color = Color(0.58, 0.04, 0.05, 1)
-shader_parameter/pixel_resolution = Vector2(640, 360)
+shader_parameter/pixel_resolution = Vector2(480, 270)
 shader_parameter/inner_radius = 0.88
 shader_parameter/outer_radius = 1.2
 shader_parameter/alpha = 0.0
