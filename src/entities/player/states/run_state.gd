@@ -31,17 +31,17 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Heal check (Garrafa de Chá da Mãe)
-	if Input.is_action_just_pressed("heal"):
+	if Input.is_action_just_pressed(&"heal"):
 		state_machine.transition_to("heal")
 		return
 
 	# Guard / Parry check
-	if Input.is_action_just_pressed("defend") and player.can_defend():
+	if Input.is_action_just_pressed(&"defend") and player.can_defend():
 		state_machine.transition_to("guard")
 		return
 
 	# Attack check (supports holding button and buffered input)
-	if (Input.is_action_pressed("attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
+	if (Input.is_action_pressed(&"attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
 		player.attack_buffer_timer = 0.0
 		if player.is_ranged_weapon_equipped():
 			state_machine.transition_to("rangedattack")
@@ -53,7 +53,7 @@ func physics_update(delta: float) -> void:
 		state_machine.transition_to("slide")
 		return
 
-	var direction := Input.get_axis("move_left", "move_right")
+	var direction := Input.get_axis(&"move_left", &"move_right")
 	if abs(direction) < 0.1:
 		state_machine.transition_to("idle")
 		return

@@ -33,7 +33,7 @@ func physics_update(delta: float) -> void:
 		if not player.is_on_floor():
 			state_machine.transition_to("fall")
 		else:
-			var dir := Input.get_axis("move_left", "move_right")
+			var dir := Input.get_axis(&"move_left", &"move_right")
 			if abs(dir) > 0.1:
 				state_machine.transition_to("run")
 			else:

@@ -26,13 +26,13 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Wall jump check FIRST before any detach checks!
-	if Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0:
+	if Input.is_action_just_pressed(&"jump") or player.jump_buffer_timer > 0.0:
 		player.jump_buffer_timer = 0.0
 		state_machine.transition_to("walljump")
 		return
 
 	var wall_norm: float = signf(player.get_wall_normal().x)
-	var input_dir: float = Input.get_axis("move_left", "move_right")
+	var input_dir: float = Input.get_axis(&"move_left", &"move_right")
 
 	if not player.is_on_wall_only():
 		player.wall_fall_start_y = player.global_position.y
@@ -72,7 +72,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# If holding down, immediately skip hold and accelerate to full slide speed
-	if Input.is_action_pressed("down"):
+	if Input.is_action_pressed(&"down"):
 		slide_timer = maxf(slide_timer, player.wall_cling_hold_time + player.wall_slide_accel_duration)
 
 	# Maintain slight pressure towards wall to keep is_on_wall reliable in Godot 4

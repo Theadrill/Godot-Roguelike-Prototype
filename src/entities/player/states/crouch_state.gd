@@ -31,19 +31,19 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Heal check (Garrafa de Chá da Mãe)
-	if Input.is_action_just_pressed("heal"):
+	if Input.is_action_just_pressed(&"heal"):
 		state_machine.transition_to("heal")
 		return
 
 	# Jump from crouch
-	if Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0:
+	if Input.is_action_just_pressed(&"jump") or player.jump_buffer_timer > 0.0:
 		player.jump_buffer_timer = 0.0
 		state_machine.transition_to("jump")
 		return
 
 	# Attack from crouch (supports holding button): stand up and execute normal attack,
 	# but block if there is a low ceiling preventing standing up (Dead Cells pattern).
-	if (Input.is_action_pressed("attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
+	if (Input.is_action_pressed(&"attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
 		player.ceiling_check.force_raycast_update()
 		if not player.ceiling_check.is_colliding():
 			player.attack_buffer_timer = 0.0
@@ -55,7 +55,7 @@ func physics_update(delta: float) -> void:
 		player.attack_buffer_timer = 0.0
 
 	# Guard / Parry from crouch
-	if Input.is_action_just_pressed("defend") and player.can_defend():
+	if Input.is_action_just_pressed(&"defend") and player.can_defend():
 		state_machine.transition_to("guard")
 		return
 
@@ -68,7 +68,7 @@ func physics_update(delta: float) -> void:
 	if not is_holding_down:
 		player.ceiling_check.force_raycast_update()
 		if not player.ceiling_check.is_colliding():
-			var h_dir: float = Input.get_axis("move_left", "move_right")
+			var h_dir: float = Input.get_axis(&"move_left", &"move_right")
 			if abs(h_dir) > 0.1:
 				state_machine.transition_to("run")
 			else:

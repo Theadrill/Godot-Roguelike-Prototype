@@ -29,7 +29,7 @@ func physics_update(delta: float) -> void:
 	if recovery_timer >= player.hard_landing_duration:
 		var face: float = float(player.facing_direction)
 		player.visual.scale = Vector2(face, 1.0)
-		var h_dir: float = Input.get_axis("move_left", "move_right")
+		var h_dir: float = Input.get_axis(&"move_left", &"move_right")
 		if absf(h_dir) > 0.1:
 			state_machine.transition_to("run")
 		else:

@@ -33,20 +33,20 @@ func physics_update(delta: float) -> void:
 			player.jump_buffer_timer = 0.0
 			state_machine.transition_to("jump")
 			return
-		elif abs(Input.get_axis("move_left", "move_right")) > 0.1:
+		elif abs(Input.get_axis(&"move_left", &"move_right")) > 0.1:
 			state_machine.transition_to("run")
 			return
 		else:
 			state_machine.transition_to("idle")
 			return
 
-	if player.coyote_timer > 0.0 and Input.is_action_just_pressed("jump"):
+	if player.coyote_timer > 0.0 and Input.is_action_just_pressed(&"jump"):
 		player.coyote_timer = 0.0
 		state_machine.transition_to("jump")
 		return
 
 	# Wall jump OR Wall Regrab Recovery check while touching wall
-	if (Input.is_action_just_pressed("jump") or player.jump_buffer_timer > 0.0) and player.is_on_wall_only():
+	if (Input.is_action_just_pressed(&"jump") or player.jump_buffer_timer > 0.0) and player.is_on_wall_only():
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:
 			# Different wall: kick off with normal wall jump
@@ -55,7 +55,7 @@ func physics_update(delta: float) -> void:
 			return
 		else:
 			# Same wall recovery: after falling >= min fall distance, pressing jump regrabs the wall!
-			var move_h: float = Input.get_axis("move_left", "move_right")
+			var move_h: float = Input.get_axis(&"move_left", &"move_right")
 			var steering_away: bool = (move_h != 0.0 and signf(move_h) == wall_norm)
 			var fall_dist: float = player.global_position.y - player.wall_fall_start_y
 			if not steering_away and fall_dist >= player.wall_regrab_min_fall_distance:
@@ -70,11 +70,11 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Air Guard / Parry check
-	if Input.is_action_just_pressed("defend") and player.can_defend():
+	if Input.is_action_just_pressed(&"defend") and player.can_defend():
 		state_machine.transition_to("guard")
 		return
 
-	if Input.is_action_just_pressed("jump") and player.can_double_jump:
+	if Input.is_action_just_pressed(&"jump") and player.can_double_jump:
 		state_machine.transition_to("doublejump")
 		return
 
@@ -83,7 +83,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Attack in air (supports holding button)
-	if (Input.is_action_pressed("attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
+	if (Input.is_action_pressed(&"attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
 		player.attack_buffer_timer = 0.0
 		if player.is_ranged_weapon_equipped():
 			state_machine.transition_to("rangedattack")
@@ -92,7 +92,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Horizontal air control (update facing first)
-	var direction := Input.get_axis("move_left", "move_right")
+	var direction := Input.get_axis(&"move_left", &"move_right")
 	if direction != 0.0:
 		player.update_facing(direction)
 

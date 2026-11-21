@@ -17,8 +17,8 @@ func physics_update(delta: float) -> void:
 	else:
 		soldier.velocity.y = 0.0
 
-	# Check for Player in Line of Sight
-	if _can_see_player():
+	# Check for Player in Line of Sight (throttled in patrol)
+	if soldier.should_run_patrol_scan(delta) and _can_see_player():
 		if not soldier.can_move:
 			# Immovable: only attack if in attack range; otherwise stay rooted and face player
 			var dist := soldier.global_position.distance_to(soldier.target_player.global_position)

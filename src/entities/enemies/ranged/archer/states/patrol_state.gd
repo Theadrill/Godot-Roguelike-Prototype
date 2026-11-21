@@ -21,11 +21,8 @@ func physics_update(delta: float) -> void:
 	else:
 		archer.velocity.y = 0.0
 
-	if archer.reaggro_cooldown > 0.0:
-		archer.reaggro_cooldown = maxf(0.0, archer.reaggro_cooldown - delta)
-
-	# Scan for Player (skipped while cooling down after losing aggro)
-	var player := archer.find_player() if archer.reaggro_cooldown <= 0.0 else null
+	# Scan for Player (throttled in patrol & skipped while cooling down after losing aggro)
+	var player: Player = archer.find_player() if archer.should_run_patrol_scan(delta) else null
 	if player:
 		var to_player := player.global_position - archer.global_position
 		var dist := to_player.length()

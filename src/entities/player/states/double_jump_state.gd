@@ -25,13 +25,13 @@ func exit() -> void:
 
 func physics_update(delta: float) -> void:
 	# Wall jump OR Wall Regrab Recovery check if pressing jump while touching wall
-	if Input.is_action_just_pressed("jump") and player.is_on_wall_only():
+	if Input.is_action_just_pressed(&"jump") and player.is_on_wall_only():
 		var wall_norm: float = signf(player.get_wall_normal().x)
 		if wall_norm != player.last_wall_jump_normal_x:
 			state_machine.transition_to("walljump")
 			return
 		else:
-			var move_h: float = Input.get_axis("move_left", "move_right")
+			var move_h: float = Input.get_axis(&"move_left", &"move_right")
 			var steering_away: bool = (move_h != 0.0 and signf(move_h) == wall_norm)
 			var fall_dist: float = player.global_position.y - player.wall_fall_start_y
 			if not steering_away and fall_dist >= player.wall_regrab_min_fall_distance:
@@ -45,7 +45,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Air Guard / Parry check
-	if Input.is_action_just_pressed("defend") and player.can_defend():
+	if Input.is_action_just_pressed(&"defend") and player.can_defend():
 		state_machine.transition_to("guard")
 		return
 
@@ -54,7 +54,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	# Attack in air (supports holding button)
-	if (Input.is_action_pressed("attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
+	if (Input.is_action_pressed(&"attack_primary") or player.attack_buffer_timer > 0.0) and player.can_attack():
 		player.attack_buffer_timer = 0.0
 		if player.is_ranged_weapon_equipped():
 			state_machine.transition_to("rangedattack")
@@ -63,7 +63,7 @@ func physics_update(delta: float) -> void:
 		return
 
 	var prev_facing: int = player.facing_direction
-	var direction := Input.get_axis("move_left", "move_right")
+	var direction := Input.get_axis(&"move_left", &"move_right")
 	if direction != 0.0:
 		player.update_facing(direction)
 		if player.facing_direction != prev_facing:

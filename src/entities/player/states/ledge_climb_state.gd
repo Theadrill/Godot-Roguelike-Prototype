@@ -40,7 +40,7 @@ func exit() -> void:
 
 func physics_update(delta: float) -> void:
 	# Vault jump-cancel: pressing jump during climb vaults up and over
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_just_pressed(&"jump"):
 		player.global_position = target_pos
 		player.velocity = Vector2(float(player.facing_direction) * player.run_speed * 0.8, player.jump_velocity * 0.95)
 		state_machine.transition_to("jump")
@@ -67,7 +67,7 @@ func physics_update(delta: float) -> void:
 		player.global_position = target_pos
 		player.velocity = Vector2.ZERO
 		
-		var move_dir := Input.get_axis("move_left", "move_right")
+		var move_dir := Input.get_axis(&"move_left", &"move_right")
 		if abs(move_dir) > 0.1:
 			state_machine.transition_to("run")
 		else:

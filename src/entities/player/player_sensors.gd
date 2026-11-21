@@ -38,8 +38,8 @@ func is_upward_attack_requested() -> bool:
 
 ## Retorna true quando Baixo + Pulo é pressionado para iniciar Ground Slam aéreo.
 func is_ground_slam_requested() -> bool:
-	var down_held: bool = Input.is_action_pressed("down") or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.get_joy_axis(0, JOY_AXIS_LEFT_Y) > 0.4
-	return down_held and Input.is_action_just_pressed("jump")
+	var down_held: bool = Input.is_action_pressed(&"down") or Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN) or Input.get_joy_axis(0, JOY_AXIS_LEFT_Y) > 0.4
+	return down_held and Input.is_action_just_pressed(&"jump")
 
 
 ## Detecção de beirada em 4 estágios (Dead Cells mantle check).

@@ -92,9 +92,9 @@ func _process(delta: float) -> void:
 			break
 			
 	if is_zero_approx(scroll_dir):
-		if Input.is_action_pressed("look_down"):
+		if Input.is_action_pressed(&"look_down"):
 			scroll_dir = 1.0
-		elif Input.is_action_pressed("look_up"):
+		elif Input.is_action_pressed(&"look_up"):
 			scroll_dir = -1.0
 			
 	if not is_zero_approx(scroll_dir) and metrics_scroll:

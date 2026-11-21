@@ -30,6 +30,8 @@ enum CooldownBehavior {
 @export_range(20.0, 300.0, 5.0, "suffix:px") var back_awareness_range: float = 80.0
 @export_range(10.0, 200.0, 2.0, "suffix:px") var attack_range: float = 30.0
 @export_range(100.0, 800.0, 10.0, "suffix:px") var lose_target_range: float = 300.0
+## Intervalo entre varreduras de percepção/raycast de visão enquanto o inimigo está em Patrulha.
+@export_range(0.05, 0.5, 0.01, "suffix:s") var patrol_scan_interval: float = 0.12
 
 @export_group("Attack Balancing")
 @export_range(5.0, 100.0, 1.0) var normal_damage: float = 14.0
@@ -90,6 +92,8 @@ var reaggro_cooldown: float = 0.0
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var flash_timer: float = 0.0
 var flash_material: ShaderMaterial
+var _cached_player: Player = null
+var _patrol_scan_timer: float = 0.0
 
 # Active Tier State
 var active_tier: int = 1
@@ -114,6 +118,7 @@ func _ready() -> void:
 	add_to_group("enemies")
 	spawn_position = global_position
 	base_max_health = max_health
+	_patrol_scan_timer = randf_range(0.0, patrol_scan_interval)
 	if initial_facing != 0:
 		facing_direction = initial_facing
 	apply_tier_by_level(1)
@@ -280,17 +285,32 @@ func has_line_of_sight_to(target: Node2D) -> bool:
 func find_player() -> Player:
 	if target_player and is_instance_valid(target_player):
 		return target_player
+	if _cached_player and is_instance_valid(_cached_player) and _cached_player.is_inside_tree():
+		return _cached_player
 	var tree := get_tree()
 	if not tree:
 		return null
-	var players := tree.get_nodes_in_group("player")
+	var players := tree.get_nodes_in_group(&"player")
 	if players.size() > 0 and players[0] is Player:
-		return players[0] as Player
+		_cached_player = players[0] as Player
+		return _cached_player
 	if tree.current_scene:
 		var p := tree.current_scene.find_child("Player", true, false)
 		if p is Player:
-			return p as Player
+			_cached_player = p as Player
+			return _cached_player
 	return null
+
+
+func should_run_patrol_scan(delta: float) -> bool:
+	if reaggro_cooldown > 0.0:
+		reaggro_cooldown = maxf(0.0, reaggro_cooldown - delta)
+		return false
+	_patrol_scan_timer -= delta
+	if _patrol_scan_timer <= 0.0:
+		_patrol_scan_timer = patrol_scan_interval
+		return true
+	return false
 
 
 # --- Telegraph & Attack Cycle ---
@@ -391,6 +411,7 @@ func respawn() -> void:
 	velocity = Vector2.ZERO
 	target_player = null
 	reaggro_cooldown = 0.0
+	_patrol_scan_timer = 0.0
 	is_adaptive_evading = false
 	is_hyper_armored = false
 	hide_telegraph()

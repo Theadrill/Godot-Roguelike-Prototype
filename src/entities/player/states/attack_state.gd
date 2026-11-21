@@ -122,7 +122,7 @@ func _start_combo_step(charge_ratio: float = 0.0) -> void:
 	_step_charge_ratio = charge_ratio
 	
 	# Allow reversing direction between combo steps if steering
-	var input_dir: float = Input.get_axis("move_left", "move_right")
+	var input_dir: float = Input.get_axis(&"move_left", &"move_right")
 	if abs(input_dir) > 0.1:
 		player.update_facing(input_dir)
 
@@ -267,7 +267,7 @@ func physics_update(delta: float) -> void:
 
 		# Keep player planted in place during charge windup (only allow turning facing direction)
 		if player.is_on_floor():
-			var dir := Input.get_axis("move_left", "move_right")
+			var dir := Input.get_axis(&"move_left", &"move_right")
 			player.velocity.x = move_toward(player.velocity.x, 0.0, 1200.0 * delta)
 			if dir != 0.0:
 				player.update_facing(dir)
@@ -286,7 +286,7 @@ func physics_update(delta: float) -> void:
 			return
 
 		# Release button: UNLEASH CHARGED SMASH!
-		if not Input.is_action_pressed("attack_primary"):
+		if not Input.is_action_pressed(&"attack_primary"):
 			is_charging = false
 			CombatFeedback.stop_rumble()
 			_was_energized_swing = true
@@ -321,7 +321,7 @@ func physics_update(delta: float) -> void:
 	player.attack_buffer_timer = 0.0
 
 	# Input queue / buffer: only queue the next 1 step once past initial windup, and do not queue ground attacks while landing from an air swing
-	if Input.is_action_just_pressed("attack_primary"):
+	if Input.is_action_just_pressed(&"attack_primary"):
 		if not (_step_started_in_air and player.is_on_floor()) and cur_frame >= maxi(1, _step_active_start_frame - 1):
 			combo_buffered = true
 			queued_combo_presses = 1
@@ -357,7 +357,7 @@ func physics_update(delta: float) -> void:
 		# Combo continuation condition (Dead Cells design):
 		# 1. Player is holding the attack button (continuous auto-chain combo)
 		# 2. Player tapped attack again during the swing (queued/buffered next hit)
-		var wants_combo: bool = (combo_buffered or queued_combo_presses > 0 or Input.is_action_pressed("attack_primary")) and not landed_from_air_attack
+		var wants_combo: bool = (combo_buffered or queued_combo_presses > 0 or Input.is_action_pressed(&"attack_primary")) and not landed_from_air_attack
 		
 		if wants_combo and can_advance:
 			if queued_combo_presses > 0:
@@ -383,7 +383,7 @@ func physics_update(delta: float) -> void:
 			player.player_sprite.speed_scale = 1.0
 			
 		if player.is_on_floor():
-			if abs(Input.get_axis("move_left", "move_right")) > 0.1:
+			if abs(Input.get_axis(&"move_left", &"move_right")) > 0.1:
 				state_machine.transition_to("run")
 			else:
 				state_machine.transition_to("idle")
@@ -556,7 +556,7 @@ func _update_air_plunge(delta: float) -> void:
 
 		PlungePhase.FALL_LOOP:
 			# Continua caindo e ciclando entre os frames de loop enquanto não toca em ninguém nem chega no chão
-			var input_dir: float = Input.get_axis("move_left", "move_right")
+			var input_dir: float = Input.get_axis(&"move_left", &"move_right")
 			player.velocity.x = move_toward(player.velocity.x, input_dir * (player.run_speed * 0.45), 500.0 * delta)
 			player.velocity.y = maxf(player.velocity.y + (player.gravity * player.fall_gravity_multiplier) * delta, _plunge_fall_speed)
 			player.move_and_slide()
@@ -625,7 +625,7 @@ func _update_air_plunge(delta: float) -> void:
 				if player.player_sprite:
 					player.player_sprite.speed_scale = 1.0
 				if player.is_on_floor():
-					if abs(Input.get_axis("move_left", "move_right")) > 0.1:
+					if abs(Input.get_axis(&"move_left", &"move_right")) > 0.1:
 						state_machine.transition_to("run")
 					else:
 						state_machine.transition_to("idle")

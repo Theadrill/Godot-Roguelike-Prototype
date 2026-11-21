@@ -60,23 +60,23 @@ func physics_update(delta: float) -> void:
 		player.velocity.x = move_toward(player.velocity.x, 0.0, 700.0 * delta)
 	else:
 		if player.is_on_floor():
-			var direction := Input.get_axis("move_left", "move_right")
+			var direction := Input.get_axis(&"move_left", &"move_right")
 			player.velocity.x = move_toward(player.velocity.x, 0.0, 900.0 * delta)
 			if direction != 0.0:
 				player.update_facing(direction)
 		else:
-			var direction := Input.get_axis("move_left", "move_right")
+			var direction := Input.get_axis(&"move_left", &"move_right")
 			player.velocity.x = move_toward(player.velocity.x, direction * (player.run_speed * 0.5), 600.0 * delta)
 
 	player.move_and_slide()
 
 	# Release button: exit guard
-	if not Input.is_action_pressed("defend"):
+	if not Input.is_action_pressed(&"defend"):
 		_exit_to_movement()
 		return
 
 	# Instant attack out of guard / parry
-	if Input.is_action_just_pressed("attack_primary") and player.can_attack():
+	if Input.is_action_just_pressed(&"attack_primary") and player.can_attack():
 		if player.is_ranged_weapon_equipped():
 			state_machine.transition_to("rangedattack")
 		else:
@@ -92,7 +92,7 @@ func _exit_to_movement() -> void:
 	if not player.is_on_floor():
 		state_machine.transition_to("fall")
 	else:
-		var direction := Input.get_axis("move_left", "move_right")
+		var direction := Input.get_axis(&"move_left", &"move_right")
 		if abs(direction) > 0.1:
 			state_machine.transition_to("run")
 		else:

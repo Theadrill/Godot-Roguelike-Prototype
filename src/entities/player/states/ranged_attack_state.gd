@@ -149,7 +149,7 @@ func physics_update(delta: float) -> void:
 
 			# Planted stance while aiming/charging on floor (matches Dead Cells bow/spell lock)
 			if player.is_on_floor():
-				var move_dir := Input.get_axis("move_left", "move_right")
+				var move_dir := Input.get_axis(&"move_left", &"move_right")
 				player.velocity.x = move_toward(player.velocity.x, 0.0, 800.0 * delta)
 				if move_dir != 0.0:
 					player.update_facing(move_dir)
@@ -160,20 +160,20 @@ func physics_update(delta: float) -> void:
 
 			# Determine when to loose projectile or start spell cast:
 			if player.weapon.is_charge_attack:
-				if not Input.is_action_pressed("attack_primary"):
+				if not Input.is_action_pressed(&"attack_primary"):
 					CombatFeedback.stop_rumble()
 					if is_spell:
 						_start_spell_cast()
 					else:
 						_fire_projectile()
 			elif player.weapon.weapon_category == WeaponData.WeaponCategory.RANGED_BOW:
-				if not Input.is_action_pressed("attack_primary"):
+				if not Input.is_action_pressed(&"attack_primary"):
 					_bow_released_early = true
 				# Bow always reaches the penultimate frame (frame 5 / 1-based frame 6) to shoot!
 				if charge_progress >= 1.0:
 					_fire_projectile()
 			else:
-				if charge_progress >= 1.0 or not Input.is_action_pressed("attack_primary"):
+				if charge_progress >= 1.0 or not Input.is_action_pressed(&"attack_primary"):
 					if is_spell:
 						_start_spell_cast()
 					else:
@@ -224,12 +224,12 @@ func physics_update(delta: float) -> void:
 				return
 
 			# Guard cancel during reload
-			if Input.is_action_just_pressed("defend") and player.can_defend():
+			if Input.is_action_just_pressed(&"defend") and player.can_defend():
 				state_machine.transition_to("guard")
 				return
 
 			if phase_timer <= 0.0:
-				if Input.is_action_pressed("attack_primary") and not player.weapon.is_charge_attack and not _bow_released_early:
+				if Input.is_action_pressed(&"attack_primary") and not player.weapon.is_charge_attack and not _bow_released_early:
 					# Keep firing while holding attack (Bow cycles from ready frame 2 -> shoot frame 5)!
 					_start_shot_cycle(true)
 				else:
@@ -335,7 +335,7 @@ func _exit_to_movement() -> void:
 	if not player.is_on_floor():
 		state_machine.transition_to("fall")
 	else:
-		var dir := Input.get_axis("move_left", "move_right")
+		var dir := Input.get_axis(&"move_left", &"move_right")
 		if abs(dir) > 0.1:
 			state_machine.transition_to("run")
 		else:

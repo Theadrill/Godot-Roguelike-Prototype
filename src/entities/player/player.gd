@@ -131,7 +131,7 @@ var is_input_locked: bool = false:
 			jump_buffer_timer = 0.0
 
 func is_slide_requested() -> bool:
-	return _ignore_slide_timer <= 0.0 and not is_input_locked and Input.is_action_just_pressed("slide")
+	return _ignore_slide_timer <= 0.0 and not is_input_locked and Input.is_action_just_pressed(&"slide")
 
 @onready var state_machine: StateMachine = $StateMachine
 const default_slash_frames = preload("res://assets/effects/slashes/slash_frames.tres")
@@ -389,13 +389,13 @@ func _physics_process(delta: float) -> void:
 		if jump_buffer_timer > 0.0:
 			jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
 
-		if Input.is_action_just_pressed("jump"):
+		if Input.is_action_just_pressed(&"jump"):
 			jump_buffer_timer = jump_buffer_duration
 
 		if attack_buffer_timer > 0.0:
 			attack_buffer_timer = max(0.0, attack_buffer_timer - delta)
 
-		if Input.is_action_just_pressed("attack_primary"):
+		if Input.is_action_just_pressed(&"attack_primary"):
 			attack_buffer_timer = attack_buffer_duration
 
 	# Hit flash timer

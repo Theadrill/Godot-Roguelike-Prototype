@@ -77,7 +77,7 @@ func physics_update(delta: float) -> void:
 			if player.is_crouch_requested():
 				state_machine.transition_to("crouch")
 				return
-			var dir := Input.get_axis("move_left", "move_right")
+			var dir := Input.get_axis(&"move_left", &"move_right")
 			if abs(dir) > 0.1:
 				state_machine.transition_to("run")
 			else:
