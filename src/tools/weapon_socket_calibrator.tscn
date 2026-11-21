@@ -7,15 +7,14 @@
 [node name="WeaponSocketCalibrator" type="Node2D" unique_id=1073998046]
 script = ExtResource("1_calibrator")
 socket_target = "Escudo nas Costas (BackSocketShield)"
-selected_animation = "double_jump"
 show_main_weapon_reference = true
 reference_main_weapon = "dagger"
 show_back_weapon_reference = true
-socket_pos_x = -4.0
-socket_pos_y = -35.0
+socket_pos_x = -9.0
+socket_pos_y = -28.0
 socket_z_index = -3
 slash_offset_x = -1.0
-status_message = "SUCESSO! Salvo em shield.tres (Escudo nas Costas) -> [double_jump Frame 0] (Pos: (-4.000000, -35.000000), Rot: 0.0°, Z: -3, FlipH: false, FlipV: false)"
+status_message = "shield [Escudo nas Costas (BackSocketShield)] -> idle Frame 0 (Z: -3, FlipH: false, FlipV: false)"
 
 [node name="GroundFloorRef" type="Line2D" parent="." unique_id=462095390]
 points = PackedVector2Array(-60, 0, 60, 0)
@@ -29,28 +28,27 @@ metadata/_edit_lock_ = true
 [node name="CharacterSprite" type="AnimatedSprite2D" parent="Visual" unique_id=1527574964]
 position = Vector2(-2, -29)
 sprite_frames = ExtResource("2_player_frames")
-animation = &"double_jump"
+animation = &"idle"
 metadata/_edit_lock_ = true
 
 [node name="BackSocketWeapon" type="Marker2D" parent="Visual" unique_id=1247055997]
 z_index = -2
 z_as_relative = false
-position = Vector2(-3, -33)
-rotation = -3.0543258
+position = Vector2(-6, -24)
+rotation = -3.3161256
 
 [node name="BackSocketShield" type="Marker2D" parent="Visual" unique_id=189514163]
 z_index = -3
-position = Vector2(-4, -35)
+position = Vector2(-9, -28)
 
 [node name="MainHandSocket" type="Marker2D" parent="Visual" unique_id=1037091576]
 z_index = 2
-position = Vector2(10, -27)
-rotation = -4.4505897
+position = Vector2(-15.999998, -15.000001)
+rotation = 3.5779247
 
 [node name="OffHandSocket" type="Marker2D" parent="Visual" unique_id=987162534]
 z_index = 2
-position = Vector2(4, -14)
-rotation = -1.5707964
+position = Vector2(10, -20)
 
 [node name="TeaBottleSocket" type="Marker2D" parent="Visual" unique_id=1498765432]
 z_index = 2
