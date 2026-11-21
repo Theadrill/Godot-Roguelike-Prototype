@@ -26,7 +26,7 @@
    * Sempre clone antes de aplicar bônus de run ou alternar modificadores em runtime (ex: `weapon_res.duplicate() as WeaponData`, como implementado em [`progression_manager.gd`](../src/core/progression_manager.gd), [`family_house.gd`](../src/world/hub/family_house.gd) e [`player_debug_actions.gd`](../src/entities/player/player_debug_actions.gd)).
 2. **Padrão *Call Down, Signal Up* & Proibição de `find_child` por Frame:**
    * Nós pais chamam métodos em filhos via referências `@onready` cacheadas; filhos e sub-controladores comunicam eventos para cima via `signal` ou `ProgressionManager`.
-   * É **proibido** chamar `find_child()`, `get_nodes_in_group()` ou `load()` dentro de `_process()` / `_physics_process()`. Cacheie referências no `_ready()`.
+   * É **proibido** chamar `find_child()`, `get_nodes_in_group()` ou `load()` dentro de `_process()` / `_physics_process()`. Cacheie referências no `_ready()` (ex.: `find_player()` com cache em `BaseEnemy`), use `StringName` (`&"..."`) em polling de `Input` e animações nos loops quentes, e aplique *throttling* nos sensores de percepção em patrulha via `should_run_patrol_scan(delta)`.
 3. **Ciclo de Vida Seguro de `Tween` e Timers:**
    * Sempre armazene tweens recorrentes (flash, bark, fade, popup) em variável e chame `if tween and tween.is_valid(): tween.kill()` antes de criar outro, evitando competição de propriedades.
 4. **Exposição Obrigatória de Métricas no Inspector (`@export`):**

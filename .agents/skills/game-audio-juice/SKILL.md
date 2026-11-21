@@ -16,24 +16,13 @@ Never use linear random offsets for camera shake; use a decaying squared trauma 
 
 ---
 
-## 2. Hit-Flash Shader
-When an entity takes damage, flash its sprite completely white for 0.08s:
-```glsl
-// hit_flash.gdshader
-shader_type canvas_item;
+## 2. Unified Hit-Flash & Pixel Dissolve Shader (Mobile TBDR Optimized)
+Unify **Hit Flash** and **Pixel Dissolve** inside a single `ShaderMaterial` ([`res://src/shaders/hit_flash.gdshader`](../../src/shaders/hit_flash.gdshader)) organized with `group_uniforms hit_flash` and `group_uniforms dissolve`:
 
-uniform bool active = false;
-uniform vec4 flash_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
-
-void fragment() {
-	vec4 original_color = texture(TEXTURE, UV);
-	if (active) {
-		COLOR = vec4(flash_color.rgb, original_color.a);
-	} else {
-		COLOR = original_color;
-	}
-}
-```
+1. Read `vec4 base_color = COLOR;` in `fragment()` so both `Polygon2D` vertex colors, `Sprite2D`/`AnimatedSprite2D` textures, and `modulate` are preserved cleanly.
+2. Gate `noise_texture` sampling behind `if (dissolve_amount > 0.0)` so combat has zero extra texture-fetch overhead while actors are alive, and sample using local pixel coordinates (`floor(v_local_pos)`) for crisp 1:1 pixel-art grains without mixels.
+3. Prefer `final_alpha = 0.0` instead of `discard` when dissolving pixels so mobile TBDR GPUs retain *Early-Z* optimizations.
+4. Instantiate `ShaderMaterial.new()` per actor instance in `_ready()` so flashing or dissolving one enemy never mutates siblings.
 
 ---
 

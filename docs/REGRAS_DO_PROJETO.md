@@ -66,6 +66,7 @@ Todos os assets visuais (protagonista, inimigos, armas, cenários e NPCs) devem 
 * **Proporção do Personagem:** Rigorosamente **16 pixels de largura × 40 pixels de altura**.
 * **Pivô nos Pés (Feet-Pivot):** Todo sprite de personagem e inimigo deve ter seu ponto de ancoragem/origem exatamente no **centro-inferior (entre os pés)**, garantindo que transições de animação nunca façam o corpo afundar ou tremer no chão.
 * **Efeitos Compatíveis:** Efeitos mágicos e de fogo utilizam `GPUParticles2D` + Shaders 2D e iluminação dinâmica com `PointLight2D` integrados à paleta do jogo.
+* **Importação Pixel Art & Shaders Mobile-Friendly:** Texturas pixel art mantêm `Lossless` (`compress/mode=0`) com `mipmaps/generate=false` (proibido `VRAM Compressed` ETC2/ASTC em spritesheets pixel art, para evitar borrões em blocos 4x4). Shaders de atores unificam *Hit Flash* e *Pixel Dissolve* em material único por instância, usando `COLOR.a = 0.0` em vez de `discard` e grãos 1:1 alinhados ao grid de pixels (`floor(v_local_pos)`).
 
 ---
 

@@ -121,3 +121,13 @@ health_component.health_depleted.connect(_on_health_depleted)
 func _on_health_depleted() -> void:
 	state_machine.transition_to("death")
 ```
+
+---
+
+## 5. GDScript VM, Mobile & Pixel-Art Performance Guidelines
+
+* **`StringName` (`&"..."`) in Hot Loops (`_process` / `_physics_process`):** Always use `StringName` literals (`&"jump"`, `&"move_left"`, `&"idle"`) for `Input.is_action_*`, `Input.get_axis`, animation names, and group queries in per-frame paths to avoid repeated `String` allocation and hashing.
+* **No Tree Searches Per Frame & AI Perception Throttling:** Never call `get_nodes_in_group()`, `find_child()`, or path-string `get_node()` inside `_physics_process`. Cache the `Player` reference in `BaseEnemy` and throttle heavy patrol perception/raycasts (`0.10s–0.15s` with randomized initial jitter in `_ready()`) rather than scanning at 60 Hz.
+* **Safe `VisibleOnScreenEnabler2D` Usage:** In large biomes, configure an enlarged `rect` (at least `720x400` for a `480x270` viewport) or restrict hibernation to `Patrol` so active `Chase` states and off-screen `respawn_timer` countdowns never freeze prematurely.
+* **Pixel Art Import vs. `VRAM Compressed` & 60 Hz Physics:** Low-res pixel art (`83x62` / `480x270`) **must** remain `compress/mode=0` (`Lossless`) with `mipmaps/generate=false` — never enable `VRAM Compressed` (ETC2/ASTC) on pixel-art spritesheets, which introduces 4x4 block artifacts. Keep `Physics Ticks per Second = 60` for tight parry, coyote-time, and corner-climb precision.
+* **Targeted Object Pooling:** Reserve object pooling for high-frequency, simple-state objects (floating damage numbers in bursts, repetitive particle decals, or bullet-hell rooms) instead of complex stateful combat projectiles.

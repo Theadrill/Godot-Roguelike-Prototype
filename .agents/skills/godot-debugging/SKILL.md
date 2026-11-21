@@ -8,13 +8,13 @@ description: >-
 # Godot 4 Debugging & Testing Workflows
 
 ## 1. Headless CLI Syntax & Compilation Check
-Before launching the game or giving code to the user, the AI can validate all scenes and scripts via terminal:
+Before launching the game or giving code to the user, always validate all scripts, autoloads, `@tool` plugins, `.tres` resources, and scene dependencies using the Windows console binary (`Godot_v4.7.2-stable_win64_console.exe`):
 
 ```powershell
-# Check for compile errors and invalid resource paths without opening a GUI window
-godot --headless --check-only --path .
+# Load full editor headless, resolve all scripts/scenes/resources, and exit cleanly
+& "C:\Tools\godot\Godot_v4.7.2-stable_win64_console.exe" --headless --editor --quit --path . 2>&1
 ```
-If errors are present, Godot exits with an error code and prints exact line numbers and syntax issues to stderr.
+Do **not** use the legacy `--check-only` flag without `--script`: on Windows GUI/headless setups it skips full project/autoload compilation and can report exit code `0` silently despite broken scripts. `--editor --quit` on the console binary catches every `SCRIPT ERROR`, `Parse Error`, and missing resource dependency.
 
 ---
 
