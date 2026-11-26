@@ -322,6 +322,8 @@ func _on_player_sprite_animation_finished() -> void:
 		player_sprite.play(&"fall")
 	elif player_sprite and player_sprite.animation == &"block":
 		play_animation(&"block_loop")
+	elif player_sprite and player_sprite.animation == &"wall_slide_start":
+		play_animation(&"wall_slide")
 
 func _detect_weapon_type_string(w: WeaponData) -> String:
 	return w.get_archetype_id() if w else "sword"

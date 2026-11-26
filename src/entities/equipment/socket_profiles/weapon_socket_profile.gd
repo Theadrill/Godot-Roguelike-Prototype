@@ -295,6 +295,9 @@ extends Resource
 @export var wall_cling_0_visible: bool = true
 
 @export_group("WallSlide (2 frames)")
+@export var wall_slide_start_0_pos: Vector2 = Vector2(6, -20)
+@export_range(-360.0, 360.0, 0.5, "suffix:°") var wall_slide_start_0_rot: float = -35.0
+@export var wall_slide_start_0_visible: bool = true
 @export var wall_slide_0_pos: Vector2 = Vector2(6, -20)
 @export_range(-360.0, 360.0, 0.5, "suffix:°") var wall_slide_0_rot: float = -35.0
 @export var wall_slide_0_visible: bool = true

@@ -92,7 +92,7 @@ func physics_update(delta: float) -> void:
 		var curve := t * t
 		var target_speed := lerpf(player.wall_slide_min_speed, player.wall_slide_max_speed, curve)
 		player.velocity.y = move_toward(player.velocity.y, target_speed, (player.gravity * 0.8) * delta)
-		if not player.player_sprite or player.player_sprite.animation != &"wall_slide":
-			player.play_animation(&"wall_slide")
+		if not player.player_sprite or (player.player_sprite.animation != &"wall_slide_start" and player.player_sprite.animation != &"wall_slide"):
+			player.play_animation(&"wall_slide_start")
 
 	player.move_and_slide()

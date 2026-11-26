@@ -453,13 +453,17 @@ region = Rect2(0, 62, 83, 62)
 atlas = ExtResource("8_wall_slide_sheet")
 region = Rect2(0, 0, 83, 62)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_wall_slide_start_0"]
+atlas = ExtResource("8_wall_slide_sheet")
+region = Rect2(83, 0, 83, 62)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_wall_slide_0"]
 atlas = ExtResource("8_wall_slide_sheet")
 region = Rect2(0, 62, 83, 62)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wall_slide_1"]
 atlas = ExtResource("8_wall_slide_sheet")
-region = Rect2(0, 124, 83, 62)
+region = Rect2(83, 62, 83, 62)
 
 [resource]
 animations = [{
@@ -942,6 +946,14 @@ animations = [{
 "loop": 1,
 "name": &"wall_cling",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wall_slide_start_0")
+}],
+"loop": 0,
+"name": &"wall_slide_start",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,

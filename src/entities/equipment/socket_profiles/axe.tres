@@ -73,7 +73,9 @@ double_jump_3_pos = Vector2(5, -20)
 double_jump_3_rot = -10.0
 wall_cling_0_pos = Vector2(-14.000001, -24)
 wall_cling_0_rot = 69.5
+wall_slide_start_0_pos = Vector2(-14.000001, -24)
 wall_slide_0_pos = Vector2(-14.000001, -24)
+wall_slide_start_0_rot = 69.5
 wall_slide_0_rot = 69.5
 wall_slide_1_pos = Vector2(-14.000001, -24)
 wall_slide_1_rot = 69.5
@@ -962,6 +964,14 @@ back_frames = {
 "visible": true,
 "z_index": -2
 },
+"wall_slide_start_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(-3, -30),
+"rot": -78.19999,
+"visible": true,
+"z_index": -2
+},
 "wall_slide_1": {
 "flip_h": false,
 "flip_v": true,
@@ -1640,6 +1650,14 @@ hand_frames = {
 "z_index": 2
 },
 "wall_slide_0": {
+"flip_h": true,
+"flip_v": true,
+"pos": Vector2(-14.000001, -24),
+"rot": 69.5,
+"visible": true,
+"z_index": 2
+},
+"wall_slide_start_0": {
 "flip_h": true,
 "flip_v": true,
 "pos": Vector2(-14.000001, -24),

@@ -891,6 +891,14 @@ back_frames = {
 "visible": true,
 "z_index": -3
 },
+"wall_slide_start_0": {
+"flip_h": false,
+"flip_v": true,
+"pos": Vector2(3, -37),
+"rot": 0.0,
+"visible": true,
+"z_index": -3
+},
 "wall_slide_1": {
 "flip_h": false,
 "flip_v": true,
