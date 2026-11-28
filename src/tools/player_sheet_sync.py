@@ -2,7 +2,8 @@
 """Sincroniza os 28 spritesheets do Player (`player_*_sheet.png`) com os frames individuais (`individual/*.png`).
 
 Uso:
-    python src/tools/player_sheet_sync.py unpack          # Gera apenas os frames individuais faltantes
+    python src/tools/player_sheet_sync.py validate        # Valida dimensões dos 28 spritesheets sem criar arquivos
+    python src/tools/player_sheet_sync.py unpack          # Gera frames faltantes nas pastas individual/ ativas
     python src/tools/player_sheet_sync.py unpack --force  # Re-fatia todos os 28 sheets para individual/
     python src/tools/player_sheet_sync.py pack            # Re-empacota individual/ -> player_*_sheet.png
 """
@@ -29,7 +30,7 @@ MANIFEST: list[tuple[str, int, int, int, int, list[str]]] = [
     ("fall/player_fall_sheet.png", 83, 62, 1, 2, [f"fall/individual/adventurer_fall_{i:02d}.png" for i in range(2)]),
     ("slide/player_slide_sheet.png", 83, 62, 1, 2, [f"slide/individual/adventurer_slide_{i:02d}.png" for i in range(2)]),
     ("roll/player_roll_sheet.png", 83, 62, 1, 1, ["roll/individual/roll_0.png"]),
-    ("wall_slide/player_wall_slide_sheet.png", 83, 62, 1, 3, [f"wall_slide/individual/adventurer_wall_slide_{i:02d}.png" for i in range(3)]),
+    ("wall_slide/player_wall_slide_sheet.png", 83, 62, 2, 2, [f"wall_slide/individual/adventurer_wall_slide_{i:02d}.png" for i in range(4)]),
     ("corner_climb/player_corner_climb_sheet.png", 83, 76, 2, 3, [f"corner_climb/individual/adventurer_corner_climb_{i:02d}.png" for i in range(5)]),
     ("attack/player_attack1_sheet.png", 83, 62, 2, 3, [f"attack/individual/adventurer_attack1_{i:02d}.png" for i in range(5)]),
     ("attack/player_attack2_sheet.png", 83, 62, 2, 3, [f"attack/individual/adventurer_attack2_{i:02d}.png" for i in range(6)]),
@@ -50,6 +51,20 @@ MANIFEST: list[tuple[str, int, int, int, int, list[str]]] = [
 ]
 
 
+def validate() -> int:
+    for sheet_rel, cw, ch, cols, rows, _indivs in MANIFEST:
+        sheet_path = os.path.join(ADVENTURER_DIR, sheet_rel)
+        if not os.path.exists(sheet_path):
+            print(f"ERRO: Sheet ausente: {sheet_rel}", file=sys.stderr)
+            return 1
+        sheet_im = Image.open(sheet_path).convert("RGBA")
+        if sheet_im.size != (cw * cols, ch * rows):
+            print(f"ERRO: {sheet_rel} tem tamanho {sheet_im.size}, esperado {(cw * cols, ch * rows)}", file=sys.stderr)
+            return 1
+    print(f"Validate concluído ({len(MANIFEST)}/{len(MANIFEST)} sheets válidos).")
+    return 0
+
+
 def unpack(force: bool = False) -> int:
     created = 0
     for sheet_rel, cw, ch, cols, rows, indivs in MANIFEST:
@@ -58,6 +73,9 @@ def unpack(force: bool = False) -> int:
         if sheet_im.size != (cw * cols, ch * rows):
             print(f"ERRO: {sheet_rel} tem tamanho {sheet_im.size}, esperado {(cw * cols, ch * rows)}", file=sys.stderr)
             return 1
+        indiv_dir = os.path.dirname(os.path.join(ADVENTURER_DIR, indivs[0]))
+        if not force and not os.path.isdir(indiv_dir):
+            continue
         for idx, indiv_rel in enumerate(indivs):
             indiv_path = os.path.join(ADVENTURER_DIR, indiv_rel)
             if not force and os.path.exists(indiv_path):
@@ -104,9 +122,11 @@ def pack() -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Sincroniza frames individuais e spritesheets do Player.")
-    parser.add_argument("action", choices=["unpack", "pack"], help="'unpack' fatia para individual/; 'pack' re-empacota para *_sheet.png")
-    parser.add_argument("--force", action="store_true", help="No modo unpack, sobrescreve frames existentes.")
+    parser.add_argument("action", choices=["validate", "unpack", "pack"], help="'validate' checa dimensões; 'unpack' fatia para individual/; 'pack' re-empacota para *_sheet.png")
+    parser.add_argument("--force", action="store_true", help="No modo unpack, sobrescreve frames existentes ou recria pastas individual/.")
     args = parser.parse_args()
+    if args.action == "validate":
+        return validate()
     if args.action == "unpack":
         return unpack(force=args.force)
     return pack()
